@@ -1,0 +1,329 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Garamond', 'Georgia', serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #c9a050;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+    text-align: center;
+    color: #a0a0a0;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.controls {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+.control-group:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    color: #c9a050;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+select, input[type="range"] {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(201, 160, 80, 0.3);
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 1em;
+}
+
+input[type="range"] {
+    padding: 0;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #a0a0a0;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #c9a050 0%, #a67c00 100%);
+    border: none;
+    border-radius: 10px;
+    color: #1a1a2e;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.generate-btn:hover {
+    background: linear-gradient(135deg, #d4b060 0%, #b68a10 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(201, 160, 80, 0.4);
+}
+
+.generate-btn:active {
+    transform: translateY(0);
+}
+
+.result {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid #c9a050;
+    display: none;
+}
+
+.result.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.generated-name {
+    font-size: 2.5em;
+    color: #c9a050;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.name-meaning {
+    font-size: 1.3em;
+    color: #d0d0d0;
+    text-align: center;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.vowel-suggestions {
+    background: rgba(201, 160, 80, 0.1);
+    border: 1px solid rgba(201, 160, 80, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.vowel-suggestions-title {
+    color: #c9a050;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+}
+
+.vowel-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.vowel-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(201, 160, 80, 0.3);
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+}
+
+.vowel-option:hover {
+    background: rgba(201, 160, 80, 0.2);
+    border-color: rgba(201, 160, 80, 0.6);
+}
+
+.vowel-option-name {
+    color: #c9a050;
+    font-weight: bold;
+    display: block;
+}
+
+.vowel-option-tone {
+    color: #a0a0a0;
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+.breakdown {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.95em;
+}
+
+.breakdown-title {
+    color: #c9a050;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.component {
+    margin: 5px 0;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+}
+
+.component-label {
+    color: #a0a0a0;
+    font-weight: bold;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.favorites {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.favorites-title {
+    color: #c9a050;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.favorite-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.favorite-name {
+    color: #c9a050;
+    font-weight: bold;
+}
+
+.favorite-meaning {
+    color: #a0a0a0;
+    font-size: 0.9em;
+    font-style: italic;
+    flex-grow: 1;
+    margin: 0 15px;
+}
+
+.remove-btn {
+    background: rgba(255, 100, 100, 0.3);
+    border: none;
+    color: #ff6666;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.remove-btn:hover {
+    background: rgba(255, 100, 100, 0.5);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    background: rgba(201, 160, 80, 0.2);
+    border: 1px solid rgba(201, 160, 80, 0.3);
+    border-radius: 8px;
+    color: #c9a050;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: rgba(201, 160, 80, 0.3);
+}
+
+.empty-favorites {
+    text-align: center;
+    color: #a0a0a0;
+    font-style: italic;
+    padding: 20px;
+}
+
+.interchangeable-note {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 3px solid rgba(201, 160, 80, 0.5);
+}
+
+.interchangeable-note-title {
+    color: #c9a050;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.interchangeable-note-text {
+    color: #a0a0a0;
+    font-size: 0.85em;
+    line-height: 1.4;
+}

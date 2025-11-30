@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Elf Name Generator - Forgotten Realms</title>
+    <meta name="description" content="Generate authentic High Elf names following the Espruar naming system from Forgotten Realms D&D lore.">
+    <meta name="keywords" content="High Elf, D&D, Forgotten Realms, name generator, Espruar, fantasy names">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>⚔️ High Elf Name Generator ⚔️</h1>
+        <div class="subtitle">Espruar Naming System - Forgotten Realms</div>
+
+        <div class="interchangeable-note">
+            <div class="interchangeable-note-title">🔄 Interchangeable Components</div>
+            <div class="interchangeable-note-text">
+                This generator follows the "Lego System" - most descriptive components can be used as either prefix or suffix. Gender modifiers (-iel, -ion) and strong role suffixes (-kian, -drith) always remain as suffixes.
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="complexity">Name Complexity</label>
+                <select id="complexity">
+                    <option value="auto">Auto (Follows Phonetic Rules)</option>
+                    <option value="simple">Simple (Two Components)</option>
+                    <option value="complex">Complex (Three Components)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="syllables">Target Syllable Count</label>
+                <input type="range" id="syllables" min="2" max="6" value="4" step="1">
+                <div class="range-labels">
+                    <span>Short (2)</span>
+                    <span>Ideal (3-5)</span>
+                    <span>Long (6)</span>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="style">Gender/Style Preference</label>
+                <select id="style">
+                    <option value="neutral">Gender Neutral</option>
+                    <option value="feminine">Feminine (Softer sounds)</option>
+                    <option value="masculine">Masculine (Stronger sounds)</option>
+                </select>
+            </div>
+            
+            <button class="generate-btn" onclick="generateName()">✨ Generate Name ✨</button>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="generated-name" id="generatedName"></div>
+            <div class="name-meaning" id="nameMeaning"></div>
+            
+            <div id="vowelSuggestionsContainer" style="display: none;" class="vowel-suggestions">
+                <div class="vowel-suggestions-title">💫 Optional Final Vowel (adds syllable & musicality):</div>
+                <div class="vowel-options" id="vowelOptions"></div>
+            </div>
+            
+            <div class="breakdown">
+                <div class="breakdown-title">Component Breakdown:</div>
+                <div id="breakdown"></div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn" onclick="saveFavorite()">💫 Save to Favorites</button>
+                <button class="action-btn" onclick="generateName()">🔄 Generate Another</button>
+            </div>
+        </div>
+        
+        <div class="favorites">
+            <div class="favorites-title">⭐ Saved Favorites</div>
+            <div id="favoritesList" class="empty-favorites">
+                No favorites saved yet. Generate and save names you like!
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
