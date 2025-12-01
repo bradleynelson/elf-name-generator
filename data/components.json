@@ -1,6 +1,4 @@
-// High Elf Name Generator - Espruar Naming System
-// Component data with interchangeability rules
-const components = [
+[
   {
     "root": "ae",
     "prefix_text": "Ae-",
@@ -312,8 +310,18 @@ const components = [
     "is_gender_modifier": false
   },
   {
-    "root": "mon / morn",
-    "prefix_text": "Mon- / Morn-",
+    "root": "mon",
+    "prefix_text": "Mon-",
+    "prefix_meaning": "Stone, Mountain, Great",
+    "can_be_prefix": true,
+    "can_be_suffix": true,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false
+  },
+  {
+    "root": "morn",
+    "prefix_text": "Morn-",
     "prefix_meaning": "Stone, Mountain, Great",
     "can_be_prefix": true,
     "can_be_suffix": true,
@@ -412,8 +420,18 @@ const components = [
     "is_gender_modifier": false
   },
   {
-    "root": "ro / roe",
-    "prefix_text": "Ro- / Roe-",
+    "root": "ro",
+    "prefix_text": "Ro-",
+    "prefix_meaning": "Song, Music, Flowing",
+    "can_be_prefix": true,
+    "can_be_suffix": true,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false
+  },
+  {
+    "root": "roe",
+    "prefix_text": "Roe-",
     "prefix_meaning": "Song, Music, Flowing",
     "can_be_prefix": true,
     "can_be_suffix": true,
@@ -502,8 +520,18 @@ const components = [
     "is_gender_modifier": false
   },
   {
-    "root": "thorn / thor",
-    "prefix_text": "Thorn- / Thor-",
+    "root": "thorn",
+    "prefix_text": "Thorn-",
+    "prefix_meaning": "Stone / Permanent / Enduring",
+    "can_be_prefix": true,
+    "can_be_suffix": true,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false
+  },
+  {
+    "root": "thor",
+    "prefix_text": "Thor-",
     "prefix_meaning": "Stone / Permanent / Enduring",
     "can_be_prefix": true,
     "can_be_suffix": true,
@@ -562,12 +590,22 @@ const components = [
     "is_gender_modifier": false
   },
   {
-    "root": "ael / ail",
+    "root": "ael",
     "prefix_text": null,
     "prefix_meaning": null,
     "can_be_prefix": true,
     "can_be_suffix": true,
-    "suffix_text": "-ael / -ail",
+    "suffix_text": "-ael",
+    "suffix_meaning": "Blade, Edge, or Warrior",
+    "is_gender_modifier": false
+  },
+  {
+    "root": "ail",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": true,
+    "can_be_suffix": true,
+    "suffix_text": "-ail",
     "suffix_meaning": "Blade, Edge, or Warrior",
     "is_gender_modifier": false
   },
@@ -1081,431 +1119,4 @@ const components = [
     "suffix_meaning": "Flower / Blossom",
     "is_gender_modifier": false
   }
-];
-
-const connectors = [
-  {
-    "text": "-a-",
-    "function": "Simple vowel bridge for flow"
-  },
-  {
-    "text": "-e-",
-    "function": "Simple vowel bridge for flow"
-  },
-  {
-    "text": "-o-",
-    "function": "Simple vowel bridge for flow"
-  },
-  {
-    "text": "-an-",
-    "function": "Spirit / Common smooth bridge"
-  },
-  {
-    "text": "-ani-",
-    "function": "Implies \"spirit of\" or \"essence of\""
-  },
-  {
-    "text": "-ea-",
-    "function": "Adds a pause or weight to the name"
-  },
-  {
-    "text": "-ella-",
-    "function": "gentle, elegant"
-  },
-  {
-    "text": "-en-",
-    "function": "Breaks up harsh consonants to add softness, often means \"small\" or \"dear\""
-  },
-  {
-    "text": "-i-",
-    "function": "A soft connector bridge that breaks up the consonants"
-  },
-  {
-    "text": "-il-",
-    "function": "Common Moon Elf bridge; adds a \"silvery\" sound"
-  },
-  {
-    "text": "-ira-",
-    "function": "dreaming, soul-deep"
-  },
-  {
-    "text": "-la-",
-    "function": "grace, beauty"
-  },
-  {
-    "text": "-l\u00eb-",
-    "function": "A melodic, quick bridge (from tel\u00eb or la) often used for Moon/Star root to a status suffix"
-  },
-  {
-    "text": "-na-",
-    "function": "heart, spirit"
-  },
-  {
-    "text": "-or-",
-    "function": "Adds a sturdy or strong tone"
-  },
-  {
-    "text": "-ri-",
-    "function": "light, movement"
-  },
-  {
-    "text": "-sae-",
-    "function": "sky, ethereal"
-  },
-  {
-    "text": "-sha-",
-    "function": "moonlit, enchanted"
-  },
-  {
-    "text": "-th-",
-    "function": "Separates two vowels or a consonant and a vowel for an airy sound."
-  },
-  {
-    "text": "-the-",
-    "function": "kin, heritage"
-  },
-  {
-    "text": "-v-",
-    "function": "Very rare; Used when the root already contains an 'r' or 'l' and another vowel is needed."
-  },
-  {
-    "text": "-va-",
-    "function": "strength, vitality"
-  },
-  {
-    "text": "-yr-",
-    "function": "Used between two strong consonants to add a rich, ancient, or rare tone"
-  }
-];
-
-// Final vowel options
-const finalVowels = [
-    { vowel: 'a', tone: 'Clear, bright, feminine' },
-    { vowel: 'i', tone: 'Sharp, intellectual' },
-    { vowel: 'o', tone: 'Deep, noble (rare)' },
-    { vowel: 'u', tone: 'Mysterious, ancient' },
-    { vowel: 'ae', tone: 'Lyrical, elegant' }
-];
-
-let currentName = null;
-let favorites = JSON.parse(localStorage.getItem('elfNameFavorites')) || [];
-
-// Helper functions
-function isVowel(char) {
-    return 'aeiouAEIOU'.includes(char);
-}
-
-function endsWithVowel(str) {
-    return isVowel(str[str.length - 1]);
-}
-
-function startsWithVowel(str) {
-    return isVowel(str[0]);
-}
-
-function endsWithHardConsonant(str) {
-    const hardConsonants = 'kptbdgcszxfv';
-    return hardConsonants.includes(str[str.length - 1].toLowerCase());
-}
-
-function countSyllables(word) {
-    word = word.toLowerCase();
-    let count = 0;
-    let prevVowel = false;
-    
-    for (let char of word) {
-        if (isVowel(char)) {
-            if (!prevVowel) count++;
-            prevVowel = true;
-        } else {
-            prevVowel = false;
-        }
-    }
-    
-    if (word.endsWith('e') && count > 1) count--;
-    
-    return Math.max(1, count);
-}
-
-function needsConnector(comp1Text, comp2Text) {
-    const end = comp1Text[comp1Text.length - 1];
-    const start = comp2Text[0];
-    
-    // Need connector if both are consonants
-    if (!isVowel(end) && !isVowel(start)) {
-        return true;
-    }
-    
-    // Liquid consonants (l, r, n, m, w) blend well
-    const liquidConsonants = 'lrnmw';
-    if (liquidConsonants.includes(end.toLowerCase()) && 
-        liquidConsonants.includes(start.toLowerCase())) {
-        return false;
-    }
-    
-    return false;
-}
-
-function selectConnector(style) {
-    const liquidConnectors = connectors.filter(c => 
-        c.text.includes('l') || c.text.includes('r') || c.text.includes('n')
-    );
-    
-    if (style === 'feminine') {
-        const soft = connectors.filter(c => 
-            c.text.includes('i') || c.text.includes('e') || c.text.includes('ella')
-        );
-        if (soft.length > 0 && Math.random() > 0.3) {
-            return soft[Math.floor(Math.random() * soft.length)];
-        }
-    }
-    
-    if (style === 'masculine') {
-        const strong = connectors.filter(c => 
-            c.text.includes('th') || c.text.includes('or') || c.text.includes('an')
-        );
-        if (strong.length > 0 && Math.random() > 0.3) {
-            return strong[Math.floor(Math.random() * strong.length)];
-        }
-    }
-    
-    if (liquidConnectors.length > 0 && Math.random() > 0.5) {
-        return liquidConnectors[Math.floor(Math.random() * liquidConnectors.length)];
-    }
-    
-    return connectors[Math.floor(Math.random() * connectors.length)];
-}
-
-function shouldSuggestFinalVowel(name, syllables, targetSyllables) {
-    // Suggest if name is short
-    if (syllables < targetSyllables) return true;
-    
-    // Suggest if ends with hard consonant
-    if (endsWithHardConsonant(name)) return true;
-    
-    return false;
-}
-
-function applyFinalVowel(vowel) {
-    if (!currentName) return;
-    
-    const newName = currentName.baseForm + vowel;
-    const newSyllables = countSyllables(newName);
-    
-    currentName.name = newName;
-    currentName.syllables = newSyllables;
-    currentName.finalVowel = vowel;
-    
-    document.getElementById('generatedName').textContent = newName;
-    
-    let breakdownHTML = '';
-    
-    // Clean up meanings
-    const cleanPrefixMeaning = currentName.prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
-    const cleanSuffixMeaning = currentName.suffix.suffix_meaning.replace(/\s*\/\s*/g, ', ');
-    
-    breakdownHTML += `<div class="component"><span class="component-label">Prefix:</span> ${currentName.prefix.prefix_text} (${cleanPrefixMeaning})</div>`;
-    if (currentName.connector) {
-        breakdownHTML += `<div class="component"><span class="component-label">Connector:</span> ${currentName.connector.text}</div>`;
-    }
-    breakdownHTML += `<div class="component"><span class="component-label">Suffix:</span> ${currentName.suffix.suffix_text} (${cleanSuffixMeaning})</div>`;
-    breakdownHTML += `<div class="component"><span class="component-label">Final Vowel:</span> -${vowel} (${finalVowels.find(v => v.vowel === vowel).tone})</div>`;
-    breakdownHTML += `<div class="component"><span class="component-label">Syllables:</span> ${newSyllables}</div>`;
-    
-    document.getElementById('breakdown').innerHTML = breakdownHTML;
-    
-    // Hide vowel suggestions after applying
-    document.getElementById('vowelSuggestionsContainer').style.display = 'none';
-}
-
-function generateName() {
-    const complexity = document.getElementById('complexity').value;
-    const targetSyllables = parseInt(document.getElementById('syllables').value);
-    const style = document.getElementById('style').value;
-    
-    let prefix, connector, suffix;
-    let attempts = 0;
-    let bestName = null;
-    let bestDiff = 100;
-    
-    while (attempts < 50) {
-        // Select prefix (can_be_prefix = true and has prefix_text)
-        const prefixCandidates = components.filter(c => c.can_be_prefix && c.prefix_text);
-        prefix = prefixCandidates[Math.floor(Math.random() * prefixCandidates.length)];
-        
-        // Select suffix (can_be_suffix = true and has suffix_text)
-        const suffixCandidates = components.filter(c => c.can_be_suffix && c.suffix_text);
-        suffix = suffixCandidates[Math.floor(Math.random() * suffixCandidates.length)];
-        
-        // Apply style preferences
-        if (style === 'feminine') {
-            const femSuffixes = suffixCandidates.filter(s => 
-                s.root.includes('iel') || s.root.includes('wen') || 
-                s.root.includes('lia') || s.root.includes('riel') || 
-                s.root.includes('rae') || s.root.includes('ae')
-            );
-            if (femSuffixes.length > 0 && Math.random() > 0.3) {
-                suffix = femSuffixes[Math.floor(Math.random() * femSuffixes.length)];
-            }
-        } else if (style === 'masculine') {
-            const mascSuffixes = suffixCandidates.filter(s => 
-                s.root.includes('ion') || s.root.includes('ar') || 
-                s.root.includes('kian') || s.root.includes('drith') ||
-                s.root.includes('dor') || s.root.includes('val')
-            );
-            if (mascSuffixes.length > 0 && Math.random() > 0.3) {
-                suffix = mascSuffixes[Math.floor(Math.random() * mascSuffixes.length)];
-            }
-        }
-        
-        // Get clean text for prefix and suffix
-        const prefixText = prefix.prefix_text.replace(/-/g, '');
-        const suffixText = suffix.suffix_text.replace(/-/g, '');
-        
-        // Determine if connector is needed
-        let useConnector = complexity === 'complex' || 
-                          (complexity === 'auto' && needsConnector(prefixText, suffixText));
-        
-        connector = useConnector ? selectConnector(style) : null;
-        
-        // Build name
-        let nameParts = [
-            prefixText,
-            connector ? connector.text.replace(/-/g, '') : '',
-            suffixText
-        ];
-        
-        let fullName = nameParts.join('');
-        fullName = fullName.charAt(0).toUpperCase() + fullName.slice(1);
-        
-        let syllables = countSyllables(fullName);
-        let diff = Math.abs(syllables - targetSyllables);
-        
-        if (diff < bestDiff) {
-            bestDiff = diff;
-            bestName = { prefix, connector, suffix, fullName, syllables };
-        }
-        
-        if (diff <= 1) break;
-        
-        attempts++;
-    }
-    
-    prefix = bestName.prefix;
-    connector = bestName.connector;
-    suffix = bestName.suffix;
-    let fullName = bestName.fullName;
-    let syllables = bestName.syllables;
-    
-    // Create meaning - show construction with + symbols
-    const prefixMeaning = prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
-    const suffixMeaning = suffix.suffix_meaning.replace(/\s*\/\s*/g, ', ');
-    
-    // Capitalize every word in each meaning
-    const capitalizedPrefix = prefixMeaning.split(' ').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
-    const capitalizedSuffix = suffixMeaning.split(' ').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
-    
-    // Build meaning display: Prefix meaning + Suffix meaning
-    let meaning = `${capitalizedPrefix} + ${capitalizedSuffix}`;
-    
-    // Store current name
-    currentName = {
-        name: fullName,
-        baseForm: fullName,
-        meaning: meaning,
-        prefix: prefix,
-        connector: connector,
-        suffix: suffix,
-        syllables: syllables,
-        finalVowel: null
-    };
-    
-    // Display result
-    document.getElementById('generatedName').textContent = fullName;
-    document.getElementById('nameMeaning').textContent = `"${meaning}"`;
-    
-    // Announce to screen readers
-    const resultDiv = document.getElementById('result');
-    resultDiv.setAttribute('aria-label', `Generated name: ${fullName}, meaning: ${meaning}`);
-    
-    // Check if we should suggest final vowels
-    if (shouldSuggestFinalVowel(fullName, syllables, targetSyllables)) {
-        const vowelOptionsHTML = finalVowels.map(v => `
-            <div class="vowel-option" onclick="applyFinalVowel('${v.vowel}')">
-                <span class="vowel-option-name">${fullName}${v.vowel}</span>
-                <span class="vowel-option-tone">${v.tone}</span>
-            </div>
-        `).join('');
-        
-        document.getElementById('vowelOptions').innerHTML = vowelOptionsHTML;
-        document.getElementById('vowelSuggestionsContainer').style.display = 'block';
-    } else {
-        document.getElementById('vowelSuggestionsContainer').style.display = 'none';
-    }
-    
-    // Breakdown
-    let breakdownHTML = '';
-    
-    // Clean up meanings (replace slashes with commas)
-    const cleanPrefixMeaning = prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
-    const cleanSuffixMeaning = suffixMeaning.replace(/\s*\/\s*/g, ', ');
-    
-    breakdownHTML += `<div class="component"><span class="component-label">Prefix:</span> ${prefix.prefix_text} (${cleanPrefixMeaning})</div>`;
-    if (connector) {
-        breakdownHTML += `<div class="component"><span class="component-label">Connector:</span> ${connector.text}</div>`;
-    }
-    breakdownHTML += `<div class="component"><span class="component-label">Suffix:</span> ${suffix.suffix_text} (${cleanSuffixMeaning})</div>`;
-    breakdownHTML += `<div class="component"><span class="component-label">Syllables:</span> ${syllables}</div>`;
-    breakdownHTML += `<div class="component"><span class="component-label">Interchangeable:</span> ${prefix.can_be_suffix && suffix.can_be_prefix ? 'Yes - components can swap positions' : 'No - follows role/gender rules'}</div>`;
-    
-    document.getElementById('breakdown').innerHTML = breakdownHTML;
-    document.getElementById('result').classList.add('show');
-}
-
-function saveFavorite() {
-    if (!currentName) return;
-    
-    if (favorites.some(f => f.name === currentName.name)) {
-        alert('This name is already in your favorites!');
-        return;
-    }
-    
-    favorites.push(currentName);
-    localStorage.setItem('elfNameFavorites', JSON.stringify(favorites));
-    displayFavorites();
-}
-
-function displayFavorites() {
-    const listDiv = document.getElementById('favoritesList');
-    
-    if (favorites.length === 0) {
-        listDiv.className = 'empty-favorites';
-        listDiv.textContent = 'No favorites saved yet. Generate and save names you like!';
-        return;
-    }
-    
-    listDiv.className = '';
-    listDiv.innerHTML = favorites.map((fav, index) => `
-        <div class="favorite-item">
-            <span class="favorite-name">${fav.name}</span>
-            <span class="favorite-meaning">"${fav.meaning}"</span>
-            <button class="remove-btn" onclick="removeFavorite(${index})" aria-label="Remove ${fav.name} from favorites">Remove</button>
-        </div>
-    `).join('');
-}
-
-function removeFavorite(index) {
-    favorites.splice(index, 1);
-    localStorage.setItem('elfNameFavorites', JSON.stringify(favorites));
-    displayFavorites();
-}
-
-// Initialize
-displayFavorites();
-window.onload = function() {
-    generateName();
-};
+]

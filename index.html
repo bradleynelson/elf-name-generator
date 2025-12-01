@@ -107,7 +107,7 @@
                 </select>
             </div>
             
-            <button class="generate-btn" onclick="generateName()" aria-label="Generate a new High Elf name">✨ Generate Name ✨</button>
+            <button class="generate-btn" aria-label="Generate a new High Elf name">✨ Generate Name ✨</button>
         </div>
         
         <div class="result" id="result" aria-live="polite">
@@ -124,8 +124,8 @@
                 <div id="breakdown"></div>
             </div>
             <div class="action-buttons">
-                <button class="action-btn" onclick="saveFavorite()" aria-label="Save current name to favorites">💫 Save to Favorites</button>
-                <button class="action-btn" onclick="generateName()" aria-label="Generate another name">🔄 Generate Another</button>
+                <button class="action-btn save-favorite" aria-label="Save current name to favorites">💫 Save to Favorites</button>
+                <button class="action-btn generate-another" aria-label="Generate another name">🔄 Generate Another</button>
             </div>
         </div>
         
@@ -338,6 +338,7 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Main application script - now using ES6 modules -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
