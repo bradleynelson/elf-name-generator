@@ -2,6 +2,8 @@
 
 A web-based name generator for creating authentic High Elf names following the Espruar naming system from Forgotten Realms D&D lore.
 
+**Live Site:** [https://espruar.com](https://espruar.com)
+
 ## Features
 
 - **Linguistic Accuracy**: Follows the complete Espruar morphological system with 108+ components
@@ -56,7 +58,7 @@ This generator is based on extensive research into Forgotten Realms High Elf nam
 
 Morphological system and naming rules compiled from Forgotten Realms D&D canon sources. Component data researched through official materials and community lore documentation.
 
-Generator created by Brad Nelson for the D&D community.
+Generator created by Brad for the D&D community.
 
 ## License
 
