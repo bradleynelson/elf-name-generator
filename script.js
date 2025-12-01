@@ -1428,6 +1428,10 @@ function generateName() {
     document.getElementById('generatedName').textContent = fullName;
     document.getElementById('nameMeaning').textContent = `"${meaning}"`;
     
+    // Announce to screen readers
+    const resultDiv = document.getElementById('result');
+    resultDiv.setAttribute('aria-label', `Generated name: ${fullName}, meaning: ${meaning}`);
+    
     // Check if we should suggest final vowels
     if (shouldSuggestFinalVowel(fullName, syllables, targetSyllables)) {
         const vowelOptionsHTML = finalVowels.map(v => `
@@ -1489,7 +1493,7 @@ function displayFavorites() {
         <div class="favorite-item">
             <span class="favorite-name">${fav.name}</span>
             <span class="favorite-meaning">"${fav.meaning}"</span>
-            <button class="remove-btn" onclick="removeFavorite(${index})">Remove</button>
+            <button class="remove-btn" onclick="removeFavorite(${index})" aria-label="Remove ${fav.name} from favorites">Remove</button>
         </div>
     `).join('');
 }

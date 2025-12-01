@@ -65,6 +65,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="container">
         <h1>⚔️ High Elf Name Generator ⚔️</h1>
         <div class="subtitle">Espruar Naming System - Forgotten Realms</div>
@@ -76,6 +77,7 @@
             </div>
         </div>
         
+        <main id="main-content">
         <div class="controls">
             <div class="control-group">
                 <label for="complexity">Name Complexity</label>
@@ -105,10 +107,10 @@
                 </select>
             </div>
             
-            <button class="generate-btn" onclick="generateName()">✨ Generate Name ✨</button>
+            <button class="generate-btn" onclick="generateName()" aria-label="Generate a new High Elf name">✨ Generate Name ✨</button>
         </div>
         
-        <div class="result" id="result">
+        <div class="result" id="result" aria-live="polite">
             <div class="generated-name" id="generatedName"></div>
             <div class="name-meaning" id="nameMeaning"></div>
             
@@ -122,25 +124,26 @@
                 <div id="breakdown"></div>
             </div>
             <div class="action-buttons">
-                <button class="action-btn" onclick="saveFavorite()">💫 Save to Favorites</button>
-                <button class="action-btn" onclick="generateName()">🔄 Generate Another</button>
+                <button class="action-btn" onclick="saveFavorite()" aria-label="Save current name to favorites">💫 Save to Favorites</button>
+                <button class="action-btn" onclick="generateName()" aria-label="Generate another name">🔄 Generate Another</button>
             </div>
         </div>
         
         <div class="favorites">
             <div class="favorites-title">
-                ⭐ Saved Favorites 
-                <span class="info-icon" title="Favorites are saved locally in your browser. They won't sync across devices or browsers.">
-                    <span class="info-circle">i</span>
+                <span aria-hidden="true">⭐</span> Saved Favorites 
+                <span class="info-icon" aria-label="Favorites are saved locally in your browser and won't sync across devices">
+                    <span class="info-circle" aria-hidden="true">i</span>
                 </span>
             </div>
             <div id="favoritesList" class="empty-favorites">
                 No favorites saved yet. Generate and save names you like!
             </div>
         </div>
+        </main>
 
-        <div class="educational-section">
-            <h2>Understanding High Elf Names</h2>
+        <section class="educational-section" aria-labelledby="education-heading">
+            <h2 id="education-heading">Understanding High Elf Names</h2>
             
             <div class="edu-card">
                 <h3>📚 The Espruar Naming System</h3>
@@ -328,7 +331,7 @@
             <div class="edu-footer">
                 <p><em>Naming rules compiled from Forgotten Realms lore and linguistic research. The generator implements authentic Espruar morphology for creating lore-friendly High Elf characters.</em></p>
             </div>
-        </div>
+        </section>
     </div>
 
     <script src="script.js"></script>

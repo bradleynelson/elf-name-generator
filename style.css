@@ -4,6 +4,30 @@
     box-sizing: border-box;
 }
 
+/* Skip link for keyboard navigation */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #c9a050;
+    color: #1a1a2e;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Improved focus indicators */
+a:focus, button:focus, select:focus, input:focus {
+    outline: 3px solid #c9a050;
+    outline-offset: 2px;
+}
+
 body {
     font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
