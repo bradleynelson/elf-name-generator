@@ -55,6 +55,9 @@ export class EspruarNameGenerator {
             // Initialize cookie consent banner
             this._initCookieBanner();
             
+            // Initialize theme toggle
+            this._initThemeToggle();
+            
             this.isInitialized = true;
             console.log('Espruar Name Generator initialized successfully');
             
@@ -321,6 +324,58 @@ export class EspruarNameGenerator {
                 modal.setAttribute('hidden', '');
             }
         });
+    }
+    
+    /**
+     * Initialize theme toggle
+     * @private
+     */
+    _initThemeToggle() {
+        const toggle = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        const label = document.getElementById('themeLabel');
+        
+        if (!toggle || !icon || !label) return;
+        
+        // Check for saved preference, otherwise use system preference
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+        
+        // Apply theme
+        this._setTheme(currentTheme, icon, label);
+        
+        // Toggle button click
+        toggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            this._setTheme(newTheme, icon, label);
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        // Listen for system preference changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            // Only auto-switch if user hasn't manually set a preference
+            if (!localStorage.getItem('theme')) {
+                const newTheme = e.matches ? 'dark' : 'light';
+                this._setTheme(newTheme, icon, label);
+            }
+        });
+    }
+    
+    /**
+     * Set theme and update UI
+     * @private
+     */
+    _setTheme(theme, icon, label) {
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            icon.textContent = '☀️';
+            label.textContent = 'Sun Elf';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            icon.textContent = '🌙';
+            label.textContent = 'Moon Elf';
+        }
     }
     
     /**

@@ -2,9 +2,10 @@
 
 /* ========================================
    CSS Custom Properties (Variables)
+   Dark Mode (Default) - "Moonlit Sanctuary"
    ======================================== */
 :root {
-    /* Colors */
+    /* Colors - Dark Mode */
     --color-gold: #c9a050;
     --color-gold-light: #d4b060;
     --color-gold-dark: #a67c00;
@@ -73,6 +74,193 @@
     --line-height-tight: 1.4;
     --line-height-normal: 1.6;
     --line-height-relaxed: 1.7;
+}
+
+/* ========================================
+   Light Mode - "Ancient Tome"
+   ======================================== */
+[data-theme="light"] {
+    /* Colors - Light Mode */
+    --color-gold: #8b6914;
+    --color-gold-light: #a0752d;
+    --color-gold-dark: #6d5310;
+    --color-gold-darker: #5a4410;
+    
+    --color-bg-primary: #f4e8d0;
+    --color-bg-secondary: #ede1c9;
+    --color-bg-overlay-light: rgba(42, 24, 16, 0.03);
+    --color-bg-overlay-dark: rgba(42, 24, 16, 0.05);
+    --color-bg-overlay-darker: rgba(42, 24, 16, 0.08);
+    
+    --color-text-primary: #2a1810;
+    --color-text-secondary: #3d2817;
+    --color-text-muted: #5a4636;
+    
+    --color-border: rgba(157, 133, 102, 0.3);
+    --color-border-gold: rgba(139, 105, 20, 0.4);
+    --color-border-gold-bright: rgba(139, 105, 20, 0.6);
+    
+    --color-info-icon: #6b5d2d;
+    --color-error: rgba(139, 69, 19, 0.2);
+    --color-error-text: #8b4513;
+    
+    /* Shadows adjusted for light mode */
+    --shadow-sm: 0 2px 4px rgba(42, 24, 16, 0.1);
+    --shadow-md: 0 5px 15px rgba(139, 105, 20, 0.2);
+    --shadow-lg: 0 8px 32px rgba(42, 24, 16, 0.15);
+}
+
+/* Light mode specific overrides for form elements */
+[data-theme="light"] body {
+    background: linear-gradient(135deg, #f4e8d0 0%, #ede1c9 100%);
+}
+
+[data-theme="light"] select option {
+    background: #f4e8d0;
+    color: #2a1810;
+}
+
+[data-theme="light"] input[type="range"] {
+    accent-color: #8b6914;
+}
+
+[data-theme="light"] input[type="range"]::-webkit-slider-thumb {
+    background: #8b6914;
+}
+
+[data-theme="light"] input[type="range"]::-moz-range-thumb {
+    background: #8b6914;
+}
+
+/* Light mode button adjustments */
+[data-theme="light"] .generate-btn {
+    background: linear-gradient(135deg, #a0752d 0%, #8b6914 100%);
+    color: #f4e8d0;
+}
+
+[data-theme="light"] .generate-btn:hover {
+    background: linear-gradient(135deg, #b68534 0%, #9d7519 100%);
+}
+
+/* Light mode container background fix */
+[data-theme="light"] .container {
+    background: rgba(237, 225, 201, 0.6);
+}
+
+[data-theme="light"] .controls {
+    background: rgba(42, 24, 16, 0.05);
+}
+
+[data-theme="light"] .result {
+    background: rgba(42, 24, 16, 0.05);
+}
+
+[data-theme="light"] .favorites {
+    background: rgba(42, 24, 16, 0.05);
+}
+
+/* Light mode educational section */
+[data-theme="light"] .educational-section {
+    background: rgba(237, 225, 201, 0.8);
+}
+
+[data-theme="light"] .edu-card {
+    background: rgba(244, 232, 208, 0.5);
+    border-left-color: #8b6914;
+}
+
+[data-theme="light"] .accordion-header {
+    background: rgba(139, 105, 20, 0.15);
+    border-left-color: #8b6914;
+    color: #6d5310;
+}
+
+[data-theme="light"] .accordion-header:hover {
+    background: rgba(139, 105, 20, 0.25);
+}
+
+[data-theme="light"] .accordion-header[aria-expanded="true"] {
+    background: rgba(139, 105, 20, 0.2);
+}
+
+/* Light mode interchangeable note */
+[data-theme="light"] .interchangeable-note {
+    background: rgba(139, 105, 20, 0.1);
+    border-left-color: #8b6914;
+}
+
+/* Light mode example boxes */
+[data-theme="light"] .example-box {
+    background: rgba(139, 105, 20, 0.1);
+    border-color: rgba(139, 105, 20, 0.3);
+}
+
+/* Light mode breakdown */
+[data-theme="light"] .breakdown {
+    background: rgba(42, 24, 16, 0.05);
+}
+
+[data-theme="light"] .component {
+    background: rgba(244, 232, 208, 0.5);
+}
+
+/* Light mode vowel suggestions */
+[data-theme="light"] .vowel-suggestions {
+    background: rgba(139, 105, 20, 0.1);
+    border-color: rgba(139, 105, 20, 0.3);
+}
+
+[data-theme="light"] .vowel-option {
+    background: rgba(244, 232, 208, 0.5);
+    border-color: rgba(139, 105, 20, 0.3);
+}
+
+[data-theme="light"] .vowel-option:hover {
+    background: rgba(139, 105, 20, 0.2);
+    border-color: rgba(139, 105, 20, 0.6);
+}
+
+/* Light mode favorite items */
+[data-theme="light"] .favorite-item {
+    background: rgba(244, 232, 208, 0.5);
+}
+
+/* Light mode cookie banner */
+[data-theme="light"] .cookie-banner {
+    background: rgba(237, 225, 201, 0.98);
+    border-top-color: #8b6914;
+}
+
+[data-theme="light"] .cookie-modal-content {
+    background: #f4e8d0;
+    border-color: #8b6914;
+}
+
+/* Light mode theme toggle */
+[data-theme="light"] .theme-toggle {
+    background: rgba(139, 105, 20, 0.15);
+    border-color: #8b6914;
+    color: #6d5310;
+}
+
+[data-theme="light"] .theme-toggle:hover {
+    background: rgba(139, 105, 20, 0.25);
+    border-color: #a0752d;
+}
+
+/* Smooth theme transition */
+*,
+*::before,
+*::after {
+    transition: background-color var(--transition-normal), 
+                color var(--transition-normal),
+                border-color var(--transition-normal);
+}
+
+/* Disable transitions on theme elements to prevent lag */
+.theme-toggle,
+.theme-toggle * {
+    transition: transform var(--transition-fast) !important;
 }
 
 /* ========================================
@@ -1083,5 +1271,62 @@ input[type="range"] {
     
     .cookie-modal-content {
         padding: var(--spacing-xl);
+    }
+}
+
+/* ========================================
+   Theme Toggle Button
+   ======================================== */
+.theme-toggle {
+    position: fixed;
+    top: var(--spacing-xl);
+    right: var(--spacing-xl);
+    z-index: 9999;
+    background: var(--color-bg-overlay-dark);
+    border: 2px solid var(--color-border-gold);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    color: var(--color-gold);
+    transition: all var(--transition-fast);
+    backdrop-filter: blur(5px);
+}
+
+.theme-toggle:hover {
+    background: var(--color-bg-overlay-darker);
+    border-color: var(--color-border-gold-bright);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+}
+
+.theme-icon {
+    font-size: var(--font-size-lg);
+    line-height: 1;
+}
+
+.theme-label {
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Mobile: Hide label, show icon only */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+        padding: var(--spacing-sm);
+    }
+    
+    .theme-label {
+        display: none;
     }
 }
