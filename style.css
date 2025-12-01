@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: 'Garamond', 'Georgia', serif;
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: #e0e0e0;
     min-height: 100vh;
@@ -27,6 +27,7 @@ h1 {
     text-align: center;
     color: #c9a050;
     font-size: 2.5em;
+    font-weight: 900;
     margin-bottom: 10px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -326,4 +327,198 @@ input[type="range"] {
     color: #a0a0a0;
     font-size: 0.85em;
     line-height: 1.4;
+}
+
+/* Educational Section Styles */
+.educational-section {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.educational-section h2 {
+    color: #c9a050;
+    font-size: 2em;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 2px solid rgba(201, 160, 80, 0.3);
+    padding-bottom: 15px;
+}
+
+.edu-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid rgba(201, 160, 80, 0.5);
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+}
+
+.edu-card h3 {
+    color: #c9a050;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+}
+
+.edu-card h4 {
+    color: #d4b060;
+    font-size: 1.1em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.edu-card p {
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #d0d0d0;
+}
+
+.edu-card ul {
+    margin-left: 25px;
+    margin-bottom: 15px;
+}
+
+.edu-card li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    color: #d0d0d0;
+}
+
+.example-box {
+    background: rgba(201, 160, 80, 0.1);
+    border: 1px solid rgba(201, 160, 80, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.highlight {
+    color: #c9a050;
+    font-weight: bold;
+}
+
+.syllable-examples {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.syl-example {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+}
+
+.vowel-guide {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.vowel-guide div {
+    padding: 5px 0;
+    color: #d0d0d0;
+}
+
+.name-breakdown-table {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.breakdown-row {
+    display: grid;
+    grid-template-columns: 150px 1fr 1fr;
+    gap: 15px;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    align-items: center;
+}
+
+.breakdown-row:last-child {
+    border-bottom: none;
+}
+
+.breakdown-name {
+    color: #c9a050;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.breakdown-parts {
+    color: #a0a0a0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.breakdown-meaning {
+    color: #d0d0d0;
+    font-style: italic;
+}
+
+.edu-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.edu-footer p {
+    color: #a0a0a0;
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.important-note {
+    background: rgba(201, 160, 80, 0.15);
+    border-left: 4px solid #c9a050;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.lore-justification {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 3px solid rgba(201, 160, 80, 0.3);
+}
+
+.lore-justification h4 {
+    color: #d4b060;
+    font-size: 1em;
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+.lore-justification p {
+    margin-bottom: 0;
+    color: #d0d0d0;
+    font-size: 0.95em;
+}
+
+.final-note {
+    background: rgba(201, 160, 80, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-style: italic;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .breakdown-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .syllable-examples {
+        flex-direction: column;
+    }
 }
