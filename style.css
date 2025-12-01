@@ -253,14 +253,30 @@ input[type="range"] {
 }
 
 .info-icon {
-    font-size: 0.8em;
+    font-size: 0.7em;
     cursor: help;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.info-icon:hover {
-    opacity: 1;
+.info-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4a90e2;
+    color: #1a1a2e;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.info-icon:hover .info-circle {
+    background: rgba(74, 144, 226, 0.6);
 }
 
 .favorite-item {
