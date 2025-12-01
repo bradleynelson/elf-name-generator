@@ -534,6 +534,22 @@ input[type="range"] {
     line-height: 1.6;
 }
 
+.disclaimer {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.disclaimer p {
+    color: #a0a0a0;
+    font-size: 0.85em;
+    line-height: 1.6;
+    margin: 0;
+}
+
 .important-note {
     background: rgba(201, 160, 80, 0.15);
     border-left: 4px solid #c9a050;
