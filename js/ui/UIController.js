@@ -234,7 +234,17 @@ export class UIController {
      * @param {string} type - Type of message ('success', 'error', 'info')
      */
     showNotification(message, type = 'info') {
-        // For now, use alert. Could be enhanced with a custom notification system
-        alert(message);
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+        toast.textContent = message;
+        
+        // Add to page
+        document.body.appendChild(toast);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
     }
 }
