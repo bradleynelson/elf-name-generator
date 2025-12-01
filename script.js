@@ -1299,11 +1299,16 @@ function applyFinalVowel(vowel) {
     document.getElementById('generatedName').textContent = newName;
     
     let breakdownHTML = '';
-    breakdownHTML += `<div class="component"><span class="component-label">Prefix:</span> ${currentName.prefix.prefix_text} (${currentName.prefix.prefix_meaning})</div>`;
+    
+    // Clean up meanings
+    const cleanPrefixMeaning = currentName.prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
+    const cleanSuffixMeaning = currentName.suffix.suffix_meaning.replace(/\s*\/\s*/g, ', ');
+    
+    breakdownHTML += `<div class="component"><span class="component-label">Prefix:</span> ${currentName.prefix.prefix_text} (${cleanPrefixMeaning})</div>`;
     if (currentName.connector) {
         breakdownHTML += `<div class="component"><span class="component-label">Connector:</span> ${currentName.connector.text}</div>`;
     }
-    breakdownHTML += `<div class="component"><span class="component-label">Suffix:</span> ${currentName.suffix.suffix_text} (${currentName.suffix.suffix_meaning})</div>`;
+    breakdownHTML += `<div class="component"><span class="component-label">Suffix:</span> ${currentName.suffix.suffix_text} (${cleanSuffixMeaning})</div>`;
     breakdownHTML += `<div class="component"><span class="component-label">Final Vowel:</span> -${vowel} (${finalVowels.find(v => v.vowel === vowel).tone})</div>`;
     breakdownHTML += `<div class="component"><span class="component-label">Syllables:</span> ${newSyllables}</div>`;
     
@@ -1392,12 +1397,20 @@ function generateName() {
     let fullName = bestName.fullName;
     let syllables = bestName.syllables;
     
-    // Create meaning
-    const prefixMeaning = prefix.prefix_meaning;
-    const suffixMeaning = suffix.suffix_meaning;
-    let meaning = `${prefixMeaning} ${suffixMeaning}`;
-    meaning = meaning.replace(/\s+/g, ' ').trim();
-    meaning = meaning.charAt(0).toUpperCase() + meaning.slice(1);
+    // Create meaning - show construction with + symbols
+    const prefixMeaning = prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
+    const suffixMeaning = suffix.suffix_meaning.replace(/\s*\/\s*/g, ', ');
+    
+    // Capitalize every word in each meaning
+    const capitalizedPrefix = prefixMeaning.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+    const capitalizedSuffix = suffixMeaning.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+    
+    // Build meaning display: Prefix meaning + Suffix meaning
+    let meaning = `${capitalizedPrefix} + ${capitalizedSuffix}`;
     
     // Store current name
     currentName = {
@@ -1432,11 +1445,16 @@ function generateName() {
     
     // Breakdown
     let breakdownHTML = '';
-    breakdownHTML += `<div class="component"><span class="component-label">Prefix:</span> ${prefix.prefix_text} (${prefix.prefix_meaning})</div>`;
+    
+    // Clean up meanings (replace slashes with commas)
+    const cleanPrefixMeaning = prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
+    const cleanSuffixMeaning = suffixMeaning.replace(/\s*\/\s*/g, ', ');
+    
+    breakdownHTML += `<div class="component"><span class="component-label">Prefix:</span> ${prefix.prefix_text} (${cleanPrefixMeaning})</div>`;
     if (connector) {
         breakdownHTML += `<div class="component"><span class="component-label">Connector:</span> ${connector.text}</div>`;
     }
-    breakdownHTML += `<div class="component"><span class="component-label">Suffix:</span> ${suffix.suffix_text} (${suffixMeaning})</div>`;
+    breakdownHTML += `<div class="component"><span class="component-label">Suffix:</span> ${suffix.suffix_text} (${cleanSuffixMeaning})</div>`;
     breakdownHTML += `<div class="component"><span class="component-label">Syllables:</span> ${syllables}</div>`;
     breakdownHTML += `<div class="component"><span class="component-label">Interchangeable:</span> ${prefix.can_be_suffix && suffix.can_be_prefix ? 'Yes - components can swap positions' : 'No - follows role/gender rules'}</div>`;
     
