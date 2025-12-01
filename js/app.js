@@ -49,6 +49,9 @@ export class EspruarNameGenerator {
             // Generate initial name
             this.generateName();
             
+            // Initialize accordions
+            this._initAccordions();
+            
             this.isInitialized = true;
             console.log('Espruar Name Generator initialized successfully');
             
@@ -63,6 +66,13 @@ export class EspruarNameGenerator {
      * @private
      */
     _bindEvents() {
+        // Subrace selector
+        if (this.ui.elements.subraceSelect) {
+            this.ui.elements.subraceSelect.addEventListener('change', (e) => {
+                this.ui.updateSubraceDescription(e.target.value);
+            });
+        }
+        
         // Generate button (main)
         this.ui.elements.generateBtn.addEventListener('click', () => {
             this.generateName();
@@ -200,6 +210,46 @@ export class EspruarNameGenerator {
         `;
         
         document.body.appendChild(overlay);
+    }
+    
+    /**
+     * Initialize accordion functionality
+     * @private
+     */
+    _initAccordions() {
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const isExpanded = header.getAttribute('aria-expanded') === 'true';
+                const content = header.nextElementSibling;
+                
+                // Toggle this accordion
+                header.setAttribute('aria-expanded', !isExpanded);
+                
+                if (isExpanded) {
+                    content.classList.remove('open');
+                } else {
+                    content.classList.add('open');
+                }
+            });
+        });
+        
+        // Back to section buttons
+        document.querySelectorAll('.back-to-section-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const accordion = e.target.closest('.accordion');
+                const header = accordion.querySelector('.accordion-header');
+                header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+        
+        // Back to top buttons
+        document.querySelectorAll('.back-to-top-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
     }
 }
 

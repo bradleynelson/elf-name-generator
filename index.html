@@ -67,7 +67,7 @@
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="container">
-        <h1>⚔️ High Elf Name Generator ⚔️</h1>
+        <h1>⚔️ Elven Name Generator ⚔️</h1>
         <div class="subtitle">Espruar Naming System - Forgotten Realms</div>
 
         <div class="interchangeable-note">
@@ -79,6 +79,18 @@
         
         <main id="main-content">
         <div class="controls">
+            <div class="control-group">
+                <label for="subrace">Elven Subrace</label>
+                <select id="subrace">
+                    <option value="high-elf">High Elf (General)</option>
+                    <option value="sun-elf">├─ Sun Elf (Ar-Tel-Quessir)</option>
+                    <option value="moon-elf">└─ Moon Elf (Teu-Tel-Quessir)</option>
+                </select>
+                <div class="subrace-description" id="subraceDescription">
+                    Balanced names drawing from all High Elf traditions
+                </div>
+            </div>
+            
             <div class="control-group">
                 <label for="complexity">Name Complexity</label>
                 <select id="complexity">
@@ -143,7 +155,15 @@
         </main>
 
         <section class="educational-section" aria-labelledby="education-heading">
-            <h2 id="education-heading">Understanding High Elf Names</h2>
+            <h2 id="education-heading">Learn About Elven Names</h2>
+            
+            <!-- Accordion 1: Understanding High Elf Names -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false">
+                    <span class="accordion-title">📖 Understanding High Elf Names</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content">
             
             <div class="edu-card">
                 <h3>📚 The Espruar Naming System</h3>
@@ -329,8 +349,218 @@
             </div>
 
             <div class="edu-footer">
-                <p><em>Naming rules compiled from Forgotten Realms lore and linguistic research. The generator implements authentic Espruar morphology for creating lore-friendly High Elf characters.</em></p>
+                <p><em>Naming rules compiled from Forgotten Realms lore and linguistic research. The generator implements authentic Espruar morphology and onomastics etymology for creating lore-friendly High Elf characters.</em></p>
             </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">⚡ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 2: A Brief History of the Tel'Quessir -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false">
+                    <span class="accordion-title">🌳 A Brief History of the Tel'Quessir</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content">
+            
+            <div class="edu-card">
+                <h3>I. The Mythological & Literary Foundation</h3>
+                <p>The concept of the modern Elf is a blend of various traditions, formalized by J.R.R. Tolkien.</p>
+                
+                <h4>Ancient Mythology</h4>
+                <p>Elves originated in Norse and Germanic myths as ethereal, powerful beings (<em>Álfar</em>) associated with light, fertility, and nature. They were often categorized as Light Elves (<em>Ljósálfar</em>) or Dark Elves (<em>Svartálfar</em>/<em>Dvergar</em>).</p>
+                
+                <h4>Tolkien's Quendi</h4>
+                <p>J.R.R. Tolkien synthesized these ideas, creating the <em>Quendi</em> (Speakers)—immortal, supremely wise, beautiful, and possessing deep lore and connection to the Earth's music. This established the essential archetype: graceful, long-lived guardians of the world.</p>
+                
+                <h4>Greenwood to Rivendell</h4>
+                <p>The change in setting (from primal forest like Greenwood to refined sanctuary like Rivendell) established the idea of Elves as a receding, ancient race whose time in the world was ending.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>II. Modern Iterations: The D&D Systemization</h3>
+                <p>When Dungeons & Dragons standardized the race, complexity was introduced for gameplay:</p>
+                
+                <h4>The Subrace Model</h4>
+                <p>D&D categorized Elves into distinct subraces (High, Gray, Wood, and Dark/Drow) to provide variety and clear mechanical differences. This moved them from a singular species to a diverse, worldwide people.</p>
+                
+                <h4>The Drow Schism</h4>
+                <p>D&D heavily formalized the Drow as the evil, subterranean branch, creating the fundamental Light vs. Dark conflict that defines much of Elven society today.</p>
+                
+                <h4>High Elf Identity</h4>
+                <p>The 'High Elf' was solidified as the scholarly, civilized, and magically potent subrace, creating the aesthetic (and sometimes aloof) nobility that remains a core trope.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>III. In-World Evolution (Faerûn History)</h3>
+                <p>In Faerûn, the Elves' history is one of ancient glory, catastrophic civil war, and slow decline.</p>
+                
+                <h4>1. The Arrival (Ancient Race)</h4>
+                <p><strong>From the Feywild:</strong> Elves were not native to the world; they were originally inhabitants of the Feywild (the plane of pure, powerful nature and emotion). They arrived on Faerûn in three great waves, driven by the desire to build a new homeland. They called themselves the <em>Tel'Quessir</em> (The Light People).</p>
+                
+                <h4>2. The Crown Wars & The Schism</h4>
+                <p><strong>The Golden Age:</strong> The Elves established massive, magical empires, the greatest of which was Myth Drannor (founded by Moon Elves).</p>
+                
+                <p><strong>The Great Betrayal:</strong> Due to ideological differences, lust for power, and the influence of the demon goddess Lolth, the Elves fell into a series of devastating civil wars called the Crown Wars (lasting over 3,000 years).</p>
+                
+                <p><strong>The Drow Exile:</strong> The betrayal and atrocities committed by the followers of Lolth led the Seldarine (the Elven gods) to curse the Dark Elves' skin and banish them to the Underdark. This marked the final creation of the distinct surface subraces (Sun, Moon, Wood).</p>
+                
+                <h4>3. New World Expansion & The Retreat</h4>
+                <p><strong>Decline of Glory:</strong> Over time, Elven kingdoms fell (often to human invasion or internal decay). The Elves slowly began a process called <em>The Retreat</em>—a mass migration back to the more magical, isolated realm of Evermeet (Sun Elf stronghold) or back into the deepest, wildest forests.</p>
+                
+                <p><strong>Ceding the World:</strong> This Retreat signifies the Elves formally stepping back from global politics and ceding dominance of the "New World" (the modern continent of Faerûn) to the younger, faster-breeding Human races. Elves today are seen as a diminished, ancient, but still powerful people who exist mostly on the fringes or in secluded sanctuaries.</p>
+            </div>
+            
+            <div class="edu-card historical-timeline">
+                <h3>📜 Key Timeline</h3>
+                <div class="timeline-entry">
+                    <strong>~25,000 DR (Before Present):</strong> First elves arrive from the Feywild
+                </div>
+                <div class="timeline-entry">
+                    <strong>~12,000 - 9,000 DR:</strong> The Crown Wars devastate elven civilization
+                </div>
+                <div class="timeline-entry">
+                    <strong>~10,500 DR:</strong> The Descent of the Drow - banishment to the Underdark
+                </div>
+                <div class="timeline-entry">
+                    <strong>261 DR:</strong> Founding of Myth Drannor, the greatest elven city
+                </div>
+                <div class="timeline-entry">
+                    <strong>714 DR:</strong> Fall of Myth Drannor to an army of devils and demons
+                </div>
+                <div class="timeline-entry">
+                    <strong>1371 DR:</strong> The Retreat begins - mass exodus to Evermeet
+                </div>
+                <div class="timeline-entry">
+                    <strong>Present Day:</strong> Elves are a fading power, legends of a bygone age
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">⚡ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 3: Elven Races of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false">
+                    <span class="accordion-title">🌍 Elven Races of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content">
+            
+            <div class="edu-card">
+                <p>The elves of Faerûn are diverse, each subrace adapted to their environment and culture. While this generator focuses on High Elves (Sun and Moon), understanding the broader elven family helps contextualize naming conventions.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌙 Moon Elves (Teu-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Adventurous and tolerant. Pale skin with silver hair. Most common and approachable of High Elves.</p>
+                <p><strong>Naming Style:</strong> Highly lyrical with flowing, poetic sounds. Prefer 4+ syllables and soft suffixes like <em>-iel</em>, <em>-ae</em>, <em>-wyn</em>.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Silmeriel, Laendrae, Merilwyn, Ilanoth
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>☀️ Sun Elves (Ar-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Scholarly and aloof. Bronze skin with gold or red hair. Most magically gifted and traditional.</p>
+                <p><strong>Naming Style:</strong> Stately and formal. Prefer 3-5 syllables with suffixes denoting rank or mastery like <em>-lar</em>, <em>-ar</em>, <em>-ion</em>.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Aranilar, Corion, Solathan, Rhynelor
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌲 Wood Elves (Sy-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Fiercely independent and martial. Coppery skin that blends with forest environments.</p>
+                <p><strong>Naming Style:</strong> Concise and functional. Prefer 2-3 syllables focused on nature roots, often ending in consonants.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Thalren, Sylwen, Brethil, Kaeth
+                </div>
+                <p class="future-note"><em>⚠️ Wood Elf name generation coming in a future update!</em></p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌑 Drow (Ss'tel'Quessir)</h3>
+                <p><strong>Characteristics:</strong> Cruel and matriarchal society of the Underdark. Black skin with white or silver hair.</p>
+                <p><strong>Naming Style:</strong> Complex, dramatic, and harsh. Variable length with clumsy consonant clusters that surface elves avoid. Often include apostrophes.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Drizzt Do'Urden, Jarlaxle, Quenthel, Yvonnel
+                </div>
+                <p class="future-note"><em>⚠️ Drow name generation coming in a future update!</em></p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌊 Sea Elves (Mar-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Aquatic adaptation with green or blue-tinted skin. Isolated from surface dwellers.</p>
+                <p><strong>Naming Style:</strong> Fluid and rhythmic. Prefer 3-4 syllables using roots that mimic ocean sounds and movements.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Marilos, Wavetha, Coralen, Nauthor
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>❄️ Snow Elves (Jhaer-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Arctic-adapted elves, rare and resilient.</p>
+                <p><strong>Naming Style:</strong> Concise and resilient. Prefer 2-3 syllables focused on ice and endurance roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Frostil, Gwyneth, Isarion, Rhimael
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🦅 Avariel (Winged Elves)</h3>
+                <p><strong>Characteristics:</strong> Angelic appearance with feathered wings. Extremely rare.</p>
+                <p><strong>Naming Style:</strong> Highly lyrical and airy. Prefer 3-5 syllables focused on sky and flight roots, similar to Moon Elves in flow.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Aerilaya, Skylion, Windrae, Galethon
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🐺 Lythari (Wolf-Elves)</h3>
+                <p><strong>Characteristics:</strong> Shapeshifters with wolf forms. Guardians of the wild.</p>
+                <p><strong>Naming Style:</strong> Simple and nature-based. Prefer 2 syllables focused on moon, star, or wolf roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Fenril, Luneth, Wolfar, Starwyn
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌿 Wild Elves (Ghaele)</h3>
+                <p><strong>Characteristics:</strong> Feral, primitive, and tribal. Most isolated from civilization.</p>
+                <p><strong>Naming Style:</strong> Shortest and most functional. Prefer 1-2 syllables, often simple nouns or verbs.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Fen, Thorn, Hawk, Ash
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>✨ Fey'ri (Half-Fiend Elves)</h3>
+                <p><strong>Characteristics:</strong> Demonic heritage from ancient sun elf families. Chaotic and dual-natured.</p>
+                <p><strong>Naming Style:</strong> Variable length, mixing traditional elven with harsh, demonic, or fiery roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Sarya'dreth, Morthil, Vyshaan, Pyrael
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">⚡ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
         </section>
         
         <footer class="disclaimer">

@@ -7,7 +7,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ae",
     "suffix_meaning": "Whisper / Secret",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "mysterious"
+    ]
   },
   {
     "root": "ael",
@@ -17,7 +21,13 @@
     "can_be_suffix": true,
     "suffix_text": "-ael",
     "suffix_meaning": "noble light",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "nocturnal",
+      "nobility",
+      "martial"
+    ]
   },
   {
     "root": "aer",
@@ -27,7 +37,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun"
+    ]
   },
   {
     "root": "ala",
@@ -37,7 +50,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "an",
@@ -47,7 +63,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ara",
@@ -57,7 +76,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "aran",
@@ -67,7 +90,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "ath",
@@ -77,7 +104,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "bi",
@@ -87,7 +117,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "cae",
@@ -97,7 +130,12 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun",
+      "feminine"
+    ]
   },
   {
     "root": "cela",
@@ -107,7 +145,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "cor",
@@ -117,7 +159,11 @@
     "can_be_suffix": false,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "ancient",
+      "sun"
+    ]
   },
   {
     "root": "del",
@@ -127,7 +173,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "eir",
@@ -137,7 +186,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ela",
@@ -147,7 +199,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "faer",
@@ -157,7 +213,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "fha",
@@ -167,7 +226,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "gyl",
@@ -177,7 +239,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "musical",
+      "moon"
+    ]
   },
   {
     "root": "iar",
@@ -187,7 +253,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "flowing"
+    ]
   },
   {
     "root": "ilan",
@@ -197,7 +267,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "im",
@@ -207,7 +281,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "iri",
@@ -217,7 +294,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "mysterious"
+    ]
   },
   {
     "root": "la",
@@ -227,7 +308,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nocturnal",
+      "moon"
+    ]
   },
   {
     "root": "lae",
@@ -237,7 +322,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "lia",
@@ -247,7 +335,11 @@
     "can_be_suffix": false,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "luin",
@@ -257,7 +349,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "mae",
@@ -267,7 +362,12 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "shadow",
+      "mysterious"
+    ]
   },
   {
     "root": "menal",
@@ -277,7 +377,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "mer",
@@ -287,7 +391,12 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "nobility",
+      "celestial"
+    ]
   },
   {
     "root": "min",
@@ -297,7 +406,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "mon",
@@ -307,7 +420,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "mon",
@@ -317,7 +434,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "morn",
@@ -327,7 +448,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "morn",
@@ -337,7 +462,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "shadow"
+    ]
   },
   {
     "root": "myr",
@@ -347,7 +476,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "nae",
@@ -357,7 +489,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "nae",
@@ -367,7 +502,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "mysterious"
+    ]
   },
   {
     "root": "qil",
@@ -377,7 +516,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "quess",
@@ -387,7 +529,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "rath",
@@ -397,7 +542,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "rho",
@@ -407,7 +555,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "rhyn",
@@ -417,7 +569,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "ro",
@@ -427,7 +583,12 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "musical",
+      "moon",
+      "flowing"
+    ]
   },
   {
     "root": "roe",
@@ -437,7 +598,12 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "musical",
+      "moon",
+      "flowing"
+    ]
   },
   {
     "root": "sar",
@@ -447,7 +613,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "shae",
@@ -457,7 +626,12 @@
     "can_be_suffix": true,
     "suffix_text": "-shae",
     "suffix_meaning": "fey-touched, moon-blessed",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon",
+      "celestial"
+    ]
   },
   {
     "root": "sil",
@@ -467,7 +641,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "silv",
@@ -477,7 +655,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "shadow"
+    ]
   },
   {
     "root": "sol",
@@ -487,7 +669,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "syl",
@@ -497,7 +683,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "tan",
@@ -507,7 +696,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "thal",
@@ -517,7 +709,10 @@
     "can_be_suffix": true,
     "suffix_text": "-thal",
     "suffix_meaning": "Foot / Step",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "thorn",
@@ -527,7 +722,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "thor",
@@ -537,7 +735,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "vael",
@@ -547,7 +748,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "val",
@@ -557,7 +761,10 @@
     "can_be_suffix": false,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "xil",
@@ -567,7 +774,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "yae",
@@ -577,7 +788,10 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "zyl",
@@ -587,7 +801,11 @@
     "can_be_suffix": true,
     "suffix_text": null,
     "suffix_meaning": null,
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "shadow"
+    ]
   },
   {
     "root": "ael",
@@ -597,7 +815,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ael",
     "suffix_meaning": "Blade, Edge, or Warrior",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "martial"
+    ]
   },
   {
     "root": "ail",
@@ -607,7 +829,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ail",
     "suffix_meaning": "Blade, Edge, or Warrior",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "martial"
+    ]
   },
   {
     "root": "aera",
@@ -617,7 +843,10 @@
     "can_be_suffix": true,
     "suffix_text": "-aera",
     "suffix_meaning": "of the sky",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ar",
@@ -627,7 +856,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ar",
     "suffix_meaning": "Lord / Master / King",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "ariel",
@@ -637,7 +870,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ariel",
     "suffix_meaning": "bright spirit",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "aris",
@@ -647,7 +884,10 @@
     "can_be_suffix": true,
     "suffix_text": "-aris",
     "suffix_meaning": "beloved, precious",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "astra",
@@ -657,7 +897,10 @@
     "can_be_suffix": true,
     "suffix_text": "-astra",
     "suffix_meaning": "Storm / Power",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "athar",
@@ -667,7 +910,10 @@
     "can_be_suffix": true,
     "suffix_text": "-athar",
     "suffix_meaning": "Watcher / Guardian",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ayne",
@@ -677,7 +923,10 @@
     "can_be_suffix": true,
     "suffix_text": "-ayne",
     "suffix_meaning": "wanderer, traveler",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "beth",
@@ -687,7 +936,10 @@
     "can_be_suffix": true,
     "suffix_text": "-beth",
     "suffix_meaning": "Renown / Fame",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "brae",
@@ -697,7 +949,10 @@
     "can_be_suffix": true,
     "suffix_text": "-brae",
     "suffix_meaning": "Craft / Maker",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "dil",
@@ -707,7 +962,10 @@
     "can_be_suffix": true,
     "suffix_text": "-dil",
     "suffix_meaning": "Friend / Devoted",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "dor",
@@ -717,7 +975,11 @@
     "can_be_suffix": true,
     "suffix_text": "-dor",
     "suffix_meaning": "Master / Land",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "dorei",
@@ -727,7 +989,10 @@
     "can_be_suffix": true,
     "suffix_text": "-dorei",
     "suffix_meaning": "people, tribe (archaic)",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "drel",
@@ -737,7 +1002,10 @@
     "can_be_suffix": true,
     "suffix_text": "-drel",
     "suffix_meaning": "Skill, Dexterity, Precision",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "dril",
@@ -747,7 +1015,10 @@
     "can_be_suffix": true,
     "suffix_text": "-dril",
     "suffix_meaning": "Tress, Braid, Fine Hair",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "drith",
@@ -757,7 +1028,10 @@
     "can_be_suffix": true,
     "suffix_text": "-drith",
     "suffix_meaning": "Widow / Sorrow",
-    "is_gender_modifier": true
+    "is_gender_modifier": true,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "dul",
@@ -767,7 +1041,10 @@
     "can_be_suffix": true,
     "suffix_text": "-dul",
     "suffix_meaning": "Glade / Valley",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "estel",
@@ -777,7 +1054,10 @@
     "can_be_suffix": true,
     "suffix_text": "-estel",
     "suffix_meaning": "Hope / Trust",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "eth",
@@ -787,7 +1067,11 @@
     "can_be_suffix": true,
     "suffix_text": "-eth",
     "suffix_meaning": "ancient, sacred",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "ancient",
+      "sun"
+    ]
   },
   {
     "root": "felle",
@@ -797,7 +1081,10 @@
     "can_be_suffix": true,
     "suffix_text": "-felle",
     "suffix_meaning": "Bloom / Spring",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "findel",
@@ -807,7 +1094,10 @@
     "can_be_suffix": true,
     "suffix_text": "-findel",
     "suffix_meaning": "Tress / Braid (of hair)",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "gal",
@@ -817,7 +1107,11 @@
     "can_be_suffix": true,
     "suffix_text": "-gal",
     "suffix_meaning": "Shine / Radiance",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "sun",
+      "light"
+    ]
   },
   {
     "root": "gwyn",
@@ -827,7 +1121,10 @@
     "can_be_suffix": true,
     "suffix_text": "-gwyn",
     "suffix_meaning": "Pale / Ice / White",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon"
+    ]
   },
   {
     "root": "iel",
@@ -837,7 +1134,11 @@
     "can_be_suffix": true,
     "suffix_text": "-iel",
     "suffix_meaning": "radiant one",
-    "is_gender_modifier": true
+    "is_gender_modifier": true,
+    "tags": [
+      "neutral",
+      "light"
+    ]
   },
   {
     "root": "ion",
@@ -847,7 +1148,10 @@
     "can_be_suffix": true,
     "suffix_text": "-ion",
     "suffix_meaning": "Son of",
-    "is_gender_modifier": true
+    "is_gender_modifier": true,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ira",
@@ -857,7 +1161,10 @@
     "can_be_suffix": true,
     "suffix_text": "-ira",
     "suffix_meaning": "dreamer",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon"
+    ]
   },
   {
     "root": "is",
@@ -867,7 +1174,10 @@
     "can_be_suffix": true,
     "suffix_text": "-is",
     "suffix_meaning": "one who sees",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ith",
@@ -877,7 +1187,10 @@
     "can_be_suffix": true,
     "suffix_text": "-ith",
     "suffix_meaning": "Wisdom / Mind",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "kian",
@@ -887,7 +1200,10 @@
     "can_be_suffix": true,
     "suffix_text": "-kian",
     "suffix_meaning": "Bane / Killer",
-    "is_gender_modifier": true
+    "is_gender_modifier": true,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "lamin",
@@ -897,7 +1213,10 @@
     "can_be_suffix": true,
     "suffix_text": "-lamin",
     "suffix_meaning": "Path / Quest",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "lar",
@@ -907,7 +1226,11 @@
     "can_be_suffix": true,
     "suffix_text": "-lar",
     "suffix_meaning": "Lord / Master / King",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "nobility",
+      "sun"
+    ]
   },
   {
     "root": "lor",
@@ -917,7 +1240,10 @@
     "can_be_suffix": true,
     "suffix_text": "-lor",
     "suffix_meaning": "knowledge, lore",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "los",
@@ -927,7 +1253,10 @@
     "can_be_suffix": true,
     "suffix_text": "-los",
     "suffix_meaning": "Snow / Frost",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon"
+    ]
   },
   {
     "root": "mith",
@@ -937,7 +1266,11 @@
     "can_be_suffix": true,
     "suffix_text": "-mith",
     "suffix_meaning": "Grey / Mist",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "mysterious"
+    ]
   },
   {
     "root": "nail",
@@ -947,7 +1280,10 @@
     "can_be_suffix": true,
     "suffix_text": "-nail",
     "suffix_meaning": "Spike, Point, or Fixed Position",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "no",
@@ -957,7 +1293,10 @@
     "can_be_suffix": true,
     "suffix_text": "-no",
     "suffix_meaning": "Son of",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "nodel",
@@ -967,7 +1306,11 @@
     "can_be_suffix": true,
     "suffix_text": "-nodel",
     "suffix_meaning": "Moon (as a final component)",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "silver",
+      "moon"
+    ]
   },
   {
     "root": "on",
@@ -977,7 +1320,10 @@
     "can_be_suffix": true,
     "suffix_text": "-on",
     "suffix_meaning": "Son of",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ra",
@@ -987,7 +1333,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ra",
     "suffix_meaning": "warrior, protector",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "martial"
+    ]
   },
   {
     "root": "riel",
@@ -997,7 +1347,11 @@
     "can_be_suffix": true,
     "suffix_text": "-riel",
     "suffix_meaning": "shining maiden",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "feminine"
+    ]
   },
   {
     "root": "rion",
@@ -1007,7 +1361,10 @@
     "can_be_suffix": true,
     "suffix_text": "-rion",
     "suffix_meaning": "wanderer, seeker",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ser",
@@ -1017,7 +1374,10 @@
     "can_be_suffix": true,
     "suffix_text": "-ser",
     "suffix_meaning": "Soft / Gentle",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "thae",
@@ -1027,7 +1387,11 @@
     "can_be_suffix": true,
     "suffix_text": "-thae",
     "suffix_meaning": "starlit, blessed",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "celestial"
+    ]
   },
   {
     "root": "thala",
@@ -1037,7 +1401,10 @@
     "can_be_suffix": true,
     "suffix_text": "-thala",
     "suffix_meaning": "Healer",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "thir",
@@ -1047,7 +1414,10 @@
     "can_be_suffix": true,
     "suffix_text": "-thir",
     "suffix_meaning": "guardian",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "ue",
@@ -1057,7 +1427,11 @@
     "can_be_suffix": true,
     "suffix_text": "-ue",
     "suffix_meaning": "Cloud / Mystery",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "mysterious"
+    ]
   },
   {
     "root": "vrae",
@@ -1067,7 +1441,10 @@
     "can_be_suffix": true,
     "suffix_text": "-vrae",
     "suffix_meaning": "Fire / Madness",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "we",
@@ -1077,7 +1454,11 @@
     "can_be_suffix": true,
     "suffix_text": "-we",
     "suffix_meaning": "song, melody",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "musical",
+      "moon"
+    ]
   },
   {
     "root": "wen",
@@ -1087,7 +1468,11 @@
     "can_be_suffix": true,
     "suffix_text": "-wen",
     "suffix_meaning": "Maiden / Young Woman",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "moon",
+      "feminine"
+    ]
   },
   {
     "root": "wiir",
@@ -1097,7 +1482,10 @@
     "can_be_suffix": true,
     "suffix_text": "-wiir",
     "suffix_meaning": "Gem / Stone",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "wyn",
@@ -1107,7 +1495,10 @@
     "can_be_suffix": true,
     "suffix_text": "-wyn",
     "suffix_meaning": "graceful one",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral"
+    ]
   },
   {
     "root": "yn",
@@ -1117,6 +1508,10 @@
     "can_be_suffix": true,
     "suffix_text": "-yn",
     "suffix_meaning": "Flower / Blossom",
-    "is_gender_modifier": false
+    "is_gender_modifier": false,
+    "tags": [
+      "neutral",
+      "flowing"
+    ]
   }
 ]

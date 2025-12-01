@@ -25,7 +25,8 @@ export class NameGenerator {
         const {
             complexity = CONFIG.DEFAULT_COMPLEXITY,
             targetSyllables = CONFIG.DEFAULT_SYLLABLES,
-            style = CONFIG.DEFAULT_STYLE
+            style = CONFIG.DEFAULT_STYLE,
+            subrace = 'high-elf' // NEW: subrace selection
         } = options;
         
         let bestName = null;
@@ -33,7 +34,7 @@ export class NameGenerator {
         
         // Try multiple attempts to get close to target syllable count
         for (let attempts = 0; attempts < CONFIG.MAX_GENERATION_ATTEMPTS; attempts++) {
-            const candidate = this._generateCandidate(complexity, style);
+            const candidate = this._generateCandidate(complexity, style, subrace);
             const diff = Math.abs(candidate.syllables - targetSyllables);
             
             if (diff < bestDiff) {
@@ -54,10 +55,10 @@ export class NameGenerator {
      * Generate a single name candidate
      * @private
      */
-    _generateCandidate(complexity, style) {
-        // Select prefix and suffix
-        const prefix = this._selectPrefix(style);
-        const suffix = this._selectSuffix(style);
+    _generateCandidate(complexity, style, subrace) {
+        // Select prefix and suffix with subrace filtering
+        const prefix = this._selectPrefix(style, subrace);
+        const suffix = this._selectSuffix(style, subrace);
         
         // Get clean text (remove hyphens)
         const prefixText = phonetics.cleanComponentText(prefix.prefix_text);
@@ -101,21 +102,21 @@ export class NameGenerator {
     }
     
     /**
-     * Select a prefix component, applying style preferences
+     * Select a prefix component, applying style and subrace preferences
      * @private
      */
-    _selectPrefix(style) {
-        return this._randomElement(this.prefixCandidates);
+    _selectPrefix(style, subrace) {
+        return this._selectWeightedComponent(this.prefixCandidates, subrace);
     }
     
     /**
-     * Select a suffix component, applying style preferences
+     * Select a suffix component, applying style and subrace preferences
      * @private
      */
-    _selectSuffix(style) {
+    _selectSuffix(style, subrace) {
         let candidates = this.suffixCandidates;
         
-        // Apply style filters
+        // Apply style filters (keep this for backward compatibility)
         if (style === 'feminine' && Math.random() > CONFIG.CONNECTOR_PROBABILITY_FEMININE) {
             const femSuffixes = candidates.filter(s => 
                 s.root.includes('iel') || s.root.includes('wen') || 
@@ -136,7 +137,7 @@ export class NameGenerator {
             }
         }
         
-        return this._randomElement(candidates);
+        return this._selectWeightedComponent(candidates, subrace);
     }
     
     /**
@@ -183,5 +184,43 @@ export class NameGenerator {
      */
     _randomElement(array) {
         return array[Math.floor(Math.random() * array.length)];
+    }
+    
+    /**
+     * Select a component using weighted probability based on subrace
+     * @private
+     */
+    _selectWeightedComponent(candidates, subrace) {
+        // If no subrace filtering, use random selection
+        if (subrace === 'high-elf') {
+            return this._randomElement(candidates);
+        }
+        
+        // Determine preferred tag based on subrace
+        const preferredTag = subrace === 'sun-elf' ? 'sun' : subrace === 'moon-elf' ? 'moon' : null;
+        
+        if (!preferredTag) {
+            return this._randomElement(candidates);
+        }
+        
+        // Filter components by preferred tag
+        const preferred = candidates.filter(c => c.tags && c.tags.includes(preferredTag));
+        const neutral = candidates.filter(c => c.tags && c.tags.includes('neutral'));
+        const other = candidates.filter(c => !c.tags || (!c.tags.includes(preferredTag) && !c.tags.includes('neutral')));
+        
+        // Weighted random selection
+        // 60% chance preferred, 30% chance neutral, 10% chance other
+        const roll = Math.random();
+        
+        if (roll < 0.6 && preferred.length > 0) {
+            return this._randomElement(preferred);
+        } else if (roll < 0.9 && neutral.length > 0) {
+            return this._randomElement(neutral);
+        } else if (other.length > 0) {
+            return this._randomElement(other);
+        }
+        
+        // Fallback: pick from any available
+        return this._randomElement(candidates);
     }
 }

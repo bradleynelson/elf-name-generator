@@ -18,6 +18,8 @@ export class UIController {
     _cacheElements() {
         return {
             // Controls
+            subraceSelect: document.getElementById('subrace'),
+            subraceDescription: document.getElementById('subraceDescription'),
             complexitySelect: document.getElementById('complexity'),
             syllablesInput: document.getElementById('syllables'),
             styleSelect: document.getElementById('style'),
@@ -48,6 +50,7 @@ export class UIController {
      */
     getPreferences() {
         return {
+            subrace: this.elements.subraceSelect.value,
             complexity: this.elements.complexitySelect.value,
             targetSyllables: parseInt(this.elements.syllablesInput.value),
             style: this.elements.styleSelect.value
@@ -246,5 +249,21 @@ export class UIController {
         setTimeout(() => {
             toast.remove();
         }, 3000);
+    }
+    
+    /**
+     * Update the subrace description text
+     * @param {string} subrace - Selected subrace
+     */
+    updateSubraceDescription(subrace) {
+        const descriptions = {
+            'high-elf': 'Balanced names drawing from all High Elf traditions',
+            'sun-elf': 'Names emphasizing Gold, Light, Nobility, and Ancient Lore (formal, 3-5 syllables)',
+            'moon-elf': 'Names emphasizing Silver, Moonlight, Stars, and Flow (lyrical, 4+ syllables)'
+        };
+        
+        if (this.elements.subraceDescription) {
+            this.elements.subraceDescription.textContent = descriptions[subrace] || descriptions['high-elf'];
+        }
     }
 }
