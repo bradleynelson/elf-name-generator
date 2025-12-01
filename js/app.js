@@ -52,6 +52,9 @@ export class EspruarNameGenerator {
             // Initialize accordions
             this._initAccordions();
             
+            // Initialize cookie consent banner
+            this._initCookieBanner();
+            
             this.isInitialized = true;
             console.log('Espruar Name Generator initialized successfully');
             
@@ -250,6 +253,100 @@ export class EspruarNameGenerator {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
+    }
+    
+    /**
+     * Initialize cookie consent banner
+     * @private
+     */
+    _initCookieBanner() {
+        const banner = document.getElementById('cookieBanner');
+        const modal = document.getElementById('cookieModal');
+        const acceptBtn = document.getElementById('cookieAccept');
+        const declineBtn = document.getElementById('cookieDecline');
+        const learnMoreLink = document.getElementById('cookieLearnMore');
+        const modalCloseBtn = document.getElementById('cookieModalClose');
+        
+        // Safety check - ensure all elements exist
+        if (!banner || !modal || !acceptBtn || !declineBtn || !learnMoreLink || !modalCloseBtn) {
+            console.error('Cookie banner elements not found');
+            return;
+        }
+        
+        // Check if consent already given
+        const consent = localStorage.getItem('analytics_consent');
+        if (consent === null) {
+            // No choice made yet, show banner
+            banner.removeAttribute('hidden');
+        } else if (consent === 'true') {
+            // Previously accepted, load GA now
+            this._loadGoogleAnalytics();
+        }
+        // If consent === 'false', do nothing (GA stays unloaded)
+        
+        // Accept button
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('analytics_consent', 'true');
+            banner.setAttribute('hidden', '');
+            this._loadGoogleAnalytics();
+        });
+        
+        // Decline button
+        declineBtn.addEventListener('click', () => {
+            localStorage.setItem('analytics_consent', 'false');
+            banner.setAttribute('hidden', '');
+        });
+        
+        // Learn more link
+        learnMoreLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.removeAttribute('hidden');
+        });
+        
+        // Close modal
+        modalCloseBtn.addEventListener('click', () => {
+            modal.setAttribute('hidden', '');
+        });
+        
+        // Close modal on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.setAttribute('hidden', '');
+            }
+        });
+        
+        // Escape key closes modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.hasAttribute('hidden')) {
+                modal.setAttribute('hidden', '');
+            }
+        });
+    }
+    
+    /**
+     * Load Google Analytics script
+     * @private
+     */
+    _loadGoogleAnalytics() {
+        if (window.gtag) {
+            console.log('Google Analytics already loaded');
+            return; // Already loaded
+        }
+        
+        console.log('Loading Google Analytics...');
+        
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-8T9GFW6PVK';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-8T9GFW6PVK');
+        
+        console.log('Google Analytics loaded successfully');
     }
 }
 

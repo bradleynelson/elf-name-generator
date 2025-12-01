@@ -28,14 +28,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8T9GFW6PVK"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8T9GFW6PVK');
-    </script>
+    <!-- Google Analytics - loaded dynamically after consent via app.js -->
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -65,6 +58,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-labelledby="cookieBannerText" aria-live="polite" hidden>
+        <div class="cookie-banner-content">
+            <p id="cookieBannerText">This site uses cookies via Google Analytics to improve your experience. <a href="#" id="cookieLearnMore" aria-label="Learn more about cookies">Learn more</a></p>
+            <div class="cookie-banner-buttons">
+                <button id="cookieAccept" class="cookie-btn cookie-accept" aria-label="Accept analytics cookies">Accept</button>
+                <button id="cookieDecline" class="cookie-btn cookie-decline" aria-label="Decline analytics cookies">Decline</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cookie Info Modal -->
+    <div id="cookieModal" class="cookie-modal" role="dialog" aria-labelledby="cookieModalTitle" aria-modal="true" hidden>
+        <div class="cookie-modal-content">
+            <h2 id="cookieModalTitle">Privacy & Cookies</h2>
+            <p><strong>What we collect:</strong> This site uses Google Analytics to understand how visitors use the generator. This includes page views, session duration, and general location (country/city level).</p>
+            <p><strong>What we DON'T collect:</strong> We never collect personal information, names you generate, or your favorites list. Your saved names stay only on your device.</p>
+            <p><strong>Your choice:</strong> You can accept or decline analytics cookies at any time. Declining will not affect site functionality.</p>
+            <button id="cookieModalClose" class="cookie-btn cookie-accept" aria-label="Close privacy information">Close</button>
+        </div>
+    </div>
+    
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="container">
         <h1>⚔️ Elven Name Generator ⚔️</h1>
