@@ -431,7 +431,7 @@ export class EspruarNameGenerator {
     }
     
     /**
-     * Initialize theme toggle
+     * Initialize theme toggle (cycles through 4 themes)
      * @private
      */
     _initThemeToggle() {
@@ -441,27 +441,47 @@ export class EspruarNameGenerator {
         
         if (!toggle || !icon || !label) return;
         
+        // Theme cycle order
+        const themes = ['moon-elf', 'sun-elf', 'wood-elf', 'drow'];
+        const themeIcons = {
+            'moon-elf': '🌙',
+            'sun-elf': '☀️',
+            'wood-elf': '🌲',
+            'drow': '🕷️'
+        };
+        const themeLabels = {
+            'moon-elf': 'Moon Elf',
+            'sun-elf': 'Sun Elf',
+            'wood-elf': 'Wood Elf',
+            'drow': 'Drow'
+        };
+        
         // Check for saved preference, otherwise use system preference
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+        const defaultTheme = systemPrefersDark ? 'moon-elf' : 'sun-elf';
+        const currentTheme = savedTheme || defaultTheme;
         
         // Apply theme
-        this._setTheme(currentTheme, icon, label);
+        this._setTheme(currentTheme, icon, label, themeIcons, themeLabels);
         
-        // Toggle button click
+        // Toggle button click - cycle to next theme
         toggle.addEventListener('click', () => {
-            const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            this._setTheme(newTheme, icon, label);
-            localStorage.setItem('theme', newTheme);
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'moon-elf';
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            const nextTheme = themes[nextIndex];
+            
+            this._setTheme(nextTheme, icon, label, themeIcons, themeLabels);
+            localStorage.setItem('theme', nextTheme);
         });
         
         // Listen for system preference changes
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
             // Only auto-switch if user hasn't manually set a preference
             if (!localStorage.getItem('theme')) {
-                const newTheme = e.matches ? 'dark' : 'light';
-                this._setTheme(newTheme, icon, label);
+                const newTheme = e.matches ? 'moon-elf' : 'sun-elf';
+                this._setTheme(newTheme, icon, label, themeIcons, themeLabels);
             }
         });
     }
@@ -470,16 +490,10 @@ export class EspruarNameGenerator {
      * Set theme and update UI
      * @private
      */
-    _setTheme(theme, icon, label) {
-        if (theme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            icon.textContent = '☀️';
-            label.textContent = 'Sun Elf';
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-            icon.textContent = '🌙';
-            label.textContent = 'Moon Elf';
-        }
+    _setTheme(theme, icon, label, themeIcons, themeLabels) {
+        document.documentElement.setAttribute('data-theme', theme);
+        icon.textContent = themeIcons[theme];
+        label.textContent = themeLabels[theme];
     }
     
     /**
