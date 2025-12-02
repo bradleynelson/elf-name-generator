@@ -220,6 +220,10 @@
     border-color: rgba(139, 105, 20, 0.6);
 }
 
+[data-theme="light"] .meaning-stack {
+    background: rgba(139, 105, 20, 0.15);
+}
+
 /* Light mode favorite items */
 [data-theme="light"] .favorite-item {
     background: rgba(244, 232, 208, 0.5);
