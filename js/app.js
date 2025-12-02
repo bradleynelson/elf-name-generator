@@ -27,7 +27,7 @@ export class EspruarNameGenerator {
             'moon-elf': 'Moon Elf',
             'sun-elf': 'Sun Elf',
             'wood-elf': 'Wood Elf',
-            'drow': 'Drow'
+            'drow': 'Dark Elf'
         };
     }
     
