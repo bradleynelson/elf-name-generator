@@ -147,9 +147,36 @@ export class EspruarNameGenerator {
         
         // Favorites list (event delegation)
         this.ui.elements.favoritesList.addEventListener('click', (e) => {
+            // Remove button - show confirmation
             if (e.target.classList.contains('remove-btn')) {
-                const index = parseInt(e.target.dataset.index);
+                const button = e.target;
+                const index = parseInt(button.dataset.index);
+                
+                // Change to confirmation state
+                button.innerHTML = `
+                    <span class="confirm-cancel" title="Cancel">🛇</span>
+                    <span class="confirm-delete" title="Delete">🗑️</span>
+                `;
+                button.classList.add('confirming');
+                
+                // Prevent immediate re-clicks
+                e.stopPropagation();
+            }
+            
+            // Cancel confirmation
+            else if (e.target.classList.contains('confirm-cancel')) {
+                const button = e.target.closest('.remove-btn');
+                button.innerHTML = 'Remove';
+                button.classList.remove('confirming');
+                e.stopPropagation();
+            }
+            
+            // Confirm deletion
+            else if (e.target.classList.contains('confirm-delete')) {
+                const button = e.target.closest('.remove-btn');
+                const index = parseInt(button.dataset.index);
                 this.removeFavorite(index);
+                e.stopPropagation();
             }
         });
     }
