@@ -125,8 +125,8 @@ export class UIController {
             return `<span class="meaning-stack">${optionsHTML}</span>`;
         });
         
-        // Join with + separator
-        return '"' + stackedParts.join('<span class="meaning-separator">+</span>') + '"';
+        // Join with + separator (quotes now added via CSS ::before/::after)
+        return stackedParts.join('<span class="meaning-separator">+</span>');
     }
     
     /**
