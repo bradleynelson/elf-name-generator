@@ -327,9 +327,9 @@ input:focus {
 .container {
     max-width: 900px;
     margin: 0 auto;
-    background: rgba(26, 26, 46, 0.95);
-    /* backdrop-filter: blur(10px); - REMOVED: causes severe scroll jitter */
-    /* -webkit-backdrop-filter: blur(10px); */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: var(--radius-2xl);
     padding: var(--spacing-4xl);
     box-shadow: var(--shadow-lg);
