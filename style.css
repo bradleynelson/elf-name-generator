@@ -120,6 +120,11 @@
     color: #2a1810;
 }
 
+[data-theme="light"] select,
+[data-theme="light"] input[type="range"] {
+    background: rgba(244, 232, 208, 0.5);
+}
+
 [data-theme="light"] input[type="range"] {
     accent-color: #8b6914;
 }
@@ -185,6 +190,11 @@
 
 /* Light mode interchangeable note */
 [data-theme="light"] .interchangeable-note {
+    background: rgba(139, 105, 20, 0.1);
+    border-left-color: #8b6914;
+}
+
+[data-theme="light"] .edu-card.intro-note {
     background: rgba(139, 105, 20, 0.1);
     border-left-color: #8b6914;
 }
@@ -439,6 +449,10 @@ h1 {
     margin-top: var(--spacing-md);
 }
 
+.settings-content .controls {
+    background: rgba(255, 255, 255, 0.08);
+}
+
 .settings-content[hidden] {
     display: none;
 }
@@ -653,7 +667,7 @@ select,
 input[type="range"] {
     width: 100%;
     padding: var(--spacing-md);
-    background: var(--color-bg-overlay-light);
+    background: #1b1d26;
     border: 1px solid var(--color-border-gold);
     border-radius: var(--radius-md);
     color: var(--color-text-primary);
@@ -1720,7 +1734,7 @@ input[type="range"] {
     top: var(--spacing-xl);
     right: var(--spacing-xl);
     z-index: 9999;
-    background: var(--color-bg-overlay-dark);
+    background: rgba(255, 255, 255, 0.05);
     border: 2px solid var(--color-border-gold);
     border-radius: var(--radius-lg);
     padding: var(--spacing-sm) var(--spacing-md);
@@ -1736,7 +1750,7 @@ input[type="range"] {
 }
 
 .theme-toggle:hover {
-    background: var(--color-bg-overlay-darker);
+    background: rgba(255, 255, 255, 0.08);
     border-color: var(--color-border-gold-bright);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
