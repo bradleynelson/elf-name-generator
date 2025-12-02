@@ -164,10 +164,23 @@ export class NameGenerator {
             meaning = prefixMeaning + ' + ' + connectorMeaning + ' + ' + suffixMeaning;
         }
         
+        // Build phonetic pronunciation
+        let pronunciation = '';
+        if (prefix.prefix_phonetic) {
+            pronunciation += prefix.prefix_phonetic;
+        }
+        if (connector && connector.phonetic) {
+            pronunciation += '-' + connector.phonetic;
+        }
+        if (suffix.suffix_phonetic) {
+            pronunciation += '-' + suffix.suffix_phonetic;
+        }
+        
         return {
             name: fullName,
             baseForm: fullName,
             meaning,
+            pronunciation,
             prefix,
             connector,
             suffix,
@@ -318,10 +331,30 @@ export class NameGenerator {
         const componentMeanings = components.map(c => c.meaning).filter(m => m && m.trim());
         const meaning = componentMeanings.join(' + ');
         
+        // Build phonetic pronunciation
+        let pronunciationParts = [];
+        for (let i = 0; i < components.length; i++) {
+            const comp = components[i];
+            
+            // Add component phonetic
+            if (comp.component.prefix_phonetic && comp.component.can_be_prefix) {
+                pronunciationParts.push(comp.component.prefix_phonetic);
+            } else if (comp.component.suffix_phonetic && comp.component.can_be_suffix) {
+                pronunciationParts.push(comp.component.suffix_phonetic);
+            }
+            
+            // Add connector phonetic if there's one after this component
+            if (i < connectors.length && connectors[i] && connectors[i].connector && connectors[i].connector.phonetic) {
+                pronunciationParts.push(connectors[i].connector.phonetic);
+            }
+        }
+        const pronunciation = pronunciationParts.join('-');
+        
         return {
             name: fullName,
             baseForm: fullName,
             meaning,
+            pronunciation,
             components,
             connectors,
             syllables,

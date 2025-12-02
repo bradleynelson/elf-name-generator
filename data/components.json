@@ -12,7 +12,9 @@
       "moon",
       "mysterious",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ay",
+    "suffix_phonetic": "ay"
   },
   {
     "root": "ael",
@@ -29,7 +31,9 @@
       "nobility",
       "martial",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Ayl",
+    "suffix_phonetic": "ayl"
   },
   {
     "root": "aer",
@@ -43,7 +47,8 @@
     "tags": [
       "sun",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Air"
   },
   {
     "root": "ala",
@@ -56,7 +61,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ah-lah"
   },
   {
     "root": "an",
@@ -69,7 +75,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ahn"
   },
   {
     "root": "ara",
@@ -84,7 +91,8 @@
       "nobility",
       "sun",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ah-rah"
   },
   {
     "root": "aran",
@@ -98,7 +106,8 @@
     "tags": [
       "nobility",
       "sun"
-    ]
+    ],
+    "prefix_phonetic": "Ah-rahn"
   },
   {
     "root": "ath",
@@ -111,7 +120,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ahth"
   },
   {
     "root": "bi",
@@ -125,7 +135,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Bee"
   },
   {
     "root": "cae",
@@ -141,7 +152,8 @@
       "sun",
       "feminine",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Kay"
   },
   {
     "root": "cela",
@@ -155,7 +167,8 @@
     "tags": [
       "silver",
       "moon"
-    ]
+    ],
+    "prefix_phonetic": "Seh-lah"
   },
   {
     "root": "cor",
@@ -170,7 +183,8 @@
       "ancient",
       "sun",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Korr"
   },
   {
     "root": "del",
@@ -184,7 +198,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Dell"
   },
   {
     "root": "eir",
@@ -197,7 +212,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Air"
   },
   {
     "root": "ela",
@@ -212,7 +228,8 @@
       "sun",
       "light",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Eh-lah"
   },
   {
     "root": "faer",
@@ -225,7 +242,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Fair"
   },
   {
     "root": "fha",
@@ -238,7 +256,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Fah"
   },
   {
     "root": "gyl",
@@ -253,7 +272,8 @@
       "musical",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Gill"
   },
   {
     "root": "iar",
@@ -267,7 +287,8 @@
     "tags": [
       "neutral",
       "flowing"
-    ]
+    ],
+    "prefix_phonetic": "Ee-arr"
   },
   {
     "root": "ilan",
@@ -282,7 +303,8 @@
       "silver",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ih-lahn"
   },
   {
     "root": "im",
@@ -295,7 +317,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ihm"
   },
   {
     "root": "iri",
@@ -310,7 +333,8 @@
       "moon",
       "mysterious",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Ih-ree"
   },
   {
     "root": "la",
@@ -325,7 +349,8 @@
       "nocturnal",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Lah"
   },
   {
     "root": "lae",
@@ -338,7 +363,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Lay"
   },
   {
     "root": "lia",
@@ -353,7 +379,8 @@
       "silver",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Lee-ah"
   },
   {
     "root": "luin",
@@ -366,7 +393,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Loo-in"
   },
   {
     "root": "mae",
@@ -382,7 +410,8 @@
       "shadow",
       "mysterious",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "May"
   },
   {
     "root": "menal",
@@ -397,7 +426,8 @@
       "silver",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Meh-nahl"
   },
   {
     "root": "mer",
@@ -412,7 +442,8 @@
       "neutral",
       "nobility",
       "celestial"
-    ]
+    ],
+    "prefix_phonetic": "Mair"
   },
   {
     "root": "min",
@@ -427,7 +458,8 @@
       "nobility",
       "sun",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Mihn"
   },
   {
     "root": "mon",
@@ -442,7 +474,8 @@
       "silver",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Mohn"
   },
   {
     "root": "mon",
@@ -457,7 +490,8 @@
       "nobility",
       "sun",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Mohn"
   },
   {
     "root": "morn",
@@ -472,7 +506,8 @@
       "nobility",
       "sun",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Morn"
   },
   {
     "root": "morn",
@@ -487,7 +522,8 @@
       "neutral",
       "shadow",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Morn"
   },
   {
     "root": "myr",
@@ -500,7 +536,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Meer"
   },
   {
     "root": "nae",
@@ -513,7 +550,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Nay"
   },
   {
     "root": "nae",
@@ -528,7 +566,8 @@
       "moon",
       "mysterious",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Nay"
   },
   {
     "root": "qil",
@@ -542,7 +581,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Kwihl"
   },
   {
     "root": "quess",
@@ -555,7 +595,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Kwehs"
   },
   {
     "root": "rath",
@@ -569,7 +610,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Rahth"
   },
   {
     "root": "rho",
@@ -583,7 +625,8 @@
     "tags": [
       "sun",
       "light"
-    ]
+    ],
+    "prefix_phonetic": "Roh"
   },
   {
     "root": "rhyn",
@@ -597,7 +640,8 @@
     "tags": [
       "sun",
       "light"
-    ]
+    ],
+    "prefix_phonetic": "Rihn"
   },
   {
     "root": "ro",
@@ -613,7 +657,8 @@
       "moon",
       "flowing",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Roh"
   },
   {
     "root": "roe",
@@ -629,7 +674,8 @@
       "moon",
       "flowing",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Roh"
   },
   {
     "root": "sar",
@@ -643,7 +689,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "prefix_phonetic": "Sahr"
   },
   {
     "root": "shae",
@@ -659,7 +706,9 @@
       "moon",
       "celestial",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Shay",
+    "suffix_phonetic": "shay"
   },
   {
     "root": "sil",
@@ -674,7 +723,8 @@
       "silver",
       "moon",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Sihl"
   },
   {
     "root": "silv",
@@ -689,7 +739,8 @@
       "moon",
       "shadow",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Sihlv"
   },
   {
     "root": "sol",
@@ -704,7 +755,8 @@
       "sun",
       "light",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Sohl"
   },
   {
     "root": "syl",
@@ -717,7 +769,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Sihl"
   },
   {
     "root": "tan",
@@ -730,7 +783,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Tahn"
   },
   {
     "root": "thal",
@@ -743,7 +797,9 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Thahl",
+    "suffix_phonetic": "thahl"
   },
   {
     "root": "thorn",
@@ -756,7 +812,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Thorn"
   },
   {
     "root": "thor",
@@ -769,7 +826,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Thor"
   },
   {
     "root": "vael",
@@ -782,7 +840,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Vayl"
   },
   {
     "root": "val",
@@ -795,7 +854,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Vahl"
   },
   {
     "root": "xil",
@@ -810,7 +870,8 @@
       "sun",
       "light",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Zihl"
   },
   {
     "root": "yae",
@@ -823,7 +884,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Yay"
   },
   {
     "root": "zyl",
@@ -838,7 +900,8 @@
       "moon",
       "shadow",
       "neutral"
-    ]
+    ],
+    "prefix_phonetic": "Zihl"
   },
   {
     "root": "ael",
@@ -853,7 +916,8 @@
       "neutral",
       "martial",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "ayl"
   },
   {
     "root": "ail",
@@ -868,7 +932,8 @@
       "neutral",
       "martial",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "ayl"
   },
   {
     "root": "aera",
@@ -881,7 +946,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "air-ah"
   },
   {
     "root": "ar",
@@ -896,7 +962,8 @@
       "nobility",
       "sun",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "arr"
   },
   {
     "root": "ariel",
@@ -911,7 +978,8 @@
       "sun",
       "light",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ah-ree-ehl"
   },
   {
     "root": "aris",
@@ -924,7 +992,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ah-rihs"
   },
   {
     "root": "astra",
@@ -937,7 +1006,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ahs-trah"
   },
   {
     "root": "athar",
@@ -950,7 +1020,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ah-thahr"
   },
   {
     "root": "ayne",
@@ -963,7 +1034,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ayn"
   },
   {
     "root": "beth",
@@ -976,7 +1048,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "behth"
   },
   {
     "root": "brae",
@@ -990,7 +1063,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "bray"
   },
   {
     "root": "dil",
@@ -1003,7 +1077,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "dihl"
   },
   {
     "root": "dor",
@@ -1018,7 +1093,8 @@
       "nobility",
       "sun",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "dorr"
   },
   {
     "root": "dorei",
@@ -1031,7 +1107,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "doh-ray"
   },
   {
     "root": "drel",
@@ -1044,7 +1121,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "drehl"
   },
   {
     "root": "dril",
@@ -1057,7 +1135,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "drihl"
   },
   {
     "root": "drith",
@@ -1070,7 +1149,8 @@
     "is_gender_modifier": true,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "drihth"
   },
   {
     "root": "dul",
@@ -1084,7 +1164,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "duhl"
   },
   {
     "root": "estel",
@@ -1097,7 +1178,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ehs-tehl"
   },
   {
     "root": "eth",
@@ -1112,7 +1194,8 @@
       "ancient",
       "sun",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "ehth"
   },
   {
     "root": "felle",
@@ -1125,7 +1208,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "fehl-leh"
   },
   {
     "root": "findel",
@@ -1138,7 +1222,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "fihn-dehl"
   },
   {
     "root": "gal",
@@ -1153,7 +1238,8 @@
       "sun",
       "light",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "gahl"
   },
   {
     "root": "gwyn",
@@ -1167,7 +1253,8 @@
     "tags": [
       "moon",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "gwihn"
   },
   {
     "root": "iel",
@@ -1181,7 +1268,8 @@
     "tags": [
       "neutral",
       "light"
-    ]
+    ],
+    "suffix_phonetic": "ee-ehl"
   },
   {
     "root": "ion",
@@ -1194,7 +1282,8 @@
     "is_gender_modifier": true,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ee-ohn"
   },
   {
     "root": "ira",
@@ -1208,7 +1297,8 @@
     "tags": [
       "moon",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ih-rah"
   },
   {
     "root": "is",
@@ -1221,7 +1311,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ihs"
   },
   {
     "root": "ith",
@@ -1235,7 +1326,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "ihth"
   },
   {
     "root": "kian",
@@ -1248,7 +1340,8 @@
     "is_gender_modifier": true,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "kee-ahn"
   },
   {
     "root": "lamin",
@@ -1261,7 +1354,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "lah-mihn"
   },
   {
     "root": "lar",
@@ -1276,7 +1370,8 @@
       "nobility",
       "sun",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "lahr"
   },
   {
     "root": "lor",
@@ -1289,7 +1384,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "lorr"
   },
   {
     "root": "los",
@@ -1303,7 +1399,8 @@
     "tags": [
       "moon",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "lohs"
   },
   {
     "root": "mith",
@@ -1318,7 +1415,8 @@
       "moon",
       "mysterious",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "mihth"
   },
   {
     "root": "nail",
@@ -1332,7 +1430,8 @@
     "tags": [
       "neutral",
       "wood"
-    ]
+    ],
+    "suffix_phonetic": "nayl"
   },
   {
     "root": "no",
@@ -1345,7 +1444,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "noh"
   },
   {
     "root": "nodel",
@@ -1359,7 +1459,8 @@
     "tags": [
       "silver",
       "moon"
-    ]
+    ],
+    "suffix_phonetic": "noh-dehl"
   },
   {
     "root": "on",
@@ -1372,7 +1473,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ohn"
   },
   {
     "root": "ra",
@@ -1386,7 +1488,8 @@
     "tags": [
       "neutral",
       "martial"
-    ]
+    ],
+    "suffix_phonetic": "rah"
   },
   {
     "root": "riel",
@@ -1401,7 +1504,8 @@
       "moon",
       "feminine",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ree-ehl"
   },
   {
     "root": "rion",
@@ -1414,7 +1518,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "ree-ohn"
   },
   {
     "root": "ser",
@@ -1427,7 +1532,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "sehr"
   },
   {
     "root": "thae",
@@ -1442,7 +1548,8 @@
       "moon",
       "celestial",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "thay"
   },
   {
     "root": "thala",
@@ -1455,7 +1562,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "thah-lah"
   },
   {
     "root": "thir",
@@ -1468,7 +1576,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "theer"
   },
   {
     "root": "ue",
@@ -1483,7 +1592,8 @@
       "moon",
       "mysterious",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "oo-eh"
   },
   {
     "root": "vrae",
@@ -1496,7 +1606,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "vray"
   },
   {
     "root": "we",
@@ -1511,7 +1622,8 @@
       "musical",
       "moon",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "weh"
   },
   {
     "root": "wen",
@@ -1526,7 +1638,8 @@
       "moon",
       "feminine",
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "wehn"
   },
   {
     "root": "wiir",
@@ -1539,7 +1652,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "weer"
   },
   {
     "root": "wyn",
@@ -1552,7 +1666,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral"
-    ]
+    ],
+    "suffix_phonetic": "wihn"
   },
   {
     "root": "yn",
@@ -1566,7 +1681,8 @@
     "tags": [
       "neutral",
       "flowing"
-    ]
+    ],
+    "suffix_phonetic": "ihn"
   },
   {
     "root": "zhaun",
@@ -1581,7 +1697,8 @@
       "drow",
       "drow-female",
       "drow-male"
-    ]
+    ],
+    "prefix_phonetic": "Zhawn"
   },
   {
     "root": "phar",
@@ -1595,7 +1712,8 @@
     "tags": [
       "drow",
       "drow-female"
-    ]
+    ],
+    "prefix_phonetic": "Fahr"
   },
   {
     "root": "faer-drow",
@@ -1609,7 +1727,8 @@
     "tags": [
       "drow",
       "drow-female"
-    ]
+    ],
+    "prefix_phonetic": "Fair"
   },
   {
     "root": "driz",
@@ -1623,7 +1742,8 @@
     "tags": [
       "drow",
       "drow-male"
-    ]
+    ],
+    "prefix_phonetic": "Drihz"
   },
   {
     "root": "qil-drow",
@@ -1637,7 +1757,8 @@
     "tags": [
       "drow",
       "drow-female"
-    ]
+    ],
+    "prefix_phonetic": "Kwihl"
   },
   {
     "root": "tyl",
@@ -1651,7 +1772,8 @@
     "tags": [
       "drow",
       "drow-female"
-    ]
+    ],
+    "suffix_phonetic": "tihl"
   },
   {
     "root": "tana",
@@ -1665,7 +1787,8 @@
     "tags": [
       "drow",
       "drow-female"
-    ]
+    ],
+    "suffix_phonetic": "tah-nah"
   },
   {
     "root": "xia",
@@ -1679,7 +1802,8 @@
     "tags": [
       "drow",
       "drow-female"
-    ]
+    ],
+    "suffix_phonetic": "zee-ah"
   },
   {
     "root": "raen",
@@ -1694,7 +1818,8 @@
       "drow",
       "drow-female",
       "drow-male"
-    ]
+    ],
+    "suffix_phonetic": "rayn"
   },
   {
     "root": "ax",
@@ -1708,7 +1833,8 @@
     "tags": [
       "drow",
       "drow-male"
-    ]
+    ],
+    "suffix_phonetic": "ahks"
   },
   {
     "root": "gloth",
@@ -1722,7 +1848,8 @@
     "tags": [
       "drow",
       "drow-male"
-    ]
+    ],
+    "suffix_phonetic": "glohth"
   },
   {
     "root": "lim",
@@ -1736,6 +1863,7 @@
     "tags": [
       "drow",
       "drow-male"
-    ]
+    ],
+    "suffix_phonetic": "lihm"
   }
 ]

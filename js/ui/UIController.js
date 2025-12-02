@@ -29,6 +29,7 @@ export class UIController {
             result: document.getElementById('result'),
             generatedName: document.getElementById('generatedName'),
             nameMeaning: document.getElementById('nameMeaning'),
+            namePronunciation: document.getElementById('namePronunciation'),
             breakdown: document.getElementById('breakdown'),
             
             // Vowel suggestions
@@ -71,12 +72,20 @@ export class UIController {
         const stackedMeaning = this._buildStackedMeaning(nameData.meaning);
         this.elements.nameMeaning.innerHTML = stackedMeaning;
         
+        // Display pronunciation if available
+        if (nameData.pronunciation) {
+            this.elements.namePronunciation.textContent = nameData.pronunciation;
+            this.elements.namePronunciation.classList.remove('hidden');
+        } else {
+            this.elements.namePronunciation.classList.add('hidden');
+        }
+        
         // Announce to screen readers (use plain text version)
         const plainMeaning = nameData.meaning.replace(/,/g, ' or');
-        this.elements.result.setAttribute(
-            'aria-label',
-            `Generated name: ${nameData.name}, meaning: ${plainMeaning}`
-        );
+        const ariaLabel = nameData.pronunciation 
+            ? `Generated name: ${nameData.name}, pronounced: ${nameData.pronunciation}, meaning: ${plainMeaning}`
+            : `Generated name: ${nameData.name}, meaning: ${plainMeaning}`;
+        this.elements.result.setAttribute('aria-label', ariaLabel);
         
         // Update breakdown
         this._displayBreakdown(nameData);

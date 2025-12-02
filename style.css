@@ -761,6 +761,21 @@ input[type="range"] {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+.name-pronunciation {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    font-family: 'Courier New', monospace;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.name-pronunciation::before {
+    content: "🎵 ";
+    font-style: normal;
+}
+
 .name-meaning {
     font-size: var(--font-size-2xl);
     color: var(--color-text-secondary);
