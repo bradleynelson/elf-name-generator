@@ -1332,6 +1332,42 @@ input[type="range"] {
     border-radius: var(--radius-sm);
 }
 
+.pronunciation-table {
+    margin: var(--spacing-lg) 0;
+}
+
+.pronunciation-row {
+    display: grid;
+    grid-template-columns: 80px 100px 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+}
+
+.pronunciation-row:last-child {
+    border-bottom: none;
+}
+
+.pronunciation-letter {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--color-gold);
+    font-family: 'Courier New', monospace;
+}
+
+.pronunciation-sound {
+    font-size: var(--font-size-md);
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-family: 'Courier New', monospace;
+}
+
+.pronunciation-example {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
 .lore-justification {
     background: rgba(255, 255, 255, 0.03);
     padding: var(--spacing-lg);
@@ -1689,5 +1725,15 @@ input[type="range"] {
     
     .theme-label {
         display: none;
+    }
+    
+    .pronunciation-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-md) 0;
+    }
+    
+    .pronunciation-letter {
+        font-size: var(--font-size-2xl);
     }
 }
