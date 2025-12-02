@@ -158,3 +158,76 @@ export function formatMeaning(meaning) {
         word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
 }
+
+/**
+ * Extract main vowel sound from a string
+ * @param {string} text - Text to analyze
+ * @returns {string|null} Main vowel sound or null
+ */
+export function getMainVowel(text) {
+    if (!text) return null;
+    
+    const vowelMatches = text.toLowerCase().match(/[aeiou]+/g);
+    if (!vowelMatches || vowelMatches.length === 0) return null;
+    
+    // Return the first vowel cluster
+    return vowelMatches[0];
+}
+
+/**
+ * Check if two strings share a vowel sound (for Moon Elf repetition)
+ * @param {string} text1 - First text
+ * @param {string} text2 - Second text
+ * @returns {boolean}
+ */
+export function sharesVowelSound(text1, text2) {
+    const vowel1 = getMainVowel(text1);
+    const vowel2 = getMainVowel(text2);
+    
+    if (!vowel1 || !vowel2) return false;
+    
+    // Check if they share any vowel character
+    for (let v of vowel1) {
+        if (vowel2.includes(v)) return true;
+    }
+    
+    return false;
+}
+
+/**
+ * Check if combining two texts would create a harsh consonant cluster
+ * Elves avoid: gr-, kr-, dr- (except Drow), tr- (rare)
+ * @param {string} comp1Text - First component
+ * @param {string} comp2Text - Second component
+ * @returns {boolean}
+ */
+export function hasHarshCluster(comp1Text, comp2Text) {
+    if (!comp1Text || !comp2Text) return false;
+    
+    const end = comp1Text.slice(-2).toLowerCase(); // Last 2 chars
+    const start = comp2Text.slice(0, 2).toLowerCase(); // First 2 chars
+    const junction = (comp1Text.slice(-1) + comp2Text.slice(0, 1)).toLowerCase();
+    
+    // Harsh clusters to avoid
+    const harshClusters = ['gr', 'kr', 'dr', 'tr', 'thr', 'str'];
+    
+    // Check if junction or either end creates a harsh cluster
+    return harshClusters.some(cluster => 
+        junction.includes(cluster) || 
+        end.includes(cluster) || 
+        start.includes(cluster)
+    );
+}
+
+/**
+ * Check if a name has excessive consonant clusters (more than 2 consonants together)
+ * @param {string} name - Name to check
+ * @returns {boolean}
+ */
+export function hasExcessiveConsonantCluster(name) {
+    if (!name) return false;
+    
+    // Find all consonant clusters
+    const consonantClusters = name.match(/[^aeiou]{3,}/gi);
+    return consonantClusters && consonantClusters.length > 0;
+}

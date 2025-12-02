@@ -66,12 +66,16 @@ export class UIController {
         
         // Update name display
         this.elements.generatedName.textContent = nameData.name;
-        this.elements.nameMeaning.textContent = `"${nameData.meaning}"`;
         
-        // Announce to screen readers
+        // Build stacked meaning display
+        const stackedMeaning = this._buildStackedMeaning(nameData.meaning);
+        this.elements.nameMeaning.innerHTML = stackedMeaning;
+        
+        // Announce to screen readers (use plain text version)
+        const plainMeaning = nameData.meaning.replace(/,/g, ' or');
         this.elements.result.setAttribute(
             'aria-label',
-            `Generated name: ${nameData.name}, meaning: ${nameData.meaning}`
+            `Generated name: ${nameData.name}, meaning: ${plainMeaning}`
         );
         
         // Update breakdown
@@ -91,35 +95,102 @@ export class UIController {
     }
     
     /**
+     * Build stacked meaning display
+     * @param {string} meaning - Meaning string with + separators
+     * @returns {string} HTML with stacked meanings
+     * @private
+     */
+    _buildStackedMeaning(meaning) {
+        // Split by + to get each component's meaning
+        const parts = meaning.split(' + ');
+        
+        const stackedParts = parts.map(part => {
+            // Split by comma to get alternatives
+            const alternatives = part.split(',').map(s => s.trim());
+            
+            // Build a vertical stack
+            const optionsHTML = alternatives
+                .map(alt => `<span class="meaning-option">${alt}</span>`)
+                .join('');
+            
+            return `<span class="meaning-stack">${optionsHTML}</span>`;
+        });
+        
+        // Join with + separator
+        return '"' + stackedParts.join('<span class="meaning-separator">+</span>') + '"';
+    }
+    
+    /**
      * Display component breakdown
      * @private
      */
     _displayBreakdown(nameData) {
-        const { prefix, connector, suffix, syllables } = nameData;
+        const { syllables } = nameData;
         
         let html = '';
         
-        // Prefix
-        const cleanPrefixMeaning = prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
-        html += `<div class="component">
-            <span class="component-label">Prefix:</span> 
-            ${prefix.prefix_text} (${cleanPrefixMeaning})
-        </div>`;
-        
-        // Connector (if used)
-        if (connector) {
+        // Check if this is a complex mode name (has components array)
+        if (nameData.components && nameData.components.length > 0) {
+            // Complex mode - display all components
+            let connectorIndex = 0;
+            
+            for (let i = 0; i < nameData.components.length; i++) {
+                const comp = nameData.components[i];
+                const cleanMeaning = comp.meaning.replace(/\s*\/\s*/g, ', ');
+                
+                html += `<div class="component">
+                    <span class="component-label">Component ${i + 1}:</span> 
+                    ${comp.component.prefix_text || comp.component.suffix_text} (${cleanMeaning})
+                </div>`;
+                
+                // Add connector if exists
+                if (i < nameData.components.length - 1 && 
+                    nameData.connectors && 
+                    connectorIndex < nameData.connectors.length) {
+                    const conn = nameData.connectors[connectorIndex];
+                    html += `<div class="component">
+                        <span class="component-label">Connector:</span> 
+                        ${conn.connector.text}`;
+                    
+                    if (conn.connector.meaning) {
+                        html += ` (${conn.connector.meaning})`;
+                    }
+                    
+                    html += `</div>`;
+                    connectorIndex++;
+                }
+            }
+        } else {
+            // Standard mode - display prefix and suffix
+            const { prefix, connector, suffix } = nameData;
+            
+            // Prefix
+            const cleanPrefixMeaning = prefix.prefix_meaning.replace(/\s*\/\s*/g, ', ');
             html += `<div class="component">
-                <span class="component-label">Connector:</span> 
-                ${connector.text}
+                <span class="component-label">Prefix:</span> 
+                ${prefix.prefix_text} (${cleanPrefixMeaning})
+            </div>`;
+            
+            // Connector (if used)
+            if (connector) {
+                html += `<div class="component">
+                    <span class="component-label">Connector:</span> 
+                    ${connector.text}`;
+                
+                if (connector.meaning) {
+                    html += ` (${connector.meaning})`;
+                }
+                
+                html += `</div>`;
+            }
+            
+            // Suffix
+            const cleanSuffixMeaning = suffix.suffix_meaning.replace(/\s*\/\s*/g, ', ');
+            html += `<div class="component">
+                <span class="component-label">Suffix:</span> 
+                ${suffix.suffix_text} (${cleanSuffixMeaning})
             </div>`;
         }
-        
-        // Suffix
-        const cleanSuffixMeaning = suffix.suffix_meaning.replace(/\s*\/\s*/g, ', ');
-        html += `<div class="component">
-            <span class="component-label">Suffix:</span> 
-            ${suffix.suffix_text} (${cleanSuffixMeaning})
-        </div>`;
         
         // Syllables
         html += `<div class="component">
@@ -127,12 +198,15 @@ export class UIController {
             ${syllables}
         </div>`;
         
-        // Interchangeability note
-        const isInterchangeable = prefix.can_be_suffix && suffix.can_be_prefix;
-        html += `<div class="component">
-            <span class="component-label">Interchangeable:</span> 
-            ${isInterchangeable ? 'Yes - components can swap positions' : 'No - follows role/gender rules'}
-        </div>`;
+        // Interchangeability note (only for standard mode)
+        if (!nameData.components) {
+            const { prefix, suffix } = nameData;
+            const isInterchangeable = prefix.can_be_suffix && suffix.can_be_prefix;
+            html += `<div class="component">
+                <span class="component-label">Interchangeable:</span> 
+                ${isInterchangeable ? 'Yes - components can swap positions' : 'No - follows role/gender rules'}
+            </div>`;
+        }
         
         this.elements.breakdown.innerHTML = html;
     }

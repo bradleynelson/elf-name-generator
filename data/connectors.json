@@ -13,11 +13,13 @@
   },
   {
     "text": "-an-",
-    "function": "Spirit / Common smooth bridge"
+    "function": "Spirit / Common smooth bridge",
+    "meaning": "Spirit"
   },
   {
     "text": "-ani-",
-    "function": "Implies \"spirit of\" or \"essence of\""
+    "function": "Implies \"spirit of\" or \"essence of\"",
+    "meaning": "Spirit Of, Essence Of"
   },
   {
     "text": "-ea-",
@@ -25,11 +27,13 @@
   },
   {
     "text": "-ella-",
-    "function": "gentle, elegant"
+    "function": "gentle, elegant",
+    "meaning": "Gentle, Elegant"
   },
   {
     "text": "-en-",
-    "function": "Breaks up harsh consonants to add softness, often means \"small\" or \"dear\""
+    "function": "Breaks up harsh consonants to add softness, often means \"small\" or \"dear\"",
+    "meaning": "Small, Dear"
   },
   {
     "text": "-i-",
@@ -41,11 +45,13 @@
   },
   {
     "text": "-ira-",
-    "function": "dreaming, soul-deep"
+    "function": "dreaming, soul-deep",
+    "meaning": "Dreaming, Soul-Deep"
   },
   {
     "text": "-la-",
-    "function": "grace, beauty"
+    "function": "grace, beauty",
+    "meaning": "Grace, Beauty"
   },
   {
     "text": "-lë-",
@@ -53,7 +59,8 @@
   },
   {
     "text": "-na-",
-    "function": "heart, spirit"
+    "function": "heart, spirit",
+    "meaning": "Heart, Spirit"
   },
   {
     "text": "-or-",
@@ -61,15 +68,18 @@
   },
   {
     "text": "-ri-",
-    "function": "light, movement"
+    "function": "light, movement",
+    "meaning": "Light, Movement"
   },
   {
     "text": "-sae-",
-    "function": "sky, ethereal"
+    "function": "sky, ethereal",
+    "meaning": "Sky, Ethereal"
   },
   {
     "text": "-sha-",
-    "function": "moonlit, enchanted"
+    "function": "moonlit, enchanted",
+    "meaning": "Moonlit, Enchanted"
   },
   {
     "text": "-th-",
@@ -77,7 +87,8 @@
   },
   {
     "text": "-the-",
-    "function": "kin, heritage"
+    "function": "kin, heritage",
+    "meaning": "Kin, Heritage"
   },
   {
     "text": "-v-",
@@ -85,7 +96,8 @@
   },
   {
     "text": "-va-",
-    "function": "strength, vitality"
+    "function": "strength, vitality",
+    "meaning": "Strength, Vitality"
   },
   {
     "text": "-yr-",

@@ -27,7 +27,6 @@ export const CONFIG = {
 export const FINAL_VOWELS = [
     { vowel: 'a', tone: 'Clear, bright, feminine' },
     { vowel: 'i', tone: 'Sharp, intellectual' },
-    { vowel: 'o', tone: 'Deep, noble (rare)' },
     { vowel: 'u', tone: 'Mysterious, ancient' },
     { vowel: 'ae', tone: 'Lyrical, elegant' }
 ];

@@ -34,7 +34,7 @@ export class NameGenerator {
         
         // Try multiple attempts to get close to target syllable count
         for (let attempts = 0; attempts < CONFIG.MAX_GENERATION_ATTEMPTS; attempts++) {
-            const candidate = this._generateCandidate(complexity, style, subrace);
+            const candidate = this._generateCandidate(complexity, style, subrace, targetSyllables);
             const diff = Math.abs(candidate.syllables - targetSyllables);
             
             if (diff < bestDiff) {
@@ -55,8 +55,13 @@ export class NameGenerator {
      * Generate a single name candidate
      * @private
      */
-    _generateCandidate(complexity, style, subrace) {
-        // Select prefix and suffix with subrace filtering
+    _generateCandidate(complexity, style, subrace, targetSyllables) {
+        // Route to complex mode for 3+ component names
+        if (complexity === 'complex') {
+            return this._generateComplexCandidate(style, subrace, targetSyllables);
+        }
+        
+        // Standard 2-component generation
         const prefix = this._selectPrefix(style, subrace);
         const suffix = this._selectSuffix(style, subrace);
         
@@ -66,9 +71,8 @@ export class NameGenerator {
         
         // Determine if connector is needed
         let connector = null;
-        const needsConnector = complexity === 'complex' || 
-                             (complexity === 'auto' && 
-                              phonetics.needsConnector(prefixText, suffixText));
+        const needsConnector = complexity === 'auto' && 
+                             phonetics.needsConnector(prefixText, suffixText);
         
         if (needsConnector) {
             connector = this._selectConnector(style);
@@ -84,10 +88,16 @@ export class NameGenerator {
         const fullName = phonetics.capitalize(nameParts.join(''));
         const syllables = phonetics.countSyllables(fullName);
         
-        // Build meaning string
+        // Build meaning string (include connector meaning if it exists)
         const prefixMeaning = phonetics.formatMeaning(prefix.prefix_meaning);
         const suffixMeaning = phonetics.formatMeaning(suffix.suffix_meaning);
-        const meaning = `${prefixMeaning} + ${suffixMeaning}`;
+        let meaning = prefixMeaning + ' + ' + suffixMeaning;
+        
+        // Add connector meaning if it has one
+        if (connector && connector.meaning) {
+            const connectorMeaning = phonetics.formatMeaning(connector.meaning);
+            meaning = prefixMeaning + ' + ' + connectorMeaning + ' + ' + suffixMeaning;
+        }
         
         return {
             name: fullName,
@@ -96,6 +106,159 @@ export class NameGenerator {
             prefix,
             connector,
             suffix,
+            syllables,
+            finalVowel: null
+        };
+    }
+    
+    /**
+     * Generate a complex name with 2-4 components (syllable-driven)
+     * @private
+     */
+    _generateComplexCandidate(style, subrace, targetSyllables) {
+        const components = [];
+        const connectors = [];
+        let nameParts = [];
+        let currentSyllables = 0;
+        // Use the passed targetSyllables, not hardcoded
+        
+        // Get flexible components (can be either prefix or suffix)
+        const flexibleComponents = this.components.filter(c => 
+            c.can_be_prefix && c.can_be_suffix && !c.is_gender_modifier
+        );
+        
+        // Start with a prefix
+        let component = this._selectWeightedComponent(this.prefixCandidates, subrace);
+        let componentText = phonetics.cleanComponentText(component.prefix_text);
+        let componentMeaning = phonetics.formatMeaning(component.prefix_meaning);
+        
+        components.push({ component, text: componentText, meaning: componentMeaning });
+        nameParts.push(componentText);
+        currentSyllables = phonetics.countSyllables(componentText);
+        
+        let lastText = componentText;
+        let attempts = 0;
+        const maxComponents = 3; // Lowered from 4 - keep names shorter
+        const minComponents = 2; // Always need at least 2 components
+        const minSyllables = 2; // Never generate 1-syllable names
+        
+        // Keep adding components until we reach target syllables
+        while (currentSyllables < targetSyllables && components.length < maxComponents && attempts < 10) {
+            attempts++;
+            
+            // Select next component from flexible pool
+            component = this._selectWeightedComponent(flexibleComponents, subrace);
+            
+            // Randomly use as prefix or suffix
+            const useAsPrefix = Math.random() > 0.5;
+            componentText = phonetics.cleanComponentText(
+                useAsPrefix && component.prefix_text ? component.prefix_text : component.suffix_text
+            );
+            componentMeaning = phonetics.formatMeaning(
+                useAsPrefix && component.prefix_meaning ? component.prefix_meaning : component.suffix_meaning
+            );
+            
+            // Check syllable count if we add this component
+            const componentSyllables = phonetics.countSyllables(componentText);
+            const projectedTotal = currentSyllables + componentSyllables;
+            
+            // Don't add if it would exceed target+1 (unless we need minimum components)
+            if (projectedTotal > targetSyllables + 1 && components.length >= minComponents) {
+                break;
+            }
+            
+            // Check if we need a connector
+            const needsConn = phonetics.needsConnector(lastText, componentText) || 
+                            phonetics.hasHarshCluster(lastText, componentText);
+            
+            if (needsConn) {
+                let connector = this._selectConnector(style);
+                let connectorText = phonetics.cleanComponentText(connector.text);
+                
+                // Moon Elf vowel repetition (1/3 chance)
+                if (subrace === 'moon-elf' && Math.random() < 0.33) {
+                    const matchingConnectors = this.connectors.filter(c => 
+                        phonetics.sharesVowelSound(c.text, componentText)
+                    );
+                    if (matchingConnectors.length > 0) {
+                        connector = matchingConnectors[Math.floor(Math.random() * matchingConnectors.length)];
+                        connectorText = phonetics.cleanComponentText(connector.text);
+                    }
+                }
+                
+                // Check if connector makes name too long
+                const connectorSyllables = phonetics.countSyllables(connectorText);
+                if (currentSyllables + connectorSyllables + componentSyllables > targetSyllables + 1) {
+                    break;
+                }
+                
+                connectors.push({ connector, text: connectorText });
+                nameParts.push(connectorText);
+                currentSyllables += connectorSyllables;
+                lastText = connectorText;
+            }
+            
+            // Add the component
+            components.push({ component, text: componentText, meaning: componentMeaning });
+            nameParts.push(componentText);
+            currentSyllables += componentSyllables;
+            lastText = componentText;
+            
+            // Stop immediately if we've met the target (don't wait for next loop)
+            if (currentSyllables >= targetSyllables && components.length >= minComponents) {
+                break;
+            }
+        }
+        
+        // Ensure we end with a proper suffix if last component isn't suffix-capable
+        const lastComponent = components[components.length - 1].component;
+        if (!lastComponent.suffix_text || !lastComponent.can_be_suffix) {
+            // Replace last component with a proper suffix
+            const finalSuffix = this._selectSuffix(style, subrace);
+            const finalSuffixText = phonetics.cleanComponentText(finalSuffix.suffix_text);
+            const finalSuffixMeaning = phonetics.formatMeaning(finalSuffix.suffix_meaning);
+            
+            // Remove last component
+            components.pop();
+            nameParts.pop();
+            currentSyllables -= phonetics.countSyllables(lastText);
+            
+            // Get new lastText
+            if (nameParts.length > 0) {
+                lastText = nameParts[nameParts.length - 1];
+            }
+            
+            // Check if connector needed
+            if (phonetics.needsConnector(lastText, finalSuffixText)) {
+                const connector = this._selectConnector(style);
+                const connectorText = phonetics.cleanComponentText(connector.text);
+                
+                connectors.push({ connector, text: connectorText });
+                nameParts.push(connectorText);
+            }
+            
+            components.push({ 
+                component: finalSuffix, 
+                text: finalSuffixText, 
+                meaning: finalSuffixMeaning 
+            });
+            nameParts.push(finalSuffixText);
+        }
+        
+        // Build the final name - join first, THEN capitalize only first letter
+        const fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
+        const syllables = phonetics.countSyllables(fullName);
+        
+        // Build meaning string - ONLY component meanings, filter out empty ones
+        const componentMeanings = components.map(c => c.meaning).filter(m => m && m.trim());
+        const meaning = componentMeanings.join(' + ');
+        
+        return {
+            name: fullName,
+            baseForm: fullName,
+            meaning,
+            components,
+            connectors,
             syllables,
             finalVowel: null
         };
