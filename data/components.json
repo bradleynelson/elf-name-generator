@@ -814,7 +814,7 @@
     "can_be_prefix": true,
     "can_be_suffix": true,
     "suffix_text": "-ael",
-    "suffix_meaning": "Blade, Edge, or Warrior",
+    "suffix_meaning": "Blade, Edge, Warrior",
     "is_gender_modifier": false,
     "tags": [
       "neutral",
@@ -828,7 +828,7 @@
     "can_be_prefix": true,
     "can_be_suffix": true,
     "suffix_text": "-ail",
-    "suffix_meaning": "Blade, Edge, or Warrior",
+    "suffix_meaning": "Blade, Edge, Warrior",
     "is_gender_modifier": false,
     "tags": [
       "neutral",
@@ -1279,7 +1279,7 @@
     "can_be_prefix": true,
     "can_be_suffix": true,
     "suffix_text": "-nail",
-    "suffix_meaning": "Spike, Point, or Fixed Position",
+    "suffix_meaning": "Spike, Point, Fixed Position",
     "is_gender_modifier": false,
     "tags": [
       "neutral"

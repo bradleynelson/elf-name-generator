@@ -14,6 +14,10 @@ export class NameGenerator {
         // Pre-filter components for faster access
         this.prefixCandidates = components.filter(c => c.can_be_prefix && c.prefix_text);
         this.suffixCandidates = components.filter(c => c.can_be_suffix && c.suffix_text);
+        
+        // Track recently used components to reduce repeats
+        this.recentlyUsed = [];
+        this.maxRecentHistory = 5; // Remember last 5 generations
     }
     
     /**
@@ -48,7 +52,39 @@ export class NameGenerator {
             }
         }
         
+        // Track components used in this generation
+        this._trackUsedComponents(bestName);
+        
         return bestName;
+    }
+    
+    /**
+     * Track components used in a name to avoid immediate repeats
+     * @private
+     */
+    _trackUsedComponents(nameData) {
+        const usedRoots = new Set();
+        
+        // Standard mode
+        if (nameData.prefix) {
+            usedRoots.add(nameData.prefix.root);
+        }
+        if (nameData.suffix) {
+            usedRoots.add(nameData.suffix.root);
+        }
+        
+        // Complex mode
+        if (nameData.components) {
+            nameData.components.forEach(comp => {
+                usedRoots.add(comp.component.root);
+            });
+        }
+        
+        // Add to history (keep last N)
+        this.recentlyUsed.push(usedRoots);
+        if (this.recentlyUsed.length > this.maxRecentHistory) {
+            this.recentlyUsed.shift();
+        }
     }
     
     /**
@@ -354,22 +390,38 @@ export class NameGenerator {
      * @private
      */
     _selectWeightedComponent(candidates, subrace) {
+        // Filter out recently used components (light anti-repeat)
+        let availableCandidates = candidates;
+        if (this.recentlyUsed.length > 0) {
+            // Flatten all recently used roots
+            const recentRoots = new Set();
+            this.recentlyUsed.forEach(usedSet => {
+                usedSet.forEach(root => recentRoots.add(root));
+            });
+            
+            // Filter out recently used (but keep if that leaves too few options)
+            const filtered = candidates.filter(c => !recentRoots.has(c.root));
+            if (filtered.length > 10) { // Only filter if we have enough left
+                availableCandidates = filtered;
+            }
+        }
+        
         // If no subrace filtering, use random selection
         if (subrace === 'high-elf') {
-            return this._randomElement(candidates);
+            return this._randomElement(availableCandidates);
         }
         
         // Determine preferred tag based on subrace
         const preferredTag = subrace === 'sun-elf' ? 'sun' : subrace === 'moon-elf' ? 'moon' : null;
         
         if (!preferredTag) {
-            return this._randomElement(candidates);
+            return this._randomElement(availableCandidates);
         }
         
         // Filter components by preferred tag
-        const preferred = candidates.filter(c => c.tags && c.tags.includes(preferredTag));
-        const neutral = candidates.filter(c => c.tags && c.tags.includes('neutral'));
-        const other = candidates.filter(c => !c.tags || (!c.tags.includes(preferredTag) && !c.tags.includes('neutral')));
+        const preferred = availableCandidates.filter(c => c.tags && c.tags.includes(preferredTag));
+        const neutral = availableCandidates.filter(c => c.tags && c.tags.includes('neutral'));
+        const other = availableCandidates.filter(c => !c.tags || (!c.tags.includes(preferredTag) && !c.tags.includes('neutral')));
         
         // Weighted random selection
         // 60% chance preferred, 30% chance neutral, 10% chance other
@@ -384,6 +436,6 @@ export class NameGenerator {
         }
         
         // Fallback: pick from any available
-        return this._randomElement(candidates);
+        return this._randomElement(availableCandidates);
     }
 }
