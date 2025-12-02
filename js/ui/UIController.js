@@ -74,9 +74,6 @@ export class UIController {
             `Generated name: ${nameData.name}, meaning: ${nameData.meaning}`
         );
         
-        // Show result
-        this.elements.result.classList.add('show');
-        
         // Update breakdown
         this._displayBreakdown(nameData);
         
@@ -89,7 +86,7 @@ export class UIController {
         )) {
             this._displayVowelSuggestions(nameData);
         } else {
-            this.elements.vowelSuggestionsContainer.style.display = 'none';
+            this.elements.vowelSuggestionsContainer.classList.add('hidden');
         }
     }
     
@@ -153,7 +150,7 @@ export class UIController {
         `).join('');
         
         this.elements.vowelOptions.innerHTML = vowelOptionsHTML;
-        this.elements.vowelSuggestionsContainer.style.display = 'block';
+        this.elements.vowelSuggestionsContainer.classList.remove('hidden');
     }
     
     /**
@@ -197,7 +194,7 @@ export class UIController {
         this.elements.breakdown.innerHTML = html;
         
         // Hide vowel suggestions
-        this.elements.vowelSuggestionsContainer.style.display = 'none';
+        this.elements.vowelSuggestionsContainer.classList.add('hidden');
     }
     
     /**

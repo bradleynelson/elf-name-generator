@@ -91,75 +91,92 @@
     <div class="container">
         <h1>⚔️ Elven Name Generator ⚔️</h1>
         <div class="subtitle">Espruar Naming System - Forgotten Realms</div>
-
-        <div class="interchangeable-note">
-            <div class="interchangeable-note-title">🔄 Interchangeable Components</div>
-            <div class="interchangeable-note-text">
-                This generator follows the "Lego System" - most descriptive components can be used as either prefix or suffix. Gender modifiers (-iel, -ion) and strong role suffixes (-kian, -drith) always remain as suffixes.
-            </div>
-        </div>
         
         <main id="main-content">
-        <div class="controls">
-            <div class="control-group">
-                <label for="subrace">Elven Subrace</label>
-                <select id="subrace">
-                    <option value="high-elf">High Elf (General)</option>
-                    <option value="sun-elf">├─ Sun Elf (Ar-Tel-Quessir)</option>
-                    <option value="moon-elf">└─ Moon Elf (Teu-Tel-Quessir)</option>
-                </select>
-                <div class="subrace-description" id="subraceDescription">
-                    Balanced names drawing from all High Elf traditions
-                </div>
-            </div>
-            
-            <div class="control-group">
-                <label for="complexity">Name Complexity</label>
-                <select id="complexity">
-                    <option value="auto">Auto (Follows Phonetic Rules)</option>
-                    <option value="simple">Simple (Two Components)</option>
-                    <option value="complex">Complex (Three Components)</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label for="syllables">Target Syllable Count</label>
-                <input type="range" id="syllables" min="2" max="6" value="4" step="1">
-                <div class="range-labels">
-                    <span>Short (2)</span>
-                    <span>Ideal (3-5)</span>
-                    <span>Long (6)</span>
-                </div>
-            </div>
-            
-            <div class="control-group">
-                <label for="style">Gender/Style Preference</label>
-                <select id="style">
-                    <option value="neutral">Gender Neutral</option>
-                    <option value="feminine">Feminine (Softer sounds)</option>
-                    <option value="masculine">Masculine (Stronger sounds)</option>
-                </select>
-            </div>
-            
-            <button class="generate-btn" aria-label="Generate a new High Elf name">✨ Generate Name ✨</button>
-        </div>
         
+        <!-- Result Card -->
         <div class="result" id="result" aria-live="polite">
-            <div class="generated-name" id="generatedName"></div>
-            <div class="name-meaning" id="nameMeaning"></div>
+            <!-- Settings Accordion -->
+            <div class="settings-accordion">
+                <button class="settings-toggle" id="settingsToggle" aria-expanded="false" aria-controls="settingsContent">
+                    <span class="settings-toggle-title">Generation Settings</span>
+                </button>
+                <div class="settings-content" id="settingsContent" hidden>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="subraceSelect">Elven Subrace</label>
+                            <select id="subrace">
+                                <option value="high-elf">High Elf (General)</option>
+                                <option value="sun-elf">├─ Sun Elf (Ar-Tel-Quessir)</option>
+                                <option value="moon-elf">└─ Moon Elf (Teu-Tel-Quessir)</option>
+                            </select>
+                            <div class="subrace-description" id="subraceDescription">
+                                Balanced names drawing from all High Elf traditions
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="complexity">Name Complexity</label>
+                            <select id="complexity">
+                                <option value="auto">Auto (Follows Phonetic Rules)</option>
+                                <option value="simple">Simple (Two Components)</option>
+                                <option value="complex">Complex (Three Components)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="syllables">Target Syllable Count</label>
+                            <input type="range" id="syllables" min="2" max="6" value="4" step="1">
+                            <div class="range-labels">
+                                <span>Short (2)</span>
+                                <span>Ideal (3-5)</span>
+                                <span>Long (6)</span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="style">Gender/Style Preference</label>
+                            <select id="style">
+                                <option value="neutral">Gender Neutral</option>
+                                <option value="feminine">Feminine (Softer sounds)</option>
+                                <option value="masculine">Masculine (Stronger sounds)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="interchangeable-note">
+                            <div class="interchangeable-note-title">🔄 Interchangeable Components</div>
+                            <div class="interchangeable-note-text">
+                                This generator follows the "Lego System" - most descriptive components can be used as either prefix or suffix. Gender modifiers (-iel, -ion) and strong role suffixes (-kian, -drith) always remain as suffixes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            <div id="vowelSuggestionsContainer" style="display: none;" class="vowel-suggestions">
+            <button class="generate-btn-large" aria-label="Generate a new name">✨ Generate Name ✨</button>
+            
+            <div class="name-content">
+                <div class="generated-name" id="generatedName"></div>
+                <div class="name-meaning" id="nameMeaning"></div>
+            </div>
+            
+            <div id="vowelSuggestionsContainer" class="vowel-suggestions hidden">
                 <div class="vowel-suggestions-title">💫 Optional Final Vowel (adds syllable & musicality):</div>
                 <div class="vowel-options" id="vowelOptions"></div>
             </div>
             
             <div class="breakdown">
-                <div class="breakdown-title">Component Breakdown:</div>
-                <div id="breakdown"></div>
+                <button class="breakdown-toggle" id="breakdownToggle" aria-expanded="false" aria-controls="breakdownContent">
+                    <span class="breakdown-title">Component Breakdown</span>
+                </button>
+                <div class="breakdown-content" id="breakdownContent" hidden>
+                    <div id="breakdown"></div>
+                </div>
             </div>
+            
             <div class="action-buttons">
-                <button class="action-btn save-favorite" aria-label="Save current name to favorites">💫 Save to Favorites</button>
-                <button class="action-btn generate-another" aria-label="Generate another name">🔄 Generate Another</button>
+                <button class="action-btn save-favorite" aria-label="Save current name to favorites">⭐ Save to Favorites</button>
+                <button class="action-btn copy-btn-bottom" id="copyBtnBottom" aria-label="Copy name to clipboard">📋 Copy to Clipboard</button>
             </div>
         </div>
         

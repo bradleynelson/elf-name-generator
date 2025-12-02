@@ -197,7 +197,7 @@
 
 /* Light mode breakdown */
 [data-theme="light"] .breakdown {
-    background: rgba(42, 24, 16, 0.05);
+    background: var(--color-bg-overlay-darker);
 }
 
 [data-theme="light"] .component {
@@ -370,6 +370,249 @@ h1 {
 }
 
 /* ========================================
+   Settings Accordion
+   ======================================== */
+.settings-accordion {
+    background: rgba(0, 0, 0, 0.4);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.settings-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: var(--spacing-sm) 0;
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-fast);
+    margin-bottom: var(--spacing-sm);
+}
+
+.settings-toggle:active {
+    outline: none;
+}
+
+.settings-toggle:focus {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+.settings-toggle:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.settings-toggle:hover .settings-toggle-title {
+    color: var(--color-gold-light);
+}
+
+.settings-toggle-title {
+    color: var(--color-gold);
+    font-weight: bold;
+}
+
+.settings-toggle-title::before {
+    content: "▶ ";
+    transition: transform var(--transition-fast);
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+.settings-toggle[aria-expanded="true"] .settings-toggle-title::before {
+    transform: rotate(90deg);
+}
+
+.settings-content {
+    margin-top: var(--spacing-md);
+}
+
+.settings-content[hidden] {
+    display: none;
+}
+
+[data-theme="light"] .settings-accordion {
+    background: var(--color-bg-overlay-darker);
+}
+
+[data-theme="light"] .settings-toggle:hover .settings-toggle-title {
+    color: #8b6914;
+}
+
+[data-theme="light"] .settings-toggle {
+    background: transparent;
+    border: none;
+}
+
+[data-theme="light"] .settings-toggle:hover {
+    background: transparent;
+}
+
+/* Settings Title */
+.settings-title {
+    color: var(--color-gold);
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+}
+
+/* Settings Actions */
+.settings-actions {
+    margin-top: var(--spacing-xl);
+}
+
+/* Breakdown Toggle */
+.breakdown-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: var(--spacing-sm) 0;
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-fast);
+    margin-bottom: var(--spacing-sm);
+}
+
+.breakdown-toggle:active {
+    outline: none;
+}
+
+.breakdown-toggle:focus {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+.breakdown-toggle:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.breakdown-toggle:hover .breakdown-title {
+    color: var(--color-gold-light);
+}
+
+.breakdown-toggle .breakdown-title::before {
+    content: "▶ ";
+    transition: transform var(--transition-fast);
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+.breakdown-toggle[aria-expanded="true"] .breakdown-title::before {
+    transform: rotate(90deg);
+}
+
+.breakdown-content {
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.breakdown-content[hidden] {
+    display: none;
+}
+
+/* Primary Action Button Styling */
+.primary-action {
+    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-darker) 100%) !important;
+    border-color: var(--color-gold) !important;
+    color: var(--color-bg-primary) !important;
+    font-weight: bold;
+}
+
+.primary-action:hover {
+    background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .primary-action {
+    color: #f4e8d0 !important;
+}
+
+
+/* ========================================
+   Generate Button (Inside Card)
+   ======================================== */
+.generate-btn-large {
+    width: 100%;
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-darker) 100%);
+    border: none;
+    border-radius: var(--radius-xl);
+    color: var(--color-bg-primary);
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin-bottom: var(--spacing-2xl);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: var(--shadow-md);
+}
+
+.generate-btn-large:hover {
+    background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(201, 160, 80, 0.4);
+}
+
+.generate-btn-large:active {
+    transform: translateY(0);
+}
+
+/* ========================================
+   Action Buttons (Bottom of Card)
+   ======================================== */
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.action-btn {
+    flex: 1;
+    padding: var(--spacing-md);
+    background: rgba(201, 160, 80, 0.2);
+    border: 1px solid var(--color-border-gold);
+    border-radius: var(--radius-md);
+    color: var(--color-gold);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-weight: bold;
+}
+
+.action-btn:hover {
+    background: rgba(201, 160, 80, 0.3);
+}
+
+.action-btn:active {
+    outline: none;
+}
+
+.action-btn:focus {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+}
+
+.action-btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ========================================
+   Vowel Suggestions
+   ======================================== */
+.vowel-suggestions {
+    background: rgba(201, 160, 80, 0.1);
+    border: 1px solid var(--color-border-gold);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* ========================================
    Controls Section
    ======================================== */
 .controls {
@@ -377,6 +620,7 @@ h1 {
     padding: var(--spacing-2xl);
     border-radius: var(--radius-xl);
     margin-bottom: var(--spacing-3xl);
+    border-left: 4px solid var(--color-gold);
 }
 
 .control-group {
@@ -479,6 +723,19 @@ input[type="range"] {
     background: rgba(201, 160, 80, 0.3);
 }
 
+.action-btn:active {
+    outline: none;
+}
+
+.action-btn:focus {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+}
+
+.action-btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
 /* ========================================
    Result Display
    ======================================== */
@@ -486,25 +743,7 @@ input[type="range"] {
     background: var(--color-bg-overlay-darker);
     padding: var(--spacing-3xl);
     border-radius: var(--radius-xl);
-    margin-bottom: var(--spacing-xl);
     border-left: 4px solid var(--color-gold);
-    display: none;
-}
-
-.result.show {
-    display: block;
-    animation: fadeIn var(--transition-slow);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .generated-name {
@@ -532,7 +771,11 @@ input[type="range"] {
     border: 1px solid var(--color-border-gold);
     padding: var(--spacing-lg);
     border-radius: var(--radius-lg);
-    margin-bottom: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+
+.vowel-suggestions.hidden {
+    display: none;
 }
 
 .vowel-suggestions-title {
@@ -581,10 +824,11 @@ input[type="range"] {
    Component Breakdown
    ======================================== */
 .breakdown {
-    background: var(--color-bg-overlay-dark);
+    background: rgba(0, 0, 0, 0.4);
     padding: var(--spacing-lg);
     border-radius: var(--radius-lg);
     font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .breakdown-title {
@@ -1078,7 +1322,7 @@ input[type="range"] {
    ======================================== */
 .toast-notification {
     position: fixed;
-    top: 20px;
+    top: 80px;
     right: 20px;
     background: var(--color-bg-overlay-darker);
     color: var(--color-text-primary);

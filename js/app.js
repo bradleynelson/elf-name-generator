@@ -46,9 +46,6 @@ export class EspruarNameGenerator {
             // Display initial favorites
             this.ui.displayFavorites(this.favorites.getAll());
             
-            // Generate initial name
-            this.generateName();
-            
             // Initialize accordions
             this._initAccordions();
             
@@ -60,6 +57,9 @@ export class EspruarNameGenerator {
             
             this.isInitialized = true;
             console.log('Espruar Name Generator initialized successfully');
+            
+            // Generate initial name (after isInitialized = true)
+            this.generateName();
             
         } catch (error) {
             console.error('Failed to initialize application:', error);
@@ -79,10 +79,13 @@ export class EspruarNameGenerator {
             });
         }
         
-        // Generate button (main)
-        this.ui.elements.generateBtn.addEventListener('click', () => {
-            this.generateName();
-        });
+        // Large generate button (main action)
+        const generateBtnLarge = document.querySelector('.generate-btn-large');
+        if (generateBtnLarge) {
+            generateBtnLarge.addEventListener('click', () => {
+                this.generateName();
+            });
+        }
         
         // Save to favorites button
         const saveFavoriteBtn = document.querySelector('.save-favorite');
@@ -92,11 +95,41 @@ export class EspruarNameGenerator {
             });
         }
         
-        // Generate another button
-        const generateAnotherBtn = document.querySelector('.generate-another');
-        if (generateAnotherBtn) {
-            generateAnotherBtn.addEventListener('click', () => {
-                this.generateName();
+        // Copy button (bottom)
+        const copyBtnBottom = document.getElementById('copyBtnBottom');
+        if (copyBtnBottom) {
+            copyBtnBottom.addEventListener('click', () => {
+                this.copyNameToClipboard();
+            });
+        }
+        
+        // Settings accordion toggle
+        const settingsToggle = document.getElementById('settingsToggle');
+        const settingsContent = document.getElementById('settingsContent');
+        if (settingsToggle && settingsContent) {
+            settingsToggle.addEventListener('click', () => {
+                const isExpanded = settingsToggle.getAttribute('aria-expanded') === 'true';
+                settingsToggle.setAttribute('aria-expanded', !isExpanded);
+                if (isExpanded) {
+                    settingsContent.setAttribute('hidden', '');
+                } else {
+                    settingsContent.removeAttribute('hidden');
+                }
+            });
+        }
+        
+        // Breakdown toggle
+        const breakdownToggle = document.getElementById('breakdownToggle');
+        const breakdownContent = document.getElementById('breakdownContent');
+        if (breakdownToggle && breakdownContent) {
+            breakdownToggle.addEventListener('click', () => {
+                const isExpanded = breakdownToggle.getAttribute('aria-expanded') === 'true';
+                breakdownToggle.setAttribute('aria-expanded', !isExpanded);
+                if (isExpanded) {
+                    breakdownContent.setAttribute('hidden', '');
+                } else {
+                    breakdownContent.removeAttribute('hidden');
+                }
             });
         }
         
@@ -151,6 +184,45 @@ export class EspruarNameGenerator {
         
         const result = this.favorites.add(currentName);
         this.ui.showNotification(result.message, result.success ? 'success' : 'error');
+    }
+    
+    /**
+     * Copy name to clipboard
+     */
+    copyNameToClipboard() {
+        if (!this.isInitialized) return;
+        
+        const currentName = this.ui.getCurrentName();
+        if (!currentName || !currentName.name) {
+            this.ui.showNotification('No name to copy!', 'error');
+            return;
+        }
+        
+        // Use modern clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(currentName.name)
+                .then(() => {
+                    this.ui.showNotification(`Copied "${currentName.name}" to clipboard!`, 'success');
+                })
+                .catch(() => {
+                    this.ui.showNotification('Failed to copy to clipboard', 'error');
+                });
+        } else {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = currentName.name;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                this.ui.showNotification(`Copied "${currentName.name}" to clipboard!`, 'success');
+            } catch (err) {
+                this.ui.showNotification('Failed to copy to clipboard', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
     }
     
     /**
@@ -257,6 +329,11 @@ export class EspruarNameGenerator {
             });
         });
     }
+    
+    /**
+     * Flip the card between result and settings
+     * @private
+     */
     
     /**
      * Initialize cookie consent banner
