@@ -33,13 +33,19 @@ export class NameGenerator {
             subrace = 'high-elf' // NEW: subrace selection
         } = options;
         
+        // Wood Elves prefer shorter names (2-3 syllables)
+        let adjustedTarget = targetSyllables;
+        if (subrace === 'wood-elf') {
+            adjustedTarget = Math.max(2, targetSyllables - 1); // Lower by 1, min 2
+        }
+        
         let bestName = null;
         let bestDiff = 100;
         
         // Try multiple attempts to get close to target syllable count
         for (let attempts = 0; attempts < CONFIG.MAX_GENERATION_ATTEMPTS; attempts++) {
-            const candidate = this._generateCandidate(complexity, style, subrace, targetSyllables);
-            const diff = Math.abs(candidate.syllables - targetSyllables);
+            const candidate = this._generateCandidate(complexity, style, subrace, adjustedTarget);
+            const diff = Math.abs(candidate.syllables - adjustedTarget);
             
             if (diff < bestDiff) {
                 bestDiff = diff;
@@ -107,8 +113,14 @@ export class NameGenerator {
         
         // Determine if connector is needed
         let connector = null;
-        const needsConnector = complexity === 'auto' && 
-                             phonetics.needsConnector(prefixText, suffixText);
+        let needsConnector = complexity === 'auto' && 
+                           phonetics.needsConnector(prefixText, suffixText);
+        
+        // Wood Elves discourage connectors - only use for REALLY harsh clusters
+        if (subrace === 'wood-elf' && needsConnector) {
+            // Only use connector if it's a harsh cluster, not just any consonant collision
+            needsConnector = phonetics.hasHarshCluster(prefixText, suffixText);
+        }
         
         if (needsConnector) {
             connector = this._selectConnector(style);
@@ -412,7 +424,9 @@ export class NameGenerator {
         }
         
         // Determine preferred tag based on subrace
-        const preferredTag = subrace === 'sun-elf' ? 'sun' : subrace === 'moon-elf' ? 'moon' : null;
+        const preferredTag = subrace === 'sun-elf' ? 'sun' : 
+                            subrace === 'moon-elf' ? 'moon' : 
+                            subrace === 'wood-elf' ? 'wood' : null;
         
         if (!preferredTag) {
             return this._randomElement(availableCandidates);

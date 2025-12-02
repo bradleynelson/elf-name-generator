@@ -330,7 +330,8 @@ export class UIController {
         const descriptions = {
             'high-elf': 'Balanced names drawing from all High Elf traditions',
             'sun-elf': 'Names emphasizing Gold, Light, Nobility, and Ancient Lore (formal, 3-5 syllables)',
-            'moon-elf': 'Names emphasizing Silver, Moonlight, Stars, and Flow (lyrical, 4+ syllables)'
+            'moon-elf': 'Names emphasizing Silver, Moonlight, Stars, and Flow (lyrical, 4+ syllables)',
+            'wood-elf': 'Short, strong names (2-3 syllables) emphasizing Nature, Vigilance, and Martial Skill'
         };
         
         if (this.elements.subraceDescription) {

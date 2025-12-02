@@ -10,7 +10,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "mysterious"
+      "mysterious",
+      "neutral"
     ]
   },
   {
@@ -26,7 +27,8 @@
       "neutral",
       "nocturnal",
       "nobility",
-      "martial"
+      "martial",
+      "wood"
     ]
   },
   {
@@ -39,7 +41,8 @@
     "suffix_meaning": null,
     "is_gender_modifier": false,
     "tags": [
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -79,7 +82,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -119,7 +123,8 @@
     "suffix_meaning": null,
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -134,7 +139,8 @@
     "tags": [
       "nobility",
       "sun",
-      "feminine"
+      "feminine",
+      "neutral"
     ]
   },
   {
@@ -162,7 +168,8 @@
     "is_gender_modifier": false,
     "tags": [
       "ancient",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -175,7 +182,8 @@
     "suffix_meaning": null,
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -202,7 +210,8 @@
     "is_gender_modifier": false,
     "tags": [
       "sun",
-      "light"
+      "light",
+      "neutral"
     ]
   },
   {
@@ -242,7 +251,8 @@
     "is_gender_modifier": false,
     "tags": [
       "musical",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -270,7 +280,8 @@
     "is_gender_modifier": false,
     "tags": [
       "silver",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -297,7 +308,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "mysterious"
+      "mysterious",
+      "neutral"
     ]
   },
   {
@@ -311,7 +323,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nocturnal",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -338,7 +351,8 @@
     "is_gender_modifier": false,
     "tags": [
       "silver",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -366,7 +380,8 @@
     "tags": [
       "moon",
       "shadow",
-      "mysterious"
+      "mysterious",
+      "neutral"
     ]
   },
   {
@@ -380,7 +395,8 @@
     "is_gender_modifier": false,
     "tags": [
       "silver",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -409,7 +425,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -423,7 +440,8 @@
     "is_gender_modifier": false,
     "tags": [
       "silver",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -437,7 +455,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -451,7 +470,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "wood"
     ]
   },
   {
@@ -465,7 +485,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral",
-      "shadow"
+      "shadow",
+      "wood"
     ]
   },
   {
@@ -505,7 +526,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "mysterious"
+      "mysterious",
+      "neutral"
     ]
   },
   {
@@ -518,7 +540,8 @@
     "suffix_meaning": null,
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -544,7 +567,8 @@
     "suffix_meaning": null,
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -587,7 +611,8 @@
     "tags": [
       "musical",
       "moon",
-      "flowing"
+      "flowing",
+      "neutral"
     ]
   },
   {
@@ -602,7 +627,8 @@
     "tags": [
       "musical",
       "moon",
-      "flowing"
+      "flowing",
+      "neutral"
     ]
   },
   {
@@ -615,7 +641,8 @@
     "suffix_meaning": null,
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -630,7 +657,8 @@
     "tags": [
       "silver",
       "moon",
-      "celestial"
+      "celestial",
+      "neutral"
     ]
   },
   {
@@ -644,7 +672,8 @@
     "is_gender_modifier": false,
     "tags": [
       "silver",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -658,7 +687,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "shadow"
+      "shadow",
+      "neutral"
     ]
   },
   {
@@ -672,7 +702,8 @@
     "is_gender_modifier": false,
     "tags": [
       "sun",
-      "light"
+      "light",
+      "neutral"
     ]
   },
   {
@@ -777,7 +808,8 @@
     "is_gender_modifier": false,
     "tags": [
       "sun",
-      "light"
+      "light",
+      "neutral"
     ]
   },
   {
@@ -804,7 +836,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "shadow"
+      "shadow",
+      "neutral"
     ]
   },
   {
@@ -818,7 +851,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral",
-      "martial"
+      "martial",
+      "wood"
     ]
   },
   {
@@ -832,7 +866,8 @@
     "is_gender_modifier": false,
     "tags": [
       "neutral",
-      "martial"
+      "martial",
+      "wood"
     ]
   },
   {
@@ -859,7 +894,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -873,7 +909,8 @@
     "is_gender_modifier": false,
     "tags": [
       "sun",
-      "light"
+      "light",
+      "neutral"
     ]
   },
   {
@@ -951,7 +988,8 @@
     "suffix_meaning": "Craft / Maker",
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -978,7 +1016,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -1043,7 +1082,8 @@
     "suffix_meaning": "Glade / Valley",
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -1070,7 +1110,8 @@
     "is_gender_modifier": false,
     "tags": [
       "ancient",
-      "sun"
+      "sun",
+      "wood"
     ]
   },
   {
@@ -1110,7 +1151,8 @@
     "is_gender_modifier": false,
     "tags": [
       "sun",
-      "light"
+      "light",
+      "neutral"
     ]
   },
   {
@@ -1123,7 +1165,8 @@
     "suffix_meaning": "Pale / Ice / White",
     "is_gender_modifier": false,
     "tags": [
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -1163,7 +1206,8 @@
     "suffix_meaning": "dreamer",
     "is_gender_modifier": false,
     "tags": [
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -1189,7 +1233,8 @@
     "suffix_meaning": "Wisdom / Mind",
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -1229,7 +1274,8 @@
     "is_gender_modifier": false,
     "tags": [
       "nobility",
-      "sun"
+      "sun",
+      "neutral"
     ]
   },
   {
@@ -1255,7 +1301,8 @@
     "suffix_meaning": "Snow / Frost",
     "is_gender_modifier": false,
     "tags": [
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -1269,7 +1316,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "mysterious"
+      "mysterious",
+      "neutral"
     ]
   },
   {
@@ -1282,7 +1330,8 @@
     "suffix_meaning": "Spike, Point, Fixed Position",
     "is_gender_modifier": false,
     "tags": [
-      "neutral"
+      "neutral",
+      "wood"
     ]
   },
   {
@@ -1350,7 +1399,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "feminine"
+      "feminine",
+      "neutral"
     ]
   },
   {
@@ -1390,7 +1440,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "celestial"
+      "celestial",
+      "neutral"
     ]
   },
   {
@@ -1430,7 +1481,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "mysterious"
+      "mysterious",
+      "neutral"
     ]
   },
   {
@@ -1457,7 +1509,8 @@
     "is_gender_modifier": false,
     "tags": [
       "musical",
-      "moon"
+      "moon",
+      "neutral"
     ]
   },
   {
@@ -1471,7 +1524,8 @@
     "is_gender_modifier": false,
     "tags": [
       "moon",
-      "feminine"
+      "feminine",
+      "neutral"
     ]
   },
   {
