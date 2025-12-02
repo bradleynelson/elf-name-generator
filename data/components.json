@@ -1567,5 +1567,175 @@
       "neutral",
       "flowing"
     ]
+  },
+  {
+    "root": "zhaun",
+    "prefix_text": "Zhaun-",
+    "prefix_meaning": "Skull, Death",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female",
+      "drow-male"
+    ]
+  },
+  {
+    "root": "phar",
+    "prefix_text": "Phar-",
+    "prefix_meaning": "Mistress, Ruler",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female"
+    ]
+  },
+  {
+    "root": "faer-drow",
+    "prefix_text": "Faer-",
+    "prefix_meaning": "Demon, Chaos",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female"
+    ]
+  },
+  {
+    "root": "driz",
+    "prefix_text": "Driz-",
+    "prefix_meaning": "Exile, Outcast",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-male"
+    ]
+  },
+  {
+    "root": "qil-drow",
+    "prefix_text": "Qil-",
+    "prefix_meaning": "Web, Spider",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "suffix_text": null,
+    "suffix_meaning": null,
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female"
+    ]
+  },
+  {
+    "root": "tyl",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-tyl",
+    "suffix_meaning": "Venom, Lethal",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female"
+    ]
+  },
+  {
+    "root": "tana",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-tana",
+    "suffix_meaning": "Fortress, Ruler",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female"
+    ]
+  },
+  {
+    "root": "xia",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-xia",
+    "suffix_meaning": "Queen, Power",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female"
+    ]
+  },
+  {
+    "root": "raen",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-raen",
+    "suffix_meaning": "Darkness, Shadow",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-female",
+      "drow-male"
+    ]
+  },
+  {
+    "root": "ax",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-ax",
+    "suffix_meaning": "Blade, Weapon",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-male"
+    ]
+  },
+  {
+    "root": "gloth",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-gloth",
+    "suffix_meaning": "Servitude, Slave",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-male"
+    ]
+  },
+  {
+    "root": "lim",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "-lim",
+    "suffix_meaning": "Shadow, Warrior",
+    "is_gender_modifier": false,
+    "tags": [
+      "drow",
+      "drow-male"
+    ]
   }
 ]

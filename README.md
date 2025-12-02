@@ -1,199 +1,301 @@
-# High Elf Name Generator (Refactored)
+# Espruar Elven Name Generator
 
-A web-based name generator for creating authentic High Elf names following the Espruar naming system from Forgotten Realms D&D lore.
+A sophisticated web-based name generator for creating authentic Elven names following the Espruar naming system from Forgotten Realms D&D lore. Now supports High Elves, Wood Elves, and Drow (Beta)!
 
 **Live Site:** [https://espruar.com](https://espruar.com)
 
-## 🆕 What's New in This Version
+---
 
-This is a **refactored version** with improved code architecture and modern best practices:
+## 🎮 How to Use
 
-### Architecture Improvements
-- **Modular ES6 Structure**: Code split into logical modules with clear separation of concerns
-- **Class-Based Design**: Main functionality organized into classes (NameGenerator, FavoritesManager, UIController, Application)
-- **External Data Files**: Component and connector data moved to JSON files for easier maintenance
-- **Error Handling**: Comprehensive try-catch blocks and graceful error recovery
-- **Storage Management**: Robust localStorage handling with quota checking
+Simply visit **[espruar.com](https://espruar.com)** to start generating authentic Elven names! No download or installation required - everything runs in your browser.
 
-### Code Quality
-- **No Global Variables**: Everything properly scoped within modules
-- **CSS Custom Properties**: Centralized color/spacing management for easy theming
-- **Named Constants**: Magic numbers replaced with descriptive configuration
-- **DRY Principles**: Eliminated code duplication throughout
-- **Utility Functions**: Reusable phonetics and formatting utilities
+### Generation Controls
 
-### Developer Experience
-- **Better Organization**: Clear file structure with dedicated folders
-- **Validation**: Data validation on load to catch issues early
-- **Comments & Documentation**: JSDoc-style comments on all major functions
-- **Event Delegation**: Efficient event handling with proper delegation
+**Elven Subrace:** Choose High Elf (General/Sun/Moon), Wood Elf, or Drow (Female/Male)
 
-## Features
+**Name Complexity:**
+- **Auto:** Follows phonetic rules, adds connectors when needed
+- **Simple:** 2 components, no connectors
+- **Complex Mode (Experimental):** 2-4 components, syllable-driven, multiple connectors
 
-- **Linguistic Accuracy**: Follows the complete Espruar morphological system with 108+ components
-- **Interchangeable Components**: Implements the "Lego System" where most roots can function as either prefix or suffix
-- **Phonetic Rules**: Applies authentic Elven phonetic flow patterns (liquid consonants, vowel bridges, etc.)
-- **Final Vowel Options**: Suggests optional aesthetic vowel endings based on syllable count and consonant hardness
-- **Gender/Style Options**: Generate feminine, masculine, or neutral names with appropriate component selection
-- **Complexity Control**: Choose simple (2 components) or complex (3 components with connectors) names
-- **Favorites System**: Save your favorite generated names locally with error handling
-- **Component Breakdown**: See the meaning and structure of each generated name
+**Target Syllable Count:** 3-position slider
+- Short (2-3 syllables)
+- Ideal (3-5 syllables) - Default
+- Long (4-6 syllables)
 
-## Project Structure
+*Note: Wood Elves and Drow automatically adjust targets based on subrace rules*
 
+**Gender/Style:**
+- Neutral, Feminine (softer sounds), Masculine (stronger sounds)
+
+---
+
+## 🌟 Features
+
+### Core Generation
+- **120+ Components**: Comprehensive morphological system with 108 High Elf + 12 Drow-specific components
+- **Interchangeable System**: Implements the "Lego System" where most roots can function as prefix or suffix
+- **Phonetic Intelligence**: Applies authentic Elven phonetic flow patterns (liquid consonants, vowel bridges, harsh cluster detection)
+- **Multiple Subraces**: High Elf (General, Sun, Moon), Wood Elf, and Drow (Female/Male) with distinct naming rules
+
+### User Experience
+- **Light/Dark Themes**: Sun Elf (parchment) and Moon Elf (dark blue) themes with auto-detection
+- **Complexity Control**: Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
+- **Syllable Targeting**: 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
+- **Favorites System**: Save your favorite names locally (browser-only, no cloud sync)
+- **Anti-Repeat Logic**: Tracks last 5 generations to reduce repeats
+- **Accessibility**: WCAG 2.1 AA compliant, screen reader support, keyboard navigation
+
+### Modern Architecture
+- **Modular ES6**: Clean separation of concerns (Core, UI, Utils, Data)
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **No Dependencies**: Pure vanilla JavaScript, no frameworks
+- **GDPR Compliant**: Cookie consent for Google Analytics
+
+## 🎭 Subrace Support
+
+### High Elf (Ar-Tel-Quessir / Teu-Tel-Quessir)
+**Style:** Lyrical, flowing, 3-5 syllables  
+**Themes:** Light, nobility, magic, stars, moon  
+**Components:** 108 interchangeable morphemes  
+**Example:** *Silanmeriel* - "Silver + Spirit + Star + Maiden"
+
+#### Sun Elf Variant
+Emphasizes gold, light, nobility, ancient lore (formal)
+
+#### Moon Elf Variant  
+Emphasizes silver, moonlight, stars, flow (lyrical, 4+ syllables preferred)
+
+### Wood Elf (Sy-Tel-Quessir) ✅
+**Style:** Concise, martial, 2-3 syllables  
+**Themes:** Nature, vigilance, martial skill  
+**Key Differences:**
+- Shorter than High Elves (2-3 vs 3-5 syllables)
+- Minimal connectors (prefer rough edges)
+- Hard consonant endings (-th, -r, -s)
+- Prioritizes martial/nature components
+
+**Example:** *Ratheth* - "Path + Honor"
+
+### Drow (Ss'tel'Quessir) ⚠️ BETA
+**Style:** Gender-specific, harsh, chaotic  
+**Themes:** Lolth, spiders, poison, death, shadow, servitude  
+**Key Differences:**
+- **Female:** 4-6 syllables, complex, powerful, vowel endings
+- **Male:** 2-3 syllables, short, subservient, hard consonant endings
+- EMBRACES harsh clusters (gr-, kr-, dr-, tr-) that surface elves avoid
+- No connectors (deliberately clumsy sound)
+- Limited component pool (12 vs 108) - more coming soon!
+
+**Examples:**  
+- Female: *Pharaqiltyl* - "Mistress + Web + Venom"
+- Male: *Zhaunax* - "Death + Blade"
+
+---
+
+## 📜 License
+
+MIT License - Copyright (c) 2025 Brad Nelson
+
+Free to use, modify, and distribute with attribution.
+
+## 🙏 Credits
+
+**Lore Research:** Forgotten Realms D&D canon sources, official WotC materials, community lore documentation
+
+**Created by:** Brad Nelson for the D&D community
+
+**Disclaimer:** This is an unofficial fan-made tool. Not affiliated with or endorsed by Wizards of the Coast. D&D and Forgotten Realms are trademarks of Wizards of the Coast LLC.
+
+## 🔮 Future Plans
+
+### Potential Expansions
+- [ ] More Drow components (expand from 12 to ~30+)
+- [ ] Sea Elf (Mar-Tel-Quessir) variant
+- [ ] Gray Elf (Fae-Tel-Quessir) variant  
+- [ ] Surname generator
+- [ ] Export/share functionality
+- [ ] Cloud sync for favorites (with accounts)
+- [ ] Mobile app version
+- [ ] Additional language variants (Draconic, Dwarvish)
+
+---
+
+## 🛠️ Technical Details (For Developers)
+
+### File Structure
 ```
 /
-├── index.html              # Main HTML file (unchanged visually)
-├── style.css               # Refactored CSS with custom properties
-├── data/
-│   ├── components.json     # 108 name components with meanings
-│   └── connectors.json     # 23 phonetic connectors
+├── index.html              # Main page (semantic HTML5)
+├── style.css               # All styling (~1600 lines)
+├── favicon.ico/png         # Gold star icons
+├── LICENSE                 # MIT License
+├── README.md               # This file
+├── CNAME                   # Domain configuration
+│
 ├── js/
-│   ├── app.js              # Main application class
-│   ├── config.js           # Configuration constants
+│   ├── app.js              # Main application controller
+│   ├── config.js           # Constants and configuration
+│   │
 │   ├── core/
 │   │   ├── NameGenerator.js      # Name generation logic
-│   │   └── FavoritesManager.js   # Favorites persistence
+│   │   └── FavoritesManager.js   # LocalStorage favorites
+│   │
 │   ├── ui/
 │   │   └── UIController.js       # DOM manipulation & display
+│   │
 │   └── utils/
-│       ├── phonetics.js          # Phonetic utility functions
-│       ├── storage.js            # LocalStorage management
-│       └── dataLoader.js         # JSON data loading
-├── favicon.png
-├── CNAME                   # Custom domain config
-├── LICENSE                 # MIT License
-└── README.md              # This file
+│       ├── dataLoader.js         # JSON data loading
+│       ├── phonetics.js          # Syllable counting, flow rules
+│       └── storage.js            # LocalStorage helpers
+│
+└── data/
+    ├── components.json     # 120 name components with tags
+    └── connectors.json     # 23 phonetic bridges
 ```
 
-## Technical Details
+### Technologies
+- **Frontend:** Pure ES6 JavaScript (modules), CSS custom properties
+- **Fonts:** Lato (Google Fonts) with system fallbacks
+- **Storage:** LocalStorage for preferences and favorites
+- **Analytics:** Google Analytics (GDPR-compliant, opt-in)
+- **Hosting:** GitHub Pages with custom domain
 
-### Naming System Implementation
+### Key Features
 
-The generator implements authentic Espruar naming rules:
+**Complex Mode:**
+- Syllable-driven (not component-driven)
+- Supports 2-4 components with 0-3 connectors
+- Vowel repetition logic (Moon Elves, 33% chance)
+- Harsh cluster detection and avoidance
+- Minimum 2 components, 2 syllables enforced
 
-- **Prefixes**: 56 morphemes with meanings like "eternal," "warrior," "star," etc.
-- **Connectors**: 23 phonetic bridges for smooth sound transitions
-- **Suffixes**: 58 morphemes including role indicators and gender modifiers
-- **Rules**: Follows canonical restrictions (gender modifiers stay as suffixes, strong prefixes don't swap, etc.)
+**Phonetic Rules:**
+- Liquid consonant detection (L, R, N, M, W)
+- Hard consonant endings (K, P, T, B, D, G, etc.)
+- Vowel flow patterns
+- Connector insertion logic (subrace-specific)
 
-### Example Names
+**Anti-Repeat System:**
+- Tracks last 5 generated names
+- Filters out recently used components
+- Only applies if 10+ alternatives available
+- Prevents pool exhaustion
 
-- **Aelriel** - "Warrior Maiden" (Feminine)
-- **Merikian** - "Star Slayer" (Masculine)  
-- **Silwendae** - "Silver Fair Whisper" (Neutral, with final vowel)
+## 📊 Data Structure
 
-## Installation & Usage
+### Components (components.json)
+Each component has:
+- `root`: Unique identifier
+- `prefix_text` / `prefix_meaning`: For use as prefix
+- `suffix_text` / `suffix_meaning`: For use as suffix
+- `can_be_prefix` / `can_be_suffix`: Position flexibility
+- `is_gender_modifier`: Special handling flag
+- `tags`: Array for subrace filtering (`sun`, `moon`, `wood`, `drow`, `drow-female`, `drow-male`, `neutral`)
 
-### Simple Deployment
-1. Upload all files to your web server
-2. Ensure `data/` and `js/` folders maintain their structure
-3. The site works entirely client-side - no server processing needed
+### Connectors (connectors.json)
+Each connector has:
+- `text`: The connector string (e.g., "-ri-")
+- `function`: Technical description
+- `meaning`: Semantic meaning (optional, displayed in Complex Mode)
 
-### Local Development
-```bash
-# Serve with any local server, e.g.:
-python -m http.server 8000
-# Then open http://localhost:8000
-```
+## 🎨 Design System
 
-**Note:** The site must be served via HTTP/HTTPS (not `file://`) to load JSON data files.
+### Themes
+**Sun Elf (Light Mode):**
+- Background: Aged parchment (#f4e8d0)
+- Accent: Warm gold (#8b6914)
+- Contrast: 11.5:1 (primary), 9.2:1 (secondary)
 
-## Browser Compatibility
+**Moon Elf (Dark Mode):**
+- Background: Deep blue gradient (#1a1a2e → #16213e)
+- Accent: Cool gold (#c9a050)
+- Contrast: WCAG AA compliant
 
-- **ES6 Modules**: Requires modern browsers (Chrome 61+, Firefox 60+, Safari 11+, Edge 16+)
-- **LocalStorage**: Required for favorites feature
-- All modern browsers fully supported
+### Typography
+- **Primary:** Lato (300, 400, 700, 900 weights)
+- **Fallbacks:** System fonts (-apple-system, BlinkMacSystemFont, 'Segoe UI')
+- **Code:** 'Courier New' for examples only
 
-## Configuration
+## 🧪 Testing
 
-Edit `js/config.js` to customize:
-- Generation attempt limits
-- Syllable preferences
-- Phonetic classification
-- Storage settings
-- UI thresholds
+### Validated With
+- Google's Rich Results Test (structured data)
+- WAVE accessibility checker
+- Lighthouse (Chrome DevTools)
+- Cross-browser: Chrome, Firefox, Safari, Edge
 
-## Data Management
+### Test Checklist
+- [ ] Keyboard navigation (Tab through all controls)
+- [ ] Screen reader announcements
+- [ ] Mobile responsiveness
+- [ ] Theme switching
+- [ ] All subrace options
+- [ ] Complex Mode with 3+ components
+- [ ] Favorites save/load
+- [ ] Anti-repeat logic
+- [ ] Cookie consent flow
 
-Component data is now in `data/components.json` and `data/connectors.json`:
+## 🚀 Deployment
 
-```json
-{
-  "root": "ae",
-  "prefix_text": "Ae-",
-  "prefix_meaning": "ever, eternal",
-  "can_be_prefix": true,
-  "can_be_suffix": true,
-  "suffix_text": "-ae",
-  "suffix_meaning": "Whisper / Secret"
-}
-```
+1. Push to GitHub repository
+2. Enable GitHub Pages (Settings → Pages)
+3. Set custom domain in CNAME file
+4. Configure DNS (A records or CNAME)
+5. SSL auto-generates (10-30 minutes)
 
-Non-programmers can edit these files to add/modify components without touching code.
+## 📜 License
 
-## Accessibility
+MIT License - Copyright (c) 2025 Brad Nelson
 
-- WCAG 2.1 AA compliant
-- Keyboard navigation support
-- Screen reader friendly with ARIA labels
-- Skip navigation link
-- Focus indicators on all interactive elements
+Free to use, modify, and distribute with attribution.
 
-## Future Enhancements
+## 🙏 Credits
 
-Potential additions:
-- [ ] Build process (Vite/Parcel)
-- [ ] Unit tests (Jest/Vitest)
-- [ ] TypeScript conversion
-- [ ] Advanced filtering options
-- [ ] Name history/undo functionality
-- [ ] Export to various formats
-- [ ] Wood Elf/Drow variants
-- [ ] Cloud sync for favorites
+**Lore Research:** Forgotten Realms D&D canon sources, official WotC materials, community lore documentation
 
-## Credits
+**Created by:** Brad Nelson for the D&D community
 
-Morphological system and naming rules compiled from Forgotten Realms D&D canon sources. Component data researched through official materials and community lore documentation.
+**Disclaimer:** This is an unofficial fan-made tool. Not affiliated with or endorsed by Wizards of the Coast. D&D and Forgotten Realms are trademarks of Wizards of the Coast LLC.
 
-Generator created by Brad Nelson for the D&D community.
+## 🔮 Future Plans
 
-## License
+### Potential Expansions
+- [ ] More Drow components (expand from 12 to ~30+)
+- [ ] Sea Elf (Mar-Tel-Quessir) variant
+- [ ] Gray Elf (Fae-Tel-Quessir) variant  
+- [ ] Surname generator
+- [ ] Export/share functionality
+- [ ] Cloud sync for favorites (with accounts)
+- [ ] Mobile app version
+- [ ] Additional language variants (Draconic, Dwarvish)
 
-MIT License - See LICENSE file for details. Free to use, modify, and distribute with attribution.
+### Known Limitations
+- Drow currently has limited component pool (Beta)
+- No cloud sync (browser-only favorites)
+- LocalStorage has size limits (~5-10MB)
+- Complex Mode may occasionally generate longer names than target
+
+## 📝 Version History
+
+### v2.0 - Major Refactor (Current)
+- Modular ES6 architecture
+- Added Wood Elf support
+- Added Drow support (Beta)
+- Complex Mode implementation
+- Light/Dark themes
+- Anti-repeat logic
+- Stacked meaning display
+- GDPR compliance
+
+### v1.0 - Initial Release
+- Monolithic JavaScript (~1500 lines)
+- High Elf (Sun/Moon) only
+- Basic component system
+- Favorites functionality
 
 ---
 
-## Development Notes
-
-### Why This Refactor?
-
-The original version worked great but had some technical debt:
-- All code in global scope
-- Data hardcoded in JavaScript
-- Magic numbers throughout
-- Limited error handling
-- No code organization
-
-This refactor addresses those issues while maintaining 100% visual and functional parity.
-
-### Migration from Original
-
-If you're updating from the original version:
-1. Favorites will automatically migrate (same localStorage key)
-2. All URLs and links remain the same
-3. Visual appearance is identical
-4. User experience unchanged
-
-### Contributing
-
-When adding features:
-1. Keep modules focused and single-purpose
-2. Add error handling for any new functionality
-3. Update relevant configuration in `config.js`
-4. Maintain visual consistency with existing design
-5. Test across browsers
-
----
-
-*Based on High Elf (Sun/Moon) naming conventions. Wood Elf and Drow follow similar but distinct patterns.*
+*"The name is the first gift given to a child by their parents. Choose wisely."*  
+— Elven Proverb

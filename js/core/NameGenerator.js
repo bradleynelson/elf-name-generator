@@ -33,10 +33,21 @@ export class NameGenerator {
             subrace = 'high-elf' // NEW: subrace selection
         } = options;
         
+        // Map drow + gender to internal tags
+        let effectiveSubrace = subrace;
+        if (subrace === 'drow') {
+            // Use gender/style selector to determine drow variant
+            effectiveSubrace = (style === 'feminine') ? 'drow-female' : 'drow-male';
+        }
+        
         // Wood Elves prefer shorter names (2-3 syllables)
+        // Drow females prefer longer names (4-6 syllables)
+        // Drow males prefer shorter names (2-3 syllables)
         let adjustedTarget = targetSyllables;
-        if (subrace === 'wood-elf') {
+        if (subrace === 'wood-elf' || effectiveSubrace === 'drow-male') {
             adjustedTarget = Math.max(2, targetSyllables - 1); // Lower by 1, min 2
+        } else if (effectiveSubrace === 'drow-female') {
+            adjustedTarget = Math.min(6, targetSyllables + 1); // Higher by 1, max 6
         }
         
         let bestName = null;
@@ -44,7 +55,7 @@ export class NameGenerator {
         
         // Try multiple attempts to get close to target syllable count
         for (let attempts = 0; attempts < CONFIG.MAX_GENERATION_ATTEMPTS; attempts++) {
-            const candidate = this._generateCandidate(complexity, style, subrace, adjustedTarget);
+            const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
             const diff = Math.abs(candidate.syllables - adjustedTarget);
             
             if (diff < bestDiff) {
@@ -120,6 +131,12 @@ export class NameGenerator {
         if (subrace === 'wood-elf' && needsConnector) {
             // Only use connector if it's a harsh cluster, not just any consonant collision
             needsConnector = phonetics.hasHarshCluster(prefixText, suffixText);
+        }
+        
+        // Drow EMBRACE harsh clusters - don't use connectors to smooth them
+        if (subrace === 'drow' && needsConnector) {
+            // Drow want the harsh, clumsy sound - skip connectors
+            needsConnector = false;
         }
         
         if (needsConnector) {
@@ -426,7 +443,9 @@ export class NameGenerator {
         // Determine preferred tag based on subrace
         const preferredTag = subrace === 'sun-elf' ? 'sun' : 
                             subrace === 'moon-elf' ? 'moon' : 
-                            subrace === 'wood-elf' ? 'wood' : null;
+                            subrace === 'wood-elf' ? 'wood' :
+                            subrace === 'drow-female' ? 'drow-female' :
+                            subrace === 'drow-male' ? 'drow-male' : null;
         
         if (!preferredTag) {
             return this._randomElement(availableCandidates);
@@ -438,6 +457,19 @@ export class NameGenerator {
         const other = availableCandidates.filter(c => !c.tags || (!c.tags.includes(preferredTag) && !c.tags.includes('neutral')));
         
         // Weighted random selection
+        // Drow use ONLY their specific components (no neutral fallback for authenticity)
+        // 90% chance preferred, 10% chance other drow components
+        if (subrace === 'drow-female' || subrace === 'drow-male') {
+            const drow = availableCandidates.filter(c => c.tags && c.tags.includes('drow'));
+            if (Math.random() < 0.9 && preferred.length > 0) {
+                return this._randomElement(preferred);
+            } else if (drow.length > 0) {
+                return this._randomElement(drow);
+            }
+            return this._randomElement(availableCandidates);
+        }
+        
+        // Standard weighting for other subraces
         // 60% chance preferred, 30% chance neutral, 10% chance other
         const roll = Math.random();
         
