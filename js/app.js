@@ -14,6 +14,21 @@ export class EspruarNameGenerator {
         this.favorites = null;
         this.ui = null;
         this.isInitialized = false;
+        
+        // Theme configuration
+        this.themes = ['moon-elf', 'sun-elf', 'wood-elf', 'drow'];
+        this.themeIcons = {
+            'moon-elf': '🌙',
+            'sun-elf': '☀️',
+            'wood-elf': '🌲',
+            'drow': '🕷️'
+        };
+        this.themeLabels = {
+            'moon-elf': 'Moon Elf',
+            'sun-elf': 'Sun Elf',
+            'wood-elf': 'Wood Elf',
+            'drow': 'Drow'
+        };
     }
     
     /**
@@ -439,22 +454,10 @@ export class EspruarNameGenerator {
         const icon = document.getElementById('themeIcon');
         const label = document.getElementById('themeLabel');
         
-        if (!toggle || !icon || !label) return;
-        
-        // Theme cycle order
-        const themes = ['moon-elf', 'sun-elf', 'wood-elf', 'drow'];
-        const themeIcons = {
-            'moon-elf': '🌙',
-            'sun-elf': '☀️',
-            'wood-elf': '🌲',
-            'drow': '🕷️'
-        };
-        const themeLabels = {
-            'moon-elf': 'Moon Elf',
-            'sun-elf': 'Sun Elf',
-            'wood-elf': 'Wood Elf',
-            'drow': 'Drow'
-        };
+        if (!toggle || !icon || !label) {
+            console.warn('Theme toggle elements not found');
+            return;
+        }
         
         // Check for saved preference, otherwise use system preference
         const savedTheme = localStorage.getItem('theme');
@@ -462,17 +465,17 @@ export class EspruarNameGenerator {
         const defaultTheme = systemPrefersDark ? 'moon-elf' : 'sun-elf';
         const currentTheme = savedTheme || defaultTheme;
         
-        // Apply theme
-        this._setTheme(currentTheme, icon, label, themeIcons, themeLabels);
+        // Apply theme immediately
+        this._setTheme(currentTheme, icon, label);
         
         // Toggle button click - cycle to next theme
         toggle.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'moon-elf';
-            const currentIndex = themes.indexOf(currentTheme);
-            const nextIndex = (currentIndex + 1) % themes.length;
-            const nextTheme = themes[nextIndex];
+            const currentIndex = this.themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % this.themes.length;
+            const nextTheme = this.themes[nextIndex];
             
-            this._setTheme(nextTheme, icon, label, themeIcons, themeLabels);
+            this._setTheme(nextTheme, icon, label);
             localStorage.setItem('theme', nextTheme);
         });
         
@@ -481,7 +484,7 @@ export class EspruarNameGenerator {
             // Only auto-switch if user hasn't manually set a preference
             if (!localStorage.getItem('theme')) {
                 const newTheme = e.matches ? 'moon-elf' : 'sun-elf';
-                this._setTheme(newTheme, icon, label, themeIcons, themeLabels);
+                this._setTheme(newTheme, icon, label);
             }
         });
     }
@@ -490,10 +493,15 @@ export class EspruarNameGenerator {
      * Set theme and update UI
      * @private
      */
-    _setTheme(theme, icon, label, themeIcons, themeLabels) {
+    _setTheme(theme, icon, label) {
+        if (!icon || !label) {
+            console.warn('Icon or label element missing');
+            return;
+        }
+        
         document.documentElement.setAttribute('data-theme', theme);
-        icon.textContent = themeIcons[theme];
-        label.textContent = themeLabels[theme];
+        icon.textContent = this.themeIcons[theme] || '🌙';
+        label.textContent = this.themeLabels[theme] || 'Moon Elf';
     }
     
     /**
