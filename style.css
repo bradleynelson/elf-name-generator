@@ -33,6 +33,7 @@
     
     --theme-icon: "🌙";
     --theme-name: "Moon Elf";
+    --sword-hue-rotate: 0deg; /* Moon Elf - keep silver/gray */
     
     /* Spacing */
     --spacing-xs: 5px;
@@ -92,27 +93,32 @@
     --color-accent-dark: #6b5010;
     --color-accent-darker: #5a4208;
     
-    --color-bg-primary: #f4e8d0;
-    --color-bg-secondary: #e8d4b0;
-    --color-bg-overlay-light: rgba(42, 24, 16, 0.08);
-    --color-bg-overlay-dark: rgba(42, 24, 16, 0.08);
-    --color-bg-overlay-darker: rgba(42, 24, 16, 0.12);
+    --color-bg-primary: #f5ead5;
+    --color-bg-secondary: #ead9b8;
+    --color-bg-overlay-light: rgba(139, 105, 20, 0.08);
+    --color-bg-overlay-dark: rgba(139, 105, 20, 0.1);
+    --color-bg-overlay-darker: rgba(139, 105, 20, 0.15);
     
-    --color-text-primary: #2a1810;
-    --color-text-secondary: #3d2618;
-    --color-text-muted: #6b4e37;
+    --color-text-primary: #2a1f10;
+    --color-text-secondary: #3d2a18;
+    --color-text-muted: #6b5637;
     
-    --color-border: rgba(42, 24, 16, 0.2);
+    --color-border: rgba(139, 105, 20, 0.25);
     --color-border-accent: rgba(139, 105, 20, 0.4);
     --color-border-accent-bright: rgba(139, 105, 20, 0.7);
     
-    --color-info-icon: #5a7fa8;
+    --color-info-icon: #8b6914;
     --color-error: rgba(180, 60, 60, 0.3);
     --color-error-text: #b43c3c;
     
-    --shadow-sm: 0 2px 4px rgba(42, 24, 16, 0.1);
-    --shadow-md: 0 5px 15px rgba(139, 105, 20, 0.2);
-    --shadow-lg: 0 8px 32px rgba(42, 24, 16, 0.15);
+    --shadow-sm: 0 2px 4px rgba(139, 105, 20, 0.15);
+    --shadow-md: 0 5px 15px rgba(139, 105, 20, 0.25);
+    --shadow-lg: 0 8px 32px rgba(139, 105, 20, 0.2);
+    --sword-hue-rotate: 120deg; /* Sun Elf - shift to green */
+}
+
+[data-theme="sun-elf"] .title-sword {
+    filter: hue-rotate(var(--sword-hue-rotate)) saturate(1.3);
 }
 
 /* ========================================
@@ -125,27 +131,32 @@
     --color-accent-dark: #7d6b3c;
     --color-accent-darker: #6b5e32;
     
-    --color-bg-primary: #1a2e1a;
-    --color-bg-secondary: #213e21;
-    --color-bg-overlay-light: rgba(255, 255, 255, 0.05);
-    --color-bg-overlay-dark: rgba(0, 0, 0, 0.2);
-    --color-bg-overlay-darker: rgba(0, 0, 0, 0.3);
+    --color-bg-primary: #1d2e1a;
+    --color-bg-secondary: #243e21;
+    --color-bg-overlay-light: rgba(157, 139, 92, 0.05);
+    --color-bg-overlay-dark: rgba(157, 139, 92, 0.1);
+    --color-bg-overlay-darker: rgba(157, 139, 92, 0.15);
     
     --color-text-primary: #e8f0e8;
     --color-text-secondary: #d4e4d4;
     --color-text-muted: #a8c8a8;
     
-    --color-border: rgba(255, 255, 255, 0.1);
+    --color-border: rgba(157, 139, 92, 0.2);
     --color-border-accent: rgba(157, 139, 92, 0.3);
     --color-border-accent-bright: rgba(157, 139, 92, 0.6);
     
-    --color-info-icon: #6b8e4e;
+    --color-info-icon: #9d8b5c;
     --color-error: rgba(139, 92, 92, 0.3);
     --color-error-text: #c97676;
     
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 2px 4px rgba(157, 139, 92, 0.2);
     --shadow-md: 0 5px 15px rgba(157, 139, 92, 0.3);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(157, 139, 92, 0.25);
+    --sword-hue-rotate: 140deg; /* Wood Elf - shift to green (more green than purple) */
+}
+
+[data-theme="wood-elf"] .title-sword {
+    filter: hue-rotate(var(--sword-hue-rotate)) saturate(1.2);
 }
 
 /* ========================================
@@ -159,27 +170,31 @@
     --color-accent-darker: #882828;
     
     --color-bg-primary: #1a1a1a;
-    --color-bg-secondary: #2a2030;
-    --color-bg-overlay-light: rgba(255, 255, 255, 0.03);
-    --color-bg-overlay-dark: rgba(0, 0, 0, 0.25);
-    --color-bg-overlay-darker: rgba(0, 0, 0, 0.35);
+    --color-bg-secondary: #2a1a1a;
+    --color-bg-overlay-light: rgba(201, 74, 74, 0.05);
+    --color-bg-overlay-dark: rgba(201, 74, 74, 0.1);
+    --color-bg-overlay-darker: rgba(201, 74, 74, 0.15);
     
-    --color-text-primary: #d0d0d8;
-    --color-text-secondary: #b8b8c8;
-    --color-text-muted: #8888a0;
+    --color-text-primary: #d8d0d0;
+    --color-text-secondary: #c8b8b8;
+    --color-text-muted: #a08888;
     
-    --color-border: rgba(200, 160, 200, 0.1);
+    --color-border: rgba(201, 74, 74, 0.2);
     --color-border-accent: rgba(201, 74, 74, 0.3);
     --color-border-accent-bright: rgba(201, 74, 74, 0.6);
     
-    --color-info-icon: #8b4789;
+    --color-info-icon: #c94a4a;
     --color-error: rgba(201, 74, 74, 0.4);
     --color-error-text: #d96060;
     
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 5px 15px rgba(201, 74, 74, 0.3);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 2px 4px rgba(201, 74, 74, 0.3);
+    --shadow-md: 0 5px 15px rgba(201, 74, 74, 0.35);
+    --shadow-lg: 0 8px 32px rgba(201, 74, 74, 0.3);
+    --sword-hue-rotate: 40deg; /* Drow - shift to golden */
 }
+
+[data-theme="drow"] .title-sword {
+    filter: hue-rotate(var(--sword-hue-rotate)) saturate(1.3);
 }
 
 /* ========================================
@@ -477,12 +492,24 @@ body {
 /* ========================================
    Focus Indicators
    ======================================== */
-a:focus,
-button:focus,
-select:focus,
-input:focus {
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
     outline: 3px solid var(--color-accent);
     outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+button:active {
+    outline: none;
+}
+
+button:active:not(.theme-toggle) {
+    border: none;
 }
 
 /* ========================================
@@ -538,6 +565,8 @@ h1 {
     line-height: 1;
     display: flex;
     align-items: center;
+    filter: hue-rotate(0deg) saturate(1.2);
+    transition: filter var(--transition-normal);
 }
 
 .subtitle {
@@ -755,55 +784,179 @@ h1 {
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: visible;
+    --glare: hsl(0 0% 100% / 0.75);
+    --shadow: var(--color-accent);
+    --font-size: var(--font-size-2xl);
+    --hover: 1; /* Always on for constant animation */
+    --pos: 0;
 }
 
+/* Rotating border effect on hover */
 .generate-btn-large:hover {
-    background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-darker) 100%);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(201, 160, 80, 0.4);
 }
 
+/* Removed border animation - replaced with sparkle animation */
+
+
 .generate-btn-large:active {
     transform: translateY(0);
 }
+
+/* Removed border animation */
 /* ========================================
-   Generate Button (Pixel Canvas Effect)
+   Generate Button (Sparkle Animation)
    ======================================== */
-   /* Pixel effect wrapper around the big generate button */
-.generate-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--color-border-accent);
-    isolation: isolate;
-    /* Optional subtle background to help pixels show up */
-    background: radial-gradient(
-        circle at bottom left,
-        transparent 55%,
-        var(--color-bg-overlay-dark)
-    );
-    transition: border-color 0.8s var(--transition-normal);
+/* Removed pixel canvas - replaced with sparkle animation */
+
+
+/* Add a subtle glow effect to the button on hover */
+.generate-btn-large:hover {
+    box-shadow: 0 5px 15px rgba(201, 160, 80, 0.4),
+                0 0 20px rgba(184, 197, 214, 0.3),
+                0 0 40px rgba(184, 197, 214, 0.2);
 }
 
-/* Let the pixel canvas fill the wrapper behind the button */
-.generate-card > pixel-canvas {
+/* Button text styling with sparkle animation */
+
+.generate-btn-large > .generate-btn-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.generate-btn-large > .generate-btn-text-shimmer {
+    display: none; /* Hide shimmer text */
+}
+
+/* Glimmer effect on button background - only on hover */
+.generate-btn-large::before {
+    content: '';
     position: absolute;
     inset: 0;
-    z-index: 0;
-    pointer-events: none; /* clicks go to the button */
-}
-
-/* Make sure the button sits on top */
-.generate-card > .generate-btn-large {
-    position: relative;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(
+        108deg,
+        transparent 0 55%,
+        var(--glare) 55% 60%,
+        transparent 60% 70%,
+        var(--glare) 70% 85%,
+        transparent 85%
+    );
+    background-size: 200% 100%;
+    background-position: 200% 0%; /* Start from the right */
     z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    filter: blur(6px); /* Increased blur */
+    animation: none;
+    transition: opacity 0.2s;
 }
 
-/* Optional “active color” border on hover/focus */
-.generate-card:hover,
-.generate-card:focus-within {
-    border-color: var(--active-color, var(--color-accent));
+/* Only animate on hover, not on active, focus, or just after click */
+.generate-btn-large:hover:not(:active):not(:focus):not(.just-clicked)::before {
+    opacity: 0.3; /* Lower opacity */
+    animation: shimmerSweepReverse 1.5s linear;
 }
+
+/* Prevent animation on click/active state - must come after hover rule */
+.generate-btn-large:active::before,
+.generate-btn-large:focus::before,
+.generate-btn-large.just-clicked::before {
+    animation: none !important;
+    opacity: 0 !important;
+    background-position: 200% 0% !important;
+}
+
+/* Reset when mouse leaves so animation can play again on next hover */
+.generate-btn-large:not(:hover)::before {
+    animation: none !important;
+    background-position: 200% 0%;
+    opacity: 0;
+}
+
+@keyframes shimmerSweep {
+    0% {
+        background-position: -200% 0%;
+    }
+    100% {
+        background-position: 200% 0%;
+    }
+}
+
+@keyframes shimmerSweepReverse {
+    0% {
+        background-position: 200% 0%;
+    }
+    100% {
+        background-position: -200% 0%;
+    }
+}
+
+/* Sparkle animation - always visible */
+.generate-btn-large svg {
+    position: absolute;
+    z-index: 3;
+    width: calc(var(--font-size) * 0.5);
+    aspect-ratio: 1;
+    --delay-step: 0.15;
+    top: calc(var(--y, 50) * 1%);
+    left: calc(var(--x, 0) * 1%);
+    transform: translate(-50%, -50%) scale(0);
+    color: var(--glare);
+    pointer-events: none;
+    opacity: 0.4; /* Reduced opacity */
+    animation: sparkle 1.5s calc((var(--delay-step) * var(--d)) * 1s) infinite both; /* Slowed down from 0.75s to 1.5s */
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(var(--s, 1));
+    }
+}
+
+.generate-btn-large svg:nth-of-type(1) {
+    --x: 0;
+    --y: 20;
+    --s: 1.1;
+    --d: 1;
+}
+
+.generate-btn-large svg:nth-of-type(2) {
+    --x: 15;
+    --y: 80;
+    --s: 1.25;
+    --d: 2;
+}
+
+.generate-btn-large svg:nth-of-type(3) {
+    --x: 45;
+    --y: 40;
+    --s: 1.1;
+    --d: 3;
+}
+
+.generate-btn-large svg:nth-of-type(4) {
+    --x: 75;
+    --y: 60;
+    --s: 0.9;
+    --d: 2;
+}
+
+.generate-btn-large svg:nth-of-type(5) {
+    --x: 100;
+    --y: 30;
+    --s: 0.8;
+    --d: 4;
+}
+
 
 /* ========================================
    Action Buttons (Bottom of Card)
@@ -824,15 +977,23 @@ h1 {
     cursor: pointer;
     transition: all var(--transition-normal);
     font-weight: bold;
+    position: relative;
+    --hover: 0;
+    --pos: 0;
 }
 
 .action-btn:hover {
     background: rgba(201, 160, 80, 0.3);
+    --hover: 1;
+    --pos: 1;
 }
 
 .action-btn:active {
     outline: none;
+    --hover: 0;
 }
+
+/* Removed all animations from copy button */
 
 .action-btn:focus {
     outline: 2px solid var(--color-accent);
@@ -2016,6 +2177,22 @@ input[type="range"]::-moz-range-progress {
     color: var(--color-accent);
     transition: all var(--transition-fast);
     backdrop-filter: blur(5px);
+    overflow: visible;
+    --glare: hsl(0 0% 100% / 0.75);
+}
+
+/* Slow pulse animation on theme button */
+.theme-toggle {
+    animation: themeButtonPulse 3s ease-in-out infinite;
+}
+
+@keyframes themeButtonPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.75;
+    }
 }
 
 .theme-toggle:hover {
@@ -2023,6 +2200,8 @@ input[type="range"]::-moz-range-progress {
     border-color: var(--color-border-accent-bright);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    animation: none;
+    opacity: 1;
 }
 
 .theme-toggle:active {
@@ -2032,6 +2211,8 @@ input[type="range"]::-moz-range-progress {
 .theme-icon {
     font-size: var(--font-size-lg);
     line-height: 1;
+    position: relative;
+    z-index: 2;
 }
 
 /* Moon emoji - Silver/moonlight filter for Moon Elf theme */
@@ -2043,6 +2224,8 @@ input[type="range"]::-moz-range-progress {
 .theme-label {
     white-space: nowrap;
     user-select: none;
+    position: relative;
+    z-index: 2;
 }
 
 /* Mobile: Hide label, show icon only */
