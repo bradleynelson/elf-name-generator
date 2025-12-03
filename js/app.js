@@ -29,6 +29,15 @@ export class EspruarNameGenerator {
             'wood-elf': 'Wood Elf',
             'drow': 'Dark Elf'
         };
+        
+        // Subrace icon mapping for generate button
+        this.subraceIcons = {
+            'high-elf': '⚡',
+            'sun-elf': '☀️',
+            'moon-elf': '🌙',
+            'wood-elf': '🌲',
+            'drow': '🕷️'
+        };
     }
     
     /**
@@ -73,6 +82,10 @@ export class EspruarNameGenerator {
             this.isInitialized = true;
             console.log('Espruar Name Generator initialized successfully');
             
+            // Set initial button icons based on default subrace
+            const initialSubrace = this.ui.elements.subraceSelect?.value || 'high-elf';
+            this._updateButtonIcons(initialSubrace);
+            
             // Generate initial name (after isInitialized = true)
             this.generateName();
             
@@ -91,6 +104,7 @@ export class EspruarNameGenerator {
         if (this.ui.elements.subraceSelect) {
             this.ui.elements.subraceSelect.addEventListener('change', (e) => {
                 this.ui.updateSubraceDescription(e.target.value);
+                this._updateButtonIcons(e.target.value);
             });
         }
         
@@ -502,6 +516,26 @@ export class EspruarNameGenerator {
         document.documentElement.setAttribute('data-theme', theme);
         icon.textContent = this.themeIcons[theme] || '🌙';
         label.textContent = this.themeLabels[theme] || 'Moon Elf';
+    }
+    
+    /**
+     * Update button icons based on selected subrace
+     * @private
+     */
+    _updateButtonIcons(subrace) {
+        const icon = this.subraceIcons[subrace] || '⚡';
+        
+        // Update main generate button
+        const generateBtn = document.querySelector('.generate-btn-large');
+        if (generateBtn) {
+            generateBtn.innerHTML = `${icon} Generate Name ${icon}`;
+        }
+        
+        // Update all "Back to Generator" buttons with lightning bolt
+        const backButtons = document.querySelectorAll('.back-to-top-btn');
+        backButtons.forEach(btn => {
+            btn.innerHTML = `⚡ Back to Generator`;
+        });
     }
     
     /**

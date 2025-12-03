@@ -7,10 +7,11 @@
 :root,
 [data-theme="moon-elf"] {
     /* Colors - Moon Elf Theme */
-    --color-accent: #c9a050;
-    --color-accent-light: #d4b060;
-    --color-accent-dark: #a67c00;
-    --color-accent-darker: #b68a10;
+    /* Moon Elf Theme - Silver/Moonlight palette */
+    --color-accent: #b8c5d6;
+    --color-accent-light: #cbd8e8;
+    --color-accent-dark: #8a9bb0;
+    --color-accent-darker: #6b7a8f;
     
     --color-bg-primary: #1a1a2e;
     --color-bg-secondary: #16213e;
@@ -23,8 +24,8 @@
     --color-text-muted: #a0a0a0;
     
     --color-border: rgba(255, 255, 255, 0.1);
-    --color-border-accent: rgba(201, 160, 80, 0.3);
-    --color-border-accent-bright: rgba(201, 160, 80, 0.6);
+    --color-border-accent: rgba(184, 197, 214, 0.3);
+    --color-border-accent-bright: rgba(184, 197, 214, 0.6);
     
     --color-info-icon: #4a90e2;
     --color-error: rgba(255, 100, 100, 0.3);
@@ -58,7 +59,7 @@
     
     /* Shadows */
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 5px 15px rgba(201, 160, 80, 0.4);
+    --shadow-md: 0 5px 15px rgba(184, 197, 214, 0.4);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
     
     /* Typography */
@@ -226,19 +227,28 @@
 }
 
 [data-theme="sun-elf"] select,
-[data-theme="sun-elf"] input[type="range"] {
+[data-theme="sun-elf"] select {
     background: rgba(244, 232, 208, 0.5);
 }
 
-[data-theme="sun-elf"] input[type="range"] {
-    accent-color: #8b6914;
+[data-theme="sun-elf"] input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(139, 105, 20, 0.15);
+}
+
+[data-theme="sun-elf"] input[type="range"]::-moz-range-track {
+    background: rgba(139, 105, 20, 0.15);
 }
 
 [data-theme="sun-elf"] input[type="range"]::-webkit-slider-thumb {
     background: #8b6914;
+    box-shadow: -200px 0 0 195px #8b6914;
 }
 
 [data-theme="sun-elf"] input[type="range"]::-moz-range-thumb {
+    background: #8b6914;
+}
+
+[data-theme="sun-elf"] input[type="range"]::-moz-range-progress {
     background: #8b6914;
 }
 
@@ -379,15 +389,24 @@
     color: #e8f0e8;
 }
 
-[data-theme="wood-elf"] input[type="range"] {
-    accent-color: #7fa35e;
+[data-theme="wood-elf"] input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(127, 163, 94, 0.15);
+}
+
+[data-theme="wood-elf"] input[type="range"]::-moz-range-track {
+    background: rgba(127, 163, 94, 0.15);
 }
 
 [data-theme="wood-elf"] input[type="range"]::-webkit-slider-thumb {
     background: #7fa35e;
+    box-shadow: -200px 0 0 195px #7fa35e;
 }
 
 [data-theme="wood-elf"] input[type="range"]::-moz-range-thumb {
+    background: #7fa35e;
+}
+
+[data-theme="wood-elf"] input[type="range"]::-moz-range-progress {
     background: #7fa35e;
 }
 
@@ -403,15 +422,24 @@
     color: #d0d0d8;
 }
 
-[data-theme="drow"] input[type="range"] {
-    accent-color: #a158a0;
+[data-theme="drow"] input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(161, 88, 160, 0.15);
+}
+
+[data-theme="drow"] input[type="range"]::-moz-range-track {
+    background: rgba(161, 88, 160, 0.15);
 }
 
 [data-theme="drow"] input[type="range"]::-webkit-slider-thumb {
     background: #a158a0;
+    box-shadow: -200px 0 0 195px #a158a0;
 }
 
 [data-theme="drow"] input[type="range"]::-moz-range-thumb {
+    background: #a158a0;
+}
+
+[data-theme="drow"] input[type="range"]::-moz-range-progress {
     background: #a158a0;
 }
 
@@ -835,6 +863,53 @@ select option {
 
 input[type="range"] {
     padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+}
+
+/* Range slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(184, 197, 214, 0.15);
+    border-radius: 4px;
+}
+
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(184, 197, 214, 0.15);
+    border-radius: 4px;
+}
+
+/* Range slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #b8c5d6;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -6px;
+    box-shadow: -200px 0 0 195px #b8c5d6;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #b8c5d6;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* Range slider progress (filled part) - Firefox */
+input[type="range"]::-moz-range-progress {
+    height: 8px;
+    background: #b8c5d6;
+    border-radius: 4px;
 }
 
 .range-labels {
@@ -1916,6 +1991,12 @@ input[type="range"] {
 .theme-icon {
     font-size: var(--font-size-lg);
     line-height: 1;
+}
+
+/* Moon emoji - Silver/moonlight filter for Moon Elf theme */
+[data-theme="moon-elf"] .theme-icon,
+[data-theme="moon-elf"] .moon-icon {
+    filter: grayscale(0.3) brightness(1.2) contrast(0.9);
 }
 
 .theme-label {
