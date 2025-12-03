@@ -26,7 +26,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&family=Montserrat:wght@900&display=swap" rel="stylesheet">
     
     <!-- Google Analytics - loaded dynamically after consent via app.js -->
     
@@ -89,7 +89,14 @@
     </button>
     
     <div class="container">
-        <h1>⚔️ Elven Name Generator ⚔️</h1>
+        <h1>
+            <span class="title-sword">⚔️</span>
+            <div class="title-text">
+                <span class="title-name">Elven Name</span>
+                <span class="title-generator">Generator</span>
+            </div>
+            <span class="title-sword">⚔️</span>
+        </h1>
         <div class="subtitle">Espruar Naming System - Forgotten Realms</div>
         
         <main id="main-content">
@@ -155,7 +162,7 @@
                 </div>
             </div>
             
-            <button class="generate-btn-large" aria-label="Generate a new name">✨ Generate Name ✨</button>
+              <button class="generate-btn-large" aria-label="Generate a new name">✨ Generate Name ✨</button>
             
             <div class="name-content">
                 <div class="generated-name" id="generatedName"></div>

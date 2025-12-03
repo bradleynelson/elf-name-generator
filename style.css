@@ -231,17 +231,8 @@
     background: rgba(244, 232, 208, 0.5);
 }
 
-[data-theme="sun-elf"] input[type="range"]::-webkit-slider-runnable-track {
-    background: rgba(139, 105, 20, 0.15);
-}
-
-[data-theme="sun-elf"] input[type="range"]::-moz-range-track {
-    background: rgba(139, 105, 20, 0.15);
-}
-
 [data-theme="sun-elf"] input[type="range"]::-webkit-slider-thumb {
     background: #8b6914;
-    box-shadow: -200px 0 0 195px #8b6914;
 }
 
 [data-theme="sun-elf"] input[type="range"]::-moz-range-thumb {
@@ -389,17 +380,8 @@
     color: #e8f0e8;
 }
 
-[data-theme="wood-elf"] input[type="range"]::-webkit-slider-runnable-track {
-    background: rgba(127, 163, 94, 0.15);
-}
-
-[data-theme="wood-elf"] input[type="range"]::-moz-range-track {
-    background: rgba(127, 163, 94, 0.15);
-}
-
 [data-theme="wood-elf"] input[type="range"]::-webkit-slider-thumb {
     background: #7fa35e;
-    box-shadow: -200px 0 0 195px #7fa35e;
 }
 
 [data-theme="wood-elf"] input[type="range"]::-moz-range-thumb {
@@ -422,17 +404,8 @@
     color: #d0d0d8;
 }
 
-[data-theme="drow"] input[type="range"]::-webkit-slider-runnable-track {
-    background: rgba(161, 88, 160, 0.15);
-}
-
-[data-theme="drow"] input[type="range"]::-moz-range-track {
-    background: rgba(161, 88, 160, 0.15);
-}
-
 [data-theme="drow"] input[type="range"]::-webkit-slider-thumb {
     background: #a158a0;
-    box-shadow: -200px 0 0 195px #a158a0;
 }
 
 [data-theme="drow"] input[type="range"]::-moz-range-thumb {
@@ -533,17 +506,44 @@ input:focus {
 h1 {
     text-align: center;
     color: var(--color-accent);
-    font-size: var(--font-size-5xl);
+    font-family: 'Montserrat', sans-serif;
     font-weight: 900;
+    font-size: var(--font-size-5xl);
     margin-bottom: var(--spacing-md);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+.title-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 0.85;
+}
+
+.title-name {
+    font-size: 1.27em;
+}
+
+.title-generator {
+    font-size: calc(var(--font-size-2xl) + 0.125rem);
+}
+
+.title-sword {
+    font-size: 2em;
+    line-height: 1;
+    display: flex;
+    align-items: center;
 }
 
 .subtitle {
     text-align: center;
     color: var(--color-text-muted);
     margin-bottom: var(--spacing-3xl);
-    font-style: italic;
 }
 
 /* ========================================
@@ -766,6 +766,44 @@ h1 {
 .generate-btn-large:active {
     transform: translateY(0);
 }
+/* ========================================
+   Generate Button (Pixel Canvas Effect)
+   ======================================== */
+   /* Pixel effect wrapper around the big generate button */
+.generate-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-accent);
+    isolation: isolate;
+    /* Optional subtle background to help pixels show up */
+    background: radial-gradient(
+        circle at bottom left,
+        transparent 55%,
+        var(--color-bg-overlay-dark)
+    );
+    transition: border-color 0.8s var(--transition-normal);
+}
+
+/* Let the pixel canvas fill the wrapper behind the button */
+.generate-card > pixel-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none; /* clicks go to the button */
+}
+
+/* Make sure the button sits on top */
+.generate-card > .generate-btn-large {
+    position: relative;
+    z-index: 1;
+}
+
+/* Optional “active color” border on hover/focus */
+.generate-card:hover,
+.generate-card:focus-within {
+    border-color: var(--active-color, var(--color-accent));
+}
 
 /* ========================================
    Action Buttons (Bottom of Card)
@@ -868,47 +906,50 @@ input[type="range"] {
     background: transparent;
 }
 
-/* Range slider track */
-input[type="range"]::-webkit-slider-runnable-track {
+/* Range slider */
+input[type="range"] {
+    padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 8px;
-    background: rgba(184, 197, 214, 0.15);
     border-radius: 4px;
+    outline: none;
+    background: linear-gradient(to right, #b8c5d6 0%, #b8c5d6 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 100%);
 }
 
-input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 8px;
-    background: rgba(184, 197, 214, 0.15);
-    border-radius: 4px;
-}
-
-/* Range slider thumb */
+/* Remove default styling */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #b8c5d6;
     border-radius: 50%;
+    background: #b8c5d6;
     cursor: pointer;
-    margin-top: -6px;
-    box-shadow: -200px 0 0 195px #b8c5d6;
+    border: none;
 }
 
 input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    background: #b8c5d6;
     border-radius: 50%;
+    background: #b8c5d6;
     cursor: pointer;
     border: none;
 }
 
-/* Range slider progress (filled part) - Firefox */
-input[type="range"]::-moz-range-progress {
+/* Firefox track */
+input[type="range"]::-moz-range-track {
+    background: rgba(255,255,255,0.1);
     height: 8px;
+    border-radius: 4px;
+}
+
+/* Firefox progress */
+input[type="range"]::-moz-range-progress {
     background: #b8c5d6;
+    height: 8px;
     border-radius: 4px;
 }
 
