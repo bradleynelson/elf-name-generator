@@ -76,6 +76,32 @@ export class NameGenerator {
     }
     
     /**
+     * Generate multiple unique names
+     * @param {number} count - Number of names to generate
+     * @param {Object} options - Generation options (same as generate)
+     * @returns {Array<Object>} Array of generated name data
+     */
+    generateMultiple(count, options = {}) {
+        const results = [];
+        const seenNames = new Set();
+        const maxAttempts = count * 10; // Prevent infinite loops
+        let attempts = 0;
+        
+        while (results.length < count && attempts < maxAttempts) {
+            attempts++;
+            const nameData = this.generate(options);
+            
+            // Only add if unique
+            if (!seenNames.has(nameData.name)) {
+                seenNames.add(nameData.name);
+                results.push(nameData);
+            }
+        }
+        
+        return results;
+    }
+    
+    /**
      * Track components used in a name to avoid immediate repeats
      * @private
      */
