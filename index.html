@@ -185,7 +185,16 @@
             
             <div class="name-content">
                 <div class="generated-name" id="generatedName"></div>
-                <div class="name-pronunciation" id="namePronunciation"></div>
+                <div class="name-pronunciation-wrapper">
+                    <div class="name-pronunciation" id="namePronunciation"></div>
+                    <div class="speaker-container" style="display: none;" id="speakerContainer">
+                        <button class="speaker-btn" id="speakerBtn" aria-label="Pronounce name" title="Pronounce name">
+                            <span class="speaker-icon speaker-icon-default">🔈</span>
+                            <span class="speaker-icon speaker-icon-playing">🔊</span>
+                            <span class="speaker-beta">BETA</span>
+                        </button>
+                    </div>
+                </div>
                 <div class="name-meaning" id="nameMeaning"></div>
             </div>
             
