@@ -603,11 +603,48 @@ h1 {
    Settings Accordion
    ======================================== */
 .settings-accordion {
-    background: rgba(0, 0, 0, 0.4);
     padding: var(--spacing-lg);
     border-radius: var(--radius-lg);
     font-size: var(--font-size-md);
     margin-bottom: var(--spacing-lg);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.settings-accordion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg-overlay-darker);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.settings-accordion::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+
+.settings-accordion > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Brighten background on hover (when accordion is closed) */
+.settings-accordion:hover:has(.settings-toggle[aria-expanded="false"])::after {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Sun Elf theme: darken instead of brighten on hover */
+[data-theme="sun-elf"] .settings-accordion:hover:has(.settings-toggle[aria-expanded="false"])::after {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .settings-toggle {
@@ -619,6 +656,8 @@ h1 {
     text-align: left;
     transition: all var(--transition-fast);
     margin-bottom: var(--spacing-sm);
+    position: relative;
+    z-index: 1;
 }
 
 .settings-toggle:active {
@@ -657,6 +696,8 @@ h1 {
 
 .settings-content {
     margin-top: var(--spacing-md);
+    position: relative;
+    z-index: 1;
 }
 
 .settings-content .controls {
@@ -670,6 +711,7 @@ h1 {
 [data-theme="sun-elf"] .settings-accordion {
     background: var(--color-bg-overlay-darker);
 }
+
 
 [data-theme="sun-elf"] .settings-toggle:hover .settings-toggle-title {
     color: #8b6914;
@@ -741,6 +783,8 @@ h1 {
 .breakdown-content {
     margin-top: var(--spacing-sm);
     margin-bottom: var(--spacing-lg);
+    position: relative;
+    z-index: 1;
 }
 
 .breakdown-content[hidden] {
@@ -1478,17 +1522,57 @@ input[type="range"]::-moz-range-progress {
    Component Breakdown
    ======================================== */
 .breakdown {
-    background: rgba(0, 0, 0, 0.4);
     padding: var(--spacing-lg);
     border-radius: var(--radius-lg);
     font-size: var(--font-size-md);
     margin-bottom: var(--spacing-lg);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.breakdown::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg-overlay-darker);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.breakdown::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+
+.breakdown > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Brighten background on hover (when accordion is closed) */
+/* Brighten background on hover (when accordion is closed) */
+.breakdown:hover:has(.breakdown-toggle[aria-expanded="false"])::after {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Sun Elf theme: darken instead of brighten on hover */
+[data-theme="sun-elf"] .breakdown:hover:has(.breakdown-toggle[aria-expanded="false"])::after {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .breakdown-title {
     color: var(--color-accent);
     font-weight: bold;
     margin-bottom: var(--spacing-md);
+    position: relative;
+    z-index: 1;
 }
 
 .component {

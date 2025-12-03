@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.3] - 2025-12-03
+
+### Added
+- Accessibility tests for ARIA attributes and screen reader support
+- Hover effect on generator accordions (brightens/darkens background based on theme)
+
+### Changed
+- Improved TTS phonetic pronunciation for multiple names (Queesastra, Ah-rahn-ee-ehl, Ayl-ih-rah-dorr, Tanenfelle, Corastra, Zhaunanidorei, Valastra, Myreathala, Vaelellathir, Anariel, Alador, Menalathar, Quessamith, Liatana)
+- Sun Elf theme accordion hover effect now darkens instead of brightens (better contrast on light background)
+
 ## [2.7.2] - 2025-12-03
 
 ### Changed
