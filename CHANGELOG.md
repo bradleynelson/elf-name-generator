@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0] - 2024-12-19 - "Dwarf Update"
+## [3.0.1] - 2025-12-04
+
+### Fixed
+- **Meta Tags for Social Sharing** - Updated Open Graph and Twitter Card meta tags to include Dwarven generator
+- **SEO Metadata** - All meta descriptions now mention both Elven and Dwarven naming systems
+
+### Added
+- **Domain-Based Defaults** - dethek.com (or dethek subdomain) automatically defaults to Dwarven tab
+- **URL Parameter Support** - `?generator=dwarven` or `?tab=dwarven` to force generator type
+
+## [3.0.0] - 2025-12-04 - "Dwarf Update"
 
 ### Added
 - **Dwarven Name Generator (Beta)** - Complete Dethek naming system implementation
