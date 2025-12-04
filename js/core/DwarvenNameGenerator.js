@@ -190,36 +190,47 @@ export class DwarvenNameGenerator {
     
     /**
      * Generate a clan name
+     * Clan names can mix English words (from clanNames) AND Dethek components (from firstNames)
+     * Examples: "Stonegrim" (English + Dethek), "Bronguard" (Dethek + English), "Stonehammer" (English + English)
      * @private
      */
     _generateClanName(subrace = 'general') {
-        // Filter by subrace preference
-        let prefixCandidates = this._filterBySubrace(this.clanNamePrefixes, subrace);
-        let suffixCandidates = this._filterBySubrace(this.clanNameSuffixes, subrace);
+        // Combine English word prefixes with Dethek prefixes
+        const allPrefixCandidates = [
+            ...this._filterBySubrace(this.clanNamePrefixes, subrace), // English words
+            ...this._filterBySubrace(this.firstNamePrefixes, subrace)  // Dethek components
+        ];
         
-        // Select random prefix and suffix
-        const prefix = this._randomElement(prefixCandidates);
-        const suffix = this._randomElement(suffixCandidates);
+        // Combine English word suffixes with Dethek suffixes
+        const allSuffixCandidates = [
+            ...this._filterBySubrace(this.clanNameSuffixes, subrace), // English words
+            ...this._filterBySubrace(this.firstNameSuffixes, subrace)  // Dethek components
+        ];
+        
+        // Select random prefix and suffix (can be English or Dethek)
+        const prefix = this._randomElement(allPrefixCandidates);
+        const suffix = this._randomElement(allSuffixCandidates);
         
         // Build the name with phonetic smoothing (no hyphens)
-        const prefixText = prefix.prefix_text.toLowerCase();
-        const suffixText = suffix.suffix_text.toLowerCase();
+        // Handle both English words (no hyphens) and Dethek components (may have hyphens)
+        const prefixText = phonetics.cleanComponentText(prefix.prefix_text || prefix.text || '').toLowerCase();
+        const suffixText = phonetics.cleanComponentText(suffix.suffix_text || suffix.text || '').toLowerCase();
         const combinedName = this._smoothConsonantCluster(prefixText, suffixText);
         const fullName = phonetics.capitalize(combinedName);
         
-        // Build meaning
-        const prefixMeaning = phonetics.formatMeaning(prefix.prefix_meaning);
-        const suffixMeaning = phonetics.formatMeaning(suffix.suffix_meaning);
+        // Build meaning (handle both English words and Dethek components)
+        const prefixMeaning = phonetics.formatMeaning(prefix.prefix_meaning || prefix.meaning || '');
+        const suffixMeaning = phonetics.formatMeaning(suffix.suffix_meaning || suffix.meaning || '');
         const meaning = `${prefixMeaning} + ${suffixMeaning}`;
         
-        // Build phonetic pronunciation
+        // Build phonetic pronunciation (handle both English words and Dethek components)
         let pronunciation = '';
-        if (prefix.prefix_phonetic) {
-            pronunciation += prefix.prefix_phonetic;
+        if (prefix.prefix_phonetic || prefix.phonetic) {
+            pronunciation += (prefix.prefix_phonetic || prefix.phonetic);
         }
-        if (suffix.suffix_phonetic) {
+        if (suffix.suffix_phonetic || suffix.phonetic) {
             if (pronunciation) pronunciation += '-';
-            pronunciation += suffix.suffix_phonetic;
+            pronunciation += (suffix.suffix_phonetic || suffix.phonetic);
         }
         
         const syllables = phonetics.countSyllables(fullName);
