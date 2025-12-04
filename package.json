@@ -1,13 +1,16 @@
 {
   "name": "elf-name-generator",
-  "version": "2.7.3",
-  "description": "Espruar Elven Name Generator",
+  "version": "3.0.0",
+  "description": "Faerûn Name Generator - Elven & Dwarven Names",
   "type": "module",
   "scripts": {
     "test": "vitest",
+    "test:run": "vitest run",
+    "test:run:log": "node scripts/run-tests-with-log.js",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
+    "test:log-update": "node scripts/log-test-update.js",
     "version:major": "node scripts/version.js major",
     "version:minor": "node scripts/version.js minor",
     "version:patch": "node scripts/version.js patch",

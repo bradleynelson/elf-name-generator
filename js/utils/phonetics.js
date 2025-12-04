@@ -231,3 +231,51 @@ export function hasExcessiveConsonantCluster(name) {
     const consonantClusters = name.match(/[^aeiou]{3,}/gi);
     return consonantClusters && consonantClusters.length > 0;
 }
+
+/**
+ * Detect gender implied by suffix
+ * @param {Object} nameData - Generated name data
+ * @returns {string} 'feminine', 'masculine', or 'neutral'
+ */
+export function detectSuffixGender(nameData) {
+    // Check for gender modifier suffixes
+    const feminineEndings = ['iel', 'ael', 'wen', 'yn', 'ae', 'a'];
+    const masculineEndings = ['ion', 'on', 'or', 'ar'];
+    
+    let suffix = null;
+    if (nameData.suffix && nameData.suffix.suffix_text) {
+        suffix = nameData.suffix.suffix_text.toLowerCase().replace('-', '');
+    } else if (nameData.components && nameData.components.length > 0) {
+        // Complex mode - check last component
+        const lastComp = nameData.components[nameData.components.length - 1];
+        suffix = lastComp.text.toLowerCase();
+    }
+    
+    if (!suffix) return 'neutral';
+    
+    // Check if it's explicitly marked as gender modifier
+    if (nameData.suffix && nameData.suffix.is_gender_modifier) {
+        if (suffix.includes('iel') || suffix.includes('ial')) return 'feminine';
+        if (suffix.includes('ion')) return 'masculine';
+    }
+    
+    // Check endings
+    for (const ending of feminineEndings) {
+        if (suffix.endsWith(ending)) return 'feminine';
+    }
+    for (const ending of masculineEndings) {
+        if (suffix.endsWith(ending)) return 'masculine';
+    }
+    
+    return 'neutral';
+}
+
+/**
+ * Determine if gender prefix vowels should be suggested
+ * @param {Object} nameData - Generated name data
+ * @returns {boolean}
+ */
+export function shouldSuggestGenderPrefix(nameData) {
+    // Always suggest for High Elf names (optional feature for gender emphasis/override)
+    return true;
+}

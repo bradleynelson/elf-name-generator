@@ -40,7 +40,7 @@ Simply visit **[espruar.com](https://espruar.com)** to start generating authenti
 - **Multiple Subraces**: High Elf (General, Sun, Moon), Wood Elf, and Drow (Female/Male) with distinct naming rules
 
 ### User Experience
-- **Light/Dark Themes**: Sun Elf (parchment) and Moon Elf (dark blue) themes with auto-detection
+- **Moon Elf Theme**: Dark blue-purple theme with silver/moonlight palette
 - **Complexity Control**: Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
 - **Syllable Targeting**: 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
 - **Favorites System**: Save your favorite names locally (browser-only, no cloud sync)
@@ -284,7 +284,7 @@ Free to use, modify, and distribute with attribution.
 - Added Wood Elf support
 - Added Drow support (Beta)
 - Complex Mode implementation
-- Light/Dark themes
+- Moon Elf theme
 - Anti-repeat logic
 - Stacked meaning display
 - GDPR compliance

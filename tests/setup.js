@@ -1,38 +1,22 @@
 // Test setup file
-// This runs before all tests
+import { beforeEach, afterEach } from 'vitest';
+import { writeFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
-// Mock localStorage for tests
-const localStorageMock = (() => {
-  let store = {};
-  return {
-    getItem: (key) => store[key] || null,
-    setItem: (key, value) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    }
-  };
-})();
+// Initialize test log on first run
+const LOG_FILE = join(process.cwd(), 'test-log.txt');
+if (!existsSync(LOG_FILE)) {
+  writeFileSync(LOG_FILE, '=== Test Log ===\n\n', 'utf8');
+}
 
-global.localStorage = localStorageMock;
-
-// Mock window.speechSynthesis for tests
-global.window = global.window || {};
-global.window.speechSynthesis = {
-  speak: () => {},
-  cancel: () => {},
-  getVoices: () => [],
-  speaking: false,
-  addEventListener: () => {}
-};
-
-// Reset localStorage before each test
+// Clean up localStorage before each test
 beforeEach(() => {
-  localStorage.clear();
+  if (typeof localStorage !== 'undefined') {
+    localStorage.clear();
+  }
 });
 
-
+// Clean up after each test
+afterEach(() => {
+  // Any cleanup needed
+});
