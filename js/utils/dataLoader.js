@@ -39,6 +39,27 @@ export async function loadGeneratorData() {
 }
 
 /**
+ * Load all required data files for the Dwarven generator
+ * @returns {Promise<Object>} Object containing firstNames and clanNames
+ */
+export async function loadDwarvenGeneratorData() {
+    try {
+        const [firstNames, clanNames] = await Promise.all([
+            loadJSON('data/dwarvenFirstNames.json'),
+            loadJSON('data/dwarvenClanNames.json')
+        ]);
+        
+        return {
+            firstNames,
+            clanNames
+        };
+    } catch (error) {
+        console.error('Failed to load Dwarven generator data:', error);
+        throw new Error('Could not load Dwarven name generator data. Please refresh the page.');
+    }
+}
+
+/**
  * Validate loaded component data
  * @param {Array} components - Component array to validate
  * @returns {boolean}
@@ -79,6 +100,56 @@ export function validateConnectors(connectors) {
         if (!connector.text || !connector.function) {
             console.error('Connector missing required fields', connector);
             return false;
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * Validate loaded Dwarven first names data
+ * @param {Array} firstNames - First names array to validate
+ * @returns {boolean}
+ */
+export function validateDwarvenFirstNames(firstNames) {
+    if (!Array.isArray(firstNames) || firstNames.length === 0) {
+        console.error('Invalid Dwarven first names data');
+        return false;
+    }
+    
+    // Check that first names have required fields
+    const requiredFields = ['root', 'can_be_prefix', 'can_be_suffix'];
+    for (const name of firstNames) {
+        for (const field of requiredFields) {
+            if (!(field in name)) {
+                console.error(`Dwarven first name missing required field: ${field}`, name);
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * Validate loaded Dwarven clan names data
+ * @param {Array} clanNames - Clan names array to validate
+ * @returns {boolean}
+ */
+export function validateDwarvenClanNames(clanNames) {
+    if (!Array.isArray(clanNames) || clanNames.length === 0) {
+        console.error('Invalid Dwarven clan names data');
+        return false;
+    }
+    
+    // Check that clan names have required fields
+    const requiredFields = ['root', 'can_be_prefix', 'can_be_suffix'];
+    for (const name of clanNames) {
+        for (const field of requiredFields) {
+            if (!(field in name)) {
+                console.error(`Dwarven clan name missing required field: ${field}`, name);
+                return false;
+            }
         }
     }
     

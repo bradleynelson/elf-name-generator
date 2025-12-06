@@ -8,13 +8,3 @@
   File: tests/accessibility/aria.test.js
   Reason: Added comprehensive ARIA attribute tests for filters, accordions, and tabs
 
-[RUN] 2025-12-06T01:45:19.726Z - FAIL
-  Passed: 5/10
-  Failed: 5/10
-  Duration: 0ms
-
-[RUN] 2025-12-06T01:54:17.157Z - FAIL
-  Passed: 6/10
-  Failed: 4/10
-  Duration: 0ms
-

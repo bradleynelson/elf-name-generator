@@ -56,13 +56,11 @@ Switch between generators using the tabs at the top of the page.
   - **Phonetic Pronunciations**: Includes pronunciation guides for generated names
 
 ### User Experience
-- **Light/Dark Themes**: Sun Elf (parchment) and Moon Elf (dark blue) themes with auto-detection
-- **Generator Switching**: Easy tab-based switching between Elven and Dwarven generators
-- **Complexity Control** (Elven): Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
-- **Syllable Targeting** (Elven): 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
-- **Favorites System**: Save your favorite names locally with generator type badges (⚔️ Elven / ⚒️ Dwarven)
-- **Filter Favorites**: Filter saved names by generator type (All / Elven / Dwarven)
-- **Anti-Repeat Logic** (Elven): Tracks last 5 generations to reduce repeats
+- **Moon Elf Theme**: Dark blue-purple theme with silver/moonlight palette
+- **Complexity Control**: Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
+- **Syllable Targeting**: 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
+- **Favorites System**: Save your favorite names locally (browser-only, no cloud sync)
+- **Anti-Repeat Logic**: Tracks last 5 generations to reduce repeats
 - **Accessibility**: WCAG 2.1 AA compliant, screen reader support, keyboard navigation
 
 ### Modern Architecture
@@ -330,7 +328,7 @@ Free to use, modify, and distribute with attribution.
 - Added Wood Elf support
 - Added Drow support (Beta)
 - Complex Mode implementation
-- Light/Dark themes
+- Moon Elf theme
 - Anti-repeat logic
 - Stacked meaning display
 - GDPR compliance

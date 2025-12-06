@@ -36,15 +36,37 @@ npm run test:coverage
 ```
 tests/
 ├── setup.js                    # Test configuration and mocks
+├── accessibility/
+│   └── aria.test.js            # ARIA attributes and accessibility tests
 ├── core/
-│   ├── NameGenerator.test.js   # Name generation logic tests
-│   └── FavoritesManager.test.js # Favorites storage tests
+│   ├── NameGenerator.test.js   # Elven name generation logic tests
+│   └── FavoritesManager.test.js # Favorites storage tests (unified Elven/Dwarven)
 ├── ui/
 │   └── UIController.test.js    # UI display and interaction tests
 └── utils/
     ├── phonetics.test.js       # Phonetic utility tests
     └── dataLoader.test.js      # Data loading and validation tests
 ```
+
+## Recent Updates (v2.7.3+)
+
+### Updated Tests
+- ✅ **FavoritesManager.test.js**: Updated for unified storage with `generatorType` tagging
+  - Tests now verify generator type is saved with favorites
+  - Tests allow same name from different generators
+  - Tests `setGeneratorType()` method
+  
+- ✅ **aria.test.js**: Added comprehensive ARIA attribute tests
+  - Filter buttons with `aria-pressed` states
+  - Accordion `aria-controls` linking
+  - Tab icons with `aria-hidden`
+  - External link indicators
+  - Form controls with proper labels
+
+### Missing Tests (To Be Added)
+- ⚠️ **DwarvenNameGenerator.test.js**: New generator needs test coverage
+- ⚠️ **TabController.test.js**: Tab switching logic needs tests
+- ⚠️ **UnifiedNameGenerator.test.js**: Main app coordination needs tests
 
 ## Writing Tests
 

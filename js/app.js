@@ -1,42 +1,41 @@
-// Main Application class - coordinates all modules
-import { loadGeneratorData, validateComponents, validateConnectors } from './utils/dataLoader.js';
+// Main Application class - coordinates all modules for both Elven and Dwarven generators
+import { CONFIG } from './config.js';
+import { loadGeneratorData, validateComponents, validateConnectors, loadDwarvenGeneratorData, validateDwarvenFirstNames, validateDwarvenClanNames } from './utils/dataLoader.js';
 import { NameGenerator } from './core/NameGenerator.js';
+import { DwarvenNameGenerator } from './core/DwarvenNameGenerator.js';
 import { FavoritesManager } from './core/FavoritesManager.js';
 import { UIController } from './ui/UIController.js';
 
 /**
- * Main application class for the Espruar Name Generator
+ * Unified Name Generator - supports both Elven (Espruar) and Dwarven (Dethek) generators
  * Coordinates all modules and handles user interactions
  */
-export class EspruarNameGenerator {
+export class UnifiedNameGenerator {
     constructor() {
-        this.generator = null;
+        this.elvenGenerator = null;
+        this.dwarvenGenerator = null;
+        this.currentGenerator = null;
         this.favorites = null;
         this.ui = null;
         this.isInitialized = false;
+        this.currentGeneratorType = 'elven';
         
-        // Theme configuration
-        this.themes = ['moon-elf', 'sun-elf', 'wood-elf', 'drow'];
-        this.themeIcons = {
-            'moon-elf': '🌙',
-            'sun-elf': '☀️',
-            'wood-elf': '🌲',
-            'drow': '🕷️'
-        };
-        this.themeLabels = {
-            'moon-elf': 'Moon Elf',
-            'sun-elf': 'Sun Elf',
-            'wood-elf': 'Wood Elf',
-            'drow': 'Dark Elf'
-        };
-        
-        // Subrace icon mapping for generate button
+        // Subrace icon mapping for generate button (Elven)
         this.subraceIcons = {
-            'high-elf': '⚡',
+            'high-elf': '✨',
             'sun-elf': '☀️',
             'moon-elf': '🌙',
             'wood-elf': '🌲',
-            'drow': '🕷️'
+            'drow': '🕷️',
+            'feyri': '🫧'
+        };
+        
+        // Subrace icon mapping for Dwarven generate button
+        this.dwarvenSubraceIcons = {
+            'general': '✨',
+            'gold-dwarf': '💰',
+            'shield-dwarf': '🛡️',
+            'duergar': '💀'
         };
     }
     
@@ -46,18 +45,52 @@ export class EspruarNameGenerator {
      */
     async init() {
         try {
-            // Load component data
-            const data = await loadGeneratorData();
+            // Load both Elven and Dwarven data
+            const [elvenData, dwarvenData] = await Promise.all([
+                loadGeneratorData(),
+                loadDwarvenGeneratorData()
+            ]);
             
-            // Validate data
-            if (!validateComponents(data.components) || !validateConnectors(data.connectors)) {
-                throw new Error('Invalid data format');
+            // Validate Elven data
+            if (!validateComponents(elvenData.components) || !validateConnectors(elvenData.connectors)) {
+                throw new Error('Invalid Elven data format');
             }
             
-            // Initialize modules
-            this.generator = new NameGenerator(data.components, data.connectors);
+            // Validate Dwarven data
+            if (!validateDwarvenFirstNames(dwarvenData.firstNames) || !validateDwarvenClanNames(dwarvenData.clanNames)) {
+                throw new Error('Invalid Dwarven data format');
+            }
+            
+            // Initialize Elven generator
+            this.elvenGenerator = new NameGenerator(elvenData.components, elvenData.connectors);
+            
+            // Initialize Dwarven generator
+            this.dwarvenGenerator = new DwarvenNameGenerator(dwarvenData.firstNames, dwarvenData.clanNames);
+            
+            // Initialize shared modules
             this.favorites = new FavoritesManager();
             this.ui = new UIController();
+            
+            // Determine initial generator type based on:
+            // 1. URL parameter (?generator=dwarven)
+            // 2. Domain (dethek.com defaults to dwarven)
+            // 3. localStorage preference
+            // 4. Default to elven
+            const initialGenerator = this._determineInitialGenerator();
+            this.currentGeneratorType = initialGenerator;
+            this.currentGenerator = initialGenerator === 'dwarven' ? this.dwarvenGenerator : this.elvenGenerator;
+            
+            // Set initial theme and generator attributes
+            if (initialGenerator === 'dwarven') {
+                document.documentElement.setAttribute('data-generator', 'dwarven');
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'moon-elf');
+                document.documentElement.setAttribute('data-generator', 'elven');
+            }
+            
+            // Update favorites manager with current generator type
+            this.favorites.setGeneratorType(this.currentGeneratorType);
             
             // Set up event listeners
             this._bindEvents();
@@ -70,28 +103,34 @@ export class EspruarNameGenerator {
             // Display initial favorites
             this.ui.displayFavorites(this.favorites.getAll());
             
+            // Listen for filter changes
+            window.addEventListener('favoritesFilterChanged', () => {
+                this.ui.displayFavorites(this.favorites.getAll());
+            });
+            
             // Initialize accordions
             this._initAccordions();
             
             // Initialize cookie consent banner
             this._initCookieBanner();
             
-            // Initialize theme toggle
-            this._initThemeToggle();
-            
             // Initialize range slider fill
             this._initRangeSliderFill();
             
             this.isInitialized = true;
-            console.log('Espruar Name Generator initialized successfully');
+            console.log('Faerûn Name Generator initialized successfully');
             
-            // Set initial button icons based on default subrace
-            const initialSubrace = this.ui.elements.subraceSelect?.value || 'high-elf';
-            this._updateButtonIcons(initialSubrace);
+            // Initialize UI state based on loaded generator
+            this._initializeUIForGenerator(this.currentGeneratorType);
             
-            // Set initial border colors based on current theme
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'moon-elf';
-            this._updateBorderColors(currentTheme);
+            // Set initial button icons based on current generator and subrace
+            if (this.currentGeneratorType === 'elven') {
+                const initialSubrace = this.ui.elements.subraceSelect?.value || 'high-elf';
+                this._updateButtonIcons(initialSubrace);
+            } else {
+                const initialDwarvenSubrace = document.getElementById('dwarvenSubrace')?.value || 'general';
+                this._updateDwarvenButtonIcons(initialDwarvenSubrace);
+            }
             
             // Generate initial name (after isInitialized = true)
             this.generateName();
@@ -107,11 +146,43 @@ export class EspruarNameGenerator {
      * @private
      */
     _bindEvents() {
-        // Subrace selector
+        // Tab switching
+        const elvenTab = document.getElementById('elvenTab');
+        const dwarvenTab = document.getElementById('dwarvenTab');
+        
+        if (elvenTab) {
+            elvenTab.addEventListener('click', (e) => {
+                if (elvenTab.classList.contains('active')) {
+                    e.preventDefault();
+                    return;
+                }
+                this.switchGenerator('elven');
+            });
+        }
+        
+        if (dwarvenTab) {
+            dwarvenTab.addEventListener('click', (e) => {
+                if (dwarvenTab.classList.contains('active')) {
+                    e.preventDefault();
+                    return;
+                }
+                this.switchGenerator('dwarven');
+            });
+        }
+        
+        // Elven Subrace selector
         if (this.ui.elements.subraceSelect) {
             this.ui.elements.subraceSelect.addEventListener('change', (e) => {
                 this.ui.updateSubraceDescription(e.target.value);
                 this._updateButtonIcons(e.target.value);
+            });
+        }
+        
+        // Dwarven Subrace selector
+        const dwarvenSubraceSelect = document.getElementById('dwarvenSubrace');
+        if (dwarvenSubraceSelect) {
+            dwarvenSubraceSelect.addEventListener('change', (e) => {
+                this._updateDwarvenButtonIcons(e.target.value);
             });
         }
         
@@ -180,7 +251,19 @@ export class EspruarNameGenerator {
         }
         
         // Keep window functions for vowel suggestions (they use onclick in HTML)
+        window.applyGenderPrefix = (vowel) => this.applyGenderPrefix(vowel);
         window.applyFinalVowel = (vowel) => this.applyFinalVowel(vowel);
+        
+        // Gender prefix options (event delegation)
+        if (this.ui.elements.genderPrefixOptions) {
+            this.ui.elements.genderPrefixOptions.addEventListener('click', (e) => {
+                const prefixOption = e.target.closest('.vowel-option');
+                if (prefixOption) {
+                    const vowel = prefixOption.dataset.vowel;
+                    this.applyGenderPrefix(vowel);
+                }
+            });
+        }
         
         // Vowel options (event delegation)
         this.ui.elements.vowelOptions.addEventListener('click', (e) => {
@@ -229,18 +312,135 @@ export class EspruarNameGenerator {
     }
     
     /**
+     * Determine initial generator type based on URL, domain, or localStorage
+     * @private
+     * @returns {string} 'elven' or 'dwarven'
+     */
+    _determineInitialGenerator() {
+        // 1. Check URL parameter (?generator=dwarven or ?tab=dwarven) - highest priority
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlGenerator = urlParams.get('generator') || urlParams.get('tab');
+        if (urlGenerator === 'dwarven' || urlGenerator === 'dwarf') {
+            return 'dwarven';
+        }
+        if (urlGenerator === 'elven' || urlGenerator === 'elf') {
+            return 'elven';
+        }
+        
+        // 2. Check domain (dethek.com or dethek subdomain defaults to dwarven)
+        const hostname = window.location.hostname.toLowerCase();
+        if (hostname === 'dethek.com' || 
+            hostname === 'www.dethek.com' ||
+            hostname.startsWith('dethek.')) {
+            return 'dwarven';
+        }
+        
+        // 3. Check localStorage preference (for other domains)
+        const lastGenerator = localStorage.getItem(CONFIG.LAST_GENERATOR_KEY);
+        if (lastGenerator === 'dwarven' || lastGenerator === 'elven') {
+            return lastGenerator;
+        }
+        
+        // 4. Default to elven
+        return 'elven';
+    }
+    
+    /**
      * Generate a new name
      */
     generateName() {
         if (!this.isInitialized) return;
         
         try {
-            const preferences = this.ui.getPreferences();
-            const nameData = this.generator.generate(preferences);
-            this.ui.displayName(nameData);
+            const preferences = this.ui.getPreferences(this.currentGeneratorType);
+            const nameData = this.currentGenerator.generate(preferences);
+            this.ui.displayName(nameData, this.currentGeneratorType);
         } catch (error) {
             console.error('Error generating name:', error);
             this.ui.showNotification('Error generating name. Please try again.', 'error');
+        }
+    }
+    
+    /**
+     * Switch between Elven and Dwarven generators
+     * @param {string} generatorType - 'elven' or 'dwarven'
+     */
+    switchGenerator(generatorType) {
+        if (generatorType === this.currentGeneratorType) return;
+        
+        this.currentGeneratorType = generatorType;
+        
+        // Save to localStorage
+        localStorage.setItem(CONFIG.LAST_GENERATOR_KEY, generatorType);
+        
+        // Update favorites manager generator type
+        this.favorites.setGeneratorType(generatorType);
+        
+        // Update current generator
+        this.currentGenerator = generatorType === 'dwarven' ? this.dwarvenGenerator : this.elvenGenerator;
+        
+        // Update UI state
+        this._initializeUIForGenerator(generatorType);
+        
+        // Generate new name with new generator
+        this.generateName();
+    }
+    
+    /**
+     * Initialize UI state for a specific generator
+     * @private
+     * @param {string} generatorType - 'elven' or 'dwarven'
+     */
+    _initializeUIForGenerator(generatorType) {
+        // Get UI elements
+        const elvenTab = document.getElementById('elvenTab');
+        const dwarvenTab = document.getElementById('dwarvenTab');
+        const titleName = document.querySelector('.title-name');
+        const subtitle = document.querySelector('.subtitle');
+        const betaLabel = document.getElementById('betaLabel');
+        const elvenEducation = document.getElementById('elvenEducationalSection');
+        const dwarvenEducation = document.getElementById('dwarvenEducationalSection');
+        const elvenControls = document.querySelector('.elven-controls');
+        const dwarvenControls = document.querySelector('.dwarven-controls');
+        const titleIcons = document.querySelectorAll('.title-sword');
+        
+        if (generatorType === 'elven') {
+            if (elvenTab) elvenTab.classList.add('active');
+            if (dwarvenTab) dwarvenTab.classList.remove('active');
+            document.documentElement.setAttribute('data-generator', 'elven');
+            document.documentElement.setAttribute('data-theme', 'moon-elf');
+            
+            if (titleName) titleName.textContent = 'Elven Name';
+            if (subtitle) subtitle.textContent = 'Espruar Naming System - Forgotten Realms';
+            if (betaLabel) betaLabel.style.display = 'none';
+            if (elvenEducation) elvenEducation.style.display = 'block';
+            if (dwarvenEducation) dwarvenEducation.style.display = 'none';
+            if (elvenControls) elvenControls.style.display = 'block';
+            if (dwarvenControls) dwarvenControls.style.display = 'none';
+            titleIcons.forEach(icon => icon.textContent = '⚔️');
+            
+            // Update button icons for current elven subrace
+            const currentSubrace = this.ui.elements.subraceSelect?.value || 'high-elf';
+            this._updateButtonIcons(currentSubrace);
+            
+        } else if (generatorType === 'dwarven') {
+            if (dwarvenTab) dwarvenTab.classList.add('active');
+            if (elvenTab) elvenTab.classList.remove('active');
+            document.documentElement.setAttribute('data-generator', 'dwarven');
+            document.documentElement.removeAttribute('data-theme');
+            
+            if (titleName) titleName.textContent = 'Dwarven Name';
+            if (subtitle) subtitle.textContent = 'Dethek Naming System - Forgotten Realms';
+            if (betaLabel) betaLabel.style.display = 'block';
+            if (elvenEducation) elvenEducation.style.display = 'none';
+            if (dwarvenEducation) dwarvenEducation.style.display = 'block';
+            if (elvenControls) elvenControls.style.display = 'none';
+            if (dwarvenControls) dwarvenControls.style.display = 'block';
+            titleIcons.forEach(icon => icon.textContent = '⚒️');
+            
+            // Update button icons for current dwarven subrace
+            const currentDwarvenSubrace = document.getElementById('dwarvenSubrace')?.value || 'general';
+            this._updateDwarvenButtonIcons(currentDwarvenSubrace);
         }
     }
     
@@ -310,6 +510,15 @@ export class EspruarNameGenerator {
         if (!success) {
             this.ui.showNotification('Failed to remove favorite', 'error');
         }
+    }
+    
+    /**
+     * Apply a gender prefix vowel to the current name
+     * @param {string} vowel - Vowel to apply
+     */
+    applyGenderPrefix(vowel) {
+        if (!this.isInitialized) return;
+        this.ui.applyGenderPrefix(vowel);
     }
     
     /**
@@ -478,110 +687,13 @@ export class EspruarNameGenerator {
     }
     
     /**
-     * Initialize theme toggle (cycles through 4 themes)
-     * @private
-     */
-    _initThemeToggle() {
-        const toggle = document.getElementById('themeToggle');
-        const icon = document.getElementById('themeIcon');
-        const label = document.getElementById('themeLabel');
-        
-        if (!toggle || !icon || !label) {
-            console.warn('Theme toggle elements not found');
-            return;
-        }
-        
-        // Check for saved preference, otherwise use system preference
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const defaultTheme = systemPrefersDark ? 'moon-elf' : 'sun-elf';
-        const currentTheme = savedTheme || defaultTheme;
-        
-        // Apply theme immediately
-        this._setTheme(currentTheme, icon, label);
-        
-        // Toggle button click - cycle to next theme
-        toggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'moon-elf';
-            const currentIndex = this.themes.indexOf(currentTheme);
-            const nextIndex = (currentIndex + 1) % this.themes.length;
-            const nextTheme = this.themes[nextIndex];
-            
-            this._setTheme(nextTheme, icon, label);
-            localStorage.setItem('theme', nextTheme);
-        });
-        
-        // Listen for system preference changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            // Only auto-switch if user hasn't manually set a preference
-            if (!localStorage.getItem('theme')) {
-                const newTheme = e.matches ? 'moon-elf' : 'sun-elf';
-                this._setTheme(newTheme, icon, label);
-            }
-        });
-    }
-    
-    /**
-     * Set theme and update UI
-     * @private
-     */
-    _setTheme(theme, icon, label) {
-        if (!icon || !label) {
-            console.warn('Icon or label element missing');
-            return;
-        }
-        
-        document.documentElement.setAttribute('data-theme', theme);
-        icon.textContent = this.themeIcons[theme] || '🌙';
-        label.textContent = this.themeLabels[theme] || 'Moon Elf';
-        
-        // Force CSS variable update for border colors
-        this._updateBorderColors(theme);
-    }
-    
-    /**
-     * Update border colors directly on the button element
-     * @private
-     */
-    _updateBorderColors(theme) {
-        const button = document.querySelector('.generate-btn-large');
-        if (!button) return;
-        
-        const borderColorMap = {
-            'moon-elf': {
-                '--border-color-1': 'rgba(184, 197, 214, 0.8)',
-                '--border-color-2': 'rgba(184, 197, 214, 1)',
-                '--border-color-3': 'rgba(255, 255, 255, 1)'
-            },
-            'sun-elf': {
-                '--border-color-1': 'rgba(184, 139, 20, 0.9)',
-                '--border-color-2': 'rgba(184, 139, 20, 1)',
-                '--border-color-3': 'rgba(139, 105, 20, 1)'
-            },
-            'wood-elf': {
-                '--border-color-1': 'rgba(127, 163, 94, 0.8)',
-                '--border-color-2': 'rgba(127, 163, 94, 1)',
-                '--border-color-3': 'rgba(107, 142, 78, 1)'
-            },
-            'drow': {
-                '--border-color-1': 'rgba(161, 88, 160, 0.8)',
-                '--border-color-2': 'rgba(161, 88, 160, 1)',
-                '--border-color-3': 'rgba(184, 120, 183, 1)'
-            }
-        };
-        
-        const colors = borderColorMap[theme] || borderColorMap['moon-elf'];
-        Object.entries(colors).forEach(([property, value]) => {
-            button.style.setProperty(property, value);
-        });
-    }
-    
-    /**
      * Update button icons based on selected subrace
      * @private
      */
     _updateButtonIcons(subrace) {
-        const icon = this.subraceIcons[subrace] || '⚡';
+        if (this.currentGeneratorType !== 'elven') return;
+        
+        const icon = this.subraceIcons[subrace] || '✨';
         
         // Update main generate button text
         const generateBtnText = document.querySelector('.generate-btn-large .generate-btn-text');
@@ -589,10 +701,30 @@ export class EspruarNameGenerator {
             generateBtnText.textContent = `${icon} Generate Name ${icon}`;
         }
         
-        // Update all "Back to Generator" buttons with lightning bolt
+        // Update all "Back to Generator" buttons with sparkles
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
-            btn.innerHTML = `⚡ Back to Generator`;
+            btn.innerHTML = `✨ Back to Generator`;
+        });
+    }
+    
+    /**
+     * Update button icons for Dwarven subrace
+     * @private
+     */
+    _updateDwarvenButtonIcons(subrace) {
+        if (this.currentGeneratorType !== 'dwarven') return;
+        
+        const icon = this.dwarvenSubraceIcons[subrace] || '✨';
+        
+        const generateBtnText = document.querySelector('.generate-btn-large .generate-btn-text');
+        if (generateBtnText) {
+            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
+        }
+        
+        const backButtons = document.querySelectorAll('.back-to-top-btn');
+        backButtons.forEach(btn => {
+            btn.innerHTML = `✨ Back to Generator`;
         });
     }
     
@@ -604,17 +736,12 @@ export class EspruarNameGenerator {
         const rangeSlider = document.getElementById('syllables');
         if (!rangeSlider) return;
         
-        // Theme color mapping
-        const themeColors = {
-            'moon-elf': '#b8c5d6',
-            'sun-elf': '#8b6914',
-            'wood-elf': '#7fa35e',
-            'drow': '#a158a0'
-        };
+        // Moon-elf theme color (only theme used for elven)
+        const moonElfColor = '#b8c5d6';
         
         const updateSliderFill = () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'moon-elf';
-            const color = themeColors[currentTheme] || themeColors['moon-elf'];
+            // Always use moon-elf color for elven generator
+            const color = moonElfColor;
             const percent = ((rangeSlider.value - rangeSlider.min) / (rangeSlider.max - rangeSlider.min)) * 100;
             
             rangeSlider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percent}%, rgba(255,255,255,0.1) ${percent}%, rgba(255,255,255,0.1) 100%)`;
@@ -622,13 +749,6 @@ export class EspruarNameGenerator {
         
         // Update on input
         rangeSlider.addEventListener('input', updateSliderFill);
-        
-        // Update on theme change (listen to data-theme attribute changes)
-        const observer = new MutationObserver(updateSliderFill);
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme']
-        });
         
         // Initial update
         updateSliderFill();
@@ -664,11 +784,11 @@ export class EspruarNameGenerator {
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        const app = new EspruarNameGenerator();
+        const app = new UnifiedNameGenerator();
         app.init();
     });
 } else {
     // DOM already loaded
-    const app = new EspruarNameGenerator();
+    const app = new UnifiedNameGenerator();
     app.init();
 }

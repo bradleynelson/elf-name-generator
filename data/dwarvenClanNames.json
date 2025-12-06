@@ -1,0 +1,951 @@
+[
+  {
+    "root": "stone",
+    "prefix_text": "Stone",
+    "prefix_meaning": "Stone, Rock",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Stohn"
+  },
+  {
+    "root": "rock",
+    "prefix_text": "Rock",
+    "prefix_meaning": "Rock, Boulder",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Rohk"
+  },
+  {
+    "root": "boulder",
+    "prefix_text": "Boulder",
+    "prefix_meaning": "Boulder, Large Stone",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Bohl-dehr"
+  },
+  {
+    "root": "granite",
+    "prefix_text": "Granite",
+    "prefix_meaning": "Granite, Hard Stone",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Grahn-ayt"
+  },
+  {
+    "root": "iron",
+    "prefix_text": "Iron",
+    "prefix_meaning": "Iron, Metal",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "eye-ern"
+  },
+  {
+    "root": "steel",
+    "prefix_text": "Steel",
+    "prefix_meaning": "Steel, Strong Metal",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Steel"
+  },
+  {
+    "root": "mithril",
+    "prefix_text": "Mithril",
+    "prefix_meaning": "Mithril, Precious Metal",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Mihth-rihl"
+  },
+  {
+    "root": "bronze",
+    "prefix_text": "Bronze",
+    "prefix_meaning": "Bronze, Alloy",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Brohnz"
+  },
+  {
+    "root": "ore",
+    "prefix_text": "Ore",
+    "prefix_meaning": "Ore, Raw Metal",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Ohr"
+  },
+  {
+    "root": "ember",
+    "prefix_text": "Ember",
+    "prefix_meaning": "Ember, Glowing Coal",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Ehm-behr"
+  },
+  {
+    "root": "ash",
+    "prefix_text": "Ash",
+    "prefix_meaning": "Ash, Remains",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Ahsh"
+  },
+  {
+    "root": "coal",
+    "prefix_text": "Coal",
+    "prefix_meaning": "Coal, Fuel",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Kohl"
+  },
+  {
+    "root": "forge",
+    "prefix_text": "Forge",
+    "prefix_meaning": "Forge, Workshop",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Fohrj"
+  },
+  {
+    "root": "anvil",
+    "prefix_text": "Anvil",
+    "prefix_meaning": "Anvil, Tool",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Ahn-vihl"
+  },
+  {
+    "root": "hammer",
+    "prefix_text": "Hammer",
+    "prefix_meaning": "Hammer, Tool",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Hah-mehr"
+  },
+  {
+    "root": "tongs",
+    "prefix_text": "Tongs",
+    "prefix_meaning": "Tongs, Tool",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Tohngz"
+  },
+  {
+    "root": "smith",
+    "prefix_text": "Smith",
+    "prefix_meaning": "Smith, Craftsman",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Smihth"
+  },
+  {
+    "root": "gear",
+    "prefix_text": "Gear",
+    "prefix_meaning": "Gear, Mechanism",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Geer"
+  },
+  {
+    "root": "rivet",
+    "prefix_text": "Rivet",
+    "prefix_meaning": "Rivet, Fastener",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Rih-veht"
+  },
+  {
+    "root": "brass",
+    "prefix_text": "Brass",
+    "prefix_meaning": "Brass, Alloy",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Brahs"
+  },
+  {
+    "root": "cinder",
+    "prefix_text": "Cinder",
+    "prefix_meaning": "Cinder, Ash",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Sihn-dehr"
+  },
+  {
+    "root": "furnace",
+    "prefix_text": "Furnace",
+    "prefix_meaning": "Furnace, Fire",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Fuhr-nahs"
+  },
+  {
+    "root": "axe",
+    "prefix_text": "Axe",
+    "prefix_meaning": "Axe, Weapon",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Ahks"
+  },
+  {
+    "root": "shield",
+    "prefix_text": "Shield",
+    "prefix_meaning": "Shield, Defense",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Sheeld"
+  },
+  {
+    "root": "helm",
+    "prefix_text": "Helm",
+    "prefix_meaning": "Helm, Helmet",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Hehlm"
+  },
+  {
+    "root": "spear",
+    "prefix_text": "Spear",
+    "prefix_meaning": "Spear, Weapon",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Speer"
+  },
+  {
+    "root": "blade",
+    "prefix_text": "Blade",
+    "prefix_meaning": "Blade, Weapon",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Blayd"
+  },
+  {
+    "root": "maul",
+    "prefix_text": "Maul",
+    "prefix_meaning": "Maul, Weapon",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Mawl"
+  },
+  {
+    "root": "pike",
+    "prefix_text": "Pike",
+    "prefix_meaning": "Pike, Weapon",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Payk"
+  },
+  {
+    "root": "blood",
+    "prefix_text": "Blood",
+    "prefix_meaning": "Blood, Life",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Bluhd"
+  },
+  {
+    "root": "war",
+    "prefix_text": "War",
+    "prefix_meaning": "War, Conflict",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Wohr"
+  },
+  {
+    "root": "battle",
+    "prefix_text": "Battle",
+    "prefix_meaning": "Battle, Fight",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Baht-uhl"
+  },
+  {
+    "root": "under",
+    "prefix_text": "Under",
+    "prefix_meaning": "Under, Below",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Uhn-dehr"
+  },
+  {
+    "root": "deep",
+    "prefix_text": "Deep",
+    "prefix_meaning": "Deep, Profound",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Deep"
+  },
+  {
+    "root": "red",
+    "prefix_text": "Red",
+    "prefix_meaning": "Red, Color",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Rehd"
+  },
+  {
+    "root": "high",
+    "prefix_text": "High",
+    "prefix_meaning": "High, Elevated",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Hay"
+  },
+  {
+    "root": "oak",
+    "prefix_text": "Oak",
+    "prefix_meaning": "Oak, Tree",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Ohk"
+  },
+  {
+    "root": "frost",
+    "prefix_text": "Frost",
+    "prefix_meaning": "Frost, Ice",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Frohst"
+  },
+  {
+    "root": "storm",
+    "prefix_text": "Storm",
+    "prefix_meaning": "Storm, Tempest",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Stohrm"
+  },
+  {
+    "root": "mountain",
+    "prefix_text": "Mountain",
+    "prefix_meaning": "Mountain, Peak",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Mown-tihn"
+  },
+  {
+    "root": "cavern",
+    "prefix_text": "Cavern",
+    "prefix_meaning": "Cavern, Cave",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Kah-vehrn"
+  },
+  {
+    "root": "boar",
+    "prefix_text": "Boar",
+    "prefix_meaning": "Boar, Beast",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Bohr"
+  },
+  {
+    "root": "ram",
+    "prefix_text": "Ram",
+    "prefix_meaning": "Ram, Beast",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Rahm"
+  },
+  {
+    "root": "bear",
+    "prefix_text": "Bear",
+    "prefix_meaning": "Bear, Beast",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Bair"
+  },
+  {
+    "root": "wolf",
+    "prefix_text": "Wolf",
+    "prefix_meaning": "Wolf, Beast",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Woolf"
+  },
+  {
+    "root": "eagle",
+    "prefix_text": "Eagle",
+    "prefix_meaning": "Eagle, Bird",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Ee-guhl"
+  },
+  {
+    "root": "drake",
+    "prefix_text": "Drake",
+    "prefix_meaning": "Drake, Dragon",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Drayk"
+  },
+  {
+    "root": "serpent",
+    "prefix_text": "Serpent",
+    "prefix_meaning": "Serpent, Snake",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Sehr-pehnt"
+  },
+  {
+    "root": "stag",
+    "prefix_text": "Stag",
+    "prefix_meaning": "Stag, Deer",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Stahg"
+  },
+  {
+    "root": "goat",
+    "prefix_text": "Goat",
+    "prefix_meaning": "Goat, Beast",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "beasts",
+    "prefix_phonetic": "Goht"
+  },
+  {
+    "root": "brawn",
+    "prefix_text": "Brawn",
+    "prefix_meaning": "Brawn, Strength",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Brawn"
+  },
+  {
+    "root": "dank",
+    "prefix_text": "Dank",
+    "prefix_meaning": "Dank, Dark",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Dahnk"
+  },
+  {
+    "root": "fire",
+    "prefix_text": "Fire",
+    "prefix_meaning": "Fire, Flame",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "fai-er"
+  },
+  {
+    "root": "holder",
+    "prefix_text": "Holder",
+    "prefix_meaning": "Holder, Keeper",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "war-battle",
+    "prefix_phonetic": "Hohl-dehr"
+  },
+  {
+    "root": "lode",
+    "prefix_text": "Lode",
+    "prefix_meaning": "Lode, Vein",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "stone-earth",
+    "prefix_phonetic": "Lohd"
+  },
+  {
+    "root": "lut",
+    "prefix_text": "Lut",
+    "prefix_meaning": "Lut, Unknown",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Luht"
+  },
+  {
+    "root": "rumnah",
+    "prefix_text": "Rumna",
+    "prefix_meaning": "Rumna, Unknown",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Ruhm-nah"
+  },
+  {
+    "root": "strake",
+    "prefix_text": "Strake",
+    "prefix_meaning": "Strake, Stripe",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "craft-forge",
+    "prefix_phonetic": "Strayk"
+  },
+  {
+    "root": "tor",
+    "prefix_text": "Tor",
+    "prefix_meaning": "Tor, Tower",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Tohr"
+  },
+  {
+    "root": "ung",
+    "prefix_text": "Ung",
+    "prefix_meaning": "Ung, Unknown",
+    "can_be_prefix": true,
+    "can_be_suffix": false,
+    "category": "geography",
+    "prefix_phonetic": "Uhng"
+  },
+  {
+    "root": "hall",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "hall",
+    "suffix_meaning": "Hall, Great Room",
+    "suffix_type": "noun",
+    "suffix_phonetic": "hahl"
+  },
+  {
+    "root": "home",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "home",
+    "suffix_meaning": "Home, Dwelling",
+    "suffix_type": "noun",
+    "suffix_phonetic": "hohm"
+  },
+  {
+    "root": "gate",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "gate",
+    "suffix_meaning": "Gate, Entrance",
+    "suffix_type": "noun",
+    "suffix_phonetic": "gayt"
+  },
+  {
+    "root": "helm",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "helm",
+    "suffix_meaning": "Helm, Helmet",
+    "suffix_type": "noun",
+    "suffix_phonetic": "hehlm"
+  },
+  {
+    "root": "guard",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "guard",
+    "suffix_meaning": "Guard, Protector",
+    "suffix_type": "noun",
+    "suffix_phonetic": "gahrd"
+  },
+  {
+    "root": "keep",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "keep",
+    "suffix_meaning": "Keep, Fortress",
+    "suffix_type": "noun",
+    "suffix_phonetic": "keep"
+  },
+  {
+    "root": "thane",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "thane",
+    "suffix_meaning": "Thane, Noble",
+    "suffix_type": "noun",
+    "suffix_phonetic": "thayn"
+  },
+  {
+    "root": "forge",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "forge",
+    "suffix_meaning": "Forge, Workshop",
+    "suffix_type": "noun",
+    "suffix_phonetic": "fohrj"
+  },
+  {
+    "root": "craft",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "craft",
+    "suffix_meaning": "Craft, Skill",
+    "suffix_type": "noun",
+    "suffix_phonetic": "krahft"
+  },
+  {
+    "root": "delve",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "delve",
+    "suffix_meaning": "Delve, Mine",
+    "suffix_type": "noun",
+    "suffix_phonetic": "dehlv"
+  },
+  {
+    "root": "mine",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "mine",
+    "suffix_meaning": "Mine, Excavation",
+    "suffix_type": "noun",
+    "suffix_phonetic": "mayn"
+  },
+  {
+    "root": "ward",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "ward",
+    "suffix_meaning": "Ward, Protection",
+    "suffix_type": "noun",
+    "suffix_phonetic": "wohrd"
+  },
+  {
+    "root": "brand",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "brand",
+    "suffix_meaning": "Brand, Mark",
+    "suffix_type": "noun",
+    "suffix_phonetic": "brahnd"
+  },
+  {
+    "root": "mark",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "mark",
+    "suffix_meaning": "Mark, Sign",
+    "suffix_type": "noun",
+    "suffix_phonetic": "mahrk"
+  },
+  {
+    "root": "breaker",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "breaker",
+    "suffix_meaning": "Breaker, One Who Breaks",
+    "suffix_type": "verb",
+    "suffix_phonetic": "bray-kehr"
+  },
+  {
+    "root": "maker",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "maker",
+    "suffix_meaning": "Maker, One Who Makes",
+    "suffix_type": "verb",
+    "suffix_phonetic": "may-kehr"
+  },
+  {
+    "root": "bender",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "bender",
+    "suffix_meaning": "Bender, One Who Bends",
+    "suffix_type": "verb",
+    "suffix_phonetic": "behn-dehr"
+  },
+  {
+    "root": "hewer",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "hewer",
+    "suffix_meaning": "Hewer, One Who Hews",
+    "suffix_type": "verb",
+    "suffix_phonetic": "hyoo-ehr"
+  },
+  {
+    "root": "shaper",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "shaper",
+    "suffix_meaning": "Shaper, One Who Shapes",
+    "suffix_type": "verb",
+    "suffix_phonetic": "shay-pehr"
+  },
+  {
+    "root": "carver",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "carver",
+    "suffix_meaning": "Carver, One Who Carves",
+    "suffix_type": "verb",
+    "suffix_phonetic": "kahr-vehr"
+  },
+  {
+    "root": "sunder",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "sunder",
+    "suffix_meaning": "Sunder, One Who Sunders",
+    "suffix_type": "verb",
+    "suffix_phonetic": "suhn-dehr"
+  },
+  {
+    "root": "bearer",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "bearer",
+    "suffix_meaning": "Bearer, One Who Bears",
+    "suffix_type": "verb",
+    "suffix_phonetic": "bair-ehr"
+  },
+  {
+    "root": "walker",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "walker",
+    "suffix_meaning": "Walker, One Who Walks",
+    "suffix_type": "verb",
+    "suffix_phonetic": "waw-kehr"
+  },
+  {
+    "root": "runner",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "runner",
+    "suffix_meaning": "Runner, One Who Runs",
+    "suffix_type": "verb",
+    "suffix_phonetic": "ruhn-nehr"
+  },
+  {
+    "root": "beard",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "beard",
+    "suffix_meaning": "Beard, Facial Hair",
+    "suffix_type": "noun",
+    "suffix_phonetic": "beerd"
+  },
+  {
+    "root": "erk",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "erk",
+    "suffix_meaning": "Work, Labor",
+    "suffix_type": "noun",
+    "suffix_phonetic": "ehrk"
+  },
+  {
+    "root": "hammer",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "hammer",
+    "suffix_meaning": "Hammer, Tool",
+    "suffix_type": "noun",
+    "suffix_phonetic": "hah-mehr"
+  },
+  {
+    "root": "anvil",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "anvil",
+    "suffix_meaning": "Anvil, Tool",
+    "suffix_type": "noun",
+    "suffix_phonetic": "ahn-vihl"
+  },
+  {
+    "root": "kil",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "kil",
+    "suffix_meaning": "Kill, Slay",
+    "suffix_type": "noun",
+    "suffix_phonetic": "kihl"
+  },
+  {
+    "root": "unn",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "unn",
+    "suffix_meaning": "One, Single",
+    "suffix_type": "noun",
+    "suffix_phonetic": "uhn"
+  },
+  {
+    "root": "hek",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "hek",
+    "suffix_meaning": "Hek, Unknown",
+    "suffix_type": "noun",
+    "suffix_phonetic": "hehk"
+  },
+  {
+    "root": "fist",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "fist",
+    "suffix_meaning": "Fist, Hand",
+    "suffix_type": "noun",
+    "suffix_phonetic": "fihst"
+  },
+  {
+    "root": "err",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "err",
+    "suffix_meaning": "Err, Wander",
+    "suffix_type": "verb",
+    "suffix_phonetic": "ehr"
+  },
+  {
+    "root": "gehr",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "gehr",
+    "suffix_meaning": "Gehr, Unknown",
+    "suffix_type": "noun",
+    "suffix_phonetic": "gehr"
+  },
+  {
+    "root": "heim",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "heim",
+    "suffix_meaning": "Heim, Home",
+    "suffix_type": "noun",
+    "suffix_phonetic": "haym"
+  },
+  {
+    "root": "eln",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "eln",
+    "suffix_meaning": "Eln, Unknown",
+    "suffix_type": "noun",
+    "suffix_phonetic": "ehln"
+  },
+  {
+    "root": "art",
+    "prefix_text": null,
+    "prefix_meaning": null,
+    "can_be_prefix": false,
+    "can_be_suffix": true,
+    "suffix_text": "art",
+    "suffix_meaning": "Art, Craft",
+    "suffix_type": "noun",
+    "suffix_phonetic": "ahrt"
+  }
+]
+
+

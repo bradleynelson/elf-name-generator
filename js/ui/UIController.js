@@ -1,5 +1,5 @@
 // UI Controller for the Espruar Name Generator
-import { FINAL_VOWELS } from '../config.js';
+import { FINAL_VOWELS, GENDER_PREFIX_VOWELS } from '../config.js';
 import * as phonetics from '../utils/phonetics.js';
 
 /**
@@ -11,7 +11,9 @@ export class UIController {
         this.currentName = null;
         this.speechSynthesis = null;
         this.currentUtterance = null;
+        this.currentFilter = 'all'; // Default filter
         this._initSpeechSynthesis();
+        this._initFavoritesFilter();
     }
     
     /**
@@ -37,8 +39,11 @@ export class UIController {
             speakerContainer: document.getElementById('speakerContainer'),
             breakdown: document.getElementById('breakdown'),
             
-            // Vowel suggestions
-            vowelSuggestionsContainer: document.getElementById('vowelSuggestionsContainer'),
+            // Modifier suggestions (combined gender prefix + final vowel)
+            modifierSuggestionsContainer: document.getElementById('modifierSuggestionsContainer'),
+            genderPrefixSection: document.getElementById('genderPrefixSection'),
+            genderPrefixOptions: document.getElementById('genderPrefixOptions'),
+            finalVowelSection: document.getElementById('finalVowelSection'),
             vowelOptions: document.getElementById('vowelOptions'),
             
             // Action buttons
@@ -52,30 +57,51 @@ export class UIController {
     
     /**
      * Get current user preferences from controls
+     * @param {string} generatorType - 'elven' or 'dwarven'
      * @returns {Object}
      */
-    getPreferences() {
-        return {
-            subrace: this.elements.subraceSelect.value,
-            complexity: this.elements.complexitySelect.value,
-            targetSyllables: parseInt(this.elements.syllablesInput.value),
-            style: this.elements.styleSelect.value
-        };
+    getPreferences(generatorType = 'elven') {
+        if (generatorType === 'dwarven') {
+            const subraceSelect = document.getElementById('dwarvenSubrace');
+            const nameTypeSelect = document.getElementById('dwarvenNameType');
+            const genderSelect = document.getElementById('dwarvenGender');
+            
+            return {
+                subrace: subraceSelect ? subraceSelect.value : 'general',
+                nameType: nameTypeSelect ? nameTypeSelect.value : 'full',
+                gender: genderSelect ? genderSelect.value : 'neutral'
+            };
+        } else {
+            return {
+                subrace: this.elements.subraceSelect ? this.elements.subraceSelect.value : 'high-elf',
+                complexity: this.elements.complexitySelect ? this.elements.complexitySelect.value : 'auto',
+                targetSyllables: this.elements.syllablesInput ? parseInt(this.elements.syllablesInput.value) : 4,
+                style: this.elements.styleSelect ? this.elements.styleSelect.value : 'neutral'
+            };
+        }
     }
     
     /**
      * Display generated name
      * @param {Object} nameData - Generated name data
+     * @param {string} generatorType - 'elven' or 'dwarven'
      */
-    displayName(nameData) {
+    displayName(nameData, generatorType = 'elven') {
         this.currentName = nameData;
         
         // Update name display
         this.elements.generatedName.textContent = nameData.name;
         
         // Build stacked meaning display
-        const stackedMeaning = this._buildStackedMeaning(nameData.meaning);
-        this.elements.nameMeaning.innerHTML = stackedMeaning;
+        if (generatorType === 'dwarven' && nameData.firstName && nameData.clanName) {
+            // For Dwarven full names, don't use + separator between first and clan
+            const firstNameMeaning = this._buildStackedMeaning(nameData.firstName.meaning);
+            const clanNameMeaning = this._buildStackedMeaning(nameData.clanName.meaning);
+            this.elements.nameMeaning.innerHTML = firstNameMeaning + '<span class="meaning-separator"> </span>' + clanNameMeaning;
+        } else {
+            const stackedMeaning = this._buildStackedMeaning(nameData.meaning);
+            this.elements.nameMeaning.innerHTML = stackedMeaning;
+        }
         
         // Display pronunciation if available
         if (nameData.pronunciation) {
@@ -101,20 +127,93 @@ export class UIController {
             : `Generated name: ${nameData.name}, meaning: ${plainMeaning}`;
         this.elements.result.setAttribute('aria-label', ariaLabel);
         
-        // Update breakdown
-        this._displayBreakdown(nameData);
-        
-        // Handle vowel suggestions
-        const preferences = this.getPreferences();
-        if (phonetics.shouldSuggestFinalVowel(
-            nameData.name,
-            nameData.syllables,
-            preferences.targetSyllables
-        )) {
-            this._displayVowelSuggestions(nameData);
+        // Update breakdown (Elven only)
+        if (generatorType === 'elven') {
+            this._displayBreakdown(nameData);
         } else {
-            this.elements.vowelSuggestionsContainer.classList.add('hidden');
+            // Dwarven breakdown
+            this._displayDwarvenBreakdown(nameData);
         }
+        
+        // Handle modifier suggestions (Elven only)
+        if (generatorType === 'elven') {
+            const preferences = this.getPreferences('elven');
+            const showGenderPrefix = phonetics.shouldSuggestGenderPrefix(nameData);
+            const showFinalVowel = phonetics.shouldSuggestFinalVowel(
+                nameData.name,
+                nameData.syllables,
+                preferences.targetSyllables
+            );
+            
+            // Show combined container if either modifier should be displayed
+            if (showGenderPrefix || showFinalVowel) {
+                this._displayModifierSuggestions(nameData, showGenderPrefix, showFinalVowel);
+            } else {
+                // Hide entire modifier container
+                if (this.elements.modifierSuggestionsContainer) {
+                    this.elements.modifierSuggestionsContainer.classList.add('hidden');
+                }
+            }
+        } else {
+            // Hide modifiers for Dwarven
+            if (this.elements.modifierSuggestionsContainer) {
+                this.elements.modifierSuggestionsContainer.classList.add('hidden');
+            }
+        }
+    }
+    
+    /**
+     * Display Dwarven name breakdown
+     * @private
+     */
+    _displayDwarvenBreakdown(nameData) {
+        if (!this.elements.breakdown) return;
+        
+        let html = '';
+        
+        if (nameData.nameType === 'full' && nameData.firstName && nameData.clanName) {
+            // Full name breakdown
+            html += `<div class="component">
+                <span class="component-label">First Name:</span> 
+                ${nameData.firstName.prefix.prefix_text}${nameData.firstName.suffix.suffix_text} 
+                (${nameData.firstName.meaning})
+            </div>`;
+            html += `<div class="component">
+                <span class="component-label">Clan Name:</span> 
+                ${nameData.clanName.prefix.prefix_text}${nameData.clanName.suffix.suffix_text} 
+                (${nameData.clanName.meaning})
+            </div>`;
+        } else if (nameData.firstName) {
+            // First name only
+            html += `<div class="component">
+                <span class="component-label">Prefix:</span> 
+                ${nameData.firstName.prefix.prefix_text} (${nameData.firstName.prefix.prefix_meaning})
+            </div>`;
+            html += `<div class="component">
+                <span class="component-label">Suffix:</span> 
+                ${nameData.firstName.suffix.suffix_text} (${nameData.firstName.suffix.suffix_meaning})
+            </div>`;
+        } else if (nameData.clanName) {
+            // Clan name only
+            html += `<div class="component">
+                <span class="component-label">Prefix:</span> 
+                ${nameData.clanName.prefix.prefix_text} (${nameData.clanName.prefix.prefix_meaning})
+            </div>`;
+            html += `<div class="component">
+                <span class="component-label">Suffix:</span> 
+                ${nameData.clanName.suffix.suffix_text} (${nameData.clanName.suffix.suffix_meaning})
+            </div>`;
+        }
+        
+        // Add syllables if available
+        if (nameData.syllables !== undefined) {
+            html += `<div class="component">
+                <span class="component-label">Syllables:</span> 
+                ${nameData.syllables}
+            </div>`;
+        }
+        
+        this.elements.breakdown.innerHTML = html;
     }
     
     /**
@@ -235,19 +334,103 @@ export class UIController {
     }
     
     /**
-     * Display vowel suggestions
+     * Display modifier suggestions (combined gender prefix + final vowel)
      * @private
      */
-    _displayVowelSuggestions(nameData) {
-        const vowelOptionsHTML = FINAL_VOWELS.map(v => `
-            <div class="vowel-option" data-vowel="${v.vowel}">
-                <span class="vowel-option-name">${nameData.name}${v.vowel}</span>
-                <span class="vowel-option-tone">${v.tone}</span>
-            </div>
-        `).join('');
+    _displayModifierSuggestions(nameData, showGenderPrefix, showFinalVowel) {
+        // Populate gender prefix section
+        if (showGenderPrefix) {
+            const genderPrefixOptionsHTML = GENDER_PREFIX_VOWELS.map(v => `
+                <div class="vowel-option" data-vowel="${v.vowel}">
+                    <span class="vowel-option-name">${v.vowel}${nameData.name.toLowerCase()}</span>
+                    <span class="vowel-option-tone">${v.note}</span>
+                </div>
+            `).join('');
+            
+            if (this.elements.genderPrefixOptions) {
+                this.elements.genderPrefixOptions.innerHTML = genderPrefixOptionsHTML;
+            }
+            if (this.elements.genderPrefixSection) {
+                this.elements.genderPrefixSection.classList.remove('hidden');
+            }
+        } else {
+            if (this.elements.genderPrefixSection) {
+                this.elements.genderPrefixSection.classList.add('hidden');
+            }
+        }
         
-        this.elements.vowelOptions.innerHTML = vowelOptionsHTML;
-        this.elements.vowelSuggestionsContainer.classList.remove('hidden');
+        // Populate final vowel section
+        if (showFinalVowel) {
+            const vowelOptionsHTML = FINAL_VOWELS.map(v => `
+                <div class="vowel-option" data-vowel="${v.vowel}">
+                    <span class="vowel-option-name">${nameData.name}${v.vowel}</span>
+                    <span class="vowel-option-tone">${v.tone} (Final Vowel)</span>
+                </div>
+            `).join('');
+            
+            if (this.elements.vowelOptions) {
+                this.elements.vowelOptions.innerHTML = vowelOptionsHTML;
+            }
+            if (this.elements.finalVowelSection) {
+                this.elements.finalVowelSection.classList.remove('hidden');
+            }
+        } else {
+            if (this.elements.finalVowelSection) {
+                this.elements.finalVowelSection.classList.add('hidden');
+            }
+        }
+        
+        // Show the combined container
+        if (this.elements.modifierSuggestionsContainer) {
+            this.elements.modifierSuggestionsContainer.classList.remove('hidden');
+        }
+    }
+    
+    /**
+     * Apply a gender prefix vowel to the current name
+     * @param {string} vowel - Vowel to apply
+     */
+    applyGenderPrefix(vowel) {
+        if (!this.currentName) return;
+        
+        const baseForm = this.currentName.baseForm || this.currentName.name;
+        const newName = vowel + baseForm.toLowerCase();
+        const newSyllables = phonetics.countSyllables(newName);
+        
+        // Update current name
+        this.currentName.name = newName;
+        this.currentName.syllables = newSyllables;
+        this.currentName.genderPrefixVowel = vowel;
+        
+        // Update display
+        this.elements.generatedName.textContent = newName;
+        
+        // Update breakdown with gender prefix info
+        const vowelInfo = GENDER_PREFIX_VOWELS.find(v => v.vowel === vowel);
+        let html = this.elements.breakdown.innerHTML;
+        
+        // Insert gender prefix info after the title
+        const firstComponent = html.indexOf('<div class="component">');
+        if (firstComponent !== -1) {
+            const genderPrefixHTML = `<div class="component">
+                <span class="component-label">Gender Prefix:</span> 
+                ${vowel}- (${vowelInfo ? vowelInfo.note : 'Gender marker'})
+            </div>`;
+            html = html.slice(0, firstComponent) + genderPrefixHTML + html.slice(firstComponent);
+        }
+        
+        // Update syllable count
+        html = html.replace(
+            /(<span class="component-label">Syllables:<\/span>\s+)\d+/,
+            `$1${newSyllables}`
+        );
+        
+        this.elements.breakdown.innerHTML = html;
+        
+        // Hide entire modifier suggestions
+        if (this.elements.modifierSuggestionsContainer) {
+            this.elements.modifierSuggestionsContainer.classList.add('hidden');
+        }
     }
     
     /**
@@ -290,8 +473,10 @@ export class UIController {
         
         this.elements.breakdown.innerHTML = html;
         
-        // Hide vowel suggestions
-        this.elements.vowelSuggestionsContainer.classList.add('hidden');
+        // Hide entire modifier suggestions
+        if (this.elements.modifierSuggestionsContainer) {
+            this.elements.modifierSuggestionsContainer.classList.add('hidden');
+        }
     }
     
     /**
@@ -313,16 +498,61 @@ export class UIController {
             return;
         }
         
+        // Filter favorites based on current filter
+        const filteredFavorites = this.currentFilter === 'all' 
+            ? favorites 
+            : favorites.filter(fav => (fav.generatorType || 'elven') === this.currentFilter);
+        
+        if (filteredFavorites.length === 0) {
+            this.elements.favoritesList.className = 'empty-favorites';
+            const filterName = this.currentFilter === 'elven' ? 'Elven' : 'Dwarven';
+            this.elements.favoritesList.textContent = `No ${filterName} favorites saved yet.`;
+            return;
+        }
+        
         this.elements.favoritesList.className = '';
-        this.elements.favoritesList.innerHTML = favorites.map((fav, index) => `
-            <div class="favorite-item">
+        this.elements.favoritesList.innerHTML = filteredFavorites.map((fav, index) => {
+            const generatorIcon = fav.generatorType === 'dwarven' ? '⚒️' : '⚔️';
+            const generatorLabel = fav.generatorType === 'dwarven' ? 'Dwarven' : 'Elven';
+            // Use original index from unfiltered array for correct removal
+            const originalIndex = favorites.indexOf(fav);
+            
+            return `
+            <div class="favorite-item" data-generator-type="${fav.generatorType || 'elven'}">
+                <span class="favorite-type-badge" title="${generatorLabel} name">${generatorIcon}</span>
                 <span class="favorite-name">${fav.name}</span>
                 <span class="favorite-meaning">"${fav.meaning}"</span>
-                <button class="remove-btn" data-index="${index}" aria-label="Remove ${fav.name} from favorites">
+                <button class="remove-btn" data-index="${originalIndex}" aria-label="Remove ${fav.name} from favorites">
                     Remove
                 </button>
             </div>
-        `).join('');
+        `}).join('');
+    }
+    
+    /**
+     * Initialize favorites filter buttons
+     * @private
+     */
+    _initFavoritesFilter() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active state and aria-pressed
+                filterButtons.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
+                
+                // Update filter and trigger redisplay
+                this.currentFilter = btn.dataset.filter;
+                
+                // Trigger favorites redisplay (will be called from app.js via favorites onChange)
+                const event = new CustomEvent('favoritesFilterChanged', { detail: { filter: this.currentFilter } });
+                window.dispatchEvent(event);
+            });
+        });
     }
     
     /**
@@ -348,18 +578,32 @@ export class UIController {
     /**
      * Update the subrace description text
      * @param {string} subrace - Selected subrace
+     * @param {string} generatorType - 'elven' or 'dwarven'
      */
-    updateSubraceDescription(subrace) {
-        const descriptions = {
-            'high-elf': 'Balanced names drawing from all High Elf traditions',
-            'sun-elf': 'Names emphasizing Gold, Light, Nobility, and Ancient Lore (formal, 3-5 syllables)',
-            'moon-elf': 'Names emphasizing Silver, Moonlight, Stars, and Flow (lyrical, 4+ syllables)',
-            'wood-elf': 'Short, strong names (2-3 syllables) emphasizing Nature, Vigilance, and Martial Skill',
-            'drow': 'Gender-specific harsh names - Female: complex/powerful (4-6 syl), Male: short/martial (2-3 syl) - Use Gender selector below'
-        };
-        
-        if (this.elements.subraceDescription) {
-            this.elements.subraceDescription.textContent = descriptions[subrace] || descriptions['high-elf'];
+    updateSubraceDescription(subrace, generatorType = 'elven') {
+        if (generatorType === 'dwarven') {
+            const descriptions = {
+                'general': 'Balanced names drawing from all Dwarven traditions',
+                'gold-dwarf': 'Names emphasizing Gold, Gems, Halls, and Wealth (stately, traditional)',
+                'shield-dwarf': 'Names emphasizing Steel, Axes, Battle, and Defense (martial, functional)',
+                'duergar': 'Names emphasizing Gray, Deep, Dark Stone, and Servitude (harsh, guttural)'
+            };
+            
+            if (this.elements.dwarvenSubraceDescription) {
+                this.elements.dwarvenSubraceDescription.textContent = descriptions[subrace] || descriptions['general'];
+            }
+        } else {
+            const descriptions = {
+                'high-elf': 'Balanced names drawing from all High Elf traditions',
+                'sun-elf': 'Names emphasizing Gold, Light, Nobility, and Ancient Lore (formal, 3-5 syllables)',
+                'moon-elf': 'Names emphasizing Silver, Moonlight, Stars, and Flow (lyrical, 4+ syllables)',
+                'wood-elf': 'Short, strong names (2-3 syllables) emphasizing Nature, Vigilance, and Martial Skill',
+                'drow': 'Gender-specific harsh names - Female: complex/powerful (4-6 syl), Male: short/martial (2-3 syl) - Use Gender selector below'
+            };
+            
+            if (this.elements.subraceDescription) {
+                this.elements.subraceDescription.textContent = descriptions[subrace] || descriptions['high-elf'];
+            }
         }
     }
     
@@ -645,7 +889,27 @@ export class UIController {
             converted = converted.replace(/ohl/g, 'ol');
             converted = converted.replace(/ohr/g, 'or');
             
-            // Keep "ee" for long e sound
+            // Handle "ahnee" -> "anee" (convert "ahn" part, preserve "ee" as long E)
+            // This handles the "-ani-" connector which has phonetic "ahnee"
+            // When converted, "ahn" becomes "an", so "ahnee" -> "anee"
+            // TTS should read "anee" as "an-ee" (two syllables with long E)
+            if (converted === 'ahnee') {
+                converted = 'anee'; // "an-ee" - TTS reads this as "an" + long E sound
+            }
+            
+            // Handle standalone "ee" -> convert to "ee" pattern TTS recognizes as long E
+            // Some TTS APIs read standalone "ee" as two separate "e" letters
+            // Solution: convert to "ee" but ensure it's in a context TTS understands
+            if (converted === 'ee') {
+                // For standalone "ee", keep as "ee" but it should be part of a compound
+                // If this still causes issues, might need to use "ee" in a compound context
+                converted = 'ee';
+            }
+            
+            // Handle "ee" at end of words (preserve as long E)
+            // "ee" at end should be preserved as long E sound
+            converted = converted.replace(/ee$/g, 'ee'); // Keep final "ee" as long E
+            
             // Keep "oo" for long u sound
             // Keep "ay" for diphthong
             // Keep "ow" for diphthong
@@ -748,6 +1012,7 @@ export class UIController {
             utterance.rate = 0.75; // Slower for clarity with phonetic spelling
             utterance.pitch = 1.0;
             utterance.volume = 1.0;
+            utterance.lang = 'en-US'; // Explicitly set to General American English for consistent pronunciation
             
             // Try to find a suitable voice (prefer English voices)
             const voices = this.speechSynthesis.getVoices();

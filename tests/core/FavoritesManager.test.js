@@ -10,7 +10,7 @@ describe('FavoritesManager', () => {
   });
 
   describe('add', () => {
-    it('should add a favorite name', () => {
+    it('should add a favorite name with generatorType tag', () => {
       const nameData = {
         name: 'Maireel',
         meaning: 'Light + Star',
@@ -18,14 +18,16 @@ describe('FavoritesManager', () => {
         syllables: 2
       };
 
+      favoritesManager.setGeneratorType('elven');
       const result = favoritesManager.add(nameData);
       
       expect(result.success).toBe(true);
       expect(favoritesManager.getAll()).toHaveLength(1);
       expect(favoritesManager.getAll()[0].name).toBe('Maireel');
+      expect(favoritesManager.getAll()[0].generatorType).toBe('elven');
     });
 
-    it('should not add duplicate names', () => {
+    it('should not add duplicate names from same generator', () => {
       const nameData = {
         name: 'Maireel',
         meaning: 'Light + Star',
@@ -33,12 +35,33 @@ describe('FavoritesManager', () => {
         syllables: 2
       };
 
+      favoritesManager.setGeneratorType('elven');
       favoritesManager.add(nameData);
       const result = favoritesManager.add(nameData);
       
       expect(result.success).toBe(false);
       expect(result.message).toContain('already');
       expect(favoritesManager.getAll()).toHaveLength(1);
+    });
+
+    it('should allow same name from different generators', () => {
+      const nameData = {
+        name: 'Thorin',
+        meaning: 'Bold One',
+        pronunciation: 'THOR-in',
+        syllables: 2
+      };
+
+      favoritesManager.setGeneratorType('elven');
+      favoritesManager.add(nameData);
+      
+      favoritesManager.setGeneratorType('dwarven');
+      const result = favoritesManager.add(nameData);
+      
+      expect(result.success).toBe(true);
+      expect(favoritesManager.getAll()).toHaveLength(2);
+      expect(favoritesManager.getAll()[0].generatorType).toBe('elven');
+      expect(favoritesManager.getAll()[1].generatorType).toBe('dwarven');
     });
 
     it('should return error for null/undefined data', () => {
@@ -90,6 +113,27 @@ describe('FavoritesManager', () => {
     });
   });
 
+  describe('setGeneratorType', () => {
+    it('should update generator type for tagging new favorites', () => {
+      favoritesManager.setGeneratorType('dwarven');
+      favoritesManager.add({ name: 'Thorin', meaning: 'Bold' });
+      
+      const all = favoritesManager.getAll();
+      expect(all[0].generatorType).toBe('dwarven');
+    });
+
+    it('should notify listeners when generator type changes', () => {
+      let callbackCalled = false;
+      favoritesManager.onChange(() => {
+        callbackCalled = true;
+      });
+
+      favoritesManager.setGeneratorType('dwarven');
+      
+      expect(callbackCalled).toBe(true);
+    });
+  });
+
   describe('onChange', () => {
     it('should call listener when favorites change', () => {
       let callbackCalled = false;
@@ -107,5 +151,6 @@ describe('FavoritesManager', () => {
     });
   });
 });
+
 
 
