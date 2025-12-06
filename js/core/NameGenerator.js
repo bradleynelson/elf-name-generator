@@ -53,9 +53,11 @@ export class NameGenerator {
         let bestName = null;
         let bestDiff = 100;
         
-        // Define subrace-specific minimums
+        // Define subrace-specific minimums and maximums
         const minSyllables = (effectiveSubrace === 'drow-female') ? 4 : 
                             ((subrace === 'wood-elf' || effectiveSubrace === 'drow-male') ? 2 : 0);
+        const maxSyllables = (effectiveSubrace === 'drow-female') ? 6 : 
+                            ((subrace === 'wood-elf' || effectiveSubrace === 'drow-male') ? 3 : 5);
         
         // Try multiple attempts to get close to target syllable count
         // Increase attempts if we need to meet minimums (more attempts for stricter requirements)
@@ -64,8 +66,11 @@ export class NameGenerator {
         for (let attempts = 0; attempts < maxAttempts; attempts++) {
             const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
             
-            // Reject candidates that don't meet subrace minimums
+            // Reject candidates that don't meet subrace minimums or exceed maximums
             if (minSyllables > 0 && candidate.syllables < minSyllables) {
+                continue; // Skip this candidate, try again
+            }
+            if (candidate.syllables > maxSyllables) {
                 continue; // Skip this candidate, try again
             }
             
@@ -291,10 +296,10 @@ export class NameGenerator {
         
         // Drow EMBRACE harsh clusters - don't use connectors to smooth them
         // BUT: Drow female needs connectors to reach 4-6 syllable minimum
-        if (subrace === 'drow' && needsConnector) {
+        if ((subrace === 'drow' || subrace === 'drow-male' || subrace === 'drow-female') && needsConnector) {
             // Drow female: allow connectors to meet 4-6 syllable requirement
             // Drow male: skip connectors (want harsh, clumsy sound)
-            if (style !== 'feminine') {
+            if (subrace === 'drow-male' || (subrace === 'drow' && style !== 'feminine')) {
                 needsConnector = false;
             }
         }
@@ -365,8 +370,9 @@ export class NameGenerator {
             c.can_be_prefix && c.can_be_suffix && !c.is_gender_modifier
         );
         
-        // Start with a prefix
-        let component = this._selectWeightedComponent(this.prefixCandidates, subrace);
+        // Start with a flexible component (can be both prefix and suffix)
+        // This ensures all non-final components are flexible
+        let component = this._selectWeightedComponent(flexibleComponents, subrace);
         let componentText = phonetics.cleanComponentText(component.prefix_text);
         let componentMeaning = phonetics.formatMeaning(component.prefix_meaning);
         
@@ -411,7 +417,10 @@ export class NameGenerator {
             const needsConn = phonetics.needsConnector(lastText, componentText) || 
                             phonetics.hasHarshCluster(lastText, componentText);
             
-            if (needsConn) {
+            // Drow male: don't use connectors (embrace harsh clusters)
+            const allowConnector = !(subrace === 'drow-male' && needsConn);
+            
+            if (needsConn && allowConnector) {
                 let connector = this._selectConnector(style);
                 let connectorText = phonetics.cleanComponentText(connector.text);
                 
@@ -468,8 +477,11 @@ export class NameGenerator {
                 lastText = nameParts[nameParts.length - 1];
             }
             
-            // Check if connector needed
-            if (phonetics.needsConnector(lastText, finalSuffixText)) {
+            // Check if connector needed (but not for Drow male)
+            const needsConnector = phonetics.needsConnector(lastText, finalSuffixText);
+            const allowConnector = !(subrace === 'drow-male' && needsConnector);
+            
+            if (needsConnector && allowConnector) {
                 const connector = this._selectConnector(style);
                 const connectorText = phonetics.cleanComponentText(connector.text);
                 
@@ -489,46 +501,73 @@ export class NameGenerator {
         let fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
         let syllables = phonetics.countSyllables(fullName);
         
+        // Enforce subrace-specific minimums and maximums
+        // Define min/max for complex mode
+        const minSyllablesComplex = (subrace === 'drow-female') ? 4 : 
+                                   ((subrace === 'wood-elf' || subrace === 'drow-male') ? 2 : 2);
+        const maxSyllablesComplex = (subrace === 'drow-female') ? 6 : 
+                                    ((subrace === 'wood-elf' || subrace === 'drow-male') ? 3 : 5);
+        
         // Ensure we meet subrace-specific minimums
         // If we don't, add more components or connectors (prioritize minimum over target)
-        if (syllables < minSyllables) {
+        if (syllables < minSyllablesComplex) {
             // Try to add another component to reach minimum (even if it exceeds target+1)
-            for (let retry = 0; retry < 10 && syllables < minSyllables; retry++) {
+            for (let retry = 0; retry < 10 && syllables < minSyllablesComplex; retry++) {
                 const extraComponent = this._selectWeightedComponent(flexibleComponents, subrace);
                 const extraText = phonetics.cleanComponentText(
                     extraComponent.prefix_text || extraComponent.suffix_text
                 );
                 const extraSyllables = phonetics.countSyllables(extraText);
                 
-                // Check if we need a connector
+                // Check if we need a connector (but not for Drow male)
                 const needsConn = phonetics.needsConnector(lastText, extraText);
-                if (needsConn) {
+                const allowConnector = !(subrace === 'drow-male' && needsConn);
+                
+                if (needsConn && allowConnector) {
                     const connector = this._selectConnector(style);
                     const connectorText = phonetics.cleanComponentText(connector.text);
                     const connectorSyllables = phonetics.countSyllables(connectorText);
                     
-                    // Add connector even if it exceeds target - minimum is more important
-                    connectors.push({ connector, text: connectorText });
-                    nameParts.push(connectorText);
-                    syllables += connectorSyllables;
+                    // Don't add if it would exceed maximum
+                    if (syllables + connectorSyllables + extraSyllables <= maxSyllablesComplex) {
+                        connectors.push({ connector, text: connectorText });
+                        nameParts.push(connectorText);
+                        syllables += connectorSyllables;
+                    }
                 }
                 
-                // Add component even if it exceeds target - minimum is more important
-                components.push({ 
-                    component: extraComponent, 
-                    text: extraText, 
-                    meaning: phonetics.formatMeaning(extraComponent.prefix_meaning || extraComponent.suffix_meaning)
-                });
-                nameParts.push(extraText);
-                syllables += extraSyllables;
-                lastText = extraText;
+                // Add component if it doesn't exceed maximum
+                if (syllables + extraSyllables <= maxSyllablesComplex) {
+                    components.push({ 
+                        component: extraComponent, 
+                        text: extraText, 
+                        meaning: phonetics.formatMeaning(extraComponent.prefix_meaning || extraComponent.suffix_meaning)
+                    });
+                    nameParts.push(extraText);
+                    syllables += extraSyllables;
+                    lastText = extraText;
+                }
                 
-                if (syllables >= minSyllables) {
+                if (syllables >= minSyllablesComplex) {
                     break;
                 }
             }
             
             // Rebuild name if we added components
+            fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
+            syllables = phonetics.countSyllables(fullName);
+        }
+        
+        // Final check: enforce maximum syllables
+        if (syllables > maxSyllablesComplex && components.length > 2) {
+            // Remove last component if it causes us to exceed max
+            components.pop();
+            nameParts.pop();
+            // Also remove last connector if present
+            if (connectors.length > 0 && nameParts.length > components.length) {
+                connectors.pop();
+                nameParts.pop();
+            }
             fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
             syllables = phonetics.countSyllables(fullName);
         }
