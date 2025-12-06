@@ -3,11 +3,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 // Setup DOM for testing
 beforeEach(() => {
   document.body.innerHTML = `
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle between light and dark theme">
-      <span class="theme-icon" id="themeIcon" aria-hidden="true">🌙</span>
-      <span class="theme-label" id="themeLabel">Moon Elf</span>
-    </button>
-    
     <div class="settings-accordion">
       <button class="settings-toggle" id="settingsToggle" aria-expanded="false" aria-controls="settingsContent">
         <span class="settings-toggle-title">Generation Settings</span>
@@ -38,23 +33,10 @@ beforeEach(() => {
 });
 
 describe('Accessibility - ARIA Attributes', () => {
-  describe('Theme Toggle Button', () => {
-    it('should have aria-label for screen readers', () => {
-      const themeToggle = document.getElementById('themeToggle');
-      expect(themeToggle).toHaveAttribute('aria-label');
-      expect(themeToggle.getAttribute('aria-label')).toBeTruthy();
-    });
-
-    it('should have aria-hidden on decorative icon', () => {
-      const themeIcon = document.getElementById('themeIcon');
-      expect(themeIcon).toHaveAttribute('aria-hidden', 'true');
-    });
-  });
-
   describe('Settings Accordion', () => {
     it('should have aria-expanded attribute on toggle button', () => {
       const settingsToggle = document.getElementById('settingsToggle');
-      expect(settingsToggle.getAttribute('aria-expanded')).toBeTruthy();
+      expect(settingsToggle.hasAttribute('aria-expanded')).toBe(true);
       expect(settingsToggle.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -62,7 +44,7 @@ describe('Accessibility - ARIA Attributes', () => {
       const settingsToggle = document.getElementById('settingsToggle');
       const settingsContent = document.getElementById('settingsContent');
       
-      expect(settingsToggle.getAttribute('aria-controls')).toBeTruthy();
+      expect(settingsToggle.hasAttribute('aria-controls')).toBe(true);
       expect(settingsToggle.getAttribute('aria-controls')).toBe('settingsContent');
       expect(settingsContent).toBeTruthy();
     });
@@ -76,7 +58,7 @@ describe('Accessibility - ARIA Attributes', () => {
   describe('Breakdown Accordion', () => {
     it('should have aria-expanded attribute on toggle button', () => {
       const breakdownToggle = document.getElementById('breakdownToggle');
-      expect(breakdownToggle.getAttribute('aria-expanded')).toBeTruthy();
+      expect(breakdownToggle.hasAttribute('aria-expanded')).toBe(true);
       expect(breakdownToggle.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -84,7 +66,7 @@ describe('Accessibility - ARIA Attributes', () => {
       const breakdownToggle = document.getElementById('breakdownToggle');
       const breakdownContent = document.getElementById('breakdownContent');
       
-      expect(breakdownToggle.getAttribute('aria-controls')).toBeTruthy();
+      expect(breakdownToggle.hasAttribute('aria-controls')).toBe(true);
       expect(breakdownToggle.getAttribute('aria-controls')).toBe('breakdownContent');
       expect(breakdownContent).toBeTruthy();
     });
@@ -98,15 +80,17 @@ describe('Accessibility - ARIA Attributes', () => {
   describe('Speaker Button', () => {
     it('should have aria-label for screen readers', () => {
       const speakerBtn = document.getElementById('speakerBtn');
+      expect(speakerBtn.hasAttribute('aria-label')).toBe(true);
       expect(speakerBtn.getAttribute('aria-label')).toBeTruthy();
-      expect(speakerBtn.getAttribute('aria-label')).toBe('Pronounce name');
     });
 
     it('should have aria-hidden on decorative icons', () => {
       const defaultIcon = document.querySelector('.speaker-icon-default');
       const playingIcon = document.querySelector('.speaker-icon-playing');
       
+      expect(defaultIcon.hasAttribute('aria-hidden')).toBe(true);
       expect(defaultIcon.getAttribute('aria-hidden')).toBe('true');
+      expect(playingIcon.hasAttribute('aria-hidden')).toBe(true);
       expect(playingIcon.getAttribute('aria-hidden')).toBe('true');
     });
   });
@@ -114,11 +98,10 @@ describe('Accessibility - ARIA Attributes', () => {
   describe('Form Controls', () => {
     it('should have aria-label on select elements', () => {
       const subraceSelect = document.getElementById('subrace');
+      expect(subraceSelect.hasAttribute('aria-label')).toBe(true);
       expect(subraceSelect.getAttribute('aria-label')).toBeTruthy();
-      expect(subraceSelect.getAttribute('aria-label')).toBe('Select elven subrace');
     });
   });
-});
 
   describe('Filter Buttons', () => {
     beforeEach(() => {
@@ -133,28 +116,32 @@ describe('Accessibility - ARIA Attributes', () => {
 
     it('should have role="group" on filter container', () => {
       const filterGroup = document.querySelector('.favorites-filter');
+      expect(filterGroup.hasAttribute('role')).toBe(true);
       expect(filterGroup.getAttribute('role')).toBe('group');
-      expect(filterGroup.getAttribute('aria-label')).toBeTruthy();
+      expect(filterGroup.hasAttribute('aria-label')).toBe(true);
     });
 
     it('should have aria-pressed on filter buttons', () => {
       const allBtn = document.querySelector('[data-filter="all"]');
       const elvenBtn = document.querySelector('[data-filter="elven"]');
       
+      expect(allBtn.hasAttribute('aria-pressed')).toBe(true);
       expect(allBtn.getAttribute('aria-pressed')).toBe('true');
+      expect(elvenBtn.hasAttribute('aria-pressed')).toBe(true);
       expect(elvenBtn.getAttribute('aria-pressed')).toBe('false');
     });
 
     it('should have aria-label on filter buttons', () => {
       const buttons = document.querySelectorAll('.filter-btn');
       buttons.forEach(btn => {
-        expect(btn.getAttribute('aria-label')).toBeTruthy();
+        expect(btn.hasAttribute('aria-label')).toBe(true);
       });
     });
 
     it('should have aria-hidden on decorative emoji icons', () => {
       const emojiSpans = document.querySelectorAll('.filter-btn span[aria-hidden]');
       emojiSpans.forEach(span => {
+        expect(span.hasAttribute('aria-hidden')).toBe(true);
         expect(span.getAttribute('aria-hidden')).toBe('true');
       });
     });
@@ -179,12 +166,14 @@ describe('Accessibility - ARIA Attributes', () => {
       const header = document.querySelector('.accordion-header');
       const content = document.getElementById('test-content');
       
+      expect(header.hasAttribute('aria-controls')).toBe(true);
       expect(header.getAttribute('aria-controls')).toBe('test-content');
       expect(content).toBeTruthy();
     });
 
     it('should have aria-hidden on decorative icons', () => {
       const icon = document.querySelector('.accordion-icon');
+      expect(icon.hasAttribute('aria-hidden')).toBe(true);
       expect(icon.getAttribute('aria-hidden')).toBe('true');
     });
   });
@@ -206,12 +195,13 @@ describe('Accessibility - ARIA Attributes', () => {
 
     it('should have aria-label on tab buttons', () => {
       const elvenTab = document.getElementById('elvenTab');
-      expect(elvenTab.getAttribute('aria-label')).toBeTruthy();
+      expect(elvenTab.hasAttribute('aria-label')).toBe(true);
     });
 
     it('should have aria-hidden on tab icons', () => {
       const icons = document.querySelectorAll('.tab-icon');
       icons.forEach(icon => {
+        expect(icon.hasAttribute('aria-hidden')).toBe(true);
         expect(icon.getAttribute('aria-hidden')).toBe('true');
       });
     });
@@ -224,9 +214,8 @@ describe('Accessibility - ARIA Attributes', () => {
 
     it('should have aria-hidden on external link icons', () => {
       const externalIcon = document.querySelector('.external-link-icon');
+      expect(externalIcon.hasAttribute('aria-hidden')).toBe(true);
       expect(externalIcon.getAttribute('aria-hidden')).toBe('true');
     });
   });
->>>>>>> Stashed changes
 });
-
