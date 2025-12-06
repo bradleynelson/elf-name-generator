@@ -71,10 +71,7 @@ export class NameGenerator {
             
             const diff = Math.abs(candidate.syllables - adjustedTarget);
             
-<<<<<<< Updated upstream
-=======
             // Track best match (only valid candidates reach here)
->>>>>>> Stashed changes
             if (diff < bestDiff) {
                 bestDiff = diff;
                 bestName = candidate;
@@ -83,6 +80,42 @@ export class NameGenerator {
             // Stop if we're close enough
             if (diff <= CONFIG.ACCEPTABLE_SYLLABLE_DIFFERENCE) {
                 break;
+            }
+        }
+        
+        // Final validation: ensure we have a valid name meeting subrace minimums
+        // (This is a fallback in case the main loop didn't find any valid candidates)
+        if (minSyllables > 0) {
+            // If we don't have a valid name yet, keep trying until we get one
+            if (!bestName || bestName.syllables < minSyllables) {
+                // Last resort: try many more times to get a valid name
+                for (let retry = 0; retry < 50; retry++) {
+                    const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
+                    if (candidate.syllables >= minSyllables) {
+                        bestName = candidate;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Safety check: if we still don't have a valid name, something is wrong
+        // But we should have found one by now with all the retries
+        if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+            console.warn(`Failed to generate valid name for ${subrace} ${style} after ${maxAttempts + 50} attempts`);
+            // Keep trying until we get a valid name (absolute last resort)
+            for (let finalRetry = 0; finalRetry < 100; finalRetry++) {
+                const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
+                if (minSyllables === 0 || candidate.syllables >= minSyllables) {
+                    bestName = candidate;
+                    break;
+                }
+            }
+            // If we STILL don't have a valid name, something is seriously wrong
+            // But we must return something, so return the last attempt even if invalid
+            if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+                console.error(`CRITICAL: Could not generate valid name for ${subrace} ${style} after ${maxAttempts + 150} attempts`);
+                bestName = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
             }
         }
         

@@ -1,27 +1,18 @@
 {
   "name": "elf-name-generator",
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  "version": "2.7.3",
-  "description": "Espruar Elven Name Generator",
-=======
-=======
->>>>>>> Stashed changes
-  "version": "3.0.2",
+  "version": "3.0.0",
   "description": "Faerûn Name Generator - Elven & Dwarven Names",
->>>>>>> Stashed changes
   "type": "module",
   "scripts": {
     "test": "vitest",
+    "test:run": "vitest run",
+    "test:run:log": "node scripts/run-tests-with-log.js",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
-<<<<<<< Updated upstream
-=======
     "test:log-update": "node scripts/log-test-update.js",
     "lint": "eslint js/ tests/ --ext .js --cache --cache-location .eslintcache --max-warnings 0",
     "lint:fix": "eslint js/ tests/ --ext .js --fix --cache --cache-location .eslintcache",
->>>>>>> Stashed changes
     "version:major": "node scripts/version.js major",
     "version:minor": "node scripts/version.js minor",
     "version:patch": "node scripts/version.js patch",

@@ -28,14 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-<<<<<<< Updated upstream
-      - name: Run tests
-        run: npm test -- --run
-      
-      - name: Run tests with coverage
-        if: github.event_name == 'pull_request'
-        run: npm run test:coverage
-=======
       - name: Check for vulnerabilities
         run: npm audit --audit-level=moderate || true
       
@@ -48,7 +40,6 @@ jobs:
       - name: Run tests with coverage
         if: github.event_name == 'pull_request'
         run: npm run test:run -- --coverage
->>>>>>> Stashed changes
 
   deploy-prod:
     name: Deploy to Production
@@ -63,21 +54,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-<<<<<<< Updated upstream
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests
-        run: npm test -- --run
-      
-=======
->>>>>>> Stashed changes
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
@@ -98,21 +74,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-<<<<<<< Updated upstream
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests
-        run: npm test -- --run
-      
-=======
->>>>>>> Stashed changes
       # Note: Development deployment would go to a separate branch or environment
       # Uncomment and configure if you want a separate dev site
       # - name: Deploy to Development Site
@@ -122,4 +83,3 @@ jobs:
       #     publish_dir: ./
       #     publish_branch: gh-pages-dev
       #     cname: dev.espruar.com  # If you have a dev subdomain
-

@@ -21,9 +21,5 @@ npm-debug.log*
 # Cursor AI files (not for repository)
 .cursorrules
 
-<<<<<<< Updated upstream
-=======
 # ESLint
 .eslintcache
-
->>>>>>> Stashed changes
