@@ -304,7 +304,7 @@ export class NameGenerator {
         }
         
         // Build the name
-        let nameParts = [
+        const nameParts = [
             prefixText,
             connector ? phonetics.cleanComponentText(connector.text) : '',
             suffixText
@@ -356,7 +356,7 @@ export class NameGenerator {
     _generateComplexCandidate(style, subrace, targetSyllables) {
         const components = [];
         const connectors = [];
-        let nameParts = [];
+        const nameParts = [];
         let currentSyllables = 0;
         // Use the passed targetSyllables, not hardcoded
         
@@ -511,7 +511,6 @@ export class NameGenerator {
                     connectors.push({ connector, text: connectorText });
                     nameParts.push(connectorText);
                     syllables += connectorSyllables;
-                    connectorAdded = true;
                 }
                 
                 // Add component even if it exceeds target - minimum is more important
