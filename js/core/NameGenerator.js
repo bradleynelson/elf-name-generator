@@ -53,11 +53,28 @@ export class NameGenerator {
         let bestName = null;
         let bestDiff = 100;
         
+        // Define subrace-specific minimums
+        const minSyllables = (effectiveSubrace === 'drow-female') ? 4 : 
+                            ((subrace === 'wood-elf' || effectiveSubrace === 'drow-male') ? 2 : 0);
+        
         // Try multiple attempts to get close to target syllable count
-        for (let attempts = 0; attempts < CONFIG.MAX_GENERATION_ATTEMPTS; attempts++) {
+        // Increase attempts if we need to meet minimums (more attempts for stricter requirements)
+        const maxAttempts = minSyllables > 0 ? CONFIG.MAX_GENERATION_ATTEMPTS * 2 : CONFIG.MAX_GENERATION_ATTEMPTS;
+        
+        for (let attempts = 0; attempts < maxAttempts; attempts++) {
             const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
+            
+            // Reject candidates that don't meet subrace minimums
+            if (minSyllables > 0 && candidate.syllables < minSyllables) {
+                continue; // Skip this candidate, try again
+            }
+            
             const diff = Math.abs(candidate.syllables - adjustedTarget);
             
+<<<<<<< Updated upstream
+=======
+            // Track best match (only valid candidates reach here)
+>>>>>>> Stashed changes
             if (diff < bestDiff) {
                 bestDiff = diff;
                 bestName = candidate;
@@ -66,6 +83,42 @@ export class NameGenerator {
             // Stop if we're close enough
             if (diff <= CONFIG.ACCEPTABLE_SYLLABLE_DIFFERENCE) {
                 break;
+            }
+        }
+        
+        // Final validation: ensure we have a valid name meeting subrace minimums
+        // (This is a fallback in case the main loop didn't find any valid candidates)
+        if (minSyllables > 0) {
+            // If we don't have a valid name yet, keep trying until we get one
+            if (!bestName || bestName.syllables < minSyllables) {
+                // Last resort: try many more times to get a valid name
+                for (let retry = 0; retry < 50; retry++) {
+                    const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
+                    if (candidate.syllables >= minSyllables) {
+                        bestName = candidate;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Safety check: if we still don't have a valid name, something is wrong
+        // But we should have found one by now with all the retries
+        if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+            console.warn(`Failed to generate valid name for ${subrace} ${style} after ${maxAttempts + 50} attempts`);
+            // Keep trying until we get a valid name (absolute last resort)
+            for (let finalRetry = 0; finalRetry < 100; finalRetry++) {
+                const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
+                if (minSyllables === 0 || candidate.syllables >= minSyllables) {
+                    bestName = candidate;
+                    break;
+                }
+            }
+            // If we STILL don't have a valid name, something is seriously wrong
+            // But we must return something, so return the last attempt even if invalid
+            if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+                console.error(`CRITICAL: Could not generate valid name for ${subrace} ${style} after ${maxAttempts + 150} attempts`);
+                bestName = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
             }
         }
         
@@ -140,6 +193,14 @@ export class NameGenerator {
             return this._generateComplexCandidate(style, subrace, targetSyllables);
         }
         
+        // For Drow female with high target (4-6 syllables), use complex mode
+        // to ensure we can meet the minimum syllable requirement
+        // Note: subrace parameter here is actually effectiveSubrace ('drow-female' or 'drow-male')
+        if (complexity === 'auto' && subrace === 'drow-female' && targetSyllables >= 4) {
+            // Use complex mode to get enough syllables for Drow female names
+            return this._generateComplexCandidate(style, subrace, targetSyllables);
+        }
+        
         // Standard 2-component generation
         const prefix = this._selectPrefix(style, subrace);
         const suffix = this._selectSuffix(style, subrace);
@@ -160,9 +221,13 @@ export class NameGenerator {
         }
         
         // Drow EMBRACE harsh clusters - don't use connectors to smooth them
+        // BUT: Drow female needs connectors to reach 4-6 syllable minimum
         if (subrace === 'drow' && needsConnector) {
-            // Drow want the harsh, clumsy sound - skip connectors
-            needsConnector = false;
+            // Drow female: allow connectors to meet 4-6 syllable requirement
+            // Drow male: skip connectors (want harsh, clumsy sound)
+            if (style !== 'feminine') {
+                needsConnector = false;
+            }
         }
         
         if (needsConnector) {
@@ -244,7 +309,9 @@ export class NameGenerator {
         let attempts = 0;
         const maxComponents = 3; // Lowered from 4 - keep names shorter
         const minComponents = 2; // Always need at least 2 components
-        const minSyllables = 2; // Never generate 1-syllable names
+        // Enforce subrace-specific minimums
+        const minSyllables = (subrace === 'drow-female') ? 4 : 
+                            ((subrace === 'wood-elf' || subrace === 'drow-male') ? 2 : 2);
         
         // Keep adding components until we reach target syllables
         while (currentSyllables < targetSyllables && components.length < maxComponents && attempts < 10) {
@@ -350,8 +417,54 @@ export class NameGenerator {
         }
         
         // Build the final name - join first, THEN capitalize only first letter
-        const fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
-        const syllables = phonetics.countSyllables(fullName);
+        let fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
+        let syllables = phonetics.countSyllables(fullName);
+        
+        // Ensure we meet subrace-specific minimums
+        // If we don't, add more components or connectors (prioritize minimum over target)
+        if (syllables < minSyllables) {
+            // Try to add another component to reach minimum (even if it exceeds target+1)
+            for (let retry = 0; retry < 10 && syllables < minSyllables; retry++) {
+                const extraComponent = this._selectWeightedComponent(flexibleComponents, subrace);
+                const extraText = phonetics.cleanComponentText(
+                    extraComponent.prefix_text || extraComponent.suffix_text
+                );
+                const extraSyllables = phonetics.countSyllables(extraText);
+                
+                // Check if we need a connector
+                const needsConn = phonetics.needsConnector(lastText, extraText);
+                let connectorAdded = false;
+                if (needsConn) {
+                    const connector = this._selectConnector(style);
+                    const connectorText = phonetics.cleanComponentText(connector.text);
+                    const connectorSyllables = phonetics.countSyllables(connectorText);
+                    
+                    // Add connector even if it exceeds target - minimum is more important
+                    connectors.push({ connector, text: connectorText });
+                    nameParts.push(connectorText);
+                    syllables += connectorSyllables;
+                    connectorAdded = true;
+                }
+                
+                // Add component even if it exceeds target - minimum is more important
+                components.push({ 
+                    component: extraComponent, 
+                    text: extraText, 
+                    meaning: phonetics.formatMeaning(extraComponent.prefix_meaning || extraComponent.suffix_meaning)
+                });
+                nameParts.push(extraText);
+                syllables += extraSyllables;
+                lastText = extraText;
+                
+                if (syllables >= minSyllables) {
+                    break;
+                }
+            }
+            
+            // Rebuild name if we added components
+            fullName = phonetics.capitalize(nameParts.join('').toLowerCase());
+            syllables = phonetics.countSyllables(fullName);
+        }
         
         // Build meaning string - ONLY component meanings, filter out empty ones
         const componentMeanings = components.map(c => c.meaning).filter(m => m && m.trim());

@@ -16,6 +16,12 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
+<<<<<<< Updated upstream
+=======
+    "test:log-update": "node scripts/log-test-update.js",
+    "lint": "eslint js/ tests/ --ext .js --cache --cache-location .eslintcache --max-warnings 0",
+    "lint:fix": "eslint js/ tests/ --ext .js --fix --cache --cache-location .eslintcache",
+>>>>>>> Stashed changes
     "version:major": "node scripts/version.js major",
     "version:minor": "node scripts/version.js minor",
     "version:patch": "node scripts/version.js patch",
@@ -23,6 +29,7 @@
   },
   "devDependencies": {
     "@vitest/ui": "^1.0.0",
+    "eslint": "^8.57.0",
     "jsdom": "^23.0.0",
     "vitest": "^1.0.0"
   }
