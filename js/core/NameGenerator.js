@@ -384,9 +384,6 @@ export class NameGenerator {
         let attempts = 0;
         const maxComponents = 3; // Lowered from 4 - keep names shorter
         const minComponents = 2; // Always need at least 2 components
-        // Enforce subrace-specific minimums
-        const minSyllables = (subrace === 'drow-female') ? 4 : 
-                            ((subrace === 'wood-elf' || subrace === 'drow-male') ? 2 : 2);
         
         // Keep adding components until we reach target syllables
         while (currentSyllables < targetSyllables && components.length < maxComponents && attempts < 10) {
