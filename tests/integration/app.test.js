@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { UnifiedNameGenerator } from '../../js/app.js';
+import { EspruarNameGenerator } from '../../js/app.js';
+import { NameGenerator } from '../../js/core/NameGenerator.js';
 import { loadGeneratorData, loadDwarvenGeneratorData } from '../../js/utils/dataLoader.js';
 
 // Mock data loading
@@ -105,18 +106,17 @@ describe('Integration Tests - App Functionality', () => {
 
     describe('App Initialization', () => {
         it('should initialize app and create generators', async () => {
-            const app = new UnifiedNameGenerator();
+            const app = new EspruarNameGenerator();
             await app.init();
             
-            expect(app.elvenGenerator).toBeDefined();
-            expect(app.dwarvenGenerator).toBeDefined();
+            expect(app.generator).toBeDefined();
             expect(app.ui).toBeDefined();
             expect(app.favorites).toBeDefined();
             expect(app.isInitialized).toBe(true);
         });
 
         it('should wire up generate button click handler', async () => {
-            const app = new UnifiedNameGenerator();
+            const app = new EspruarNameGenerator();
             await app.init();
             
             const generateBtn = document.querySelector('.generate-btn-large');
@@ -134,7 +134,7 @@ describe('Integration Tests - App Functionality', () => {
 
     describe('Generate Button Functionality', () => {
         it('should generate and display name when button clicked', async () => {
-            const app = new UnifiedNameGenerator();
+            const app = new EspruarNameGenerator();
             await app.init();
             
             const generateBtn = document.querySelector('.generate-btn-large');
@@ -164,7 +164,7 @@ describe('Integration Tests - App Functionality', () => {
         });
 
         it('should show name meaning after generation', async () => {
-            const app = new UnifiedNameGenerator();
+            const app = new EspruarNameGenerator();
             await app.init();
             
             const generateBtn = document.querySelector('.generate-btn-large');
@@ -179,19 +179,13 @@ describe('Integration Tests - App Functionality', () => {
     });
 
     describe('Tab Switching', () => {
-        it('should switch generators when tab clicked', async () => {
-            const app = new UnifiedNameGenerator();
+        it('should have generator initialized', async () => {
+            const app = new EspruarNameGenerator();
             await app.init();
             
-            const dwarvenTab = document.getElementById('dwarvenTab');
-            
-            expect(app.currentGeneratorType).toBe('elven');
-            
-            // Click dwarven tab
-            dwarvenTab.click();
-            
-            expect(app.currentGeneratorType).toBe('dwarven');
-            expect(app.currentGenerator).toBe(app.dwarvenGenerator);
+            // Verify generator is initialized
+            expect(app.generator).toBeDefined();
+            expect(app.generator).toBeInstanceOf(NameGenerator);
         });
     });
 });

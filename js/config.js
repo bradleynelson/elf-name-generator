@@ -24,6 +24,14 @@ export const CONFIG = {
     DEFAULT_STYLE: 'neutral'
 };
 
+export const GENDER_PREFIX_VOWELS = [
+    { vowel: 'A', gender: 'feminine' },
+    { vowel: 'E', gender: 'masculine' },
+    { vowel: 'I', gender: 'feminine' },
+    { vowel: 'Y', gender: 'feminine' },
+    { vowel: 'O', gender: 'masculine' }
+];
+
 export const FINAL_VOWELS = [
     { vowel: 'a', tone: 'Clear, bright, feminine' },
     { vowel: 'i', tone: 'Sharp, intellectual' },
