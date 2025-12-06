@@ -1,0 +1,20 @@
+# Code Owners
+# This file defines who owns different parts of the codebase
+# GitHub will automatically request reviews from code owners when PRs touch their files
+
+# Default owner for everything
+* @bradleynelson
+
+# Core generation logic - requires careful review
+/js/core/ @bradleynelson
+/data/ @bradleynelson
+
+# Configuration files - important for deployment
+js/config.js @bradleynelson
+package.json @bradleynelson
+.github/ @bradleynelson
+
+# Production deployment files
+CNAME @bradleynelson
+index.html @bradleynelson
+

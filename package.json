@@ -1,6 +1,6 @@
 {
   "name": "elf-name-generator",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Faerûn Name Generator - Elven & Dwarven Names",
   "type": "module",
   "scripts": {
@@ -11,14 +11,18 @@
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
     "test:log-update": "node scripts/log-test-update.js",
+    "lint": "eslint js/ tests/ --ext .js --cache --cache-location .eslintcache --max-warnings 0",
+    "lint:fix": "eslint js/ tests/ --ext .js --fix --cache --cache-location .eslintcache",
     "version:major": "node scripts/version.js major",
     "version:minor": "node scripts/version.js minor",
     "version:patch": "node scripts/version.js patch",
     "version": "npm run version:patch"
   },
   "devDependencies": {
-    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/ui": "^4.0.15",
+    "eslint": "^8.57.0",
     "jsdom": "^23.0.0",
-    "vitest": "^1.0.0"
+    "vitest": "^4.0.15"
   }
 }

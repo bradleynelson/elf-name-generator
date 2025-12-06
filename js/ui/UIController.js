@@ -511,7 +511,7 @@ export class UIController {
         }
         
         this.elements.favoritesList.className = '';
-        this.elements.favoritesList.innerHTML = filteredFavorites.map((fav, index) => {
+        this.elements.favoritesList.innerHTML = filteredFavorites.map((fav, _index) => {
             const generatorIcon = fav.generatorType === 'dwarven' ? '⚒️' : '⚔️';
             const generatorLabel = fav.generatorType === 'dwarven' ? 'Dwarven' : 'Elven';
             // Use original index from unfiltered array for correct removal

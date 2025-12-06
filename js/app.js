@@ -279,7 +279,8 @@ export class UnifiedNameGenerator {
             // Remove button - show confirmation
             if (e.target.classList.contains('remove-btn')) {
                 const button = e.target;
-                const index = parseInt(button.dataset.index);
+                // index parsed but not used in this branch (used in confirm-delete)
+                parseInt(button.dataset.index);
                 
                 // Change to confirmation state
                 button.innerHTML = `

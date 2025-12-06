@@ -35,7 +35,7 @@ export class DwarvenNameGenerator {
             subrace = 'general'
         } = options;
         
-        let result = {};
+        const result = {};
         
         // Generate based on name type
         if (nameType === 'first' || nameType === 'full') {
@@ -259,7 +259,6 @@ export class DwarvenNameGenerator {
         const lastChar = prefix.slice(-1).toLowerCase();
         const lastTwoChars = prefix.slice(-2).toLowerCase();
         const firstChar = suffix.charAt(0).toLowerCase();
-        const firstTwoChars = suffix.slice(0, 2).toLowerCase();
         
         // Check for triple or quadruple consonant (ddd, dddd)
         const combined = prefix + suffix;
@@ -267,7 +266,7 @@ export class DwarvenNameGenerator {
             // Remove duplicate consonants at the boundary
             // e.g., "Audd" + "dd" -> "Aud" + "d"
             let cleanPrefix = prefix;
-            let cleanSuffix = suffix;
+            const cleanSuffix = suffix;
             
             // If prefix ends with repeated consonant, trim to single
             if (lastChar === lastTwoChars.charAt(0) && !vowels.has(lastChar)) {
