@@ -1,6 +1,6 @@
-# Espruar Elven Name Generator
+# Faerûn Name Generator
 
-A sophisticated web-based name generator for creating authentic Elven names following the Espruar naming system from Forgotten Realms D&D lore. Now supports High Elves, Wood Elves, and Drow (Beta)!
+A sophisticated web-based name generator for creating authentic Elven and Dwarven names following the Espruar (Elven) and Dethek (Dwarven) naming systems from Forgotten Realms D&D lore. Supports High Elves, Wood Elves, Drow (Beta), and Dwarven names!
 
 **Live Site:** [https://espruar.com](https://espruar.com)
 
@@ -8,11 +8,20 @@ A sophisticated web-based name generator for creating authentic Elven names foll
 
 ## 🎮 How to Use
 
-Simply visit **[espruar.com](https://espruar.com)** to start generating authentic Elven names! No download or installation required - everything runs in your browser.
+Simply visit **[espruar.com](https://espruar.com)** to start generating authentic Elven and Dwarven names! No download or installation required - everything runs in your browser.
+
+### Generator Types
+
+**⚔️ Elven (Espruar):** Generate names following the Espruar naming system  
+**⚒️ Dwarven (Dethek):** Generate names following the Dethek naming system
+
+Switch between generators using the tabs at the top of the page.
 
 ### Generation Controls
 
 **Elven Subrace:** Choose High Elf (General/Sun/Moon), Wood Elf, or Drow (Female/Male)
+
+**Dwarven Subrace:** Choose from various Dwarven subraces (Gold Dwarf, Shield Dwarf, etc.)
 
 **Name Complexity:**
 - **Auto:** Follows phonetic rules, adds connectors when needed
@@ -34,17 +43,26 @@ Simply visit **[espruar.com](https://espruar.com)** to start generating authenti
 ## 🌟 Features
 
 ### Core Generation
-- **120+ Components**: Comprehensive morphological system with 108 High Elf + 12 Drow-specific components
-- **Interchangeable System**: Implements the "Lego System" where most roots can function as prefix or suffix
-- **Phonetic Intelligence**: Applies authentic Elven phonetic flow patterns (liquid consonants, vowel bridges, harsh cluster detection)
-- **Multiple Subraces**: High Elf (General, Sun, Moon), Wood Elf, and Drow (Female/Male) with distinct naming rules
+- **Elven Generator:**
+  - **120+ Components**: Comprehensive morphological system with 108 High Elf + 12 Drow-specific components
+  - **Interchangeable System**: Implements the "Lego System" where most roots can function as prefix or suffix
+  - **Phonetic Intelligence**: Applies authentic Elven phonetic flow patterns (liquid consonants, vowel bridges, harsh cluster detection)
+  - **Multiple Subraces**: High Elf (General, Sun, Moon), Wood Elf, and Drow (Female/Male) with distinct naming rules
+
+- **Dwarven Generator:**
+  - **First Names + Clan Names**: Combines authentic Dwarven first names with clan names
+  - **Dethek System**: Follows traditional Dwarven naming conventions from Forgotten Realms
+  - **Multiple Subraces**: Supports various Dwarven subraces with appropriate naming styles
+  - **Phonetic Pronunciations**: Includes pronunciation guides for generated names
 
 ### User Experience
 - **Light/Dark Themes**: Sun Elf (parchment) and Moon Elf (dark blue) themes with auto-detection
-- **Complexity Control**: Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
-- **Syllable Targeting**: 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
-- **Favorites System**: Save your favorite names locally (browser-only, no cloud sync)
-- **Anti-Repeat Logic**: Tracks last 5 generations to reduce repeats
+- **Generator Switching**: Easy tab-based switching between Elven and Dwarven generators
+- **Complexity Control** (Elven): Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
+- **Syllable Targeting** (Elven): 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
+- **Favorites System**: Save your favorite names locally with generator type badges (⚔️ Elven / ⚒️ Dwarven)
+- **Filter Favorites**: Filter saved names by generator type (All / Elven / Dwarven)
+- **Anti-Repeat Logic** (Elven): Tracks last 5 generations to reduce repeats
 - **Accessibility**: WCAG 2.1 AA compliant, screen reader support, keyboard navigation
 
 ### Modern Architecture
@@ -55,7 +73,9 @@ Simply visit **[espruar.com](https://espruar.com)** to start generating authenti
 
 ## 🎭 Subrace Support
 
-### High Elf (Ar-Tel-Quessir / Teu-Tel-Quessir)
+### ⚔️ Elven Subraces
+
+#### High Elf (Ar-Tel-Quessir / Teu-Tel-Quessir)
 **Style:** Lyrical, flowing, 3-5 syllables  
 **Themes:** Light, nobility, magic, stars, moon  
 **Components:** 108 interchangeable morphemes  
@@ -91,6 +111,29 @@ Emphasizes silver, moonlight, stars, flow (lyrical, 4+ syllables preferred)
 **Examples:**  
 - Female: *Pharaqiltyl* - "Mistress + Web + Venom"
 - Male: *Zhaunax* - "Death + Blade"
+
+### ⚒️ Dwarven Subraces
+
+#### Gold Dwarf (Shield Dwarf)
+**Style:** Traditional, honor-bound, clan-focused  
+**Themes:** Gold, honor, tradition, craftsmanship  
+**Structure:** First Name + Clan Name  
+**Example:** *Thorin Ironforge* - "Bold + Ironforge Clan"
+
+#### Shield Dwarf (Mountain Dwarf)
+**Style:** Strong, resilient, mountain-dwelling  
+**Themes:** Mountains, strength, endurance, stone  
+**Structure:** First Name + Clan Name  
+**Example:** *Balin Stonebeard* - "Mighty + Stonebeard Clan"
+
+#### Other Dwarven Subraces
+The generator supports various Dwarven subraces from Forgotten Realms, each with appropriate naming conventions and clan associations.
+
+**Key Features:**
+- **First Names**: Authentic Dwarven first names with meanings
+- **Clan Names**: Traditional clan names that can be combined with first names
+- **Phonetic Pronunciations**: Includes pronunciation guides for proper Dwarven speech
+- **Cultural Accuracy**: Follows Dethek naming traditions from D&D lore
 
 ---
 
@@ -139,8 +182,9 @@ Free to use, modify, and distribute with attribution.
 │   ├── config.js           # Constants and configuration
 │   │
 │   ├── core/
-│   │   ├── NameGenerator.js      # Name generation logic
-│   │   └── FavoritesManager.js   # LocalStorage favorites
+│   │   ├── NameGenerator.js         # Elven name generation logic
+│   │   ├── DwarvenNameGenerator.js   # Dwarven name generation logic
+│   │   └── FavoritesManager.js       # LocalStorage favorites
 │   │
 │   ├── ui/
 │   │   └── UIController.js       # DOM manipulation & display
@@ -151,8 +195,10 @@ Free to use, modify, and distribute with attribution.
 │       └── storage.js            # LocalStorage helpers
 │
 └── data/
-    ├── components.json     # 120 name components with tags
-    └── connectors.json     # 23 phonetic bridges
+    ├── components.json          # 120 Elven name components with tags
+    ├── connectors.json          # 23 phonetic bridges
+    ├── dwarvenFirstNames.json   # Dwarven first names
+    └── dwarvenClanNames.json    # Dwarven clan names
 ```
 
 ### Technologies
