@@ -308,7 +308,7 @@ export class NameGenerator {
         }
         
         // Build the name
-        const nameParts = [
+        let nameParts = [
             prefixText,
             connector ? phonetics.cleanComponentText(connector.text) : '',
             suffixText
@@ -506,7 +506,6 @@ export class NameGenerator {
                 
                 // Check if we need a connector
                 const needsConn = phonetics.needsConnector(lastText, extraText);
-                let connectorAdded = false;
                 if (needsConn) {
                     const connector = this._selectConnector(style);
                     const connectorText = phonetics.cleanComponentText(connector.text);
@@ -544,7 +543,7 @@ export class NameGenerator {
         const meaning = componentMeanings.join(' + ');
         
         // Build phonetic pronunciation
-        let pronunciationParts = [];
+        const pronunciationParts = [];
         for (let i = 0; i < components.length; i++) {
             const comp = components[i];
             

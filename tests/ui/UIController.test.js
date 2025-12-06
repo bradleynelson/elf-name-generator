@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { UIController } from '../../js/ui/UIController.js';
 
 // Setup DOM for testing

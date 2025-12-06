@@ -110,7 +110,7 @@ describe('NameGenerator - Randomness & Uniqueness (Real Data)', () => {
         });
 
         it('should track recently used components correctly', () => {
-            const firstResult = generator.generate({
+            generator.generate({
                 subrace: 'high-elf',
                 complexity: 'simple',
                 targetSyllables: 3,

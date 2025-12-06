@@ -1,5 +1,6 @@
 // Test setup file
 // This runs before all tests
+import { beforeEach } from 'vitest';
 
 // Mock localStorage for tests
 const localStorageMock = (() => {

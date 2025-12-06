@@ -183,7 +183,6 @@ describe('Integration Tests - App Functionality', () => {
             const app = new UnifiedNameGenerator();
             await app.init();
             
-            const elvenTab = document.getElementById('elvenTab');
             const dwarvenTab = document.getElementById('dwarvenTab');
             
             expect(app.currentGeneratorType).toBe('elven');

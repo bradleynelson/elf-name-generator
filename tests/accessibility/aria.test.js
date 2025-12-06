@@ -118,8 +118,7 @@ describe('Accessibility - ARIA Attributes', () => {
       expect(subraceSelect.getAttribute('aria-label')).toBe('Select elven subrace');
     });
   });
-<<<<<<< Updated upstream
-=======
+});
 
   describe('Filter Buttons', () => {
     beforeEach(() => {

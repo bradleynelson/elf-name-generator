@@ -62,7 +62,7 @@ export function countSyllables(word) {
     let count = 0;
     let prevVowel = false;
     
-    for (let char of word) {
+    for (const char of word) {
         if (isVowel(char)) {
             if (!prevVowel) count++;
             prevVowel = true;
@@ -187,7 +187,7 @@ export function sharesVowelSound(text1, text2) {
     if (!vowel1 || !vowel2) return false;
     
     // Check if they share any vowel character
-    for (let v of vowel1) {
+    for (const v of vowel1) {
         if (vowel2.includes(v)) return true;
     }
     

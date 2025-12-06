@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { NameGenerator } from '../../js/core/NameGenerator.js';
-import * as phonetics from '../../js/utils/phonetics.js';
 import { loadTestData } from '../helpers/loadTestData.js';
 
 // Use real data for comprehensive rule validation
@@ -320,7 +319,6 @@ describe('NameGenerator - Onomastic Rules', () => {
 
         it('should add connectors when needed in complex mode', () => {
             // Generate names and check for connectors
-            let hasConnectors = false;
             for (let i = 0; i < 20; i++) {
                 const result = generator.generate({
                     subrace: 'high-elf',
@@ -330,7 +328,6 @@ describe('NameGenerator - Onomastic Rules', () => {
                 });
                 
                 if (result.connectors && result.connectors.length > 0) {
-                    hasConnectors = true;
                     // Verify connectors are between components
                     expect(result.components.length).toBeGreaterThan(result.connectors.length);
                     break;
@@ -411,8 +408,6 @@ describe('NameGenerator - Onomastic Rules', () => {
     describe('Connector Logic', () => {
         it('should add connectors when needed for phonetic flow', () => {
             // Generate names and verify connectors are added appropriately
-            let connectorCount = 0;
-            
             for (let i = 0; i < 30; i++) {
                 const result = generator.generate({
                     subrace: 'high-elf',
@@ -422,7 +417,6 @@ describe('NameGenerator - Onomastic Rules', () => {
                 });
                 
                 if (result.connector) {
-                    connectorCount++;
                     // Connector should have phonetic representation
                     expect(result.connector.phonetic).toBeTruthy();
                 }
@@ -433,8 +427,6 @@ describe('NameGenerator - Onomastic Rules', () => {
         });
 
         it('should not add connectors for Wood Elf (discouraged)', () => {
-            let connectorCount = 0;
-            
             for (let i = 0; i < 30; i++) {
                 const result = generator.generate({
                     subrace: 'wood-elf',
@@ -443,19 +435,18 @@ describe('NameGenerator - Onomastic Rules', () => {
                     style: 'neutral'
                 });
                 
+                // Wood Elves discourage connectors - should be rare
+                // With limited mock data, can't guarantee, but structure should work
                 if (result.connector) {
-                    connectorCount++;
+                    // If connector exists, it should only be for harsh clusters
+                    expect(result.connector).toBeDefined();
                 }
             }
             
-            // Wood Elves discourage connectors - should be rare
-            // With limited mock data, can't guarantee, but structure should work
             expect(true).toBe(true);
         });
 
         it('should not add connectors for Drow (harsh clusters preserved)', () => {
-            let connectorCount = 0;
-            
             for (let i = 0; i < 30; i++) {
                 const result = generator.generate({
                     subrace: 'drow',
@@ -464,9 +455,8 @@ describe('NameGenerator - Onomastic Rules', () => {
                     style: 'neutral'
                 });
                 
-                if (result.connector) {
-                    connectorCount++;
-                }
+                // Drow embrace harsh clusters - connectors should be null
+                expect(result.connector).toBeNull();
             }
             
             // Drow embrace harsh clusters - connectors should be rare

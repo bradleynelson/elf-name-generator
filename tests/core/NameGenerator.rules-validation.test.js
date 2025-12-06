@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { NameGenerator } from '../../js/core/NameGenerator.js';
 import { CONFIG } from '../../js/config.js';
 import { GENDER_PREFIX_VOWELS, FINAL_VOWELS } from '../../js/config.js';
-import * as phonetics from '../../js/utils/phonetics.js';
 import { loadTestData } from '../helpers/loadTestData.js';
 
 // Use real data for comprehensive rule validation
@@ -113,8 +112,6 @@ describe('NameGenerator - Rule Validation & Understanding', () => {
 
         it('should understand Auto mode: adds connectors when needed', () => {
             // Auto mode may add connectors for phonetic flow
-            let hasConnector = false;
-            
             for (let i = 0; i < 20; i++) {
                 const result = generator.generate({
                     subrace: 'high-elf',
@@ -123,9 +120,11 @@ describe('NameGenerator - Rule Validation & Understanding', () => {
                     style: 'neutral'
                 });
                 
+                // Auto mode may or may not use connectors depending on need
+                // Result should be defined regardless
+                expect(result).toBeDefined();
                 if (result.connector) {
-                    hasConnector = true;
-                    break;
+                    break; // Found one, that's enough
                 }
             }
             
