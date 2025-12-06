@@ -275,7 +275,7 @@ export function detectSuffixGender(nameData) {
  * @param {Object} nameData - Generated name data
  * @returns {boolean}
  */
-export function shouldSuggestGenderPrefix(nameData) {
+export function shouldSuggestGenderPrefix(_nameData) {
     // Always suggest for High Elf names (optional feature for gender emphasis/override)
     return true;
 }
