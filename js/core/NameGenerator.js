@@ -52,6 +52,7 @@ export class NameGenerator {
         
         let bestName = null;
         let bestDiff = 100;
+        const acceptableCandidates = []; // Store all acceptable candidates for random selection
         
         // Define subrace-specific minimums and maximums
         const minSyllables = (effectiveSubrace === 'drow-female') ? 4 : 
@@ -76,14 +77,30 @@ export class NameGenerator {
             
             const diff = Math.abs(candidate.syllables - adjustedTarget);
             
-            // Track best match (only valid candidates reach here)
+            // Track best match
             if (diff < bestDiff) {
                 bestDiff = diff;
                 bestName = candidate;
             }
             
-            // Stop if we're close enough
+            // Store acceptable candidates (within target ±1) for random selection
             if (diff <= CONFIG.ACCEPTABLE_SYLLABLE_DIFFERENCE) {
+                acceptableCandidates.push(candidate);
+            }
+            
+            // Stop early if we have enough acceptable candidates (adds randomness)
+            if (acceptableCandidates.length >= 3) {
+                // Randomly pick from acceptable candidates instead of always best
+                bestName = acceptableCandidates[Math.floor(Math.random() * acceptableCandidates.length)];
+                break;
+            }
+            
+            // Stop if we're close enough and have at least one acceptable candidate
+            if (diff <= CONFIG.ACCEPTABLE_SYLLABLE_DIFFERENCE && acceptableCandidates.length > 0) {
+                // 50% chance to use best, 50% chance to use random acceptable
+                if (Math.random() < 0.5 && acceptableCandidates.length > 1) {
+                    bestName = acceptableCandidates[Math.floor(Math.random() * acceptableCandidates.length)];
+                }
                 break;
             }
         }
@@ -350,6 +367,7 @@ export class NameGenerator {
             connector,
             suffix,
             syllables,
+            genderPrefixVowel: null,
             finalVowel: null
         };
     }
@@ -392,13 +410,28 @@ export class NameGenerator {
             // Select next component from flexible pool
             component = this._selectWeightedComponent(flexibleComponents, subrace);
             
-            // Randomly use as prefix or suffix
-            const useAsPrefix = Math.random() > 0.5;
+            // Randomly use as prefix or suffix (ensure component has the required form)
+            let useAsPrefix = Math.random() > 0.5;
+            
+            // If component doesn't have the preferred form, use the available one
+            if (useAsPrefix && !component.prefix_text) {
+                useAsPrefix = false;
+            } else if (!useAsPrefix && !component.suffix_text) {
+                useAsPrefix = true;
+            }
+            
+            // Ensure we have a valid form (fallback if somehow both are missing)
+            if (!component.prefix_text && !component.suffix_text) {
+                // Skip this component and try again
+                attempts--;
+                continue;
+            }
+            
             componentText = phonetics.cleanComponentText(
-                useAsPrefix && component.prefix_text ? component.prefix_text : component.suffix_text
+                useAsPrefix ? component.prefix_text : component.suffix_text
             );
             componentMeaning = phonetics.formatMeaning(
-                useAsPrefix && component.prefix_meaning ? component.prefix_meaning : component.suffix_meaning
+                useAsPrefix ? component.prefix_meaning : component.suffix_meaning
             );
             
             // Check syllable count if we add this component
@@ -600,6 +633,7 @@ export class NameGenerator {
             components,
             connectors,
             syllables,
+            genderPrefixVowel: null,
             finalVowel: null
         };
     }
@@ -619,22 +653,29 @@ export class NameGenerator {
     _selectSuffix(style, subrace) {
         let candidates = this.suffixCandidates;
         
-        // Apply style filters (keep this for backward compatibility)
-        if (style === 'feminine' && Math.random() > CONFIG.CONNECTOR_PROBABILITY_FEMININE) {
-            const femSuffixes = candidates.filter(s => 
-                s.root.includes('iel') || s.root.includes('wen') || 
-                s.root.includes('lia') || s.root.includes('riel') || 
-                s.root.includes('rae') || s.root.includes('ae')
-            );
+        // Apply style filters with weighted probability (not always-on)
+        // Use style preference 50% of the time to maintain randomness
+        if (style === 'feminine' && Math.random() < 0.5) {
+            // Filter for feminine suffixes (check suffix_text, not root, for accuracy)
+            const femSuffixes = candidates.filter(s => {
+                const suffixText = (s.suffix_text || '').toLowerCase();
+                return suffixText.includes('iel') || suffixText.includes('wen') || 
+                       suffixText.includes('lia') || suffixText.includes('riel') || 
+                       suffixText.includes('rae') || suffixText.includes('ae') ||
+                       s.is_gender_modifier && suffixText.includes('iel');
+            });
             if (femSuffixes.length > 0) {
                 candidates = femSuffixes;
             }
-        } else if (style === 'masculine' && Math.random() > CONFIG.CONNECTOR_PROBABILITY_MASCULINE) {
-            const mascSuffixes = candidates.filter(s => 
-                s.root.includes('ion') || s.root.includes('ar') || 
-                s.root.includes('kian') || s.root.includes('drith') ||
-                s.root.includes('dor') || s.root.includes('val')
-            );
+        } else if (style === 'masculine' && Math.random() < 0.5) {
+            // Filter for masculine suffixes
+            const mascSuffixes = candidates.filter(s => {
+                const suffixText = (s.suffix_text || '').toLowerCase();
+                return suffixText.includes('ion') || suffixText.includes('ar') || 
+                       suffixText.includes('kian') || suffixText.includes('drith') ||
+                       suffixText.includes('dor') || suffixText.includes('val') ||
+                       s.is_gender_modifier && (suffixText.includes('ion') || suffixText.includes('kian') || suffixText.includes('drith'));
+            });
             if (mascSuffixes.length > 0) {
                 candidates = mascSuffixes;
             }
@@ -648,36 +689,35 @@ export class NameGenerator {
      * @private
      */
     _selectConnector(style) {
-        // Liquid connectors (l, r, n) for smooth flow
-        const liquidConnectors = this.connectors.filter(c => 
-            c.text.includes('l') || c.text.includes('r') || c.text.includes('n')
-        );
-        
-        // Feminine style prefers softer sounds
-        if (style === 'feminine') {
+        // Feminine style prefers softer sounds (50% chance to apply preference)
+        if (style === 'feminine' && Math.random() < 0.5) {
             const softConnectors = this.connectors.filter(c => 
                 c.text.includes('i') || c.text.includes('e') || c.text.includes('ella')
             );
-            if (softConnectors.length > 0 && Math.random() > CONFIG.CONNECTOR_PROBABILITY_FEMININE) {
+            if (softConnectors.length > 0) {
                 return this._randomElement(softConnectors);
             }
         }
         
-        // Masculine style prefers stronger sounds
-        if (style === 'masculine') {
+        // Masculine style prefers stronger sounds (50% chance to apply preference)
+        if (style === 'masculine' && Math.random() < 0.5) {
             const strongConnectors = this.connectors.filter(c => 
                 c.text.includes('th') || c.text.includes('or') || c.text.includes('an')
             );
-            if (strongConnectors.length > 0 && Math.random() > CONFIG.CONNECTOR_PROBABILITY_MASCULINE) {
+            if (strongConnectors.length > 0) {
                 return this._randomElement(strongConnectors);
             }
         }
         
-        // Default: prefer liquid connectors for natural flow
-        if (liquidConnectors.length > 0 && Math.random() > CONFIG.LIQUID_CONNECTOR_PROBABILITY) {
+        // Default: prefer liquid connectors for natural flow (60% chance)
+        const liquidConnectors = this.connectors.filter(c => 
+            c.text.includes('l') || c.text.includes('r') || c.text.includes('n')
+        );
+        if (liquidConnectors.length > 0 && Math.random() < 0.6) {
             return this._randomElement(liquidConnectors);
         }
         
+        // Otherwise, completely random from all connectors
         return this._randomElement(this.connectors);
     }
     
@@ -694,7 +734,7 @@ export class NameGenerator {
      * @private
      */
     _selectWeightedComponent(candidates, subrace) {
-        // Filter out recently used components (light anti-repeat)
+        // Filter out recently used components (anti-repeat for better randomness)
         let availableCandidates = candidates;
         if (this.recentlyUsed.length > 0) {
             // Flatten all recently used roots
@@ -704,8 +744,9 @@ export class NameGenerator {
             });
             
             // Filter out recently used (but keep if that leaves too few options)
+            // Lowered threshold from 10 to 5 to be more aggressive about avoiding repeats
             const filtered = candidates.filter(c => !recentRoots.has(c.root));
-            if (filtered.length > 10) { // Only filter if we have enough left
+            if (filtered.length > 5) { // Only filter if we have enough left
                 availableCandidates = filtered;
             }
         }

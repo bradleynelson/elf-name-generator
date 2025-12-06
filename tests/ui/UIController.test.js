@@ -13,7 +13,10 @@ beforeEach(() => {
     <select id="complexity"></select>
     <input id="syllables" type="range" value="3">
     <select id="style"></select>
-    <div id="vowelSuggestionsContainer"></div>
+    <div id="modifierSuggestionsContainer"></div>
+    <div id="genderPrefixSection"></div>
+    <div id="genderPrefixOptions"></div>
+    <div id="finalVowelSection"></div>
     <div id="vowelOptions"></div>
     <div id="favoritesList"></div>
     <button id="speakerBtn"></button>
@@ -49,7 +52,7 @@ describe('UIController', () => {
         }
       };
 
-      uiController.displayName(nameData);
+      uiController.displayName(nameData, 'elven');
 
       expect(uiController.elements.generatedName.textContent).toBe('Maireel');
       expect(uiController.elements.namePronunciation.textContent).toBe('Mair-eel');
@@ -74,7 +77,7 @@ describe('UIController', () => {
         }
       };
 
-      uiController.displayName(nameData);
+      uiController.displayName(nameData, 'elven');
 
       expect(uiController.elements.generatedName.textContent).toBe('Test');
       expect(uiController.elements.namePronunciation.classList.contains('hidden')).toBe(true);
@@ -82,13 +85,27 @@ describe('UIController', () => {
   });
 
   describe('getPreferences', () => {
-    it('should return current user preferences', () => {
-      const prefs = uiController.getPreferences();
+    it('should return current user preferences for elven', () => {
+      const prefs = uiController.getPreferences('elven');
 
       expect(prefs).toHaveProperty('subrace');
       expect(prefs).toHaveProperty('complexity');
       expect(prefs).toHaveProperty('targetSyllables');
       expect(prefs).toHaveProperty('style');
+    });
+
+    it('should return current user preferences for dwarven', () => {
+      document.body.innerHTML += `
+        <select id="dwarvenSubrace"><option value="general">General</option></select>
+        <select id="dwarvenNameType"><option value="full">Full</option></select>
+        <select id="dwarvenGender"><option value="neutral">Neutral</option></select>
+      `;
+      const uiController2 = new UIController();
+      const prefs = uiController2.getPreferences('dwarven');
+
+      expect(prefs).toHaveProperty('subrace');
+      expect(prefs).toHaveProperty('nameType');
+      expect(prefs).toHaveProperty('gender');
     });
   });
 

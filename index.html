@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elven Name Generator | D&D Forgotten Realms Espruar Names</title>
-    <meta name="description" content="Generate authentic Elven names following the Espruar naming system from Forgotten Realms D&D lore. Features High Elves, Wood Elves, and Drow with 120+ components and phonetic pronunciations.">
-    <meta name="keywords" content="High Elf, D&D, Forgotten Realms, name generator, Espruar, fantasy names, character generator, elf names, DnD, Wood Elf, Drow">
+    <title>Faerûn Name Generator | D&D Forgotten Realms - Elven & Dwarven Names</title>
+    <meta name="description" content="Generate authentic Elven and Dwarven names from Forgotten Realms D&D lore. Features Espruar (High Elves, Wood Elves, Drow) and Dethek (Gold Dwarves, Shield Dwarves, Duergar) naming systems with phonetic pronunciations.">
+    <meta name="keywords" content="Faerûn, D&D, Forgotten Realms, name generator, Espruar, Dethek, fantasy names, character generator, elf names, dwarf names, DnD, High Elf, Wood Elf, Drow, Gold Dwarf, Shield Dwarf, Duergar">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -14,14 +14,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://espruar.com/">
-    <meta property="og:title" content="Elven Name Generator - D&D Forgotten Realms">
-    <meta property="og:description" content="Generate authentic Elven names following the Espruar naming system from Forgotten Realms D&D lore. High Elves, Wood Elves, and Drow with phonetic pronunciations.">
+    <meta property="og:title" content="Faerûn Name Generator - Elven & Dwarven Names | D&D Forgotten Realms">
+    <meta property="og:description" content="Generate authentic Elven and Dwarven names from Forgotten Realms D&D lore. Features Espruar (High Elves, Wood Elves, Drow) and Dethek (Gold Dwarves, Shield Dwarves, Duergar) naming systems with phonetic pronunciations.">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://espruar.com/">
-    <meta property="twitter:title" content="Elven Name Generator - D&D Forgotten Realms">
-    <meta property="twitter:description" content="Generate authentic Elven names following the Espruar naming system from Forgotten Realms D&D lore. High Elves, Wood Elves, and Drow with phonetic pronunciations.">
+    <meta property="twitter:title" content="Faerûn Name Generator - Elven & Dwarven Names | D&D Forgotten Realms">
+    <meta property="twitter:description" content="Generate authentic Elven and Dwarven names from Forgotten Realms D&D lore. Features Espruar (High Elves, Wood Elves, Drow) and Dethek (Gold Dwarves, Shield Dwarves, Duergar) naming systems with phonetic pronunciations.">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -82,13 +82,36 @@
     
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle between light and dark theme">
-        <span class="theme-icon" id="themeIcon" aria-hidden="true">🌙</span>
-        <span class="theme-label" id="themeLabel">Moon Elf</span>
-    </button>
+    <!-- Generator Tabs -->
+    <div class="generator-tabs">
+        <button class="generator-tab active" id="elvenTab" aria-label="Switch to Elven Name Generator">
+            <span class="tab-icon" aria-hidden="true">⚔️</span>
+            <span class="tab-label">ESPRUAR</span>
+        </button>
+        <button class="generator-tab" id="dwarvenTab" aria-label="Switch to Dwarven Name Generator">
+            <span class="tab-icon" aria-hidden="true">⚒️</span>
+            <span class="tab-label">DETHEK</span>
+        </button>
+    </div>
+    
+    <!-- Footer Tabs -->
+    <div class="footer-tabs">
+        <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="Buy Me a Coffee - Opens in new window">
+            <span class="tab-icon" aria-hidden="true">☕</span>
+            <span class="tab-label">KAETH</span>
+            <span class="external-link-icon" aria-hidden="true">⧉</span>
+        </a>
+        <a href="https://github.com/bradleynelson/elf-name-generator" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="GitHub Repository - Opens in new window">
+            <span class="tab-icon" aria-hidden="true">📦</span>
+            <span class="tab-label">REPO</span>
+            <span class="external-link-icon" aria-hidden="true">⧉</span>
+        </a>
+    </div>
     
     <div class="container">
+        <!-- Beta Badge for Dwarven Generator -->
+        <div class="beta-badge" id="betaLabel" style="display: none;">BETA</div>
+        
         <h1>
             <span class="title-sword">⚔️</span>
             <div class="title-text">
@@ -110,52 +133,102 @@
                 </button>
                 <div class="settings-content" id="settingsContent" hidden>
                     <div class="controls">
-                        <div class="control-group">
-                            <label for="subrace">Elven Subrace</label>
-                            <select id="subrace">
-                                <option value="high-elf">High Elf (General)</option>
-                                <option value="sun-elf">├─ Sun Elf (Ar-Tel-Quessir)</option>
-                                <option value="moon-elf">├─ Moon Elf (Teu-Tel-Quessir)</option>
-                                <option value="wood-elf">Wood Elf (Sy-Tel-Quessir)</option>
-                                <option value="drow">Drow \ Dark Elves (Ss'tel'Quessir) - BETA</option>
-                            </select>
-                            <div class="subrace-description" id="subraceDescription">
-                                Balanced names drawing from all High Elf traditions
+                        <!-- Elven-only controls -->
+                        <div class="elven-controls">
+                            <div class="control-group">
+                                <label for="subrace">Elven Subrace</label>
+                                <select id="subrace">
+                                    <option value="high-elf">High Elf (General)</option>
+                                    <option value="sun-elf">├─ Sun Elf (Ar-Tel-Quessir)</option>
+                                    <option value="moon-elf">├─ Moon Elf (Teu-Tel-Quessir)</option>
+                                    <option value="wood-elf">Wood Elf (Sy-Tel-Quessir)</option>
+                                    <option value="drow">Drow \ Dark Elves (Ss'tel'Quessir) - BETA</option>
+                                </select>
+                                <div class="subrace-description" id="subraceDescription">
+                                    Balanced names drawing from all High Elf traditions
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="control-group">
-                            <label for="complexity">Name Complexity</label>
-                            <select id="complexity">
-                                <option value="auto">Auto (Follows Phonetic Rules)</option>
-                                <option value="simple">Simple (Two Components)</option>
-                                <option value="complex">Complex Mode (Experimental)</option>
-                            </select>
-                        </div>
-
-                        <div class="control-group">
-                            <label for="syllables">Target Syllable Count</label>
-                            <input type="range" id="syllables" min="3" max="5" value="4" step="1">
-                            <div class="range-labels">
-                                <span>Short (2-3)</span>
-                                <span>Ideal (3-5)</span>
-                                <span>Long (4-6)</span>
+                            <div class="control-group">
+                                <label for="complexity">Name Complexity</label>
+                                <select id="complexity">
+                                    <option value="auto">Auto (Follows Phonetic Rules) - Over 5M Potential Combinations</option>
+                                    <option value="simple">Simple (Two Components) - Over 260K Potential Combinations</option>
+                                    <option value="complex">Complex Mode (Experimental) - Over 10B Potential Combinations</option>
+                                </select>
                             </div>
-                        </div>
 
-                        <div class="control-group">
-                            <label for="style">Gender/Style Preference</label>
-                            <select id="style">
-                                <option value="neutral">Gender Neutral</option>
-                                <option value="feminine">Feminine (Softer sounds)</option>
-                                <option value="masculine">Masculine (Stronger sounds)</option>
-                            </select>
+                            <div class="control-group">
+                                <label for="syllables">Target Syllable Count</label>
+                                <input type="range" id="syllables" min="3" max="5" value="4" step="1">
+                                <div class="range-labels">
+                                    <span>Short (2-3)</span>
+                                    <span>Ideal (3-5)</span>
+                                    <span>Long (4-6)</span>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="style">Gender/Style Preference</label>
+                                <select id="style">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="feminine">Feminine (Softer sounds)</option>
+                                    <option value="masculine">Masculine (Stronger sounds)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="interchangeable-note">
+                                <div class="interchangeable-note-title">🔄 Interchangeable Components</div>
+                                <div class="interchangeable-note-text">
+                                    This generator follows the "Lego System" - most descriptive components can be used as either prefix or suffix. Gender modifiers (-iel, -ion) and strong role suffixes (-kian, -drith) always remain as suffixes.
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="interchangeable-note">
-                            <div class="interchangeable-note-title">🔄 Interchangeable Components</div>
-                            <div class="interchangeable-note-text">
-                                This generator follows the "Lego System" - most descriptive components can be used as either prefix or suffix. Gender modifiers (-iel, -ion) and strong role suffixes (-kian, -drith) always remain as suffixes.
+                        <!-- Dwarven-only controls (hidden by default) -->
+                        <div class="dwarven-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="dwarvenSubrace">Dwarven Clan</label>
+                                <select id="dwarvenSubrace">
+                                    <option value="general">General Dwarven</option>
+                                    <option value="gold-dwarf">Gold Dwarf</option>
+                                    <option value="shield-dwarf">Shield Dwarf</option>
+                                    <option value="duergar">Duergar (Gray Dwarf)</option>
+                                </select>
+                                <div class="subrace-description" id="dwarvenSubraceDescription">
+                                    Traditional Dwarven names from all clans
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="dwarvenNameType">Name Type</label>
+                                <select id="dwarvenNameType">
+                                    <option value="full">Full Name (First + Clan) - Over 29M Potential Combinations</option>
+                                    <option value="first">First Name Only - Almost 3k Potential Combinations</option>
+                                    <option value="clan">Clan Name Only - Almost 10k Potential Combinations</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group disabled-control-group">
+                                <label for="dwarvenSyllables" class="disabled-label">Target Syllable Count</label>
+                                <input type="range" id="dwarvenSyllables" min="1" max="5" value="3" step="1" disabled title="Not available for Dwarven names">
+                                <div class="range-labels">
+                                    <span>Short</span>
+                                    <span>Medium</span>
+                                    <span>Long</span>
+                                </div>
+                                <div class="disabled-note">
+                                    ℹ️ Dwarven names follow traditional fixed-length patterns
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="dwarvenGender">Gender Preference</label>
+                                <select id="dwarvenGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -184,7 +257,7 @@
               </button>
             
             <div class="name-content">
-                <div class="generated-name" id="generatedName"></div>
+                <div class="generated-name" id="generatedName" aria-label="Generated name"></div>
                 <div class="name-pronunciation-wrapper">
                     <div class="name-pronunciation" id="namePronunciation"></div>
                     <div class="speaker-container" style="display: none;" id="speakerContainer">
@@ -198,9 +271,16 @@
                 <div class="name-meaning" id="nameMeaning"></div>
             </div>
             
-            <div id="vowelSuggestionsContainer" class="vowel-suggestions hidden">
-                <div class="vowel-suggestions-title">💫 Optional Final Vowel (adds syllable & musicality):</div>
-                <div class="vowel-options" id="vowelOptions"></div>
+            <div id="modifierSuggestionsContainer" class="vowel-suggestions hidden">
+                <div class="vowel-suggestions-title">✨ Optional Modifiers:</div>
+                
+                <div id="genderPrefixSection" class="modifier-section hidden">
+                    <div class="vowel-options" id="genderPrefixOptions"></div>
+                </div>
+                
+                <div id="finalVowelSection" class="modifier-section hidden">
+                    <div class="vowel-options" id="vowelOptions"></div>
+                </div>
             </div>
             
             <div class="breakdown">
@@ -225,22 +305,154 @@
                     <span class="info-circle" aria-hidden="true">i</span>
                 </span>
             </div>
+            <div class="favorites-filter" role="group" aria-label="Filter favorites by generator type">
+                <button class="filter-btn active" data-filter="all" aria-label="Show all favorites" aria-pressed="true">All</button>
+                <button class="filter-btn" data-filter="elven" aria-label="Show only Elven favorites" aria-pressed="false"><span aria-hidden="true">⚔️</span> Elven</button>
+                <button class="filter-btn" data-filter="dwarven" aria-label="Show only Dwarven favorites" aria-pressed="false"><span aria-hidden="true">⚒️</span> Dwarven</button>
+            </div>
             <div id="favoritesList" class="empty-favorites">
                 No favorites saved yet. Generate and save names you like!
             </div>
         </div>
         </main>
 
-        <section class="educational-section" aria-labelledby="education-heading">
-            <h2 id="education-heading">Learn About Elven Names</h2>
+        <section class="educational-section" id="elvenEducationalSection" aria-labelledby="education-heading">
+            <h2 id="education-heading">Lore & Linguistics</h2>
             
-            <!-- Accordion 1: Understanding High Elf Names -->
+            <!-- Accordion 1: Elven Races of Faerûn -->
             <div class="accordion">
-                <button class="accordion-header" aria-expanded="false">
+                <button class="accordion-header" aria-expanded="false" aria-controls="elven-races-content">
+                    <span class="accordion-title">🌍 Elven Races of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="elven-races-content">
+            
+            <div class="edu-card">
+                <p>The elves of Faerûn are diverse, each subrace adapted to their environment and culture. While this generator focuses on High Elves (Sun and Moon), understanding the broader elven family helps contextualize naming conventions.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3><span class="moon-icon">🌙</span> Moon Elves (Teu-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Adventurous and tolerant. Pale skin with silver hair. Most common and approachable of High Elves.</p>
+                <p><strong>Naming Style:</strong> Highly lyrical with flowing, poetic sounds. Prefer 4+ syllables and soft suffixes like <em>-iel</em>, <em>-ae</em>, <em>-wyn</em>.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Silmeriel, Laendrae, Merilwyn, Ilanoth
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>☀️ Sun Elves (Ar-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Scholarly and aloof. Bronze skin with gold or red hair. Most magically gifted and traditional.</p>
+                <p><strong>Naming Style:</strong> Stately and formal. Prefer 3-5 syllables with suffixes denoting rank or mastery like <em>-lar</em>, <em>-ar</em>, <em>-ion</em>.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Aranilar, Corion, Solathan, Rhynelor
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌲 Wood Elves (Sy-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Fiercely independent and martial. Coppery skin that blends with forest environments.</p>
+                <p><strong>Naming Style:</strong> Concise and functional. Prefer 2-3 syllables focused on nature, vigilance, and martial skill. Often end in hard consonants for strength and directness.</p>
+                <p><strong>Key Differences from High Elves:</strong></p>
+                <ul>
+                    <li><strong>Shorter:</strong> 2-3 syllables (vs High Elf's 3-5)</li>
+                    <li><strong>Direct:</strong> Minimal connectors, prefer rough edges</li>
+                    <li><strong>Martial Focus:</strong> Emphasize weaponry, nature, vigilance</li>
+                    <li><strong>Hard Endings:</strong> Often end in consonants (-th, -r, -s)</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Examples:</strong> Ratheth, Sargwyn, Delith, Qilaeth
+                </div>
+                <p class="available-note"><em>✅ Wood Elf name generation is now available! Select from the subrace dropdown above.</em></p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🕷️ Drow \ Dark Elves (Ss'tel'Quessir) - BETA</h3>
+                <p><strong>Characteristics:</strong> Cruel and matriarchal society of the Underdark. Black skin with white or silver hair.</p>
+                <p><strong>Naming Style:</strong> Gender-specific with stark differences. Harsh, chaotic consonant clusters that surface elves deliberately avoid.</p>
+                <p><strong>Key Differences from High Elves:</strong></p>
+                <ul>
+                    <li><strong>Gender Split:</strong> Females = 4-6 syllables (complex, powerful), Males = 2-3 syllables (short, subservient)</li>
+                    <li><strong>Harsh Clusters:</strong> EMBRACE what High Elves avoid (gr-, kr-, dr-, tr-)</li>
+                    <li><strong>No Flow:</strong> Deliberately clumsy and jarring sound</li>
+                    <li><strong>Dark Themes:</strong> Lolth, spiders, poison, death, shadow, servitude</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Female Examples:</strong> Pharaqiltyl, Faerraen, Qiltana<br>
+                    <strong>Male Examples:</strong> Zhaunax, Drizlim, Qilgloth
+                </div>
+                <p class="beta-note"><em>⚠️ Drow name generation is in BETA with limited components (12 vs 108 High Elf components).</em></p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌊 Sea Elves (Mar-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Aquatic adaptation with green or blue-tinted skin. Isolated from surface dwellers.</p>
+                <p><strong>Naming Style:</strong> Fluid and rhythmic. Prefer 3-4 syllables using roots that mimic ocean sounds and movements.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Marilos, Wavetha, Coralen, Nauthor
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>❄️ Snow Elves (Jhaer-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Arctic-adapted elves, rare and resilient.</p>
+                <p><strong>Naming Style:</strong> Concise and resilient. Prefer 2-3 syllables focused on ice and endurance roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Frostil, Gwyneth, Isarion, Rhimael
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🦅 Avariel (Winged Elves)</h3>
+                <p><strong>Characteristics:</strong> Angelic appearance with feathered wings. Extremely rare.</p>
+                <p><strong>Naming Style:</strong> Highly lyrical and airy. Prefer 3-5 syllables focused on sky and flight roots, similar to Moon Elves in flow.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Aerilaya, Skylion, Windrae, Galethon
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🐺 Lythari (Wolf-Elves)</h3>
+                <p><strong>Characteristics:</strong> Shapeshifters with wolf forms. Guardians of the wild.</p>
+                <p><strong>Naming Style:</strong> Simple and nature-based. Prefer 2 syllables focused on moon, star, or wolf roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Fenril, Luneth, Wolfar, Starwyn
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌿 Wild Elves (Ghaele)</h3>
+                <p><strong>Characteristics:</strong> Feral, primitive, and tribal. Most isolated from civilization.</p>
+                <p><strong>Naming Style:</strong> Shortest and most functional. Prefer 1-2 syllables, often simple nouns or verbs.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Fen, Thorn, Hawk, Ash
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>✨ Fey'ri (Half-Fiend Elves)</h3>
+                <p><strong>Characteristics:</strong> Demonic heritage from ancient sun elf families. Chaotic and dual-natured.</p>
+                <p><strong>Naming Style:</strong> Variable length, mixing traditional elven with harsh, demonic, or fiery roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Sarya'dreth, Morthil, Vyshaan, Pyrael
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 2: Understanding High Elf Names -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="understanding-elven-content">
                     <span class="accordion-title">📖 Understanding High Elf Names</span>
                     <span class="accordion-icon" aria-hidden="true">▼</span>
                 </button>
-                <div class="accordion-content">
+                <div class="accordion-content" id="understanding-elven-content">
             
             <div class="edu-card intro-note">
                 <p><strong>📌 Note:</strong> The Espruar morphological system originated with High Elves and forms the foundation for all Elven naming conventions. This section focuses on High Elf (Sun/Moon) traditions, which emphasize lyrical flow and phonetic beauty. Wood Elves and Drow adapted these rules to match their distinct cultures—see their specific sections below for how they differ.</p>
@@ -435,7 +647,7 @@
             
             <div class="accordion-footer-buttons">
                 <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
-                <button class="back-to-top-btn">⚡ Back to Generator</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
             </div>
             
                 </div><!-- end accordion-content -->
@@ -443,11 +655,11 @@
             
             <!-- Accordion 1.5: Pronunciation Guide -->
             <div class="accordion">
-                <button class="accordion-header" aria-expanded="false">
+                <button class="accordion-header" aria-expanded="false" aria-controls="elven-pronunciation-content">
                     <span class="accordion-title">🎵 Elven Pronunciation Guide</span>
                     <span class="accordion-icon" aria-hidden="true">▼</span>
                 </button>
-                <div class="accordion-content">
+                <div class="accordion-content" id="elven-pronunciation-content">
             
             <div class="edu-card intro-note">
                 <p><strong>📌 How to Read Pronunciations:</strong> Each generated name now includes a phonetic guide (e.g., 🎵 Mair-ee-ehl). This section explains how to pronounce each sound in Espruar, the High Elf language.</p>
@@ -576,7 +788,7 @@
             
             <div class="accordion-footer-buttons">
                 <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
-                <button class="back-to-top-btn">⚡ Back to Generator</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
             </div>
             
                 </div><!-- end accordion-content -->
@@ -584,58 +796,44 @@
             
             <!-- Accordion 2: A Brief History of the Tel'Quessir -->
             <div class="accordion">
-                <button class="accordion-header" aria-expanded="false">
+                <button class="accordion-header" aria-expanded="false" aria-controls="elven-history-content">
                     <span class="accordion-title">🌳 A Brief History of the Tel'Quessir</span>
                     <span class="accordion-icon" aria-hidden="true">▼</span>
                 </button>
-                <div class="accordion-content">
+                <div class="accordion-content" id="elven-history-content">
             
             <div class="edu-card">
-                <h3>I. The Mythological & Literary Foundation</h3>
-                <p>The concept of the modern Elf is a blend of various traditions, formalized by J.R.R. Tolkien.</p>
-                
-                <h4>Ancient Mythology</h4>
-                <p>Elves originated in Norse and Germanic myths as ethereal, powerful beings (<em>Álfar</em>) associated with light, fertility, and nature. They were often categorized as Light Elves (<em>Ljósálfar</em>) or Dark Elves (<em>Svartálfar</em>/<em>Dvergar</em>).</p>
-                
-                <h4>Tolkien's Quendi</h4>
-                <p>J.R.R. Tolkien synthesized these ideas, creating the <em>Quendi</em> (Speakers)—immortal, supremely wise, beautiful, and possessing deep lore and connection to the Earth's music. This established the essential archetype: graceful, long-lived guardians of the world.</p>
-                
-                <h4>Greenwood to Rivendell</h4>
-                <p>The change in setting (from primal forest like Greenwood to refined sanctuary like Rivendell) established the idea of Elves as a receding, ancient race whose time in the world was ending.</p>
+                <p>The elves call themselves the Tel'Quessir (The People) or the Fair Folk. They are one of Faerûn's most ancient and magical races, with a history spanning tens of thousands of years.</p>
             </div>
             
             <div class="edu-card">
-                <h3>II. Modern Iterations: The D&D Systemization</h3>
-                <p>When Dungeons & Dragons standardized the race, complexity was introduced for gameplay:</p>
-                
-                <h4>The Subrace Model</h4>
-                <p>D&D categorized Elves into distinct subraces (High, Gray, Wood, and Dark/Drow) to provide variety and clear mechanical differences. This moved them from a singular species to a diverse, worldwide people.</p>
-                
-                <h4>The Drow Schism</h4>
-                <p>D&D heavily formalized the Drow as the evil, subterranean branch, creating the fundamental Light vs. Dark conflict that defines much of Elven society today.</p>
-                
-                <h4>High Elf Identity</h4>
-                <p>The 'High Elf' was solidified as the scholarly, civilized, and magically potent subrace, creating the aesthetic (and sometimes aloof) nobility that remains a core trope.</p>
+                <h3>🌟 The Arrival from Faerie</h3>
+                <p>Elves were not native to Toril. They migrated from the Feywild (the plane of primal nature and magic) in three great waves, arriving on Faerûn around 25,000 years before the present day. They brought with them powerful magic and a deep connection to the natural world.</p>
             </div>
             
             <div class="edu-card">
-                <h3>III. In-World Evolution (Faerûn History)</h3>
-                <p>In Faerûn, the Elves' history is one of ancient glory, catastrophic civil war, and slow decline.</p>
-                
-                <h4>1. The Arrival (Ancient Race)</h4>
-                <p><strong>From the Feywild:</strong> Elves were not native to the world; they were originally inhabitants of the Feywild (the plane of pure, powerful nature and emotion). They arrived on Faerûn in three great waves, driven by the desire to build a new homeland. They called themselves the <em>Tel'Quessir</em> (The Light People).</p>
-                
-                <h4>2. The Crown Wars & The Schism</h4>
-                <p><strong>The Golden Age:</strong> The Elves established massive, magical empires, the greatest of which was Myth Drannor (founded by Moon Elves).</p>
-                
-                <p><strong>The Great Betrayal:</strong> Due to ideological differences, lust for power, and the influence of the demon goddess Lolth, the Elves fell into a series of devastating civil wars called the Crown Wars (lasting over 3,000 years).</p>
-                
-                <p><strong>The Drow Exile:</strong> The betrayal and atrocities committed by the followers of Lolth led the Seldarine (the Elven gods) to curse the Dark Elves' skin and banish them to the Underdark. This marked the final creation of the distinct surface subraces (Sun, Moon, Wood).</p>
-                
-                <h4>3. New World Expansion & The Retreat</h4>
-                <p><strong>Decline of Glory:</strong> Over time, Elven kingdoms fell (often to human invasion or internal decay). The Elves slowly began a process called <em>The Retreat</em>—a mass migration back to the more magical, isolated realm of Evermeet (Sun Elf stronghold) or back into the deepest, wildest forests.</p>
-                
-                <p><strong>Ceding the World:</strong> This Retreat signifies the Elves formally stepping back from global politics and ceding dominance of the "New World" (the modern continent of Faerûn) to the younger, faster-breeding Human races. Elves today are seen as a diminished, ancient, but still powerful people who exist mostly on the fringes or in secluded sanctuaries.</p>
+                <h3>👑 The Golden Age</h3>
+                <p>The elves established magnificent magical empires across Faerûn, building cities of wonder and art. Their mastery of magic was unrivaled, and their kingdoms flourished for millennia. High elves ruled vast territories, wood elves guarded ancient forests, and all lived in relative harmony.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>⚔️ The Crown Wars</h3>
+                <p>For over 3,000 years, the elven empires tore themselves apart in a series of devastating civil wars known as the Crown Wars. Driven by pride, ambition, and the corrupting influence of the demon goddess Lolth, elf fought elf in conflicts that destroyed entire nations and reshaped the continent.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🕷️ The Descent of the Drow</h3>
+                <p>The followers of Lolth, who had committed unspeakable atrocities during the Crown Wars, were cursed by the Seldarine (elven gods). Their skin turned black as pitch, and they were driven into the Underdark. These Dark Elves became the Drow, twisted by millennia of hatred and Lolth's influence into the cruel civilization they are today.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🏛️ Great Kingdoms</h3>
+                <p>After the Crown Wars, the surviving elves rebuilt. Myth Drannor became the greatest elven city in history, a beacon of learning and cooperation between races. Other kingdoms like Evereska, Evermeet, and the forests of the High Forest maintained elven traditions and power.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌅 The Retreat</h3>
+                <p>Over the last millennium, as humans rose to dominance and elven populations dwindled, many elves began The Retreat—a mass exodus to the hidden island of Evermeet or back to the Feywild. This marked the elves stepping back from the wider world, leaving Faerûn to the younger races. Today, elves are a fading power, legends of a bygone golden age.</p>
             </div>
             
             <div class="edu-card historical-timeline">
@@ -665,134 +863,294 @@
             
             <div class="accordion-footer-buttons">
                 <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
-                <button class="back-to-top-btn">⚡ Back to Generator</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
             </div>
             
                 </div><!-- end accordion-content -->
             </div><!-- end accordion -->
             
-            <!-- Accordion 3: Elven Races of Faerûn -->
+        </section>
+        
+        <!-- Dwarven Educational Section (hidden by default) -->
+        <section class="educational-section" id="dwarvenEducationalSection" style="display: none;" aria-labelledby="dwarven-education-heading">
+            <h2 id="dwarven-education-heading">Lore & Linguistics</h2>
+            
+            <!-- Accordion 1: Dwarven Races of Faerûn -->
             <div class="accordion">
-                <button class="accordion-header" aria-expanded="false">
-                    <span class="accordion-title">🌍 Elven Races of Faerûn</span>
+                <button class="accordion-header" aria-expanded="false" aria-controls="dwarven-races-content">
+                    <span class="accordion-title">⛏️ Dwarven Races of Faerûn</span>
                     <span class="accordion-icon" aria-hidden="true">▼</span>
                 </button>
-                <div class="accordion-content">
+                <div class="accordion-content" id="dwarven-races-content">
             
             <div class="edu-card">
-                <p>The elves of Faerûn are diverse, each subrace adapted to their environment and culture. While this generator focuses on High Elves (Sun and Moon), understanding the broader elven family helps contextualize naming conventions.</p>
+                <p>The dwarves of Faerûn are a proud and ancient race, divided into several distinct subraces. Each has adapted to their environment while maintaining the core dwarven values of clan, craft, and honor.</p>
             </div>
             
             <div class="edu-card">
-                <h3><span class="moon-icon">🌙</span> Moon Elves (Teu-Tel-Quessir)</h3>
-                <p><strong>Characteristics:</strong> Adventurous and tolerant. Pale skin with silver hair. Most common and approachable of High Elves.</p>
-                <p><strong>Naming Style:</strong> Highly lyrical with flowing, poetic sounds. Prefer 4+ syllables and soft suffixes like <em>-iel</em>, <em>-ae</em>, <em>-wyn</em>.</p>
+                <h3>💰 Gold Dwarves (Hill Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Deep southern kingdoms, master crafters and merchants. Bronze-brown skin, lighter hair.</p>
+                <p><strong>Naming Style:</strong> Favor names with themes of wealth, honor, sun, and craftsmanship.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Silmeriel, Laendrae, Merilwyn, Ilanoth
+                    <strong>Examples:</strong> Goldbeard, Sunforge, Gemhammer
                 </div>
             </div>
             
             <div class="edu-card">
-                <h3>☀️ Sun Elves (Ar-Tel-Quessir)</h3>
-                <p><strong>Characteristics:</strong> Scholarly and aloof. Bronze skin with gold or red hair. Most magically gifted and traditional.</p>
-                <p><strong>Naming Style:</strong> Stately and formal. Prefer 3-5 syllables with suffixes denoting rank or mastery like <em>-lar</em>, <em>-ar</em>, <em>-ion</em>.</p>
+                <h3>🛡️ Shield Dwarves (Mountain Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Northern kingdoms, fierce warriors and defenders. Pale skin, often fair-haired.</p>
+                <p><strong>Naming Style:</strong> Favor names with themes of battle, iron, defense, and strength.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Aranilar, Corion, Solathan, Rhynelor
+                    <strong>Examples:</strong> Ironshield, Battlehammer, Steelguard
                 </div>
             </div>
             
             <div class="edu-card">
-                <h3>🌲 Wood Elves (Sy-Tel-Quessir)</h3>
-                <p><strong>Characteristics:</strong> Fiercely independent and martial. Coppery skin that blends with forest environments.</p>
-                <p><strong>Naming Style:</strong> Concise and functional. Prefer 2-3 syllables focused on nature, vigilance, and martial skill. Often end in hard consonants for strength and directness.</p>
-                <p><strong>Key Differences from High Elves:</strong></p>
-                <ul>
-                    <li><strong>Shorter:</strong> 2-3 syllables (vs High Elf's 3-5)</li>
-                    <li><strong>Direct:</strong> Minimal connectors, prefer rough edges</li>
-                    <li><strong>Martial Focus:</strong> Emphasize weaponry, nature, vigilance</li>
-                    <li><strong>Hard Endings:</strong> Often end in consonants (-th, -r, -s)</li>
-                </ul>
+                <h3>💀 Duergar (Gray Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Underdark dwellers, cruel slavers with psionic powers. Gray skin, bald.</p>
+                <p><strong>Naming Style:</strong> Favor names with themes of darkness, stone, ash, and the deep earth.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Ratheth, Sargwyn, Delith, Qilaeth
-                </div>
-                <p class="available-note"><em>✅ Wood Elf name generation is now available! Select from the subrace dropdown above.</em></p>
-            </div>
-            
-            <div class="edu-card">
-                <h3>🕷️ Drow \ Dark Elves (Ss'tel'Quessir) - BETA</h3>
-                <p><strong>Characteristics:</strong> Cruel and matriarchal society of the Underdark. Black skin with white or silver hair.</p>
-                <p><strong>Naming Style:</strong> Gender-specific with stark differences. Harsh, chaotic consonant clusters that surface elves deliberately avoid.</p>
-                <p><strong>Key Differences from High Elves:</strong></p>
-                <ul>
-                    <li><strong>Gender Split:</strong> Females = 4-6 syllables (complex, powerful), Males = 2-3 syllables (short, subservient)</li>
-                    <li><strong>Harsh Clusters:</strong> EMBRACE what High Elves avoid (gr-, kr-, dr-, tr-)</li>
-                    <li><strong>No Flow:</strong> Deliberately clumsy and jarring sound</li>
-                    <li><strong>Dark Themes:</strong> Lolth, spiders, poison, death, shadow, servitude</li>
-                </ul>
-                <div class="example-box">
-                    <strong>Female Examples:</strong> Pharaqiltyl, Faerraen, Qiltana<br>
-                    <strong>Male Examples:</strong> Zhaunax, Drizlim, Qilgloth
-                </div>
-                <p class="beta-note"><em>⚠️ Drow name generation is in BETA with limited components (12 vs 108 High Elf components).</em></p>
-            </div>
-            
-            <div class="edu-card">
-                <h3>🌊 Sea Elves (Mar-Tel-Quessir)</h3>
-                <p><strong>Characteristics:</strong> Aquatic adaptation with green or blue-tinted skin. Isolated from surface dwellers.</p>
-                <p><strong>Naming Style:</strong> Fluid and rhythmic. Prefer 3-4 syllables using roots that mimic ocean sounds and movements.</p>
-                <div class="example-box">
-                    <strong>Examples:</strong> Marilos, Wavetha, Coralen, Nauthor
+                    <strong>Examples:</strong> Deepstone, Ashhammer, Darkforge
                 </div>
             </div>
             
             <div class="edu-card">
-                <h3>❄️ Snow Elves (Jhaer-Tel-Quessir)</h3>
-                <p><strong>Characteristics:</strong> Arctic-adapted elves, rare and resilient.</p>
-                <p><strong>Naming Style:</strong> Concise and resilient. Prefer 2-3 syllables focused on ice and endurance roots.</p>
+                <h3>❄️ Arctic Dwarves (Inugaakalikurit)</h3>
+                <p><strong>Characteristics:</strong> Isolated far-north dwellers, adapted to frozen tundra. White or light blonde hair, pale skin.</p>
+                <p><strong>Naming Style:</strong> Short, harsh names reflecting ice, survival, and isolation. Often monosyllabic.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Frostil, Gwyneth, Isarion, Rhimael
+                    <strong>Examples:</strong> Frostbeard, Iceforge, Coldstone
                 </div>
             </div>
             
             <div class="edu-card">
-                <h3>🦅 Avariel (Winged Elves)</h3>
-                <p><strong>Characteristics:</strong> Angelic appearance with feathered wings. Extremely rare.</p>
-                <p><strong>Naming Style:</strong> Highly lyrical and airy. Prefer 3-5 syllables focused on sky and flight roots, similar to Moon Elves in flow.</p>
+                <h3>🪨 Urdunnir (Stone Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Deep Underdark dwellers, even more isolated than duergar. Stone-like skin, extremely rare.</p>
+                <p><strong>Naming Style:</strong> Ancient, earth-focused names emphasizing stone, depth, and endurance.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Aerilaya, Skylion, Windrae, Galethon
+                    <strong>Examples:</strong> Stoneheart, Deepdelver, Earthborn
                 </div>
             </div>
             
             <div class="edu-card">
-                <h3>🐺 Lythari (Wolf-Elves)</h3>
-                <p><strong>Characteristics:</strong> Shapeshifters with wolf forms. Guardians of the wild.</p>
-                <p><strong>Naming Style:</strong> Simple and nature-based. Prefer 2 syllables focused on moon, star, or wolf roots.</p>
+                <h3>🌿 Wild Dwarves</h3>
+                <p><strong>Characteristics:</strong> Jungle-dwelling, tribal, and primitive. Darker skin, less technologically advanced.</p>
+                <p><strong>Naming Style:</strong> Simple, direct names focused on nature, hunting, and survival. Shortest dwarven names.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Fenril, Luneth, Wolfar, Starwyn
+                    <strong>Examples:</strong> Boar, Thorn, Flint, Ironjaw
                 </div>
             </div>
             
             <div class="edu-card">
-                <h3>🌿 Wild Elves (Ghaele)</h3>
-                <p><strong>Characteristics:</strong> Feral, primitive, and tribal. Most isolated from civilization.</p>
-                <p><strong>Naming Style:</strong> Shortest and most functional. Prefer 1-2 syllables, often simple nouns or verbs.</p>
+                <h3>🌋 Derro</h3>
+                <p><strong>Characteristics:</strong> Insane Underdark dwellers, corrupted by ancient magic. Blue-gray skin, white hair, mad.</p>
+                <p><strong>Naming Style:</strong> Chaotic, often harsh or nonsensical. Reflect madness and cruelty.</p>
                 <div class="example-box">
-                    <strong>Examples:</strong> Fen, Thorn, Hawk, Ash
-                </div>
-            </div>
-            
-            <div class="edu-card">
-                <h3>✨ Fey'ri (Half-Fiend Elves)</h3>
-                <p><strong>Characteristics:</strong> Demonic heritage from ancient sun elf families. Chaotic and dual-natured.</p>
-                <p><strong>Naming Style:</strong> Variable length, mixing traditional elven with harsh, demonic, or fiery roots.</p>
-                <div class="example-box">
-                    <strong>Examples:</strong> Sarya'dreth, Morthil, Vyshaan, Pyrael
+                    <strong>Examples:</strong> Grimshackle, Madstone, Gloomfang
                 </div>
             </div>
             
             <div class="accordion-footer-buttons">
                 <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
-                <button class="back-to-top-btn">⚡ Back to Generator</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 2: Understanding Dwarven Names -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="understanding-dwarven-content">
+                    <span class="accordion-title">📖 Understanding Dwarven Names</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="understanding-dwarven-content">
+            
+            <div class="edu-card intro-note">
+                <p><strong>📌 Note:</strong> Dwarven names in the Dethek tradition are fundamentally different from Elven. They combine practical, descriptive elements rather than flowing syllables, reflecting dwarven culture's emphasis on heritage, craft, and deeds over poetic beauty.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Structure of Dwarven Names</h3>
+                <p>A full dwarven name consists of two parts:</p>
+                <ul>
+                    <li><strong>Given Name (First Name):</strong> Personal name given at birth, often reflecting traits or aspirations</li>
+                    <li><strong>Clan Name:</strong> Inherited family name describing the clan's trade, location, or legendary deeds</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Example:</strong> <em>Thorin Oakenshield</em><br>
+                    <strong>Thorin</strong> (first) = "Bold One"<br>
+                    <strong>Oakenshield</strong> (clan) = "Shield made of Oak"
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>First Names: Personal Identity</h3>
+                <p>Dwarven first names are constructed from meaningful roots that combine into short, strong names (typically 2-3 syllables).</p>
+                <p><strong>Common First Name Prefixes:</strong></p>
+                <p>Bar- (strong), Thorin- (bold), Dor- (steadfast), Gimli- (spark), Barin- (enduring)</p>
+                <p><strong>Common First Name Suffixes:</strong></p>
+                <p>-in (diminutive, son of), -rim (shield), -gar (spear), -dain (slayer)</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Thorin, Balin, Gimli, Dwalin, Bombur
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Clan Names: Family Legacy</h3>
+                <p>Clan names describe the family's defining characteristic - their trade, a legendary deed, their stronghold, or a notable feature.</p>
+                <p><strong>Structure:</strong> Usually [Noun/Adjective] + [Noun/Verb]</p>
+                <p><strong>Common Elements:</strong></p>
+                <ul>
+                    <li><strong>Craft:</strong> Forge, Anvil, Hammer, Smith, Gear</li>
+                    <li><strong>Materials:</strong> Iron, Steel, Stone, Gold, Mithril</li>
+                    <li><strong>Actions:</strong> -breaker, -maker, -bearer, -hewer</li>
+                    <li><strong>Places:</strong> -hall, -gate, -keep, -mountain</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Examples:</strong> Ironfoot, Stonehelm, Bronzebeard, Battlehammer, Goreblade
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Gender in Dwarven Names</h3>
+                <p>Unlike Elven names, dwarven first names can have gender-specific forms:</p>
+                <ul>
+                    <li><strong>Male:</strong> Often end in -in, -ur, -ar, -or</li>
+                    <li><strong>Female:</strong> Often end in -a, -dis, -trasa, -ja, -ra</li>
+                    <li><strong>Neutral:</strong> Many names work for both genders</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Male Examples:</strong> Thorin, Dwalin, Balin<br>
+                    <strong>Female Examples:</strong> Kathra, Amber, Diesa
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 3: Dwarven Pronunciation Guide -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="dwarven-pronunciation-content">
+                    <span class="accordion-title">🎵 Dwarven Pronunciation Guide</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="dwarven-pronunciation-content">
+            
+            <div class="edu-card">
+                <h3>Dethek Phonetic Rules</h3>
+                <p>Dwarven names are designed to be spoken with strength and clarity, even when shouted across a forge or battlefield.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Consonant Clusters</h3>
+                <p>Dwarven embraces strong consonant combinations:</p>
+                <ul>
+                    <li><strong>Initial Clusters:</strong> Thr-, Dr-, Gr-, Kr-, Br-</li>
+                    <li><strong>Medial Clusters:</strong> -ld-, -rg-, -mb-, -ng-</li>
+                    <li><strong>Final Clusters:</strong> -rd, -rn, -ld, -mb</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Examples:</strong> Thror (THROR), Gror (GROR), Groin (GRO-in)
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Stress Patterns</h3>
+                <p>Dwarven names typically stress the first syllable heavily:</p>
+                <ul>
+                    <li><strong>THO</strong>-rin (not tho-RIN)</li>
+                    <li><strong>BA</strong>-lin (not ba-LIN)</li>
+                    <li><strong>DWA</strong>-lin (not dwa-LIN)</li>
+                </ul>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 4: A Brief History of the Khazad -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="dwarven-history-content">
+                    <span class="accordion-title">⚒️ A Brief History of the Khazad</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="dwarven-history-content">
+            
+            <div class="edu-card">
+                <p>The dwarves call themselves the Stout Folk or Khazad. They are one of Faerûn's oldest and most enduring races, with a history stretching back to the world's creation.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🏔️ The First Dwarves</h3>
+                <p>According to legend, the dwarves were forged by Moradin the Soulforger from the heart of the mountains. They emerged from deep caverns fully formed, already masters of stone and metal.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>⚔️ The Great Rift</h3>
+                <p>Thousands of years ago, philosophical differences split the dwarven race. Gold dwarves retreated deep into southern mountains, while shield dwarves remained closer to the surface in the north, leading to the cultural and physical differences seen today.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>💔 The Descent of the Duergar</h3>
+                <p>The gray dwarves, or duergar, were once shield dwarves captured by mind flayers and enslaved in the Underdark. Over millennia they were twisted by psionic torment and dark magic, becoming the cruel, bitter race known today.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🏛️ Great Kingdoms</h3>
+                <p>Throughout history, dwarves have built magnificent underground kingdoms: Gauntlgrym, Citadel Adbar, Mithral Hall, and many more. These strongholds stand as testaments to dwarven engineering and determination.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>⚒️ Culture & Values</h3>
+                <p>Dwarven culture centers on three pillars:</p>
+                <ul>
+                    <li><strong>Clan:</strong> Family and heritage above all</li>
+                    <li><strong>Craft:</strong> Mastery of stone, metal, and creation</li>
+                    <li><strong>Honor:</strong> Keeping oaths and remembering grudges</li>
+                </ul>
+            </div>
+            
+            <div class="edu-card historical-timeline">
+                <h3>📜 Key Timeline</h3>
+                <div class="timeline-entry">
+                    <strong>~37,000 DR (Before Present):</strong> Moradin forges the first dwarves in the heart of the mountains
+                </div>
+                <div class="timeline-entry">
+                    <strong>~35,000 DR:</strong> The Founding - First great dwarven kingdoms established
+                </div>
+                <div class="timeline-entry">
+                    <strong>~12,000 DR:</strong> The Great Rift - Gold and Shield dwarves diverge
+                </div>
+                <div class="timeline-entry">
+                    <strong>~8,100 DR:</strong> Shield dwarves captured by mind flayers, beginning of the Duergar
+                </div>
+                <div class="timeline-entry">
+                    <strong>~3,389 DR:</strong> Founding of Gauntlgrym, greatest northern dwarven city
+                </div>
+                <div class="timeline-entry">
+                    <strong>1,306 DR:</strong> Founding of Mithral Hall by Clan Battlehammer
+                </div>
+                <div class="timeline-entry">
+                    <strong>1,358 DR:</strong> Fall of many dwarven kingdoms during the Time of Troubles
+                </div>
+                <div class="timeline-entry">
+                    <strong>Present Day:</strong> Dwarves endure, reclaiming lost kingdoms and forging new alliances
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
             </div>
             
                 </div><!-- end accordion-content -->
@@ -805,7 +1163,7 @@
         </footer>
         
         <div class="version-box">
-            <p>v2.7.3 - Last Updated 12-03-25</p>
+            <p>v3.0.2 - Last Updated 12-04-25</p>
         </div>
     </div>
 

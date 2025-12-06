@@ -33,6 +33,7 @@ beforeEach(() => {
 });
 
 describe('Accessibility - ARIA Attributes', () => {
+
   describe('Settings Accordion', () => {
     it('should have aria-expanded attribute on toggle button', () => {
       const settingsToggle = document.getElementById('settingsToggle');
@@ -116,33 +117,29 @@ describe('Accessibility - ARIA Attributes', () => {
 
     it('should have role="group" on filter container', () => {
       const filterGroup = document.querySelector('.favorites-filter');
-      expect(filterGroup.hasAttribute('role')).toBe(true);
-      expect(filterGroup.getAttribute('role')).toBe('group');
-      expect(filterGroup.hasAttribute('aria-label')).toBe(true);
+      expect(filterGroup).toHaveAttribute('role', 'group');
+      expect(filterGroup).toHaveAttribute('aria-label');
     });
 
     it('should have aria-pressed on filter buttons', () => {
       const allBtn = document.querySelector('[data-filter="all"]');
       const elvenBtn = document.querySelector('[data-filter="elven"]');
       
-      expect(allBtn.hasAttribute('aria-pressed')).toBe(true);
-      expect(allBtn.getAttribute('aria-pressed')).toBe('true');
-      expect(elvenBtn.hasAttribute('aria-pressed')).toBe(true);
-      expect(elvenBtn.getAttribute('aria-pressed')).toBe('false');
+      expect(allBtn).toHaveAttribute('aria-pressed', 'true');
+      expect(elvenBtn).toHaveAttribute('aria-pressed', 'false');
     });
 
     it('should have aria-label on filter buttons', () => {
       const buttons = document.querySelectorAll('.filter-btn');
       buttons.forEach(btn => {
-        expect(btn.hasAttribute('aria-label')).toBe(true);
+        expect(btn).toHaveAttribute('aria-label');
       });
     });
 
     it('should have aria-hidden on decorative emoji icons', () => {
       const emojiSpans = document.querySelectorAll('.filter-btn span[aria-hidden]');
       emojiSpans.forEach(span => {
-        expect(span.hasAttribute('aria-hidden')).toBe(true);
-        expect(span.getAttribute('aria-hidden')).toBe('true');
+        expect(span).toHaveAttribute('aria-hidden', 'true');
       });
     });
   });
@@ -166,15 +163,13 @@ describe('Accessibility - ARIA Attributes', () => {
       const header = document.querySelector('.accordion-header');
       const content = document.getElementById('test-content');
       
-      expect(header.hasAttribute('aria-controls')).toBe(true);
-      expect(header.getAttribute('aria-controls')).toBe('test-content');
+      expect(header).toHaveAttribute('aria-controls', 'test-content');
       expect(content).toBeTruthy();
     });
 
     it('should have aria-hidden on decorative icons', () => {
       const icon = document.querySelector('.accordion-icon');
-      expect(icon.hasAttribute('aria-hidden')).toBe(true);
-      expect(icon.getAttribute('aria-hidden')).toBe('true');
+      expect(icon).toHaveAttribute('aria-hidden', 'true');
     });
   });
 
@@ -195,14 +190,13 @@ describe('Accessibility - ARIA Attributes', () => {
 
     it('should have aria-label on tab buttons', () => {
       const elvenTab = document.getElementById('elvenTab');
-      expect(elvenTab.hasAttribute('aria-label')).toBe(true);
+      expect(elvenTab).toHaveAttribute('aria-label');
     });
 
     it('should have aria-hidden on tab icons', () => {
       const icons = document.querySelectorAll('.tab-icon');
       icons.forEach(icon => {
-        expect(icon.hasAttribute('aria-hidden')).toBe(true);
-        expect(icon.getAttribute('aria-hidden')).toBe('true');
+        expect(icon).toHaveAttribute('aria-hidden', 'true');
       });
     });
 
@@ -214,8 +208,9 @@ describe('Accessibility - ARIA Attributes', () => {
 
     it('should have aria-hidden on external link icons', () => {
       const externalIcon = document.querySelector('.external-link-icon');
-      expect(externalIcon.hasAttribute('aria-hidden')).toBe(true);
-      expect(externalIcon.getAttribute('aria-hidden')).toBe('true');
+      expect(externalIcon).toHaveAttribute('aria-hidden', 'true');
     });
   });
 });
+
+
