@@ -57,10 +57,6 @@ export class NameGenerator {
         const minSyllables = (effectiveSubrace === 'drow-female') ? 4 : 
                             ((subrace === 'wood-elf' || effectiveSubrace === 'drow-male') ? 2 : 0);
         
-        // Define subrace-specific minimums
-        const minSyllables = (effectiveSubrace === 'drow-female') ? 4 : 
-                            ((subrace === 'wood-elf' || effectiveSubrace === 'drow-male') ? 2 : 0);
-        
         // Try multiple attempts to get close to target syllable count
         // Increase attempts if we need to meet minimums (more attempts for stricter requirements)
         const maxAttempts = minSyllables > 0 ? CONFIG.MAX_GENERATION_ATTEMPTS * 2 : CONFIG.MAX_GENERATION_ATTEMPTS;
