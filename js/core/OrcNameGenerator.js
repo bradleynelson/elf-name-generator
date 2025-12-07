@@ -9,9 +9,9 @@ export class OrcNameGenerator {
     generate(options = {}) {
         const {
             // subrace kept for compatibility but not used (shared pool)
-            subrace = 'orc',
+            subrace: _subrace = 'orc',
             nameType = 'full',
-            gender = 'neutral'
+            gender: _gender = 'neutral'
         } = options;
 
         const includeEpithet = nameType === 'full' || nameType === 'full-with-epithet';
@@ -51,7 +51,7 @@ export class OrcNameGenerator {
         return items;
     }
 
-    _generatePersonal(subrace, gender) {
+    _generatePersonal(_subrace, _gender) {
         let pool = this._filterBySubrace(this.personalNames);
         if (!pool.length) pool = this.personalNames;
         const pick = this._randomElement(pool);

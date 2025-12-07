@@ -95,7 +95,6 @@ export class UIController {
                 includeNickname
             };
         } else if (generatorType === 'orc') {
-            const subraceSelect = document.getElementById('orcSubrace');
             const nameTypeSelect = document.getElementById('orcNameType');
             const genderSelect = document.getElementById('orcGender');
             const nameType = nameTypeSelect ? nameTypeSelect.value : 'full';
@@ -302,7 +301,7 @@ export class UIController {
      */
     _displayOrcBreakdown(nameData) {
         if (!this.elements.breakdown || !nameData.breakdown) return;
-        const { personal, clan, epithet } = nameData.breakdown;
+        const { personal, epithet } = nameData.breakdown;
         let html = '';
         if (personal) {
             html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">(${personal.meaning || ''})</span></div>`;
