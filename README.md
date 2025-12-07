@@ -12,11 +12,12 @@ Simply visit **[espruar.com](https://espruar.com)** to start generating authenti
 
 ### Generator Types
 
-**⚔️ Elven (Espruar):** Generate names following the Espruar naming system  
+**✨ Elven (Espruar):** Generate names following the Espruar naming system  
 **⚒️ Dwarven (Dethek):** Generate names following the Dethek naming system  
 **⚙️ Gnomish (Gnim):** Generate names for rock/forest/deep gnomes with personal + clan + optional nickname  
-**🗡️ Halfling (Hin):** Generate names for Lightfoot/Strongheart, Stout, and Ghostwise; personal + family with optional nickname
-**🪓 Orc:** Generate names for Mountain/Gray/Half-Orcs/Orogs with personal + clan + optional epithet
+**🗡️ Halfling (Hin):** Generate names for Lightfoot/Strongheart, Stout, and Ghostwise; personal + family with optional nickname  
+
+**⚔️ Orc:** Generate names for Mountain/Gray/Half-Orcs/Orogs with personal + epithet (no surname)
 
 Switch between generators using the tabs at the top of the page.
 

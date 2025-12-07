@@ -582,6 +582,7 @@ export class UnifiedNameGenerator {
         const halflingControls = document.querySelector('.halfling-controls');
         const orcControls = document.querySelector('.orc-controls');
         const titleIcons = document.querySelectorAll('.title-sword');
+        const orcTabMore = document.getElementById('orcTabMore');
         
         if (generatorType === 'elven') {
             if (elvenTab) elvenTab.classList.add('active');
@@ -589,6 +590,7 @@ export class UnifiedNameGenerator {
             if (gnomishTab) gnomishTab.classList.remove('active');
             if (halflingTab) halflingTab.classList.remove('active');
             if (orcTab) orcTab.classList.remove('active');
+            if (orcTabMore) orcTabMore.classList.remove('active');
             document.documentElement.setAttribute('data-generator', 'elven');
             document.documentElement.setAttribute('data-theme', 'moon-elf');
             
@@ -617,6 +619,7 @@ export class UnifiedNameGenerator {
             if (gnomishTab) gnomishTab.classList.remove('active');
             if (halflingTab) halflingTab.classList.remove('active');
             if (orcTab) orcTab.classList.remove('active');
+            if (orcTabMore) orcTabMore.classList.remove('active');
             document.documentElement.setAttribute('data-generator', 'dwarven');
             document.documentElement.removeAttribute('data-theme');
             
@@ -647,6 +650,7 @@ export class UnifiedNameGenerator {
             if (dwarvenTab) dwarvenTab.classList.remove('active');
             if (halflingTab) halflingTab.classList.remove('active');
             if (orcTab) orcTab.classList.remove('active');
+            if (orcTabMore) orcTabMore.classList.remove('active');
             document.documentElement.setAttribute('data-generator', 'gnomish');
             document.documentElement.removeAttribute('data-theme');
             
@@ -676,6 +680,7 @@ export class UnifiedNameGenerator {
             if (dwarvenTab) dwarvenTab.classList.remove('active');
             if (gnomishTab) gnomishTab.classList.remove('active');
             if (orcTab) orcTab.classList.remove('active');
+            if (orcTabMore) orcTabMore.classList.remove('active');
             document.documentElement.setAttribute('data-generator', 'halfling');
             document.documentElement.removeAttribute('data-theme');
             
@@ -705,6 +710,7 @@ export class UnifiedNameGenerator {
             if (dwarvenTab) dwarvenTab.classList.remove('active');
             if (gnomishTab) gnomishTab.classList.remove('active');
             if (halflingTab) halflingTab.classList.remove('active');
+            if (orcTabMore) orcTabMore.classList.add('active');
             document.documentElement.setAttribute('data-generator', 'orc');
             document.documentElement.removeAttribute('data-theme');
             
