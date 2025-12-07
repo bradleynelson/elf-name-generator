@@ -24,7 +24,7 @@ describe('GnomishNameGenerator', () => {
 
   it('generates a full name with breakdown', () => {
     const result = gen.generate({ subrace: 'rock', nameType: 'full', gender: 'neutral' });
-    expect(result.name).toMatch(/\s\".*\"\s/);
+    expect(result.name).toMatch(/\s".*"\s/);
     expect(result.breakdown.personal).toBeTruthy();
     expect(result.breakdown.clan).toBeTruthy();
     expect(result.breakdown.nickname).toBeTruthy();
