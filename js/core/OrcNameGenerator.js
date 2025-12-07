@@ -8,14 +8,12 @@ export class OrcNameGenerator {
 
     generate(options = {}) {
         const {
-            // subrace kept for compatibility but not used (shared pool)
-            subrace: _subrace = 'orc',
-            nameType = 'full',
-            gender: _gender = 'neutral'
+            // subrace/gender kept for compatibility but ignored (shared pool)
+            nameType = 'full'
         } = options;
 
         const includeEpithet = nameType === 'full' || nameType === 'full-with-epithet';
-        const personal = this._generatePersonal(subrace, gender);
+        const personal = this._generatePersonal();
         const epithet = includeEpithet ? this._generateEpithet() : null;
         const formattedEpithetText = epithet ? this._formatEpithetText(epithet.text) : null;
 
@@ -51,7 +49,7 @@ export class OrcNameGenerator {
         return items;
     }
 
-    _generatePersonal(_subrace, _gender) {
+    _generatePersonal() {
         let pool = this._filterBySubrace(this.personalNames);
         if (!pool.length) pool = this.personalNames;
         const pick = this._randomElement(pool);
