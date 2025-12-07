@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UnifiedNameGenerator } from '../../js/app.js';
 import { NameGenerator } from '../../js/core/NameGenerator.js';
-import { loadGeneratorData, loadDwarvenGeneratorData } from '../../js/utils/dataLoader.js';
+import { loadGeneratorData, loadDwarvenGeneratorData, loadGnomishGeneratorData } from '../../js/utils/dataLoader.js';
 
 // Mock data loading
 vi.mock('../../js/utils/dataLoader.js', () => ({
     loadGeneratorData: vi.fn(),
     loadDwarvenGeneratorData: vi.fn(),
+    loadGnomishGeneratorData: vi.fn(),
     validateComponents: vi.fn(() => true),
     validateConnectors: vi.fn(() => true),
     validateDwarvenFirstNames: vi.fn(() => true),
@@ -69,12 +70,25 @@ const mockDwarvenData = {
     ]
 };
 
+const mockGnomishData = {
+    personalNames: [
+        { root: 'al', prefix_text: 'Al', suffix_text: 'al', prefix_meaning: 'High', suffix_meaning: 'High', can_be_prefix: true, can_be_suffix: true, gender: 'neutral', subrace: ['rock'], prefix_phonetic: 'Ahl', suffix_phonetic: 'Ahl' }
+    ],
+    clanNames: [
+        { root: 'spark', prefix_text: 'Spark', suffix_text: 'spark', prefix_meaning: 'Spark', suffix_meaning: 'Spark', can_be_prefix: true, can_be_suffix: true, subrace: ['rock'], phonetic: 'Spahrk' }
+    ],
+    nicknames: [
+        { text: 'Cogs', meaning: 'Inventor', phonetic: 'Kogs' }
+    ]
+};
+
 describe('Integration Tests - App Functionality', () => {
     beforeEach(() => {
         // Reset mocks
         vi.clearAllMocks();
         loadGeneratorData.mockResolvedValue(mockElvenData);
         loadDwarvenGeneratorData.mockResolvedValue(mockDwarvenData);
+        loadGnomishGeneratorData.mockResolvedValue(mockGnomishData);
         
         // Setup minimal DOM structure
         document.body.innerHTML = `
@@ -89,6 +103,7 @@ describe('Integration Tests - App Functionality', () => {
             <select id="style"><option value="neutral">Neutral</option></select>
             <button id="elvenTab" class="generator-tab active"></button>
             <button id="dwarvenTab" class="generator-tab"></button>
+            <button id="gnomishTab" class="generator-tab"></button>
             <div id="favoritesList"></div>
             <div id="modifierSuggestionsContainer"></div>
             <div id="genderPrefixSection"></div>
@@ -98,6 +113,12 @@ describe('Integration Tests - App Functionality', () => {
             <button id="speakerBtn"></button>
             <div id="speakerContainer"></div>
             <div id="breakdown"></div>
+            <div id="gnomishEducationalSection"></div>
+            <div class="gnomish-controls">
+                <select id="gnomishSubrace"><option value="rock">Rock</option></select>
+                <select id="gnomishNameType"><option value="full">Full</option></select>
+                <select id="gnomishGender"><option value="neutral">Neutral</option></select>
+            </div>
         `;
         
         // Clear localStorage
