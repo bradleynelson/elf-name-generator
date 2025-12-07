@@ -57,7 +57,7 @@ export class UIController {
     
     /**
      * Get current user preferences from controls
-     * @param {string} generatorType - 'elven', 'dwarven', or 'gnomish'
+     * @param {string} generatorType - 'elven', 'dwarven', 'gnomish', 'halfling', or 'orc'
      * @returns {Object}
      */
     getPreferences(generatorType = 'elven') {
@@ -81,6 +81,30 @@ export class UIController {
                 nameType,
                 gender: genderSelect ? genderSelect.value : 'neutral',
                 includeNickname: nameType === 'full' ? true : nameType === 'full-no-nickname' ? false : true
+            };
+        } else if (generatorType === 'halfling') {
+            const subraceSelect = document.getElementById('halflingSubrace');
+            const nameTypeSelect = document.getElementById('halflingNameType');
+            const genderSelect = document.getElementById('halflingGender');
+            const nameType = nameTypeSelect ? nameTypeSelect.value : 'full';
+            const includeNickname = nameType === 'full' || nameType === 'full-with-nickname';
+            return {
+                subrace: subraceSelect ? subraceSelect.value : 'lightfoot',
+                nameType,
+                gender: genderSelect ? genderSelect.value : 'neutral',
+                includeNickname
+            };
+        } else if (generatorType === 'orc') {
+            const subraceSelect = document.getElementById('orcSubrace');
+            const nameTypeSelect = document.getElementById('orcNameType');
+            const genderSelect = document.getElementById('orcGender');
+            const nameType = nameTypeSelect ? nameTypeSelect.value : 'full';
+            const includeEpithet = nameType === 'full' || nameType === 'full-with-epithet';
+            return {
+                subrace: 'orc',
+                nameType,
+                gender: genderSelect ? genderSelect.value : 'neutral',
+                includeEpithet
             };
         } else {
             return {
@@ -145,6 +169,10 @@ export class UIController {
             this._displayDwarvenBreakdown(nameData);
         } else if (generatorType === 'gnomish') {
             this._displayGnomishBreakdown(nameData);
+        } else if (generatorType === 'halfling') {
+            this._displayHalflingBreakdown(nameData);
+        } else if (generatorType === 'orc') {
+            this._displayOrcBreakdown(nameData);
         }
         
         // Handle modifier suggestions (Elven only)
@@ -244,6 +272,44 @@ export class UIController {
         }
         if (clan) {
             html += `<div class="component"><span class="component-label">Clan:</span> ${clan.name} <span class="component-meaning">(${clan.meaning || ''})</span></div>`;
+        }
+        this.elements.breakdown.innerHTML = html;
+    }
+    
+    /**
+     * Display Halfling name breakdown
+     * @private
+     */
+    _displayHalflingBreakdown(nameData) {
+        if (!this.elements.breakdown || !nameData.breakdown) return;
+        const { personal, family, nickname } = nameData.breakdown;
+        let html = '';
+        if (personal) {
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">(${personal.meaning || ''})</span></div>`;
+        }
+        if (family) {
+            html += `<div class="component"><span class="component-label">Family:</span> ${family.text} <span class="component-meaning">(${family.meaning || ''})</span></div>`;
+        }
+        if (nickname && nickname.text) {
+            html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">(${nickname.meaning || ''})</span></div>`;
+        }
+        this.elements.breakdown.innerHTML = html;
+    }
+
+    /**
+     * Display Orc name breakdown
+     * @private
+     */
+    _displayOrcBreakdown(nameData) {
+        if (!this.elements.breakdown || !nameData.breakdown) return;
+        const { personal, clan, epithet } = nameData.breakdown;
+        let html = '';
+        if (personal) {
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">(${personal.meaning || ''})</span></div>`;
+        }
+        if (epithet && epithet.text) {
+            const display = epithet.displayText || epithet.text;
+            html += `<div class="component"><span class="component-label">Epithet:</span> ${display} <span class="component-meaning">(${epithet.meaning || ''})</span></div>`;
         }
         this.elements.breakdown.innerHTML = html;
     }
@@ -537,15 +603,34 @@ export class UIController {
         
         if (filteredFavorites.length === 0) {
             this.elements.favoritesList.className = 'empty-favorites';
-            const filterName = this.currentFilter === 'elven' ? 'Elven' : 'Dwarven';
+            const filterNameMap = {
+                'elven': 'Elven',
+                'dwarven': 'Dwarven',
+                'gnomish': 'Gnomish',
+                'halfling': 'Halfling'
+            };
+            const filterName = filterNameMap[this.currentFilter] || 'selected';
             this.elements.favoritesList.textContent = `No ${filterName} favorites saved yet.`;
             return;
         }
         
         this.elements.favoritesList.className = '';
         this.elements.favoritesList.innerHTML = filteredFavorites.map((fav, _index) => {
-            const generatorIcon = fav.generatorType === 'dwarven' ? '⚒️' : '⚔️';
-            const generatorLabel = fav.generatorType === 'dwarven' ? 'Dwarven' : 'Elven';
+            const type = fav.generatorType || 'elven';
+            const generatorIcon = {
+                'elven': '⚔️',
+                'dwarven': '⚒️',
+                'gnomish': '🛠️',
+                'halfling': '🗡️',
+                'orc': '🪓'
+            }[type] || '⚔️';
+            const generatorLabel = {
+                'elven': 'Elven',
+                'dwarven': 'Dwarven',
+                'gnomish': 'Gnomish',
+                'halfling': 'Halfling',
+                'orc': 'Orc'
+            }[type] || 'Elven';
             // Use original index from unfiltered array for correct removal
             const originalIndex = favorites.indexOf(fav);
             

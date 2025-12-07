@@ -118,6 +118,113 @@
     --sword-hue-rotate: 90deg; /* shift icon hue subtly green */
 }
 
+[data-generator="halfling"] {
+    --color-accent: #E0B66C;
+    --color-accent-light: #F1D39A;
+    --color-accent-dark: #C4933F;
+    --color-accent-darker: #8A6223;
+    --color-accent-secondary: #7A5A35; /* warm wood */
+    --color-accent-secondary-light: #9A7547;
+    --color-accent-secondary-dark: #5A3F24;
+    --color-accent-glow: rgba(224, 182, 108, 0.3);
+    
+    --color-bg-primary: #1b1410;
+    --color-bg-secondary: #231a13;
+    --color-bg-overlay-light: rgba(255, 255, 255, 0.05);
+    --color-bg-overlay-dark: rgba(0, 0, 0, 0.25);
+    --color-bg-overlay-darker: rgba(0, 0, 0, 0.35);
+    
+    --color-text-primary: #f1e7d7;
+    --color-text-secondary: #dfd1be;
+    --color-text-muted: #b39c82;
+    
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-accent: rgba(224, 182, 108, 0.4);
+    --color-border-accent-bright: rgba(122, 90, 53, 0.5);
+    
+    --color-info-icon: #e0b66c;
+    --color-error: rgba(255, 140, 120, 0.25);
+    --color-error-text: #ffb39a;
+    
+    --sword-hue-rotate: 25deg;
+}
+
+[data-generator="orc"] {
+    /* Charcoal + vibrant orc green, minimal red */
+    --color-accent: #4caf50; /* main green */
+    --color-accent-light: #6fce73;
+    --color-accent-dark: #2f7a34;
+    --color-accent-darker: #1e4f22;
+    --color-accent-secondary: #2f3b2f; /* dark olive/charcoal */
+    --color-accent-secondary-light: #455646;
+    --color-accent-secondary-dark: #1a211a;
+    --color-accent-glow: rgba(76, 175, 80, 0.3);
+    
+    --color-bg-primary: #0c0f0c;
+    --color-bg-secondary: #101410;
+    --color-bg-overlay-light: rgba(255, 255, 255, 0.04);
+    --color-bg-overlay-dark: rgba(0, 0, 0, 0.35);
+    --color-bg-overlay-darker: rgba(0, 0, 0, 0.45);
+    
+    --color-text-primary: #e8e3d9;
+    --color-text-secondary: #cfc6b7;
+    --color-text-muted: #9ba193;
+    
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-accent: rgba(76, 175, 80, 0.45);
+    --color-border-accent-bright: rgba(76, 175, 80, 0.65);
+    
+    --color-info-icon: #6fce73;
+    --color-error: rgba(255, 120, 120, 0.35);
+    --color-error-text: #ffb0a0;
+    
+    --sword-hue-rotate: 0deg; /* remove hue shift on axes/icons */
+}
+
+[data-generator="orc"] .controls,
+[data-generator="orc"] .result,
+[data-generator="orc"] .favorites,
+[data-generator="orc"] .educational-section {
+    border-left: 4px solid var(--color-accent);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.18),
+                0 0 16px var(--color-accent-glow);
+}
+
+[data-generator="orc"] h1,
+[data-generator="orc"] .subtitle {
+    text-shadow: none !important;
+}
+
+[data-generator="orc"] .title-sword {
+    text-shadow: none !important;
+    filter: none;
+}
+
+[data-generator="orc"] .beta-badge {
+    background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent) 65%, var(--color-accent-light) 100%);
+    color: var(--color-bg-primary);
+    border: 1px solid var(--color-accent-darker);
+    box-shadow: 0 0 8px var(--color-accent-glow);
+}
+
+[data-generator="orc"] .generate-btn-large {
+    background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent) 55%, var(--color-accent-light) 100%);
+    border: 1px solid var(--color-accent);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4),
+                0 0 16px var(--color-accent-glow);
+    color: var(--color-bg-primary);
+}
+
+[data-generator="orc"] .generate-btn-large:hover {
+    background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent-light) 40%, var(--color-accent) 100%);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45),
+                0 0 20px var(--color-accent-glow);
+}
+
+[data-generator="orc"] .generate-btn-large:focus-visible {
+    outline: 3px solid var(--color-accent-light);
+    outline-offset: 3px;
+}
 /* Copper-green accents on key cards for Gnomish */
 [data-generator="gnomish"] .controls,
 [data-generator="gnomish"] .result,
@@ -158,8 +265,8 @@
         top: 170px;
     }
     .footer-tabs {
-        /* space for three main tabs (~82px each incl. gap) */
-        top: calc(170px + (3 * 82px) + (3 * var(--spacing-sm)));
+        /* space for four main tabs; generous height to avoid overlap */
+        top: calc(170px + (4 * 100px) + (4 * var(--spacing-sm)));
     }
     .footer-tab {
         background: rgba(0,0,0,0.25);
@@ -167,7 +274,7 @@
     }
     /* Nudge main content away from tabs to avoid overlap */
     .container {
-        margin-right: 180px;
+        margin-right: 250px;
     }
 }
 
@@ -196,6 +303,52 @@
 
 [data-generator="gnomish"] .generate-btn-large:focus-visible {
     outline: 3px solid var(--color-accent-secondary-light);
+    outline-offset: 3px;
+}
+
+/* Warm halfling accents on key cards */
+[data-generator="halfling"] .controls,
+[data-generator="halfling"] .result,
+[data-generator="halfling"] .favorites,
+[data-generator="halfling"] .educational-section {
+    border-left: 4px solid var(--color-accent-secondary);
+    box-shadow: 0 0 12px rgba(224, 182, 108, 0.12),
+                0 0 14px var(--color-accent-glow);
+}
+
+[data-generator="halfling"] h1,
+[data-generator="halfling"] .subtitle {
+    text-shadow: none !important;
+}
+
+[data-generator="halfling"] .title-sword {
+    text-shadow: none !important;
+    filter: hue-rotate(25deg) saturate(1.1);
+}
+
+[data-generator="halfling"] .beta-badge {
+    background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent) 65%, var(--color-accent-light) 100%);
+    color: var(--color-bg-primary);
+    border: 1px solid var(--color-accent-darker);
+    box-shadow: 0 0 8px var(--color-accent-glow);
+}
+
+[data-generator="halfling"] .generate-btn-large {
+    background: linear-gradient(135deg, var(--color-accent-secondary-dark) 0%, var(--color-accent-secondary) 40%, var(--color-accent) 100%);
+    border: 1px solid var(--color-accent-secondary);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35),
+                0 0 16px var(--color-accent-glow);
+    color: var(--color-bg-primary);
+}
+
+[data-generator="halfling"] .generate-btn-large:hover {
+    background: linear-gradient(135deg, var(--color-accent-secondary-dark) 0%, var(--color-accent) 50%, var(--color-accent-light) 100%);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4),
+                0 0 20px var(--color-accent-glow);
+}
+
+[data-generator="halfling"] .generate-btn-large:focus-visible {
+    outline: 3px solid var(--color-accent-light);
     outline-offset: 3px;
 }
 
@@ -2010,11 +2163,13 @@ input[type="range"]::-moz-range-progress {
         z-index: 2 !important; /* below container */
     }
     .generator-tabs {
-        top: 150px !important;
+        top: 130px !important;
     }
     .footer-tabs {
-        /* 3 tabs ~64px tall + gaps + buffer */
-        top: 395px !important;
+        /* place below 4 main tabs with extra buffer */
+        top: calc(130px + (4 * 90px) + (3 * 10px) + 24px) !important;
+        width: 70px !important;
+        right: 36px !important; /* align left edge with main 80px tabs (right 26px) */
     }
     .footer-tab {
         background: rgba(0,0,0,0.25) !important;
@@ -2022,6 +2177,10 @@ input[type="range"]::-moz-range-progress {
     }
     /* Hide More tab on desktop */
     #moreTab {
+        display: none !important;
+    }
+    /* Hide mobile-only Orc entry for desktop */
+    #orcTabMore {
         display: none !important;
     }
 }
@@ -2461,6 +2620,40 @@ input[type="range"]::-moz-range-progress {
                      0 0 8px var(--color-accent-glow) !important;
     }
     
+    /* Orc tab active state */
+    #orcTab.active {
+        background: rgba(196, 79, 57, 0.2) !important;
+        border: none !important;
+        border-radius: var(--radius-md) !important;
+        box-shadow: 0 0 12px rgba(196, 79, 57, 0.35) !important,
+                    0 0 16px var(--color-accent-glow) !important;
+    }
+    
+    #orcTab.active .tab-icon,
+    #orcTab.active .tab-label {
+        color: #C44F39 !important;
+        opacity: 1 !important;
+        text-shadow: 0 0 6px rgba(196, 79, 57, 0.6) !important,
+                     0 0 8px var(--color-accent-glow) !important;
+    }
+    
+    /* Halfling tab active state - warm gold */
+    #halflingTab.active {
+        background: rgba(224, 182, 108, 0.18) !important;
+        border: none !important;
+        border-radius: var(--radius-md) !important;
+        box-shadow: 0 0 12px rgba(224, 182, 108, 0.35) !important,
+                    0 0 16px var(--color-accent-glow) !important;
+    }
+    
+    #halflingTab.active .tab-icon,
+    #halflingTab.active .tab-label {
+        color: #E0B66C !important;
+        opacity: 1 !important;
+        text-shadow: 0 0 6px rgba(224, 182, 108, 0.6) !important,
+                     0 0 8px var(--color-accent-glow) !important;
+    }
+    
     /* Footer tabs active - match generator theme */
     html[data-generator="elven"] .footer-tab.active {
         background: rgba(138, 180, 248, 0.15) !important;
@@ -2490,6 +2683,25 @@ input[type="range"]::-moz-range-progress {
     html[data-generator="gnomish"] .footer-tab.active .tab-icon,
     html[data-generator="gnomish"] .footer-tab.active .tab-label {
         color: #8BC34A !important;
+    }
+    
+    html[data-generator="orc"] .footer-tab.active {
+        background: rgba(196, 79, 57, 0.2) !important;
+        border-radius: var(--radius-md) !important;
+    }
+    
+    html[data-generator="orc"] .footer-tab.active .tab-icon,
+    html[data-generator="orc"] .footer-tab.active .tab-label {
+        color: #C44F39 !important;
+    }
+    html[data-generator="halfling"] .footer-tab.active {
+        background: rgba(224, 182, 108, 0.18) !important;
+        border-radius: var(--radius-md) !important;
+    }
+    
+    html[data-generator="halfling"] .footer-tab.active .tab-icon,
+    html[data-generator="halfling"] .footer-tab.active .tab-label {
+        color: #E0B66C !important;
     }
     
     /* Add bottom padding to body to account for fixed nav */
@@ -3052,6 +3264,10 @@ html[data-generator="dwarven"] select option {
     body.footer-tabs-open .footer-tabs {
         display: flex !important;
         bottom: 56px !important;
+    }
+    /* Hide Orc tab on primary bar to keep 5 buttons max (incl. More) */
+    #orcTab {
+        display: none !important;
     }
     .generator-tab,
     .footer-tab {

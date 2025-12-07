@@ -83,6 +83,52 @@ export async function loadGnomishGeneratorData() {
 }
 
 /**
+ * Load all required data files for the Orc generator
+ * @returns {Promise<Object>} Object containing personalNames, clanNames, epithets
+ */
+export async function loadOrcGeneratorData() {
+    try {
+        const [personalNames, clanNames, epithets] = await Promise.all([
+            loadJSON('data/orcPersonalNames.json'),
+            loadJSON('data/orcClanNames.json'),
+            loadJSON('data/orcEpithets.json')
+        ]);
+        
+        return {
+            personalNames,
+            clanNames,
+            epithets
+        };
+    } catch (error) {
+        console.error('Failed to load Orc generator data:', error);
+        throw new Error('Could not load Orc name generator data. Please refresh the page.');
+    }
+}
+
+/**
+ * Load all required data files for the Halfling generator
+ * @returns {Promise<Object>} Object containing personalNames, familyNames, nicknames
+ */
+export async function loadHalflingGeneratorData() {
+    try {
+        const [personalNames, familyNames, nicknames] = await Promise.all([
+            loadJSON('data/halflingPersonalNames.json'),
+            loadJSON('data/halflingFamilyNames.json'),
+            loadJSON('data/halflingNicknames.json')
+        ]);
+        
+        return {
+            personalNames,
+            familyNames,
+            nicknames
+        };
+    } catch (error) {
+        console.error('Failed to load Halfling generator data:', error);
+        throw new Error('Could not load Halfling name generator data. Please refresh the page.');
+    }
+}
+
+/**
  * Validate loaded component data
  * @param {Array} components - Component array to validate
  * @returns {boolean}

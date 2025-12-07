@@ -20,6 +20,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Mobile nav height/position regressions after adding the gnomish tab; buttons now occupy full width and stay anchored to the bottom
 
+## [3.2.0] - 2025-12-07
+
+### Added
+- **Halfling (Hin) Generator**: Personal + family + optional nickname; supports Lightfoot/Strongheart, Stout, Ghostwise (data pools + phonetics)
+- **Halfling UI**: Dagger tab, halfling controls (subrace, name type, gender), halfling educational section
+- **Halfling Theme**: Warm earthy/gold palette, dagger icons, tab/active states, full-width mobile nav support
+- **Loader & Data**: `loadHalflingGeneratorData` with personal/family/nickname JSON
+- **Tests**: Unit tests for `HalflingNameGenerator`; integration mocks/DOM updated for halfling tab and data
+
+### Changed
+- **Favorites Filter**: Added Gnomish and Halfling filters/badges/icons
+- **Integration**: App wiring now initializes halfling generator and tab switching, including dagger active state and bottom nav styling
+
+## [3.3.0] - 2025-12-07
+
+### Added
+- **Orc Generator (ALFA)**: Personal + clan + epithet; supports Mountain, Gray, Half-Orc, Orog; dagger/axe icon tab; warm iron theme
+- **Orc Data**: Personal names, clan names, epithets JSON pools; loader `loadOrcGeneratorData`
+- **Tests**: Unit coverage for `OrcNameGenerator`; integration updated for orc tab/mocks
+- **Data Expansion**: Added more halfling personal names; broadened pools for robustness
+
+### Changed
+- **Favorites Filter**: Added Orc filter/badge/icon
+- **Badge**: Gnomish/Halfling/Orc badges now display ALFA when active
+
 ## [3.0.2] - 2025-12-04
 
 ### Changed
