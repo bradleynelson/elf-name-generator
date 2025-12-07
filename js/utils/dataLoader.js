@@ -60,6 +60,29 @@ export async function loadDwarvenGeneratorData() {
 }
 
 /**
+ * Load all required data files for the Gnomish generator
+ * @returns {Promise<Object>} Object containing personalNames, clanNames, nicknames
+ */
+export async function loadGnomishGeneratorData() {
+    try {
+        const [personalNames, clanNames, nicknames] = await Promise.all([
+            loadJSON('data/gnomishPersonalNames.json'),
+            loadJSON('data/gnomishClanNames.json'),
+            loadJSON('data/gnomishNicknames.json')
+        ]);
+        
+        return {
+            personalNames,
+            clanNames,
+            nicknames
+        };
+    } catch (error) {
+        console.error('Failed to load Gnomish generator data:', error);
+        throw new Error('Could not load Gnomish name generator data. Please refresh the page.');
+    }
+}
+
+/**
  * Validate loaded component data
  * @param {Array} components - Component array to validate
  * @returns {boolean}

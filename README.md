@@ -1,6 +1,6 @@
 # Faerûn Name Generator
 
-A sophisticated web-based name generator for creating authentic Elven and Dwarven names following the Espruar (Elven) and Dethek (Dwarven) naming systems from Forgotten Realms D&D lore. Supports High Elves, Wood Elves, Drow (Beta), and Dwarven names!
+A sophisticated web-based name generator for creating authentic Elven, Dwarven, and Gnomish (Gnim) names following Forgotten Realms D&D lore. Supports High Elves, Wood Elves, Drow (Beta), Dwarves, and Gnomes!
 
 **Live Site:** [https://espruar.com](https://espruar.com)
 
@@ -13,7 +13,8 @@ Simply visit **[espruar.com](https://espruar.com)** to start generating authenti
 ### Generator Types
 
 **⚔️ Elven (Espruar):** Generate names following the Espruar naming system  
-**⚒️ Dwarven (Dethek):** Generate names following the Dethek naming system
+**⚒️ Dwarven (Dethek):** Generate names following the Dethek naming system  
+**⚙️ Gnomish (Gnim):** Generate names for rock/forest/deep gnomes with personal + clan + optional nickname
 
 Switch between generators using the tabs at the top of the page.
 
@@ -55,6 +56,11 @@ Switch between generators using the tabs at the top of the page.
   - **Multiple Subraces**: Supports various Dwarven subraces with appropriate naming styles
   - **Phonetic Pronunciations**: Includes pronunciation guides for generated names
 
+- **Gnomish Generator (Gnim):**
+  - **Personal + Clan + Nickname**: Full names with optional nickname; personal-only, clan-only, and nickname-only modes
+  - **Subraces**: Rock, forest, and deep gnomes with iconography (⚙️, 🌿, ⛏️)
+  - **Phonetic-friendly**: Vowel-rich, soft consonant patterns; nickname toggle via name type selection
+
 ### User Experience
 - **Moon Elf Theme**: Dark blue-purple theme with silver/moonlight palette
 - **Complexity Control**: Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
@@ -62,6 +68,8 @@ Switch between generators using the tabs at the top of the page.
 - **Favorites System**: Save your favorite names locally (browser-only, no cloud sync)
 - **Anti-Repeat Logic**: Tracks last 5 generations to reduce repeats
 - **Accessibility**: WCAG 2.1 AA compliant, screen reader support, keyboard navigation
+- **Mobile Navigation**: Full-width, scrollable bottom bar with “More” overflow for future generators
+- **Gnomish Theme**: Copper + green palette; copper beta badge and generate button
 
 ### Modern Architecture
 - **Modular ES6**: Clean separation of concerns (Core, UI, Utils, Data)
@@ -323,7 +331,12 @@ Free to use, modify, and distribute with attribution.
 
 ## 📝 Version History
 
-### v2.0 - Major Refactor (Current)
+### v3.1.0 - Gnomish Generator & Mobile Nav
+- Added Gnomish (Gnim) generator with personal/clan/nickname modes and rock/forest/deep subraces
+- Copper + green gnomish theme; updated mobile bottom nav to full-width, scrollable with “More” overflow
+- Added unit/integration coverage for gnomish generator and app wiring
+
+### v2.0 - Major Refactor
 - Modular ES6 architecture
 - Added Wood Elf support
 - Added Drow support (Beta)

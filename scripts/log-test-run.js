@@ -27,3 +27,5 @@ const entry = `[RUN] ${timestamp} - ${status}\n  Passed: ${passed}/${total}\n  F
 appendFileSync(LOG_FILE, entry, 'utf8');
 console.log(`✓ Test run logged to test-log.txt`);
 
+
+

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2025-12-07
+
+### Added
+- **Gnomish Name Generator (Gnim)** with personal/clan/nickname generation, rock/forest/deep subraces, and nickname toggle via name type (full with/without nickname, personal-only, clan-only, nickname-only)
+- **Gnomish Theme**: Copper + green palette, copper beta badge, copper generate button, subrace icons (gear for tinker, pick for deep)
+- **Gnomish Data**: Personal names, clan names, and nicknames JSON pools loaded via `loadGnomishGeneratorData`
+- **Tests**: Unit coverage for `GnomishNameGenerator`; integration updates to load/switch gnomish generator in app tests
+
+### Changed
+- **Unified UI**: Mobile bottom nav now full-width, scrollable, with “More” overflow; tabs sized evenly and pinned to bottom
+- **App Wiring**: UnifiedNameGenerator initializes gnomish generator, remembers gnomish preferences, and updates tab switching/education visibility for gnomish
+
+### Fixed
+- Mobile nav height/position regressions after adding the gnomish tab; buttons now occupy full width and stay anchored to the bottom
+
 ## [3.0.2] - 2025-12-04
 
 ### Changed

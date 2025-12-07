@@ -92,6 +92,14 @@
             <span class="tab-icon" aria-hidden="true">⚒️</span>
             <span class="tab-label">DETHEK</span>
         </button>
+        <button class="generator-tab" id="gnomishTab" aria-label="Switch to Gnomish Name Generator">
+            <span class="tab-icon" aria-hidden="true">🛠️</span>
+            <span class="tab-label">GNIM</span>
+        </button>
+        <button class="generator-tab" id="moreTab" aria-label="More generators and links" aria-expanded="false">
+            <span class="tab-icon" aria-hidden="true">⋯</span>
+            <span class="tab-label">MORE</span>
+        </button>
     </div>
     
     <!-- Footer Tabs -->
@@ -225,6 +233,38 @@
                             <div class="control-group">
                                 <label for="dwarvenGender">Gender Preference</label>
                                 <select id="dwarvenGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Gnomish-only controls (hidden by default) -->
+                        <div class="gnomish-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="gnomishSubrace">Gnomish Subrace</label>
+                                <select id="gnomishSubrace">
+                                    <option value="rock">Rock Gnome (Tinker)</option>
+                                    <option value="forest">Forest Gnome</option>
+                                    <option value="deep">Deep Gnome (Svirfneblin)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="gnomishNameType">Name Type</label>
+                                <select id="gnomishNameType">
+                                    <option value="full">Full (Personal + Clan + Nickname)</option>
+                                    <option value="full-no-nickname">Full (Personal + Clan, no nickname)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="clan">Clan Only</option>
+                                    <option value="nickname">Nickname Only</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="gnomishGender">Gender Preference</label>
+                                <select id="gnomishGender">
                                     <option value="neutral">Gender Neutral</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -870,6 +910,76 @@
             </div><!-- end accordion -->
             
         </section>
+
+        <!-- Gnomish Lore & Linguistics -->
+        <section class="educational-section" id="gnomishEducationalSection" aria-labelledby="gnomish-education-heading" style="display: none;">
+            <h2 id="gnomish-education-heading">Lore & Linguistics (Gnim)</h2>
+
+            <!-- Accordion 1: Gnome Subraces of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="gnome-subraces-content">
+                    <span class="accordion-title">🌍 Gnome Subraces of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="gnome-subraces-content">
+                    <div class="edu-card">
+                        <p>Gnomes favor bright, playful names that reflect craft, curiosity, and family pride. Nicknames are common among rock/forest gnomes, but deep gnomes use them sparingly in formal settings.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⚙️ Rock Gnomes (Tinker Traditions)</h3>
+                        <p><strong>Characteristics:</strong> Inventive, meticulous, fond of clockworks and alchemy.</p>
+                        <p><strong>Naming Style:</strong> 2–3 syllables, playful blends, frequent nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Alnib, Bryntik, Coggle, Pipwhistle</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🌿 Forest Gnomes (Green Whisperers)</h3>
+                        <p><strong>Characteristics:</strong> Reclusive, nature-linked, illusion-savvy.</p>
+                        <p><strong>Naming Style:</strong> Soft consonants, leafy/animal roots, gentle cadence.</p>
+                        <div class="example-box"><strong>Examples:</strong> Fenella, Mossik, Liriwyn, Thistle</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⛏️ Deep Gnomes (Svirfneblin)</h3>
+                        <p><strong>Characteristics:</strong> Stoic, stone-wise, wary of the Underdark.</p>
+                        <p><strong>Naming Style:</strong> Short, gravelly, fewer nicknames, earth/mineral roots.</p>
+                        <div class="example-box"><strong>Examples:</strong> Korvid, Drunn, Sparvyn, Nelbrin</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🛠️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion 2: How Gnomish Names Work -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="gnome-structure-content">
+                    <span class="accordion-title">📖 How Gnomish Names Work</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="gnome-structure-content">
+                    <div class="edu-card intro-note">
+                        <p><strong>📌 Structure:</strong> Personal + optional Nickname + Clan. Nicknames are common for rock/forest gnomes; deep gnomes often omit them in formal use.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🧩 Personal Name</h3>
+                        <p>2–3 syllables; playful consonant-vowel swings; roots tied to craft, wit, or nature.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏷️ Nickname (Optional)</h3>
+                        <p>Earned from deeds or quirks. Often inserted in quotes between personal and clan.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏠 Clan Name</h3>
+                        <p>Family pride: minerals, tools, jokes, or exploits. Combines Dethek-style roots with Common words.</p>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🛠️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
         
         <!-- Dwarven Educational Section (hidden by default) -->
         <section class="educational-section" id="dwarvenEducationalSection" style="display: none;" aria-labelledby="dwarven-education-heading">
@@ -1163,7 +1273,7 @@
         </footer>
         
         <div class="version-box">
-            <p>v3.0.2 - Last Updated 12-04-25</p>
+            <p>v3.1.0 - Last Updated 12-07-25</p>
         </div>
     </div>
 

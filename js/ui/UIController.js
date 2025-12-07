@@ -57,7 +57,7 @@ export class UIController {
     
     /**
      * Get current user preferences from controls
-     * @param {string} generatorType - 'elven' or 'dwarven'
+     * @param {string} generatorType - 'elven', 'dwarven', or 'gnomish'
      * @returns {Object}
      */
     getPreferences(generatorType = 'elven') {
@@ -70,6 +70,17 @@ export class UIController {
                 subrace: subraceSelect ? subraceSelect.value : 'general',
                 nameType: nameTypeSelect ? nameTypeSelect.value : 'full',
                 gender: genderSelect ? genderSelect.value : 'neutral'
+            };
+        } else if (generatorType === 'gnomish') {
+            const subraceSelect = document.getElementById('gnomishSubrace');
+            const nameTypeSelect = document.getElementById('gnomishNameType');
+            const genderSelect = document.getElementById('gnomishGender');
+            const nameType = nameTypeSelect ? nameTypeSelect.value : 'full';
+            return {
+                subrace: subraceSelect ? subraceSelect.value : 'rock',
+                nameType,
+                gender: genderSelect ? genderSelect.value : 'neutral',
+                includeNickname: nameType === 'full' ? true : nameType === 'full-no-nickname' ? false : true
             };
         } else {
             return {
@@ -127,12 +138,13 @@ export class UIController {
             : `Generated name: ${nameData.name}, meaning: ${plainMeaning}`;
         this.elements.result.setAttribute('aria-label', ariaLabel);
         
-        // Update breakdown (Elven only)
+        // Update breakdown
         if (generatorType === 'elven') {
             this._displayBreakdown(nameData);
-        } else {
-            // Dwarven breakdown
+        } else if (generatorType === 'dwarven') {
             this._displayDwarvenBreakdown(nameData);
+        } else if (generatorType === 'gnomish') {
+            this._displayGnomishBreakdown(nameData);
         }
         
         // Handle modifier suggestions (Elven only)
@@ -155,7 +167,7 @@ export class UIController {
                 }
             }
         } else {
-            // Hide modifiers for Dwarven
+            // Hide modifiers for non-elven
             if (this.elements.modifierSuggestionsContainer) {
                 this.elements.modifierSuggestionsContainer.classList.add('hidden');
             }
@@ -213,6 +225,26 @@ export class UIController {
             </div>`;
         }
         
+        this.elements.breakdown.innerHTML = html;
+    }
+
+    /**
+     * Display Gnomish name breakdown
+     * @private
+     */
+    _displayGnomishBreakdown(nameData) {
+        if (!this.elements.breakdown || !nameData.breakdown) return;
+        const { personal, nickname, clan } = nameData.breakdown;
+        let html = '';
+        if (personal) {
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.name} <span class="component-meaning">(${personal.meaning || ''})</span></div>`;
+        }
+        if (nickname && nickname.text) {
+            html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">(${nickname.meaning || ''})</span></div>`;
+        }
+        if (clan) {
+            html += `<div class="component"><span class="component-label">Clan:</span> ${clan.name} <span class="component-meaning">(${clan.meaning || ''})</span></div>`;
+        }
         this.elements.breakdown.innerHTML = html;
     }
     
