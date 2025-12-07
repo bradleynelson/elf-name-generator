@@ -15,7 +15,7 @@ export class HalflingNameGenerator {
         const includeNickname = nameType === 'full' || nameType === 'full_with_nickname';
         const personal = this._generatePersonalName(subrace, gender);
         const family = this._generateFamilyName(subrace);
-        const nickname = includeNickname ? this._generateNickname() : null;
+        let nickname = includeNickname ? this._generateNickname() : null;
 
         let name = '';
         let meaning = '';
@@ -30,6 +30,9 @@ export class HalflingNameGenerator {
             meaning = family.meaning || family.text;
             breakdown.family = family;
         } else if (nameType === 'nickname') {
+            if (!nickname) {
+                nickname = this._generateNickname();
+            }
             if (!nickname) {
                 throw new Error('No nicknames available for generation');
             }

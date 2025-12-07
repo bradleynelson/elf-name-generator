@@ -12,7 +12,7 @@ export class OrcNameGenerator {
             nameType = 'full'
         } = options;
 
-        const includeEpithet = nameType === 'full' || nameType === 'full-with-epithet';
+        const includeEpithet = nameType === 'full' || nameType === 'full-with-epithet' || nameType === 'epithet';
         const personal = this._generatePersonal();
         const epithet = includeEpithet ? this._generateEpithet() : null;
         const formattedEpithetText = epithet ? this._formatEpithetText(epithet.text) : null;
