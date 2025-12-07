@@ -38,7 +38,7 @@ export class UnifiedNameGenerator {
         
         // Subrace icon mapping for Dwarven generate button
         this.dwarvenSubraceIcons = {
-            'general': '✨',
+            'general': '⚒️',
             'gold-dwarf': '💰',
             'shield-dwarf': '🛡️',
             'duergar': '💀'
@@ -997,7 +997,7 @@ export class UnifiedNameGenerator {
         // Update all "Back to Generator" buttons with sparkles
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
-            btn.innerHTML = `✨ Back to Generator`;
+            btn.innerHTML = `⚡ Back to Generator`;
         });
     }
     
@@ -1008,7 +1008,7 @@ export class UnifiedNameGenerator {
     _updateDwarvenButtonIcons(subrace) {
         if (this.currentGeneratorType !== 'dwarven') return;
         
-        const icon = this.dwarvenSubraceIcons[subrace] || '✨';
+        const icon = this.dwarvenSubraceIcons[subrace] || '⚒️';
         
         const generateBtnText = document.querySelector('.generate-btn-large .generate-btn-text');
         if (generateBtnText) {
@@ -1017,7 +1017,7 @@ export class UnifiedNameGenerator {
         
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
-            btn.innerHTML = `✨ Back to Generator`;
+            btn.innerHTML = `⚡ Back to Generator`;
         });
     }
 
@@ -1036,7 +1036,7 @@ export class UnifiedNameGenerator {
 
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
-            btn.innerHTML = `🛠️ Back to Generator`;
+            btn.innerHTML = `⚡ Back to Generator`;
         });
     }
 
@@ -1055,7 +1055,7 @@ export class UnifiedNameGenerator {
 
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
-            btn.innerHTML = `🗡️ Back to Generator`;
+            btn.innerHTML = `⚡ Back to Generator`;
         });
     }
 
@@ -1074,7 +1074,7 @@ export class UnifiedNameGenerator {
 
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
-            btn.innerHTML = `${icon} Back to Generator`;
+            btn.innerHTML = `⚡ Back to Generator`;
         });
     }
     
