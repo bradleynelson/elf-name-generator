@@ -2160,14 +2160,14 @@ input[type="range"]::-moz-range-progress {
         border: none !important;
         box-shadow: none !important;
         padding: 0 !important;
-        z-index: 2 !important; /* below container */
+        z-index: 4 !important;
     }
     .generator-tabs {
-        top: 130px !important;
+        top: 100px !important;
     }
     .footer-tabs {
         /* place below 4 main tabs with extra buffer */
-        top: calc(130px + (4 * 90px) + (3 * 10px) + 24px) !important;
+        top: calc(100px + (4 * 90px) + (3 * 10px) + 15px) !important;
         width: 70px !important;
         right: 36px !important; /* align left edge with main 80px tabs (right 26px) */
     }
@@ -2182,6 +2182,20 @@ input[type="range"]::-moz-range-progress {
     /* Hide mobile-only Orc entry for desktop */
     #orcTabMore {
         display: none !important;
+    }
+}
+
+/* Desktop alignment tweak: keep tabs hugged to container on wide screens */
+@media (min-width: 1024px) {
+    /* Anchor tabs to the right edge of the centered 900px container with a small gutter */
+    .generator-tabs,
+    .footer-tabs {
+        left: calc(50% + 450px) !important; /* container half-width, no extra gutter */
+        right: auto !important;
+        transform: none !important;
+    }
+    .footer-tabs {
+        left: calc(50% + 450px) !important; /* align left edge with main tabs */
     }
 }
 
@@ -2622,18 +2636,18 @@ input[type="range"]::-moz-range-progress {
     
     /* Orc tab active state */
     #orcTab.active {
-        background: rgba(196, 79, 57, 0.2) !important;
+        background: rgba(76, 175, 80, 0.2) !important;
         border: none !important;
         border-radius: var(--radius-md) !important;
-        box-shadow: 0 0 12px rgba(196, 79, 57, 0.35) !important,
+        box-shadow: 0 0 12px rgba(76, 175, 80, 0.35) !important,
                     0 0 16px var(--color-accent-glow) !important;
     }
     
     #orcTab.active .tab-icon,
     #orcTab.active .tab-label {
-        color: #C44F39 !important;
+        color: #4CAF50 !important;
         opacity: 1 !important;
-        text-shadow: 0 0 6px rgba(196, 79, 57, 0.6) !important,
+        text-shadow: 0 0 6px rgba(76, 175, 80, 0.6) !important,
                      0 0 8px var(--color-accent-glow) !important;
     }
     
@@ -2686,13 +2700,13 @@ input[type="range"]::-moz-range-progress {
     }
     
     html[data-generator="orc"] .footer-tab.active {
-        background: rgba(196, 79, 57, 0.2) !important;
+        background: rgba(76, 175, 80, 0.2) !important;
         border-radius: var(--radius-md) !important;
     }
     
     html[data-generator="orc"] .footer-tab.active .tab-icon,
     html[data-generator="orc"] .footer-tab.active .tab-label {
-        color: #C44F39 !important;
+        color: #4CAF50 !important;
     }
     html[data-generator="halfling"] .footer-tab.active {
         background: rgba(224, 182, 108, 0.18) !important;
