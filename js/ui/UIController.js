@@ -617,11 +617,11 @@ export class UIController {
         this.elements.favoritesList.innerHTML = filteredFavorites.map((fav, _index) => {
             const type = fav.generatorType || 'elven';
             const generatorIcon = {
-                'elven': '⚔️',
+                'elven': '✨',
                 'dwarven': '⚒️',
                 'gnomish': '🛠️',
                 'halfling': '🗡️',
-                'orc': '🪓'
+                'orc': '⚔️'
             }[type] || '⚔️';
             const generatorLabel = {
                 'elven': 'Elven',
