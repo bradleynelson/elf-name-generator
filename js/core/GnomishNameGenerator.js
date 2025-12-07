@@ -33,8 +33,8 @@ export class GnomishNameGenerator {
             ? `${personal.name} "${nickname.text}" ${clan.name}`
             : `${personal.name} ${clan.name}`;
         const meaning = nickname
-            ? `${personal.meaning}; "${nickname.meaning}"; ${clan.meaning}`
-            : `${personal.meaning}; ${clan.meaning}`;
+            ? `${personal.meaning} + "${nickname.meaning}" + ${clan.meaning}`
+            : `${personal.meaning} + ${clan.meaning}`;
         const pronunciation = [personal.pronunciation, nickname?.phonetic, clan.phonetic]
             .filter(Boolean)
             .join(' · ');

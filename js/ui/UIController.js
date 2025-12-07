@@ -137,10 +137,13 @@ export class UIController {
             this.elements.nameMeaning.innerHTML = stackedMeaning;
         }
         
-        // Display pronunciation if available
-        if (nameData.pronunciation) {
-            this.elements.namePronunciation.textContent = nameData.pronunciation;
-            this.elements.namePronunciation.classList.remove('hidden');
+        // Display pronunciation if available (skip for halfling/orc since phonetics removed)
+        const canPronounce = generatorType !== 'halfling' && generatorType !== 'orc' && nameData.pronunciation;
+        if (canPronounce) {
+            if (this.elements.namePronunciation) {
+                this.elements.namePronunciation.textContent = nameData.pronunciation;
+                this.elements.namePronunciation.classList.remove('hidden');
+            }
             if (this.elements.speakerContainer) {
                 this.elements.speakerContainer.style.display = 'flex';
             }
@@ -148,9 +151,21 @@ export class UIController {
                 this.elements.speakerBtn.setAttribute('data-name', nameData.name);
             }
         } else {
-            this.elements.namePronunciation.classList.add('hidden');
+            if (this.elements.namePronunciation) {
+                this.elements.namePronunciation.textContent = generatorType === 'halfling' || generatorType === 'orc'
+                    ? 'Phonetics not supported for this generator.'
+                    : '';
+                if (generatorType === 'halfling' || generatorType === 'orc') {
+                    this.elements.namePronunciation.classList.remove('hidden');
+                } else {
+                    this.elements.namePronunciation.classList.add('hidden');
+                }
+            }
             if (this.elements.speakerContainer) {
                 this.elements.speakerContainer.style.display = 'none';
+            }
+            if (this.elements.speakerBtn) {
+                this.elements.speakerBtn.removeAttribute('data-name');
             }
         }
         
@@ -264,13 +279,15 @@ export class UIController {
         const { personal, nickname, clan } = nameData.breakdown;
         let html = '';
         if (personal) {
-            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.name} <span class="component-meaning">(${personal.meaning || ''})</span></div>`;
+            const personalText = personal.text || personal.name || personal.root || '';
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personalText} <span class="component-meaning">(${personal.meaning || personalText})</span></div>`;
         }
         if (nickname && nickname.text) {
             html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">(${nickname.meaning || ''})</span></div>`;
         }
         if (clan) {
-            html += `<div class="component"><span class="component-label">Clan:</span> ${clan.name} <span class="component-meaning">(${clan.meaning || ''})</span></div>`;
+            const clanText = clan.text || clan.name || clan.root || '';
+            html += `<div class="component"><span class="component-label">Clan:</span> ${clanText} <span class="component-meaning">(${clan.meaning || clanText})</span></div>`;
         }
         this.elements.breakdown.innerHTML = html;
     }
@@ -714,7 +731,7 @@ export class UIController {
                 'sun-elf': 'Names emphasizing Gold, Light, Nobility, and Ancient Lore (formal, 3-5 syllables)',
                 'moon-elf': 'Names emphasizing Silver, Moonlight, Stars, and Flow (lyrical, 4+ syllables)',
                 'wood-elf': 'Short, strong names (2-3 syllables) emphasizing Nature, Vigilance, and Martial Skill',
-                'drow': 'Gender-specific harsh names - Female: complex/powerful (4-6 syl), Male: short/martial (2-3 syl) - Use Gender selector below'
+                'drow': 'Gender-specific harsh names - Female: complex/powerful (4-6 syl), Male: short/martial (2-3 syl) - Use Gender selector below. Beta: this feature is functional but still in testing. Performance, accuracy, and stability may vary.'
             };
             
             if (this.elements.subraceDescription) {

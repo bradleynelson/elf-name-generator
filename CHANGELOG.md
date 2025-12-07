@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.3] - 2025-12-07
+
+### Patch
+- Added contact “Mail” tab and modal with mailto and zero-backend note.
+- Clarified ALFA/BETA tooltips, help cursors, and favorites icon/label alignment.
+- Updated disclaimer and MIT license popover styling/copyright language.
+- Fixed Gnomish component breakdown so personal/nickname/clan render separately.
+- Softened popover backgrounds and refined small-tab styling.
+
 ## [3.1.0] - 2025-12-07
 
 ### Added

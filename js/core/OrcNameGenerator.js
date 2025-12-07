@@ -54,13 +54,13 @@ export class OrcNameGenerator {
         if (!pool.length) pool = this.personalNames;
         const pick = this._randomElement(pool);
         const text = pick.text || pick.root;
-        return { text, meaning: pick.meaning || text, phonetic: pick.phonetic || text, gender: pick.gender };
+        return { text, meaning: pick.meaning || text, gender: pick.gender };
     }
 
     _generateEpithet() {
         if (!this.epithets.length) return null;
         const pick = this._randomElement(this.epithets);
-        return { text: pick.text, meaning: pick.meaning || pick.text, phonetic: pick.phonetic || pick.text };
+        return { text: pick.text, meaning: pick.meaning || pick.text };
     }
 
     _formatEpithetText(text) {
