@@ -1,12 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UnifiedNameGenerator } from '../../js/app.js';
 import { NameGenerator } from '../../js/core/NameGenerator.js';
-import { loadGeneratorData, loadDwarvenGeneratorData } from '../../js/utils/dataLoader.js';
+import { loadGeneratorData, loadDwarvenGeneratorData, loadGnomishGeneratorData, loadHalflingGeneratorData, loadOrcGeneratorData } from '../../js/utils/dataLoader.js';
 
 // Mock data loading
 vi.mock('../../js/utils/dataLoader.js', () => ({
     loadGeneratorData: vi.fn(),
     loadDwarvenGeneratorData: vi.fn(),
+    loadGnomishGeneratorData: vi.fn(),
+    loadHalflingGeneratorData: vi.fn(),
+    loadOrcGeneratorData: vi.fn(),
     validateComponents: vi.fn(() => true),
     validateConnectors: vi.fn(() => true),
     validateDwarvenFirstNames: vi.fn(() => true),
@@ -69,12 +72,49 @@ const mockDwarvenData = {
     ]
 };
 
+const mockGnomishData = {
+    personalNames: [
+        { root: 'al', prefix_text: 'Al', suffix_text: 'al', prefix_meaning: 'High', suffix_meaning: 'High', can_be_prefix: true, can_be_suffix: true, gender: 'neutral', subrace: ['rock'], prefix_phonetic: 'Ahl', suffix_phonetic: 'Ahl' }
+    ],
+    clanNames: [
+        { root: 'spark', prefix_text: 'Spark', suffix_text: 'spark', prefix_meaning: 'Spark', suffix_meaning: 'Spark', can_be_prefix: true, can_be_suffix: true, subrace: ['rock'], phonetic: 'Spahrk' }
+    ],
+    nicknames: [
+        { text: 'Cogs', meaning: 'Inventor', phonetic: 'Kogs' }
+    ]
+};
+
+const mockHalflingData = {
+    personalNames: [
+        { root: 'milo', prefix_text: 'Milo', suffix_text: 'milo', prefix_meaning: 'gracious', suffix_meaning: 'gracious', can_be_prefix: true, can_be_suffix: true, gender: 'male', subrace: ['lightfoot'], phonetic: 'MY-loh' }
+    ],
+    familyNames: [
+        { root: 'goodbarrel', text: 'Goodbarrel', meaning: 'brewkeeper', subrace: ['lightfoot'], phonetic: 'GOOD-bar-rel' }
+    ],
+    nicknames: [
+        { text: 'Quickstep', meaning: 'moves lightly', phonetic: 'KWIK-step' }
+    ]
+};
+
+const mockOrcData = {
+    personalNames: [
+        { root: 'grom', text: 'Grom', meaning: 'thunder', subrace: ['mountain'] }
+    ],
+    clanNames: [],
+    epithets: [
+        { text: 'Skull-Taker', meaning: 'claims skulls' }
+    ]
+};
+
 describe('Integration Tests - App Functionality', () => {
     beforeEach(() => {
         // Reset mocks
         vi.clearAllMocks();
         loadGeneratorData.mockResolvedValue(mockElvenData);
         loadDwarvenGeneratorData.mockResolvedValue(mockDwarvenData);
+        loadGnomishGeneratorData.mockResolvedValue(mockGnomishData);
+        loadHalflingGeneratorData.mockResolvedValue(mockHalflingData);
+        loadOrcGeneratorData.mockResolvedValue(mockOrcData);
         
         // Setup minimal DOM structure
         document.body.innerHTML = `
@@ -89,6 +129,9 @@ describe('Integration Tests - App Functionality', () => {
             <select id="style"><option value="neutral">Neutral</option></select>
             <button id="elvenTab" class="generator-tab active"></button>
             <button id="dwarvenTab" class="generator-tab"></button>
+            <button id="gnomishTab" class="generator-tab"></button>
+            <button id="halflingTab" class="generator-tab"></button>
+            <button id="orcTab" class="generator-tab"></button>
             <div id="favoritesList"></div>
             <div id="modifierSuggestionsContainer"></div>
             <div id="genderPrefixSection"></div>
@@ -98,6 +141,24 @@ describe('Integration Tests - App Functionality', () => {
             <button id="speakerBtn"></button>
             <div id="speakerContainer"></div>
             <div id="breakdown"></div>
+            <div id="gnomishEducationalSection"></div>
+            <div class="gnomish-controls">
+                <select id="gnomishSubrace"><option value="rock">Rock</option></select>
+                <select id="gnomishNameType"><option value="full">Full</option></select>
+                <select id="gnomishGender"><option value="neutral">Neutral</option></select>
+            </div>
+            <div id="halflingEducationalSection"></div>
+            <div class="halfling-controls">
+                <select id="halflingSubrace"><option value="lightfoot">Lightfoot</option></select>
+                <select id="halflingNameType"><option value="full">Full</option></select>
+                <select id="halflingGender"><option value="neutral">Neutral</option></select>
+            </div>
+            <div id="orcEducationalSection"></div>
+            <div class="orc-controls">
+                <select id="orcSubrace"><option value="mountain">Mountain</option></select>
+                <select id="orcNameType"><option value="full">Full</option><option value="personal">Personal</option><option value="epithet">Epithet</option></select>
+                <select id="orcGender"><option value="neutral">Neutral</option></select>
+            </div>
         `;
         
         // Clear localStorage
@@ -111,6 +172,9 @@ describe('Integration Tests - App Functionality', () => {
             
             expect(app.elvenGenerator).toBeDefined();
             expect(app.dwarvenGenerator).toBeDefined();
+            expect(app.gnomishGenerator).toBeDefined();
+            expect(app.halflingGenerator).toBeDefined();
+            expect(app.orcGenerator).toBeDefined();
             expect(app.ui).toBeDefined();
             expect(app.favorites).toBeDefined();
             expect(app.isInitialized).toBe(true);
@@ -188,6 +252,31 @@ describe('Integration Tests - App Functionality', () => {
             expect(app.elvenGenerator).toBeDefined();
             expect(app.elvenGenerator).toBeInstanceOf(NameGenerator);
             expect(app.dwarvenGenerator).toBeDefined();
+            expect(app.gnomishGenerator).toBeDefined();
+            expect(app.halflingGenerator).toBeDefined();
+            expect(app.orcGenerator).toBeDefined();
+        });
+
+        it('should switch to halfling when halfling tab clicked', async () => {
+            const app = new UnifiedNameGenerator();
+            await app.init();
+
+            const halflingTab = document.getElementById('halflingTab');
+            halflingTab.click();
+
+            expect(app.currentGeneratorType).toBe('halfling');
+            expect(app.currentGenerator).toBe(app.halflingGenerator);
+        });
+
+        it('should switch to orc when orc tab clicked', async () => {
+            const app = new UnifiedNameGenerator();
+            await app.init();
+
+            const orcTab = document.getElementById('orcTab');
+            orcTab.click();
+
+            expect(app.currentGeneratorType).toBe('orc');
+            expect(app.currentGenerator).toBe(app.orcGenerator);
         });
     });
 });

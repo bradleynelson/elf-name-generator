@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faerûn Name Generator | D&D Forgotten Realms - Elven & Dwarven Names</title>
-    <meta name="description" content="Generate authentic Elven and Dwarven names from Forgotten Realms D&D lore. Features Espruar (High Elves, Wood Elves, Drow) and Dethek (Gold Dwarves, Shield Dwarves, Duergar) naming systems with phonetic pronunciations.">
+    <meta name="description" content="Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarven, Gnomish, Halfling, and Orcish DnD species.">
     <meta name="keywords" content="Faerûn, D&D, Forgotten Realms, name generator, Espruar, Dethek, fantasy names, character generator, elf names, dwarf names, DnD, High Elf, Wood Elf, Drow, Gold Dwarf, Shield Dwarf, Duergar">
     
     <!-- Favicon -->
@@ -15,13 +15,13 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://espruar.com/">
     <meta property="og:title" content="Faerûn Name Generator - Elven & Dwarven Names | D&D Forgotten Realms">
-    <meta property="og:description" content="Generate authentic Elven and Dwarven names from Forgotten Realms D&D lore. Features Espruar (High Elves, Wood Elves, Drow) and Dethek (Gold Dwarves, Shield Dwarves, Duergar) naming systems with phonetic pronunciations.">
+    <meta property="og:description" content="Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarven, Gnomish, Halfling, and Orcish DnD species.">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://espruar.com/">
     <meta property="twitter:title" content="Faerûn Name Generator - Elven & Dwarven Names | D&D Forgotten Realms">
-    <meta property="twitter:description" content="Generate authentic Elven and Dwarven names from Forgotten Realms D&D lore. Features Espruar (High Elves, Wood Elves, Drow) and Dethek (Gold Dwarves, Shield Dwarves, Duergar) naming systems with phonetic pronunciations.">
+    <meta property="twitter:description" content="Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarven, Gnomish, Halfling, and Orcish DnD species.">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +36,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Elven Name Generator",
-      "description": "Generate authentic Elven names following the Espruar naming system from Forgotten Realms D&D lore. Supports High Elves, Wood Elves, and Drow with 120+ components and phonetic pronunciations.",
+      "description": "Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarven, Gnomish, Halfling, and Orcish DnD species.",
       "url": "https://espruar.com/",
       "applicationCategory": "GameApplication",
       "genre": "Fantasy, Role-Playing Game",
@@ -85,17 +85,37 @@
     <!-- Generator Tabs -->
     <div class="generator-tabs">
         <button class="generator-tab active" id="elvenTab" aria-label="Switch to Elven Name Generator">
-            <span class="tab-icon" aria-hidden="true">⚔️</span>
+            <span class="tab-icon" aria-hidden="true">✨</span>
             <span class="tab-label">ESPRUAR</span>
         </button>
         <button class="generator-tab" id="dwarvenTab" aria-label="Switch to Dwarven Name Generator">
             <span class="tab-icon" aria-hidden="true">⚒️</span>
             <span class="tab-label">DETHEK</span>
         </button>
+        <button class="generator-tab" id="gnomishTab" aria-label="Switch to Gnomish Name Generator">
+            <span class="tab-icon" aria-hidden="true">🛠️</span>
+            <span class="tab-label">GNIM</span>
+        </button>
+        <button class="generator-tab" id="halflingTab" aria-label="Switch to Halfling Name Generator">
+            <span class="tab-icon" aria-hidden="true">🗡️</span>
+            <span class="tab-label">HIN</span>
+        </button>
+        <button class="generator-tab" id="orcTab" aria-label="Switch to Orc Name Generator">
+            <span class="tab-icon" aria-hidden="true">⚔️</span>
+            <span class="tab-label">ORC</span>
+        </button>
+        <button class="generator-tab" id="moreTab" aria-label="More generators and links" aria-expanded="false">
+            <span class="tab-icon" aria-hidden="true">⋯</span>
+            <span class="tab-label">MORE</span>
+        </button>
     </div>
     
     <!-- Footer Tabs -->
     <div class="footer-tabs">
+        <button class="footer-tab" id="orcTabMore" aria-label="Switch to Orc Name Generator">
+            <span class="tab-icon" aria-hidden="true">⚔️</span>
+            <span class="tab-label">ORC</span>
+        </button>
         <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="Buy Me a Coffee - Opens in new window">
             <span class="tab-icon" aria-hidden="true">☕</span>
             <span class="tab-label">KAETH</span>
@@ -231,6 +251,111 @@
                                 </select>
                             </div>
                         </div>
+
+                        <!-- Gnomish-only controls (hidden by default) -->
+                        <div class="gnomish-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="gnomishSubrace">Gnomish Subrace</label>
+                                <select id="gnomishSubrace">
+                                    <option value="rock">Rock Gnome (Tinker)</option>
+                                    <option value="forest">Forest Gnome</option>
+                                    <option value="deep">Deep Gnome (Svirfneblin)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="gnomishNameType">Name Type</label>
+                                <select id="gnomishNameType">
+                                    <option value="full">Full (Personal + Clan + Nickname)</option>
+                                    <option value="full-no-nickname">Full (Personal + Clan, no nickname)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="clan">Clan Only</option>
+                                    <option value="nickname">Nickname Only</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="gnomishGender">Gender Preference</label>
+                                <select id="gnomishGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Halfling-only controls (hidden by default) -->
+                        <div class="halfling-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="halflingSubrace">Halfling Subrace</label>
+                                <select id="halflingSubrace">
+                                    <option value="lightfoot">Lightfoot (Nomadic)</option>
+                                    <option value="stout">Stout (Hearty)</option>
+                                    <option value="ghostwise">Ghostwise (Silent)</option>
+                                    <option value="strongheart">Strongheart (Luiren)</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="halflingNameType">Name Type</label>
+                                <select id="halflingNameType">
+                                    <option value="full">Full (Personal + Family + Nickname)</option>
+                                    <option value="full-no-nickname">Full (Personal + Family, no nickname)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="family">Family Only</option>
+                                    <option value="nickname">Nickname Only</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Nicknames are common among Lightfoot/Strongheart; Ghostwise use them less.
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="halflingGender">Gender Preference</label>
+                                <select id="halflingGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Orc-only controls (hidden by default) -->
+                        <div class="orc-controls" style="display: none;">
+                            <div class="control-group disabled-control-group">
+                                <label for="orcSubrace" class="disabled-label">Orc Kindred</label>
+                                <select id="orcSubrace" disabled>
+                                    <option value="orc">Orc (all kindreds)</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Shared pool for Mountain, Gray, Half-Orc, and Orog names.
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="orcNameType">Name Type</label>
+                                <select id="orcNameType">
+                                    <option value="full">Full (Personal + Epithet)</option>
+                                    <option value="full-with-epithet">Full (Personal + Epithet)</option>
+                                    <option value="full-no-epithet">Full (Personal only)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="epithet">Epithet Only</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Orcs favor a single name; epithets (Skull-Taker) are earned over time.
+                                </div>
+                            </div>
+
+                            <div class="control-group disabled-control-group">
+                                <label for="orcGender" class="disabled-label">Gender (shared)</label>
+                                <select id="orcGender" disabled>
+                                    <option value="neutral">Neutral (shared pool)</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Orc and half-orc names reuse the same pool; epithets aren’t gendered.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -309,6 +434,9 @@
                 <button class="filter-btn active" data-filter="all" aria-label="Show all favorites" aria-pressed="true">All</button>
                 <button class="filter-btn" data-filter="elven" aria-label="Show only Elven favorites" aria-pressed="false"><span aria-hidden="true">⚔️</span> Elven</button>
                 <button class="filter-btn" data-filter="dwarven" aria-label="Show only Dwarven favorites" aria-pressed="false"><span aria-hidden="true">⚒️</span> Dwarven</button>
+                <button class="filter-btn" data-filter="gnomish" aria-label="Show only Gnomish favorites" aria-pressed="false"><span aria-hidden="true">🛠️</span> Gnomish</button>
+                <button class="filter-btn" data-filter="halfling" aria-label="Show only Halfling favorites" aria-pressed="false"><span aria-hidden="true">🗡️</span> Halfling</button>
+                <button class="filter-btn" data-filter="orc" aria-label="Show only Orc favorites" aria-pressed="false"><span aria-hidden="true">🪓</span> Orc</button>
             </div>
             <div id="favoritesList" class="empty-favorites">
                 No favorites saved yet. Generate and save names you like!
@@ -871,6 +999,188 @@
             
         </section>
         
+        <!-- Halfling Lore & Linguistics -->
+        <section class="educational-section" id="halflingEducationalSection" aria-labelledby="halfling-education-heading" style="display: none;">
+            <h2 id="halfling-education-heading">Lore & Linguistics (Hin)</h2>
+
+            <!-- Accordion 1: Halfling Subraces of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="halfling-subraces-content">
+                    <span class="accordion-title">🌾 Halfling Subraces of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="halfling-subraces-content">
+                    <div class="edu-card">
+                        <p>Halflings (the Hin) prize comfort, community, and quick wits. Names are short, friendly, and often come with nicknames—especially among Lightfoot and Strongheart.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🗡️ Lightfoot / Strongheart</h3>
+                        <p><strong>Style:</strong> Breezy, sociable, travel-friendly; personal + family, frequent nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Milo Goodbarrel “Quickstep”, Rosa Tealeaf, Bree Underbough</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🛡️ Stout</h3>
+                        <p><strong>Style:</strong> Hearty, earthy roots; sturdy consonants; fewer nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Dann Hardbottle, Pella Thorngage</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🌫️ Ghostwise</h3>
+                        <p><strong>Style:</strong> Quiet, understated, sometimes single-word bynames; nicknames kept within the clan.</p>
+                        <div class="example-box"><strong>Examples:</strong> Whis Understep, Shaela Reedbank</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🗡️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion 2: How Halfling Names Work -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="halfling-structure-content">
+                    <span class="accordion-title">📖 How Halfling Names Work</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="halfling-structure-content">
+                    <div class="edu-card intro-note">
+                        <p><strong>📌 Structure:</strong> Personal + Family, with an optional nickname placed in quotes. Nicknames are common for Lightfoot/Strongheart, less so for Ghostwise.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🧍 Personal Name</h3>
+                        <p>Short, friendly, vowel-rich. Often one or two roots blended for warmth or agility.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏠 Family Name</h3>
+                        <p>Describes craft, homeland, or a family trait (Goodbarrel, Tealeaf, Underbough, Hardbottle).</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏷️ Nickname (Optional)</h3>
+                        <p>Earned by habit or deed (Quickstep, Kettlewhistle). Common in casual use; formal documents may drop it.</p>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🗡️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Orc Lore & Linguistics -->
+        <section class="educational-section" id="orcEducationalSection" aria-labelledby="orc-education-heading" style="display: none;">
+            <h2 id="orc-education-heading">Lore & Linguistics (Orc)</h2>
+
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="orc-subraces-content">
+                    <span class="accordion-title">⚔️ Orcish Kindreds</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="orc-subraces-content">
+                    <div class="edu-card">
+                        <p>Orc names are short, harsh, and proud. Epithets mark deeds and scars. The generator uses one shared pool across kindreds; use these notes as flavor cues.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⚔️ Mountain Orcs</h3>
+                        <p><strong>Characteristics:</strong> High crags, warbands, conquest ethos.</p>
+                        <p><strong>Naming Style:</strong> Blunt, hammer/tusk imagery; battle epithets.</p>
+                        <div class="example-box"><strong>Examples:</strong> Grom the Skull-Taker, Brakka the Stone-Cleaver</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🪓 Gray Orcs</h3>
+                        <p><strong>Characteristics:</strong> Ash wastes, long marches, oathbound faith.</p>
+                        <p><strong>Naming Style:</strong> Ash/stone motifs; epithets tied to vows or visions.</p>
+                        <div class="example-box"><strong>Examples:</strong> Vrash the Ashwalker, Grisha the Doom-Singer</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🩸 Half-Orcs</h3>
+                        <p><strong>Characteristics:</strong> Bridge Common and Orc; keep pride, temper cadence.</p>
+                        <p><strong>Naming Style:</strong> Slightly softer vowels; epithets earned but sometimes omitted in formal settings.</p>
+                        <div class="example-box"><strong>Examples:</strong> Lara the Redclaw, Dren the Grimscar</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🛡️ Orogs</h3>
+                        <p><strong>Characteristics:</strong> Disciplined shock troops; tactical leaders from the depths.</p>
+                        <p><strong>Naming Style:</strong> Martial, iron/stone themes; epithets about strategy or might.</p>
+                        <div class="example-box"><strong>Examples:</strong> Ovak the Ironfist, Harg the War-Planner</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🪓 Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gnomish Lore & Linguistics -->
+        <section class="educational-section" id="gnomishEducationalSection" aria-labelledby="gnomish-education-heading" style="display: none;">
+            <h2 id="gnomish-education-heading">Lore & Linguistics (Gnim)</h2>
+
+            <!-- Accordion 1: Gnome Subraces of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="gnome-subraces-content">
+                    <span class="accordion-title">🌍 Gnome Subraces of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="gnome-subraces-content">
+                    <div class="edu-card">
+                        <p>Gnomes favor bright, playful names that reflect craft, curiosity, and family pride. Nicknames are common among rock/forest gnomes, but deep gnomes use them sparingly in formal settings.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⚙️ Rock Gnomes (Tinker Traditions)</h3>
+                        <p><strong>Characteristics:</strong> Inventive, meticulous, fond of clockworks and alchemy.</p>
+                        <p><strong>Naming Style:</strong> 2–3 syllables, playful blends, frequent nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Alnib, Bryntik, Coggle, Pipwhistle</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🌿 Forest Gnomes (Green Whisperers)</h3>
+                        <p><strong>Characteristics:</strong> Reclusive, nature-linked, illusion-savvy.</p>
+                        <p><strong>Naming Style:</strong> Soft consonants, leafy/animal roots, gentle cadence.</p>
+                        <div class="example-box"><strong>Examples:</strong> Fenella, Mossik, Liriwyn, Thistle</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⛏️ Deep Gnomes (Svirfneblin)</h3>
+                        <p><strong>Characteristics:</strong> Stoic, stone-wise, wary of the Underdark.</p>
+                        <p><strong>Naming Style:</strong> Short, gravelly, fewer nicknames, earth/mineral roots.</p>
+                        <div class="example-box"><strong>Examples:</strong> Korvid, Drunn, Sparvyn, Nelbrin</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🛠️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion 2: How Gnomish Names Work -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="gnome-structure-content">
+                    <span class="accordion-title">📖 How Gnomish Names Work</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="gnome-structure-content">
+                    <div class="edu-card intro-note">
+                        <p><strong>📌 Structure:</strong> Personal + optional Nickname + Clan. Nicknames are common for rock/forest gnomes; deep gnomes often omit them in formal use.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🧩 Personal Name</h3>
+                        <p>2–3 syllables; playful consonant-vowel swings; roots tied to craft, wit, or nature.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏷️ Nickname (Optional)</h3>
+                        <p>Earned from deeds or quirks. Often inserted in quotes between personal and clan.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏠 Clan Name</h3>
+                        <p>Family pride: minerals, tools, jokes, or exploits. Combines Dethek-style roots with Common words.</p>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🛠️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        
         <!-- Dwarven Educational Section (hidden by default) -->
         <section class="educational-section" id="dwarvenEducationalSection" style="display: none;" aria-labelledby="dwarven-education-heading">
             <h2 id="dwarven-education-heading">Lore & Linguistics</h2>
@@ -1163,7 +1473,7 @@
         </footer>
         
         <div class="version-box">
-            <p>v3.0.2 - Last Updated 12-04-25</p>
+            <p>v3.1.0 - Last Updated 12-07-25</p>
         </div>
     </div>
 

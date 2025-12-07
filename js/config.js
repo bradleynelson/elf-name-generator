@@ -28,7 +28,17 @@ export const CONFIG = {
     
     // Default values (Dwarven)
     DWARVEN_DEFAULT_NAME_TYPE: 'full',
-    DWARVEN_DEFAULT_GENDER: 'neutral'
+    DWARVEN_DEFAULT_GENDER: 'neutral',
+
+    // Default values (Halfling)
+    HALFLING_DEFAULT_SUBRACE: 'lightfoot',
+    HALFLING_DEFAULT_NAME_TYPE: 'full',
+    HALFLING_DEFAULT_GENDER: 'neutral',
+
+    // Default values (Orc)
+    ORC_DEFAULT_SUBRACE: 'mountain',
+    ORC_DEFAULT_NAME_TYPE: 'full',
+    ORC_DEFAULT_GENDER: 'neutral'
 };
 
 // Gender modifier prefix vowels (optional - prepended to beginning)

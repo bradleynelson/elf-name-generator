@@ -1,0 +1,8 @@
+[
+  {"root":"al","prefix_text":"Al","prefix_meaning":"Noble, high","can_be_prefix":true,"can_be_suffix":false,"gender":"neutral","subrace":["rock","forest"],"prefix_phonetic":"Ahl"},
+  {"root":"bryn","prefix_text":"Bryn","prefix_meaning":"Hill","can_be_prefix":true,"can_be_suffix":false,"gender":"neutral","subrace":["rock","forest"],"prefix_phonetic":"Brin"},
+  {"root":"mip","prefix_text":null,"suffix_text":"mip","suffix_meaning":"Tinker","can_be_prefix":false,"can_be_suffix":true,"gender":"neutral","subrace":["rock"],"suffix_phonetic":"Mihp"},
+  {"root":"fen","prefix_text":"Fen","prefix_meaning":"Bright","can_be_prefix":true,"can_be_suffix":false,"gender":"neutral","subrace":["forest"],"prefix_phonetic":"Fehn"},
+  {"root":"ella","prefix_text":null,"suffix_text":"ella","suffix_meaning":"Song","can_be_prefix":false,"can_be_suffix":true,"gender":"female","subrace":["forest"],"suffix_phonetic":"Ell-uh"},
+  {"root":"tik","prefix_text":null,"suffix_text":"tik","suffix_meaning":"Quick","can_be_prefix":false,"can_be_suffix":true,"gender":"neutral","subrace":["rock","forest"],"suffix_phonetic":"Tik"}
+]

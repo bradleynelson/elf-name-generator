@@ -1,8 +1,11 @@
 // Main Application class - coordinates all modules for both Elven and Dwarven generators
 import { CONFIG } from './config.js';
-import { loadGeneratorData, validateComponents, validateConnectors, loadDwarvenGeneratorData, validateDwarvenFirstNames, validateDwarvenClanNames } from './utils/dataLoader.js';
+import { loadGeneratorData, validateComponents, validateConnectors, loadDwarvenGeneratorData, validateDwarvenFirstNames, validateDwarvenClanNames, loadGnomishGeneratorData, loadHalflingGeneratorData, loadOrcGeneratorData } from './utils/dataLoader.js';
 import { NameGenerator } from './core/NameGenerator.js';
 import { DwarvenNameGenerator } from './core/DwarvenNameGenerator.js';
+import { GnomishNameGenerator } from './core/GnomishNameGenerator.js';
+import { HalflingNameGenerator } from './core/HalflingNameGenerator.js';
+import { OrcNameGenerator } from './core/OrcNameGenerator.js';
 import { FavoritesManager } from './core/FavoritesManager.js';
 import { UIController } from './ui/UIController.js';
 
@@ -14,6 +17,9 @@ export class UnifiedNameGenerator {
     constructor() {
         this.elvenGenerator = null;
         this.dwarvenGenerator = null;
+        this.gnomishGenerator = null;
+        this.halflingGenerator = null;
+        this.orcGenerator = null;
         this.currentGenerator = null;
         this.favorites = null;
         this.ui = null;
@@ -37,6 +43,29 @@ export class UnifiedNameGenerator {
             'shield-dwarf': '🛡️',
             'duergar': '💀'
         };
+
+        // Subrace icon mapping for Gnomish generate button
+        this.gnomishSubraceIcons = {
+            'rock': '⚙️',
+            'forest': '🌿',
+            'deep': '⛏️'
+        };
+
+        // Subrace icon mapping for Halfling generate button
+        this.halflingSubraceIcons = {
+            'lightfoot': '🗡️',
+            'stout': '🛡️',
+            'ghostwise': '🌫️',
+            'strongheart': '🪶'
+        };
+
+        this.orcSubraceIcons = {
+            'orc': '⚔️',
+            'mountain': '⚔️',
+            'gray': '🪓',
+            'half-orc': '🩸',
+            'orog': '🛡️'
+        };
     }
     
     /**
@@ -45,10 +74,13 @@ export class UnifiedNameGenerator {
      */
     async init() {
         try {
-            // Load both Elven and Dwarven data
-            const [elvenData, dwarvenData] = await Promise.all([
+            // Load Elven, Dwarven, Gnomish, Halfling, and Orc data
+            const [elvenData, dwarvenData, gnomishData, halflingData, orcData] = await Promise.all([
                 loadGeneratorData(),
-                loadDwarvenGeneratorData()
+                loadDwarvenGeneratorData(),
+                loadGnomishGeneratorData(),
+                loadHalflingGeneratorData(),
+                loadOrcGeneratorData()
             ]);
             
             // Validate Elven data
@@ -67,6 +99,15 @@ export class UnifiedNameGenerator {
             // Initialize Dwarven generator
             this.dwarvenGenerator = new DwarvenNameGenerator(dwarvenData.firstNames, dwarvenData.clanNames);
             
+            // Initialize Gnomish generator
+            this.gnomishGenerator = new GnomishNameGenerator(gnomishData.personalNames, gnomishData.clanNames, gnomishData.nicknames);
+            
+            // Initialize Halfling generator
+            this.halflingGenerator = new HalflingNameGenerator(halflingData.personalNames, halflingData.familyNames, halflingData.nicknames);
+            
+            // Initialize Orc generator
+            this.orcGenerator = new OrcNameGenerator(orcData.personalNames, orcData.clanNames, orcData.epithets);
+            
             // Initialize shared modules
             this.favorites = new FavoritesManager();
             this.ui = new UIController();
@@ -78,11 +119,28 @@ export class UnifiedNameGenerator {
             // 4. Default to elven
             const initialGenerator = this._determineInitialGenerator();
             this.currentGeneratorType = initialGenerator;
-            this.currentGenerator = initialGenerator === 'dwarven' ? this.dwarvenGenerator : this.elvenGenerator;
+            this.currentGenerator = initialGenerator === 'dwarven'
+                ? this.dwarvenGenerator
+                : initialGenerator === 'gnomish'
+                    ? this.gnomishGenerator
+                    : initialGenerator === 'halfling'
+                        ? this.halflingGenerator
+                        : initialGenerator === 'orc'
+                            ? this.orcGenerator
+                            : this.elvenGenerator;
             
             // Set initial theme and generator attributes
             if (initialGenerator === 'dwarven') {
                 document.documentElement.setAttribute('data-generator', 'dwarven');
+                document.documentElement.removeAttribute('data-theme');
+            } else if (initialGenerator === 'gnomish') {
+                document.documentElement.setAttribute('data-generator', 'gnomish');
+                document.documentElement.removeAttribute('data-theme');
+            } else if (initialGenerator === 'halfling') {
+                document.documentElement.setAttribute('data-generator', 'halfling');
+                document.documentElement.removeAttribute('data-theme');
+            } else if (initialGenerator === 'orc') {
+                document.documentElement.setAttribute('data-generator', 'orc');
                 document.documentElement.removeAttribute('data-theme');
             } else {
                 document.documentElement.setAttribute('data-theme', 'moon-elf');
@@ -127,9 +185,15 @@ export class UnifiedNameGenerator {
             if (this.currentGeneratorType === 'elven') {
                 const initialSubrace = this.ui.elements.subraceSelect?.value || 'high-elf';
                 this._updateButtonIcons(initialSubrace);
-            } else {
+            } else if (this.currentGeneratorType === 'dwarven') {
                 const initialDwarvenSubrace = document.getElementById('dwarvenSubrace')?.value || 'general';
                 this._updateDwarvenButtonIcons(initialDwarvenSubrace);
+            } else if (this.currentGeneratorType === 'gnomish') {
+                const initialGnomishSubrace = document.getElementById('gnomishSubrace')?.value || 'rock';
+                this._updateGnomishButtonIcons(initialGnomishSubrace);
+            } else if (this.currentGeneratorType === 'halfling') {
+                const initialHalflingSubrace = document.getElementById('halflingSubrace')?.value || 'lightfoot';
+                this._updateHalflingButtonIcons(initialHalflingSubrace);
             }
             
             // Generate initial name (after isInitialized = true)
@@ -149,6 +213,11 @@ export class UnifiedNameGenerator {
         // Tab switching
         const elvenTab = document.getElementById('elvenTab');
         const dwarvenTab = document.getElementById('dwarvenTab');
+        const gnomishTab = document.getElementById('gnomishTab');
+        const halflingTab = document.getElementById('halflingTab');
+        const orcTab = document.getElementById('orcTab');
+        const orcTabMore = document.getElementById('orcTabMore');
+        const moreTab = document.getElementById('moreTab');
         
         if (elvenTab) {
             elvenTab.addEventListener('click', (e) => {
@@ -170,6 +239,59 @@ export class UnifiedNameGenerator {
             });
         }
         
+        if (gnomishTab) {
+            gnomishTab.addEventListener('click', (e) => {
+                if (gnomishTab.classList.contains('active')) {
+                    e.preventDefault();
+                    return;
+                }
+                document.body.classList.remove('footer-tabs-open');
+                if (moreTab) moreTab.setAttribute('aria-expanded', 'false');
+                this.switchGenerator('gnomish');
+            });
+        }
+
+        if (halflingTab) {
+            halflingTab.addEventListener('click', (e) => {
+                if (halflingTab.classList.contains('active')) {
+                    e.preventDefault();
+                    return;
+                }
+                document.body.classList.remove('footer-tabs-open');
+                if (moreTab) moreTab.setAttribute('aria-expanded', 'false');
+                this.switchGenerator('halfling');
+            });
+        }
+
+        if (orcTab) {
+            orcTab.addEventListener('click', (e) => {
+                if (orcTab.classList.contains('active')) {
+                    e.preventDefault();
+                    return;
+                }
+                document.body.classList.remove('footer-tabs-open');
+                if (moreTab) moreTab.setAttribute('aria-expanded', 'false');
+                this.switchGenerator('orc');
+            });
+        }
+
+        if (orcTabMore) {
+            orcTabMore.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.remove('footer-tabs-open');
+                if (moreTab) moreTab.setAttribute('aria-expanded', 'false');
+                this.switchGenerator('orc');
+            });
+        }
+
+        if (moreTab) {
+            moreTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isOpen = document.body.classList.toggle('footer-tabs-open');
+                moreTab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+        }
+        
         // Elven Subrace selector
         if (this.ui.elements.subraceSelect) {
             this.ui.elements.subraceSelect.addEventListener('change', (e) => {
@@ -183,6 +305,29 @@ export class UnifiedNameGenerator {
         if (dwarvenSubraceSelect) {
             dwarvenSubraceSelect.addEventListener('change', (e) => {
                 this._updateDwarvenButtonIcons(e.target.value);
+            });
+        }
+
+        // Gnomish Subrace selector
+        const gnomishSubraceSelect = document.getElementById('gnomishSubrace');
+        if (gnomishSubraceSelect) {
+            gnomishSubraceSelect.addEventListener('change', (e) => {
+                this._updateGnomishButtonIcons(e.target.value);
+            });
+        }
+
+        // Halfling Subrace selector
+        const halflingSubraceSelect = document.getElementById('halflingSubrace');
+        if (halflingSubraceSelect) {
+            halflingSubraceSelect.addEventListener('change', (e) => {
+                this._updateHalflingButtonIcons(e.target.value);
+            });
+        }
+
+        const orcSubraceSelect = document.getElementById('orcSubrace');
+        if (orcSubraceSelect) {
+            orcSubraceSelect.addEventListener('change', (e) => {
+                this._updateOrcButtonIcons(e.target.value);
             });
         }
         
@@ -317,7 +462,7 @@ export class UnifiedNameGenerator {
      * @returns {string} 'elven' or 'dwarven'
      */
     _determineInitialGenerator() {
-        // 1. Check URL parameter (?generator=dwarven or ?tab=dwarven) - highest priority
+        // 1. Check URL parameter (?generator=dwarven|gnomish or ?tab=...)
         const urlParams = new URLSearchParams(window.location.search);
         const urlGenerator = urlParams.get('generator') || urlParams.get('tab');
         if (urlGenerator === 'dwarven' || urlGenerator === 'dwarf') {
@@ -325,6 +470,18 @@ export class UnifiedNameGenerator {
         }
         if (urlGenerator === 'elven' || urlGenerator === 'elf') {
             return 'elven';
+        }
+        if (urlGenerator === 'gnomish' || urlGenerator === 'gnome') {
+            return 'gnomish';
+        }
+        if (urlGenerator === 'halfling' || urlGenerator === 'hin') {
+            return 'halfling';
+        }
+        if (urlGenerator === 'orc' || urlGenerator === 'orog') {
+            return 'orc';
+        }
+        if (urlGenerator === 'halfling' || urlGenerator === 'hin') {
+            return 'halfling';
         }
         
         // 2. Check domain (dethek.com or dethek subdomain defaults to dwarven)
@@ -337,7 +494,7 @@ export class UnifiedNameGenerator {
         
         // 3. Check localStorage preference (for other domains)
         const lastGenerator = localStorage.getItem(CONFIG.LAST_GENERATOR_KEY);
-        if (lastGenerator === 'dwarven' || lastGenerator === 'elven') {
+        if (lastGenerator === 'dwarven' || lastGenerator === 'elven' || lastGenerator === 'gnomish' || lastGenerator === 'halfling' || lastGenerator === 'orc') {
             return lastGenerator;
         }
         
@@ -373,11 +530,24 @@ export class UnifiedNameGenerator {
         // Save to localStorage
         localStorage.setItem(CONFIG.LAST_GENERATOR_KEY, generatorType);
         
+        // Close footer tabs on switch
+        document.body.classList.remove('footer-tabs-open');
+        const moreTab = document.getElementById('moreTab');
+        if (moreTab) moreTab.setAttribute('aria-expanded', 'false');
+        
         // Update favorites manager generator type
         this.favorites.setGeneratorType(generatorType);
         
         // Update current generator
-        this.currentGenerator = generatorType === 'dwarven' ? this.dwarvenGenerator : this.elvenGenerator;
+        this.currentGenerator = generatorType === 'dwarven'
+            ? this.dwarvenGenerator
+            : generatorType === 'gnomish'
+                ? this.gnomishGenerator
+                : generatorType === 'halfling'
+                    ? this.halflingGenerator
+                    : generatorType === 'orc'
+                        ? this.orcGenerator
+                        : this.elvenGenerator;
         
         // Update UI state
         this._initializeUIForGenerator(generatorType);
@@ -395,18 +565,30 @@ export class UnifiedNameGenerator {
         // Get UI elements
         const elvenTab = document.getElementById('elvenTab');
         const dwarvenTab = document.getElementById('dwarvenTab');
+        const gnomishTab = document.getElementById('gnomishTab');
+        const halflingTab = document.getElementById('halflingTab');
+        const orcTab = document.getElementById('orcTab');
         const titleName = document.querySelector('.title-name');
         const subtitle = document.querySelector('.subtitle');
         const betaLabel = document.getElementById('betaLabel');
         const elvenEducation = document.getElementById('elvenEducationalSection');
         const dwarvenEducation = document.getElementById('dwarvenEducationalSection');
+        const gnomishEducation = document.getElementById('gnomishEducationalSection');
+        const halflingEducation = document.getElementById('halflingEducationalSection');
+        const orcEducation = document.getElementById('orcEducationalSection');
         const elvenControls = document.querySelector('.elven-controls');
         const dwarvenControls = document.querySelector('.dwarven-controls');
+        const gnomishControls = document.querySelector('.gnomish-controls');
+        const halflingControls = document.querySelector('.halfling-controls');
+        const orcControls = document.querySelector('.orc-controls');
         const titleIcons = document.querySelectorAll('.title-sword');
         
         if (generatorType === 'elven') {
             if (elvenTab) elvenTab.classList.add('active');
             if (dwarvenTab) dwarvenTab.classList.remove('active');
+            if (gnomishTab) gnomishTab.classList.remove('active');
+            if (halflingTab) halflingTab.classList.remove('active');
+            if (orcTab) orcTab.classList.remove('active');
             document.documentElement.setAttribute('data-generator', 'elven');
             document.documentElement.setAttribute('data-theme', 'moon-elf');
             
@@ -415,9 +597,15 @@ export class UnifiedNameGenerator {
             if (betaLabel) betaLabel.style.display = 'none';
             if (elvenEducation) elvenEducation.style.display = 'block';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
+            if (gnomishEducation) gnomishEducation.style.display = 'none';
+            if (halflingEducation) halflingEducation.style.display = 'none';
+            if (orcEducation) orcEducation.style.display = 'none';
             if (elvenControls) elvenControls.style.display = 'block';
             if (dwarvenControls) dwarvenControls.style.display = 'none';
-            titleIcons.forEach(icon => icon.textContent = '⚔️');
+            if (gnomishControls) gnomishControls.style.display = 'none';
+            if (halflingControls) halflingControls.style.display = 'none';
+            if (orcControls) orcControls.style.display = 'none';
+            titleIcons.forEach(icon => icon.textContent = '✨');
             
             // Update button icons for current elven subrace
             const currentSubrace = this.ui.elements.subraceSelect?.value || 'high-elf';
@@ -426,21 +614,120 @@ export class UnifiedNameGenerator {
         } else if (generatorType === 'dwarven') {
             if (dwarvenTab) dwarvenTab.classList.add('active');
             if (elvenTab) elvenTab.classList.remove('active');
+            if (gnomishTab) gnomishTab.classList.remove('active');
+            if (halflingTab) halflingTab.classList.remove('active');
+            if (orcTab) orcTab.classList.remove('active');
             document.documentElement.setAttribute('data-generator', 'dwarven');
             document.documentElement.removeAttribute('data-theme');
             
             if (titleName) titleName.textContent = 'Dwarven Name';
             if (subtitle) subtitle.textContent = 'Dethek Naming System - Forgotten Realms';
-            if (betaLabel) betaLabel.style.display = 'block';
+            if (betaLabel) {
+                betaLabel.style.display = 'block';
+                betaLabel.textContent = 'BETA';
+            }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'block';
+            if (gnomishEducation) gnomishEducation.style.display = 'none';
+            if (halflingEducation) halflingEducation.style.display = 'none';
+            if (orcEducation) orcEducation.style.display = 'none';
             if (elvenControls) elvenControls.style.display = 'none';
             if (dwarvenControls) dwarvenControls.style.display = 'block';
+            if (gnomishControls) gnomishControls.style.display = 'none';
+            if (halflingControls) halflingControls.style.display = 'none';
+            if (orcControls) orcControls.style.display = 'none';
             titleIcons.forEach(icon => icon.textContent = '⚒️');
             
             // Update button icons for current dwarven subrace
             const currentDwarvenSubrace = document.getElementById('dwarvenSubrace')?.value || 'general';
             this._updateDwarvenButtonIcons(currentDwarvenSubrace);
+        } else if (generatorType === 'gnomish') {
+            if (gnomishTab) gnomishTab.classList.add('active');
+            if (elvenTab) elvenTab.classList.remove('active');
+            if (dwarvenTab) dwarvenTab.classList.remove('active');
+            if (halflingTab) halflingTab.classList.remove('active');
+            if (orcTab) orcTab.classList.remove('active');
+            document.documentElement.setAttribute('data-generator', 'gnomish');
+            document.documentElement.removeAttribute('data-theme');
+            
+            if (titleName) titleName.textContent = 'Gnomish Name';
+            if (subtitle) subtitle.textContent = 'Gnim Naming System - Forgotten Realms';
+            if (betaLabel) {
+                betaLabel.style.display = 'block';
+                betaLabel.textContent = 'ALFA';
+            }
+            if (elvenEducation) elvenEducation.style.display = 'none';
+            if (dwarvenEducation) dwarvenEducation.style.display = 'none';
+            if (gnomishEducation) gnomishEducation.style.display = 'block';
+            if (halflingEducation) halflingEducation.style.display = 'none';
+            if (orcEducation) orcEducation.style.display = 'none';
+            if (elvenControls) elvenControls.style.display = 'none';
+            if (dwarvenControls) dwarvenControls.style.display = 'none';
+            if (gnomishControls) gnomishControls.style.display = 'block';
+            if (halflingControls) halflingControls.style.display = 'none';
+            if (orcControls) orcControls.style.display = 'none';
+            titleIcons.forEach(icon => icon.textContent = '🛠️');
+
+            const currentGnomishSubrace = document.getElementById('gnomishSubrace')?.value || 'rock';
+            this._updateGnomishButtonIcons(currentGnomishSubrace);
+        } else if (generatorType === 'halfling') {
+            if (halflingTab) halflingTab.classList.add('active');
+            if (elvenTab) elvenTab.classList.remove('active');
+            if (dwarvenTab) dwarvenTab.classList.remove('active');
+            if (gnomishTab) gnomishTab.classList.remove('active');
+            if (orcTab) orcTab.classList.remove('active');
+            document.documentElement.setAttribute('data-generator', 'halfling');
+            document.documentElement.removeAttribute('data-theme');
+            
+            if (titleName) titleName.textContent = 'Halfling Name';
+            if (subtitle) subtitle.textContent = 'Hin Naming (Common Script) - Forgotten Realms';
+            if (betaLabel) {
+                betaLabel.style.display = 'block';
+                betaLabel.textContent = 'ALFA';
+            }
+            if (elvenEducation) elvenEducation.style.display = 'none';
+            if (dwarvenEducation) dwarvenEducation.style.display = 'none';
+            if (gnomishEducation) gnomishEducation.style.display = 'none';
+            if (halflingEducation) halflingEducation.style.display = 'block';
+            if (orcEducation) orcEducation.style.display = 'none';
+            if (elvenControls) elvenControls.style.display = 'none';
+            if (dwarvenControls) dwarvenControls.style.display = 'none';
+            if (gnomishControls) gnomishControls.style.display = 'none';
+            if (halflingControls) halflingControls.style.display = 'block';
+            if (orcControls) orcControls.style.display = 'none';
+            titleIcons.forEach(icon => icon.textContent = '🗡️');
+
+            const currentHalflingSubrace = document.getElementById('halflingSubrace')?.value || 'lightfoot';
+            this._updateHalflingButtonIcons(currentHalflingSubrace);
+        } else if (generatorType === 'orc') {
+            if (orcTab) orcTab.classList.add('active');
+            if (elvenTab) elvenTab.classList.remove('active');
+            if (dwarvenTab) dwarvenTab.classList.remove('active');
+            if (gnomishTab) gnomishTab.classList.remove('active');
+            if (halflingTab) halflingTab.classList.remove('active');
+            document.documentElement.setAttribute('data-generator', 'orc');
+            document.documentElement.removeAttribute('data-theme');
+            
+            if (titleName) titleName.textContent = 'Orc Name';
+            if (subtitle) subtitle.textContent = 'Orcish (Da’esh) Naming - Forgotten Realms';
+            if (betaLabel) {
+                betaLabel.style.display = 'block';
+                betaLabel.textContent = 'ALFA';
+            }
+            if (elvenEducation) elvenEducation.style.display = 'none';
+            if (dwarvenEducation) dwarvenEducation.style.display = 'none';
+            if (gnomishEducation) gnomishEducation.style.display = 'none';
+            if (halflingEducation) halflingEducation.style.display = 'none';
+            if (orcEducation) orcEducation.style.display = 'block';
+            if (elvenControls) elvenControls.style.display = 'none';
+            if (dwarvenControls) dwarvenControls.style.display = 'none';
+            if (gnomishControls) gnomishControls.style.display = 'none';
+            if (halflingControls) halflingControls.style.display = 'none';
+            if (orcControls) orcControls.style.display = 'block';
+            titleIcons.forEach(icon => icon.textContent = '⚔️');
+
+            const currentOrcSubrace = document.getElementById('orcSubrace')?.value || 'orc';
+            this._updateOrcButtonIcons(currentOrcSubrace);
         }
     }
     
@@ -725,6 +1012,63 @@ export class UnifiedNameGenerator {
         const backButtons = document.querySelectorAll('.back-to-top-btn');
         backButtons.forEach(btn => {
             btn.innerHTML = `✨ Back to Generator`;
+        });
+    }
+
+    /**
+     * Update button icons for Gnomish subrace
+     * @private
+     */
+    _updateGnomishButtonIcons(subrace) {
+        if (this.currentGeneratorType !== 'gnomish') return;
+        const icon = this.gnomishSubraceIcons[subrace] || '🛠️';
+
+        const generateBtnText = document.querySelector('.generate-btn-large .generate-btn-text');
+        if (generateBtnText) {
+            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
+        }
+
+        const backButtons = document.querySelectorAll('.back-to-top-btn');
+        backButtons.forEach(btn => {
+            btn.innerHTML = `🛠️ Back to Generator`;
+        });
+    }
+
+    /**
+     * Update button icons for Halfling subrace
+     * @private
+     */
+    _updateHalflingButtonIcons(subrace) {
+        if (this.currentGeneratorType !== 'halfling') return;
+        const icon = this.halflingSubraceIcons[subrace] || '🗡️';
+
+        const generateBtnText = document.querySelector('.generate-btn-large .generate-btn-text');
+        if (generateBtnText) {
+            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
+        }
+
+        const backButtons = document.querySelectorAll('.back-to-top-btn');
+        backButtons.forEach(btn => {
+            btn.innerHTML = `🗡️ Back to Generator`;
+        });
+    }
+
+    /**
+     * Update button icons for Orc subrace
+     * @private
+     */
+    _updateOrcButtonIcons(subrace) {
+        if (this.currentGeneratorType !== 'orc') return;
+        const icon = this.orcSubraceIcons[subrace] || this.orcSubraceIcons.orc || '⚔️';
+
+        const generateBtnText = document.querySelector('.generate-btn-large .generate-btn-text');
+        if (generateBtnText) {
+            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
+        }
+
+        const backButtons = document.querySelectorAll('.back-to-top-btn');
+        backButtons.forEach(btn => {
+            btn.innerHTML = `${icon} Back to Generator`;
         });
     }
     

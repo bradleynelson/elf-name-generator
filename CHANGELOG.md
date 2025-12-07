@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2025-12-07
+
+### Added
+- **Gnomish (Gnim) Generator (ALFA)**: Personal + clan + optional nickname; rock/forest/deep subraces; copper/green theme and icons.
+- **Halfling (Hin) Generator (ALFA)**: Personal + family + optional nickname; Lightfoot/Strongheart, Stout, Ghostwise; dagger theme.
+- **Orc Generator (ALFA)**: Personal + epithet (no surname); Mountain/Gray/Half-Orc/Orog flavoring; vibrant orc-green theme.
+- **Data & Loaders**: Gnomish, Halfling, Orc JSON pools and loaders (`loadGnomishGeneratorData`, `loadHalflingGeneratorData`, `loadOrcGeneratorData`).
+- **Tests**: Unit coverage for all three new generators; integration updates to load and switch Gnomish/Halfling/Orc tabs.
+
+### Changed
+- **UI/UX**: Mobile bottom nav is full-width with “More” overflow; Orc controls simplified (shared pool); Orcish kindred lore refreshed with examples.
+- **Favorites & Badges**: Filters/icons for Gnomish, Halfling, Orc; badges show ALFA for new species.
+- **Metadata**: Descriptions now highlight Espruar depth and multi-species support.
+
+### Fixed
+- Mobile nav height/position regressions after adding new tabs.
+
 ## [3.0.2] - 2025-12-04
 
 ### Changed
