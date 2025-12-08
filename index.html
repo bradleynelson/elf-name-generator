@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faerûn Name Generator | D&D Forgotten Realms - Elven & Dwarven Names</title>
+    <meta name="description" content="Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarf, Gnome, Halfling, and Orc species.">
+    <meta name="keywords" content="Faerûn, D&D, Forgotten Realms, name generator, Espruar, Dethek, fantasy names, character generator, elf names, dwarf names, DnD, High Elf, Wood Elf, Drow, Gold Dwarf, Shield Dwarf, Duergar">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://espruar.com/">
+    <meta property="og:title" content="Faerûn Name Generator - Elven & Dwarven Names | D&D Forgotten Realms">
+    <meta property="og:description" content="Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarf, Gnome, Halfling, and Orc species.">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://espruar.com/">
+    <meta property="twitter:title" content="Faerûn Name Generator - Elven & Dwarven Names | D&D Forgotten Realms">
+    <meta property="twitter:description" content="Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarf, Gnome, Halfling, and Orc species.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics - loaded dynamically after consent via app.js -->
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Elven Name Generator",
+      "description": "Generate authentic Elven names based on the naming conventions of Espruar in Forgotten Realms, plus limited support for Dwarf, Gnome, Halfling, and Orc species.",
+      "url": "https://espruar.com/",
+      "applicationCategory": "GameApplication",
+      "genre": "Fantasy, Role-Playing Game",
+      "keywords": "Elf names, High Elf, Wood Elf, Drow, D&D, Forgotten Realms, name generator, Espruar, fantasy names, character generator, pronunciation",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Brad Nelson",
+        "url": "https://github.com/bradleynelson"
+      }
+    }
+    </script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-labelledby="cookieBannerText" aria-live="polite" hidden>
+        <div class="cookie-banner-content">
+            <p id="cookieBannerText">This site uses cookies via Google Analytics to improve your experience. <a href="#" id="cookieLearnMore" aria-label="Learn more about cookies">Learn more</a></p>
+            <div class="cookie-banner-buttons">
+                <button id="cookieAccept" class="cookie-btn cookie-accept" aria-label="Accept analytics cookies">Accept</button>
+                <button id="cookieDecline" class="cookie-btn cookie-decline" aria-label="Decline analytics cookies">Decline</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cookie Info Modal -->
+    <div id="cookieModal" class="cookie-modal" role="dialog" aria-labelledby="cookieModalTitle" aria-modal="true" hidden>
+        <div class="cookie-modal-content">
+            <h2 id="cookieModalTitle">Privacy & Cookies</h2>
+            <p><strong>What we collect:</strong> This site uses Google Analytics to understand how visitors use the generator. This includes page views, session duration, and general location (country/city level).</p>
+            <p><strong>What we DON'T collect:</strong> We never collect personal information, names you generate, or your favorites list. Your saved names stay only on your device.</p>
+            <p><strong>Your choice:</strong> You can accept or decline analytics cookies at any time. Declining will not affect site functionality.</p>
+            <button id="cookieModalClose" class="cookie-btn cookie-accept" aria-label="Close privacy information">Close</button>
+        </div>
+    </div>
+    
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Tabs Stack (primary + secondary) -->
+    <div class="tabs-stack">
+        <div class="generator-tabs">
+            <button class="generator-tab active" id="elvenTab" aria-label="Switch to Elven Name Generator">
+                <span class="tab-icon" aria-hidden="true">✨</span>
+                <span class="tab-label">ESPRUAR</span>
+            </button>
+            <button class="generator-tab" id="dwarvenTab" aria-label="Switch to Dwarven Name Generator">
+                <span class="tab-icon" aria-hidden="true">⚒️</span>
+                <span class="tab-label">DETHEK</span>
+            </button>
+            <button class="generator-tab" id="gnomishTab" aria-label="Switch to Gnomish Name Generator">
+                <span class="tab-icon" aria-hidden="true">🛠️</span>
+                <span class="tab-label">GNIM</span>
+            </button>
+            <button class="generator-tab" id="halflingTab" aria-label="Switch to Halfling Name Generator">
+                <span class="tab-icon" aria-hidden="true">🗡️</span>
+                <span class="tab-label">HIN</span>
+            </button>
+            <button class="generator-tab" id="orcTab" aria-label="Switch to Orc Name Generator">
+                <span class="tab-icon" aria-hidden="true">⚔️</span>
+                <span class="tab-label">ORC</span>
+            </button>
+            <button class="generator-tab" id="moreTab" aria-label="More generators and links" aria-expanded="false">
+                <span class="tab-icon" aria-hidden="true">⋯</span>
+                <span class="tab-label">MORE</span>
+            </button>
+        </div>
+        
+        <div class="footer-tabs">
+            <button class="footer-tab" id="orcTabMore" aria-label="Switch to Orc Name Generator">
+                <span class="tab-icon" aria-hidden="true">⚔️</span>
+                <span class="tab-label">ORC</span>
+            </button>
+            <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="Buy Me a Coffee - Opens in new window">
+                <span class="tab-icon" aria-hidden="true">☕</span>
+                <span class="tab-label">KAETH</span>
+                <span class="external-link-icon" aria-hidden="true">⧉</span>
+            </a>
+            <a href="https://github.com/bradleynelson/elf-name-generator" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="GitHub Repository - Opens in new window">
+                <span class="tab-icon" aria-hidden="true">📦</span>
+                <span class="tab-label">REPO</span>
+                <span class="external-link-icon" aria-hidden="true">⧉</span>
+            </a>
+            <button class="footer-tab" id="contactTab" aria-label="Contact and feedback">
+                <span class="tab-icon" aria-hidden="true">✉️</span>
+                <span class="tab-label">MAIL</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Beta Badge for Dwarven Generator -->
+        <div class="beta-badge" id="betaLabel" style="visibility: hidden;">BETA</div>
+        
+        <h1>
+            <span class="title-sword">⚔️</span>
+            <div class="title-text">
+                <span class="title-name">Elven Name</span>
+                <span class="title-generator">Generator</span>
+            </div>
+            <span class="title-sword">⚔️</span>
+        </h1>
+        <div class="subtitle">Espruar Naming System - Forgotten Realms</div>
+        
+        <main id="main-content">
+        
+        <!-- Result Card -->
+        <div class="result" id="result" aria-live="polite">
+            <!-- Settings Accordion -->
+            <div class="settings-accordion">
+                <button class="settings-toggle" id="settingsToggle" aria-expanded="false" aria-controls="settingsContent">
+                    <span class="settings-toggle-title">Generation Settings</span>
+                </button>
+                <div class="settings-content" id="settingsContent" hidden>
+                    <div class="controls">
+                        <!-- Elven-only controls -->
+                        <div class="elven-controls">
+                            <div class="control-group">
+                                <label for="subrace">Elven Subrace</label>
+                                <select id="subrace">
+                                    <option value="high-elf">High Elf (General)</option>
+                                    <option value="sun-elf">├─ Sun Elf (Ar-Tel-Quessir)</option>
+                                    <option value="moon-elf">├─ Moon Elf (Teu-Tel-Quessir)</option>
+                                    <option value="wood-elf">Wood Elf (Sy-Tel-Quessir)</option>
+                                    <option value="drow">Drow \ Dark Elves (Ss'tel'Quessir) - BETA</option>
+                                </select>
+                                <div class="subrace-description" id="subraceDescription">
+                                    Balanced names drawing from all High Elf traditions
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="complexity">Name Complexity</label>
+                                <select id="complexity">
+                                    <option value="auto">Auto (Follows Phonetic Rules) - Over 5M Potential Combinations</option>
+                                    <option value="simple">Simple (Two Components) - Over 260K Potential Combinations</option>
+                                    <option value="complex">Complex Mode (Experimental) - Over 10B Potential Combinations</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="syllables">Target Syllable Count</label>
+                                <input type="range" id="syllables" min="3" max="5" value="4" step="1">
+                                <div class="range-labels">
+                                    <span>Short (2-3)</span>
+                                    <span>Ideal (3-5)</span>
+                                    <span>Long (4-6)</span>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="style">Gender/Style Preference</label>
+                                <select id="style">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="feminine">Feminine (Softer sounds)</option>
+                                    <option value="masculine">Masculine (Stronger sounds)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="interchangeable-note">
+                                <div class="interchangeable-note-title">🔄 Interchangeable Components</div>
+                                <div class="interchangeable-note-text">
+                                    This generator follows the "Lego System" - most descriptive components can be used as either prefix or suffix. Gender modifiers (-iel, -ion) and strong role suffixes (-kian, -drith) always remain as suffixes.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dwarven-only controls (hidden by default) -->
+                        <div class="dwarven-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="dwarvenSubrace">Dwarven Clan</label>
+                                <select id="dwarvenSubrace">
+                                    <option value="general">General Dwarven</option>
+                                    <option value="gold-dwarf">Gold Dwarf</option>
+                                    <option value="shield-dwarf">Shield Dwarf</option>
+                                    <option value="duergar">Duergar (Gray Dwarf)</option>
+                                </select>
+                                <div class="subrace-description" id="dwarvenSubraceDescription">
+                                    Traditional Dwarven names from all clans
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="dwarvenNameType">Name Type</label>
+                                <select id="dwarvenNameType">
+                                    <option value="full">Full Name (First + Clan) - Over 29M Potential Combinations</option>
+                                    <option value="first">First Name Only - Almost 3k Potential Combinations</option>
+                                    <option value="clan">Clan Name Only - Almost 10k Potential Combinations</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group disabled-control-group">
+                                <label for="dwarvenSyllables" class="disabled-label">Target Syllable Count</label>
+                                <input type="range" id="dwarvenSyllables" min="1" max="5" value="3" step="1" disabled title="Not available for Dwarven names">
+                                <div class="range-labels">
+                                    <span>Short</span>
+                                    <span>Medium</span>
+                                    <span>Long</span>
+                                </div>
+                                <div class="disabled-note">
+                                    ℹ️ Dwarven names follow traditional fixed-length patterns
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="dwarvenGender">Gender Preference</label>
+                                <select id="dwarvenGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Gnomish-only controls (hidden by default) -->
+                        <div class="gnomish-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="gnomishSubrace">Gnomish Subrace</label>
+                                <select id="gnomishSubrace">
+                                    <option value="rock">Rock Gnome (Tinker)</option>
+                                    <option value="forest">Forest Gnome</option>
+                                    <option value="deep">Deep Gnome (Svirfneblin)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="gnomishNameType">Name Type</label>
+                                <select id="gnomishNameType">
+                                    <option value="full">Full (Personal + Clan + Nickname)</option>
+                                    <option value="full-no-nickname">Full (Personal + Clan, no nickname)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="clan">Clan Only</option>
+                                    <option value="nickname">Nickname Only</option>
+                                </select>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="gnomishGender">Gender Preference</label>
+                                <select id="gnomishGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Halfling-only controls (hidden by default) -->
+                        <div class="halfling-controls" style="display: none;">
+                            <div class="control-group">
+                                <label for="halflingSubrace">Halfling Subrace</label>
+                                <select id="halflingSubrace">
+                                    <option value="lightfoot">Lightfoot (Nomadic)</option>
+                                    <option value="stout">Stout (Hearty)</option>
+                                    <option value="ghostwise">Ghostwise (Silent)</option>
+                                    <option value="strongheart">Strongheart (Luiren)</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="halflingNameType">Name Type</label>
+                                <select id="halflingNameType">
+                                    <option value="full">Full (Personal + Family + Nickname)</option>
+                                    <option value="full-no-nickname">Full (Personal + Family, no nickname)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="family">Family Only</option>
+                                    <option value="nickname">Nickname Only</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Nicknames are common among Lightfoot/Strongheart; Ghostwise use them less.
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="halflingGender">Gender Preference</label>
+                                <select id="halflingGender">
+                                    <option value="neutral">Gender Neutral</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Orc-only controls (hidden by default) -->
+                        <div class="orc-controls" style="display: none;">
+                            <div class="control-group disabled-control-group">
+                                <label for="orcSubrace" class="disabled-label">Orc Kindred</label>
+                                <select id="orcSubrace" disabled>
+                                    <option value="orc">Orc (all kindreds)</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Shared pool for Mountain, Gray, Half-Orc, and Orog names.
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="orcNameType">Name Type</label>
+                                <select id="orcNameType">
+                                    <option value="full">Full (Personal + Epithet)</option>
+                                    <option value="full-with-epithet">Full (Personal + Epithet)</option>
+                                    <option value="full-no-epithet">Full (Personal only)</option>
+                                    <option value="personal">Personal Only</option>
+                                    <option value="epithet">Epithet Only</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Orcs favor a single name; epithets (Skull-Taker) are earned over time.
+                                </div>
+                            </div>
+
+                            <div class="control-group disabled-control-group">
+                                <label for="orcGender" class="disabled-label">Gender (shared)</label>
+                                <select id="orcGender" disabled>
+                                    <option value="neutral">Neutral (shared pool)</option>
+                                </select>
+                                <div class="disabled-note">
+                                    Orc and half-orc names reuse the same pool; epithets aren’t gendered.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+              <button class="generate-btn-large" aria-label="Generate a new name">
+                <!-- Sparkles -->
+                <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z" fill="currentColor"/>
+                </svg>
+                <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z" fill="currentColor"/>
+                </svg>
+                <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z" fill="currentColor"/>
+                </svg>
+                <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z" fill="currentColor"/>
+                </svg>
+                <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M93.781 51.578C95 50.969 96 49.359 96 48c0-1.375-1-2.969-2.219-3.578 0 0-22.868-1.514-31.781-10.422-8.915-8.91-10.438-31.781-10.438-31.781C50.969 1 49.375 0 48 0s-2.969 1-3.594 2.219c0 0-1.5 22.87-10.406 31.781-8.908 8.913-31.781 10.422-31.781 10.422C1 45.031 0 46.625 0 48c0 1.359 1 2.969 2.219 3.578 0 0 22.873 1.51 31.781 10.422 8.906 8.911 10.406 31.781 10.406 31.781C45.031 95 46.625 96 48 96s2.969-1 3.562-2.219c0 0 1.523-22.871 10.438-31.781 8.913-8.908 31.781-10.422 31.781-10.422Z" fill="currentColor"/>
+                </svg>
+                <span class="generate-btn-text">✨ Generate Name ✨</span>
+                <span class="generate-btn-text-shimmer" aria-hidden="true">✨ Generate Name ✨</span>
+              </button>
+            
+            <div class="name-content">
+                <div class="generated-name" id="generatedName" aria-label="Generated name"></div>
+                <div class="name-pronunciation-wrapper">
+                    <div class="name-pronunciation" id="namePronunciation"></div>
+                    <div class="speaker-container" style="display: none;" id="speakerContainer">
+                        <button class="speaker-btn" id="speakerBtn" aria-label="Pronounce name" title="Pronounce name (Beta: this feature is functional but still in testing. Performance, accuracy, and stability may vary. APIs, outputs, or behavior may change without notice during the beta period.)">
+                            <span class="speaker-icon speaker-icon-default">🔈</span>
+                            <span class="speaker-icon speaker-icon-playing">🔊</span>
+                            <span class="speaker-beta">BETA</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="name-meaning" id="nameMeaning"></div>
+            </div>
+            
+            <div id="modifierSuggestionsContainer" class="vowel-suggestions hidden">
+                <div class="vowel-suggestions-title">💫 Optional Modifiers:</div>
+                
+                <div id="genderPrefixSection" class="modifier-section hidden">
+                    <div class="vowel-options" id="genderPrefixOptions"></div>
+                </div>
+                
+                <div id="finalVowelSection" class="modifier-section hidden">
+                    <div class="vowel-options" id="vowelOptions"></div>
+                </div>
+            </div>
+            
+            <div class="breakdown">
+                <button class="breakdown-toggle" id="breakdownToggle" aria-expanded="false" aria-controls="breakdownContent">
+                    <span class="breakdown-title">Component Breakdown</span>
+                </button>
+                <div class="breakdown-content" id="breakdownContent" hidden>
+                    <div id="breakdown"></div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn save-favorite" aria-label="Save current name to favorites">⭐ Save to Favorites</button>
+                <button class="action-btn copy-btn-bottom" id="copyBtnBottom" aria-label="Copy name to clipboard">📋 Copy to Clipboard</button>
+            </div>
+        </div>
+        
+        <div class="favorites">
+            <div class="favorites-title">
+                <span aria-hidden="true">⭐</span> Saved Favorites 
+                <span class="info-icon" role="button" tabindex="0" aria-expanded="false" aria-controls="favoritesInfo">
+                    <span class="info-circle" aria-hidden="true">i</span>
+                    <span class="info-popover" id="favoritesInfo" role="status">
+                        Favorites are saved locally in your browser and won't sync across devices.
+                    </span>
+                </span>
+            </div>
+            <div class="favorites-filter" role="group" aria-label="Filter favorites by generator type">
+                <button class="filter-btn active" data-filter="all" aria-label="Show all favorites" aria-pressed="true">All</button>
+                <button class="filter-btn" data-filter="elven" aria-label="Show only Elven favorites" aria-pressed="false"><span aria-hidden="true">✨</span> Elven</button>
+                <button class="filter-btn" data-filter="dwarven" aria-label="Show only Dwarven favorites" aria-pressed="false"><span aria-hidden="true">⚒️</span> Dwarven</button>
+                <button class="filter-btn" data-filter="gnomish" aria-label="Show only Gnomish favorites" aria-pressed="false"><span aria-hidden="true">🛠️</span> Gnomish</button>
+                <button class="filter-btn" data-filter="halfling" aria-label="Show only Halfling favorites" aria-pressed="false"><span aria-hidden="true">🗡️</span> Halfling</button>
+                <button class="filter-btn" data-filter="orc" aria-label="Show only Orc favorites" aria-pressed="false"><span aria-hidden="true">⚔️</span> Orc</button>
+            </div>
+            <div id="favoritesList" class="empty-favorites">
+                No favorites saved yet. Generate and save names you like!
+            </div>
+        </div>
+        </main>
+
+        <section class="educational-section" id="elvenEducationalSection" aria-labelledby="education-heading">
+            <h2 id="education-heading">Lore & Linguistics</h2>
+            
+            <!-- Accordion 1: Elven Races of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="elven-races-content">
+                    <span class="accordion-title">🌍 Elven Races of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="elven-races-content">
+            
+            <div class="edu-card">
+                <p>The elves of Faerûn are diverse, each subrace adapted to their environment and culture. While this generator focuses on High Elves (Sun and Moon), understanding the broader elven family helps contextualize naming conventions.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3><span class="moon-icon">🌙</span> Moon Elves (Teu-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Adventurous and tolerant. Pale skin with silver hair. Most common and approachable of High Elves.</p>
+                <p><strong>Naming Style:</strong> Highly lyrical with flowing, poetic sounds. Prefer 4+ syllables and soft suffixes like <em>-iel</em>, <em>-ae</em>, <em>-wyn</em>.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Silmeriel, Laendrae, Merilwyn, Ilanoth
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>☀️ Sun Elves (Ar-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Scholarly and aloof. Bronze skin with gold or red hair. Most magically gifted and traditional.</p>
+                <p><strong>Naming Style:</strong> Stately and formal. Prefer 3-5 syllables with suffixes denoting rank or mastery like <em>-lar</em>, <em>-ar</em>, <em>-ion</em>.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Aranilar, Corion, Solathan, Rhynelor
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌲 Wood Elves (Sy-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Fiercely independent and martial. Coppery skin that blends with forest environments.</p>
+                <p><strong>Naming Style:</strong> Concise and functional. Prefer 2-3 syllables focused on nature, vigilance, and martial skill. Often end in hard consonants for strength and directness.</p>
+                <p><strong>Key Differences from High Elves:</strong></p>
+                <ul>
+                    <li><strong>Shorter:</strong> 2-3 syllables (vs High Elf's 3-5)</li>
+                    <li><strong>Direct:</strong> Minimal connectors, prefer rough edges</li>
+                    <li><strong>Martial Focus:</strong> Emphasize weaponry, nature, vigilance</li>
+                    <li><strong>Hard Endings:</strong> Often end in consonants (-th, -r, -s)</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Examples:</strong> Ratheth, Sargwyn, Delith, Qilaeth
+                </div>
+                <p class="available-note"><em>✅ Wood Elf name generation is now available! Select from the subrace dropdown above.</em></p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🕷️ Drow \ Dark Elves (Ss'tel'Quessir) - BETA</h3>
+                <p><strong>Characteristics:</strong> Cruel and matriarchal society of the Underdark. Black skin with white or silver hair.</p>
+                <p><strong>Naming Style:</strong> Gender-specific with stark differences. Harsh, chaotic consonant clusters that surface elves deliberately avoid.</p>
+                <p><strong>Key Differences from High Elves:</strong></p>
+                <ul>
+                    <li><strong>Gender Split:</strong> Females = 4-6 syllables (complex, powerful), Males = 2-3 syllables (short, subservient)</li>
+                    <li><strong>Harsh Clusters:</strong> EMBRACE what High Elves avoid (gr-, kr-, dr-, tr-)</li>
+                    <li><strong>No Flow:</strong> Deliberately clumsy and jarring sound</li>
+                    <li><strong>Dark Themes:</strong> Lolth, spiders, poison, death, shadow, servitude</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Female Examples:</strong> Pharaqiltyl, Faerraen, Qiltana<br>
+                    <strong>Male Examples:</strong> Zhaunax, Drizlim, Qilgloth
+                </div>
+                <p class="beta-note"><em>⚠️ Drow name generation is in BETA with limited components (12 vs 108 High Elf components).</em></p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌊 Sea Elves (Mar-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Aquatic adaptation with green or blue-tinted skin. Isolated from surface dwellers.</p>
+                <p><strong>Naming Style:</strong> Fluid and rhythmic. Prefer 3-4 syllables using roots that mimic ocean sounds and movements.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Marilos, Wavetha, Coralen, Nauthor
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>❄️ Snow Elves (Jhaer-Tel-Quessir)</h3>
+                <p><strong>Characteristics:</strong> Arctic-adapted elves, rare and resilient.</p>
+                <p><strong>Naming Style:</strong> Concise and resilient. Prefer 2-3 syllables focused on ice and endurance roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Frostil, Gwyneth, Isarion, Rhimael
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🦅 Avariel (Winged Elves)</h3>
+                <p><strong>Characteristics:</strong> Angelic appearance with feathered wings. Extremely rare.</p>
+                <p><strong>Naming Style:</strong> Highly lyrical and airy. Prefer 3-5 syllables focused on sky and flight roots, similar to Moon Elves in flow.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Aerilaya, Skylion, Windrae, Galethon
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🐺 Lythari (Wolf-Elves)</h3>
+                <p><strong>Characteristics:</strong> Shapeshifters with wolf forms. Guardians of the wild.</p>
+                <p><strong>Naming Style:</strong> Simple and nature-based. Prefer 2 syllables focused on moon, star, or wolf roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Fenril, Luneth, Wolfar, Starwyn
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌿 Wild Elves (Ghaele)</h3>
+                <p><strong>Characteristics:</strong> Feral, primitive, and tribal. Most isolated from civilization.</p>
+                <p><strong>Naming Style:</strong> Shortest and most functional. Prefer 1-2 syllables, often simple nouns or verbs.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Fen, Thorn, Hawk, Ash
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>✨ Fey'ri (Half-Fiend Elves)</h3>
+                <p><strong>Characteristics:</strong> Demonic heritage from ancient sun elf families. Chaotic and dual-natured.</p>
+                <p><strong>Naming Style:</strong> Variable length, mixing traditional elven with harsh, demonic, or fiery roots.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Sarya'dreth, Morthil, Vyshaan, Pyrael
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 2: Understanding High Elf Names -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="understanding-elven-content">
+                    <span class="accordion-title">📖 Understanding High Elf Names</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="understanding-elven-content">
+            
+            <div class="edu-card intro-note">
+                <p><strong>📌 Note:</strong> The Espruar morphological system originated with High Elves and forms the foundation for all Elven naming conventions. This section focuses on High Elf (Sun/Moon) traditions, which emphasize lyrical flow and phonetic beauty. Wood Elves and Drow adapted these rules to match their distinct cultures—see their specific sections below for how they differ.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>📚 The Espruar Naming System</h3>
+                <p>High Elf names in Dungeons & Dragons follow the ancient Espruar language of Faerûn. At its core, the system is simple: combine a <strong>Prefix</strong> with a <strong>Suffix</strong> to create meaningful names.</p>
+                <div class="example-box">
+                    <strong>Example:</strong> Ael- (Knight/Warrior) + -eth (Honor/Spirit) = <span class="highlight">Aeleth</span> (Honorable Knight)
+                </div>
+            </div>
+
+            <div class="edu-card">
+                <h3>🔄 The "Lego System" - Interchangeability</h3>
+                <p>Most descriptive components (like <em>Mer</em> for Star or <em>Sil</em> for Silver) can function as either prefix or suffix. This flexibility creates thousands of unique combinations.</p>
+                <p><strong>Important Exception:</strong> Gender modifiers and role indicators stay in their designated positions:</p>
+                <ul>
+                    <li><strong>-iel</strong> (daughter of), <strong>-ion</strong> (son of) → Always suffixes</li>
+                    <li><strong>-kian</strong> (slayer), <strong>-drith</strong> (watcher) → Always suffixes</li>
+                    <li>Strong prefixes like <strong>Val-</strong> (valor), <strong>Cor-</strong> (ancient) → Always prefixes</li>
+                </ul>
+            </div>
+
+            <div class="edu-card">
+                <h3>🎵 The Rules of Elven Flow</h3>
+                
+                <h4>Syllable Count (3-5 is ideal)</h4>
+                <p>High Elf names balance being evocative without becoming cumbersome. The sweet spot is 3-5 syllables for first names.</p>
+                <div class="syllable-examples">
+                    <div class="syl-example">✓ <strong>Ae-la-ris</strong> (3 syllables)</div>
+                    <div class="syl-example">✓ <strong>Mer-il-i-on</strong> (4 syllables)</div>
+                    <div class="syl-example">✓ <strong>Sil-wen-dae</strong> (3 syllables)</div>
+                </div>
+
+                <h4>Liquid Consonants</h4>
+                <p>Elven names favor "liquid" and "nasal" consonants (<strong>L, R, N, M</strong>) that create flowing, melodic sounds. These letters blend naturally without needing connector bridges.</p>
+                <div class="example-box">
+                    <strong>Example:</strong> Gwyn-wyn (Pale Lady) - the repetition creates elegant symmetry
+                </div>
+
+                <h4>Connector Bridges</h4>
+                <p>When combining components with clashing consonants, connectors smooth the transition:</p>
+                <ul>
+                    <li><strong>Vowel bridges</strong> (-a-, -i-, -o-) break up harsh consonant clusters</li>
+                    <li><strong>Liquid bridges</strong> (-il-, -or-, -an-) add melodic flow</li>
+                    <li>Example: Zyl + thil = Zyl<strong>a</strong>thil (adds -a- to avoid "Zylthil")</li>
+                </ul>
+
+                <h4>Final Vowels</h4>
+                <p>A single vowel can be added to the end of a name for musicality and to reach ideal syllable count:</p>
+                <div class="vowel-guide">
+                    <div><strong>-a</strong> → Clear, bright (often feminine)</div>
+                    <div><strong>-i</strong> → Sharp, intellectual</div>
+                    <div><strong>-o</strong> → Deep, noble (rare)</div>
+                    <div><strong>-u</strong> → Mysterious, ancient</div>
+                    <div><strong>-ae</strong> → Lyrical, elegant</div>
+                </div>
+            </div>
+
+            <div class="edu-card">
+                <h3>💡 Name Examples with Breakdowns</h3>
+                <div class="name-breakdown-table">
+                    <div class="breakdown-row">
+                        <div class="breakdown-name">Aelriel</div>
+                        <div class="breakdown-parts">Ael- (warrior) + -riel (maiden)</div>
+                        <div class="breakdown-meaning">"Warrior Maiden"</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-name">Merikian</div>
+                        <div class="breakdown-parts">Mer- (star) + -i- + -kian (slayer)</div>
+                        <div class="breakdown-meaning">"Star Slayer"</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-name">Silwendae</div>
+                        <div class="breakdown-parts">Sil- (silver) + -wen (maiden) + -dae</div>
+                        <div class="breakdown-meaning">"Silver Maiden's Whisper"</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-name">Corilon</div>
+                        <div class="breakdown-parts">Cor- (ancient) + -il- + -on (descendant)</div>
+                        <div class="breakdown-meaning">"Ancient Descendant"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edu-card">
+                <h3>📏 Guidelines on Name Length</h3>
+                <p>The preference in Elven naming is for names that are long enough to be evocative but short enough to be spoken easily.</p>
+                
+                <h4>The Ideal (3-5 Syllables)</h4>
+                <p>The sweet spot for a first name is generally <strong>three to five syllables</strong>. This is the perfect length to incorporate a prefix, a connector, and a suffix without becoming awkward.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong><br>
+                    • Ae-la-ris (3 syllables)<br>
+                    • Mer-a-dri-el (4 syllables)<br>
+                    • Si-la-no-del-lia (5 syllables)
+                </div>
+
+                <h4>Avoiding Too Short</h4>
+                <p>Elven names are typically not two syllables unless they are used as a <strong>childhood nickname</strong> or are an <strong>ancient, simplified root</strong>.</p>
+                <p><strong>The Vowel Ending Effect:</strong> The addition of a single vowel to the end of a short name is a simple suffix or aesthetic ending that can provide the required extra syllable and musical finish.</p>
+                <div class="example-box">
+                    <strong>Example:</strong> Meryn (2 syllables) → Meryna (3 syllables, more formal)
+                </div>
+
+                <h4>Avoiding Too Long</h4>
+                <p>Names that exceed <strong>six syllables</strong> are generally avoided in daily conversation. They become long enough to function more as a <strong>title</strong> or a <strong>formal declaration of heritage</strong> than a name.</p>
+                
+                <h4>Full Names (First + Surname)</h4>
+                <p>When combining the first name and the surname, the full name will naturally be quite long, but it's acceptable because the surname is only used in formal settings. The most important guideline is that the first name should feel musical and easy to say for the Elf, which usually means keeping it within the 3-5 syllable range.</p>
+            </div>
+
+            <div class="edu-card">
+                <h3>👑 Elven Surname Construction</h3>
+                <p>Elven surnames typically fall into two main categories in the Forgotten Realms:</p>
+
+                <h4>1. Compound Descriptive Names (Traditional Style)</h4>
+                <p>This is the most common and traditional style, where two descriptive words are combined, often using a vowel or consonant bridge for flow.</p>
+                <p><strong>Structure:</strong> Root 1 (Noun/Adjective) + Root 2 (Noun/Adjective)</p>
+                <div class="example-box">
+                    <strong>Examples:</strong><br>
+                    • <strong>Moonwhisper</strong> - Family known for night rituals or lunar magic<br>
+                    • <strong>Starweaver</strong> - Family of astronomers or fate-readers<br>
+                    • <strong>Silverblade</strong> - Legendary family of warriors or smiths<br>
+                    • <strong>Leafdancer</strong> - Family connected to nature or forest guardianship
+                </div>
+
+                <h4>The Difference from First Names</h4>
+                <p>While a first name means <em>"Star Daughter,"</em> a surname means <em>"Star-Daughter's-Family"</em> or <em>"House of Star Daughter."</em> Surnames usually describe a family's ancient trade, favored environment, or a founding event.</p>
+
+                <h4>2. Ancient/Established Lineage Names</h4>
+                <p>These are names like <strong>Estelda</strong> or <strong>Irithyl</strong>. They were once compound names but have become so old and abbreviated over millennia that their original roots are obscured. They sound less like descriptions and more like unique names, similar to human surnames.</p>
+
+                <h4>Translation Convention</h4>
+                <p>It is common for Elven surnames to be translated into English. When translating these into English, they are almost always rendered as <strong>one combined, descriptive word</strong>. This is called <em>compounding</em>.</p>
+                <div class="important-note">
+                    <strong>What Elven Names Do NOT Do:</strong><br>
+                    Elven surnames do not typically follow the common English convention of using prepositions or modifiers (called phrasal surnames).<br><br>
+                    ❌ <em>Incorrect:</em> "of the Moon" or "from Silverwood"<br>
+                    ✅ <em>Correct:</em> "Moonborn" or "Silverwood"
+                </div>
+                <p>In summary: <strong>Elven surnames are almost always a single, compound descriptive word</strong> in translation, while human surnames are often separate words or phrases.</p>
+            </div>
+
+            <div class="edu-card">
+                <h3>✨ Lore Justification for Unconventional Names</h3>
+                <p>In the end, you might have a name you really like that breaks the rules. <strong>That's perfectly acceptable</strong> - this is supposed to be fun after all! But if you care about lore accuracy, there are plenty of in-world justifications you can use:</p>
+
+                <div class="lore-justification">
+                    <h4>Regional Variations</h4>
+                    <p>Different High Elf communities might have slightly different pronunciations or preferences. A name that seems unusual might be common in a distant elven city.</p>
+                </div>
+
+                <div class="lore-justification">
+                    <h4>Archaic Forms</h4>
+                    <p>Your character might use an ancient version of a name that predates modern Espruar conventions. Older names might have different construction rules.</p>
+                </div>
+
+                <div class="lore-justification">
+                    <h4>Mixed Heritage</h4>
+                    <p>Perhaps one parent was a Wood Elf, Drow, or even human, leading to a name that blends traditions. Half-elves especially might have names that don't perfectly follow High Elf conventions.</p>
+                </div>
+
+                <div class="lore-justification">
+                    <h4>Personal Choice</h4>
+                    <p>An elf who has lived for centuries might choose to modify their name to reflect major life events, achievements, or personal transformation. Name changes are not uncommon in elven culture.</p>
+                </div>
+
+                <div class="lore-justification">
+                    <h4>Shortened/Nickname Usage</h4>
+                    <p>What seems like a "too short" name might actually be a nickname used among friends, while the character has a longer formal name they use in official settings.</p>
+                </div>
+
+                <div class="lore-justification">
+                    <h4>Intentional Symbolism</h4>
+                    <p>Breaking a naming convention might be deliberate - perhaps to honor a fallen hero, commemorate a unique event, or make a statement about breaking from tradition.</p>
+                </div>
+
+                <p class="final-note">Remember: <strong>The most important thing is that you and your DM are happy with the name.</strong> These guidelines exist to help create authentic-feeling characters, not to restrict your creativity. Use them as a foundation, not a cage.</p>
+            </div>
+
+            <div class="edu-card">
+                <h3>🏰 Lore & Background</h3>
+                <p>This generator is based on the <strong>Espruar</strong> language spoken by High Elves (also called Sun Elves and Moon Elves) in the <strong>Forgotten Realms</strong> setting of Dungeons & Dragons. These naming conventions reflect the Elven values of musical flow, poetic symmetry, and meaningful composition.</p>
+                <p><strong>Note:</strong> This generator now includes Wood Elf and Drow (Beta) naming systems! Wood Elves prioritize concise, martial names while Drow use harsh, matriarchal patterns. See the subrace descriptions below for details on how each differs from High Elf traditions.</p>
+            </div>
+
+            <div class="edu-footer">
+                <p><em>Naming rules compiled from Forgotten Realms lore and linguistic research. The generator implements authentic Espruar morphology and onomastics etymology for creating lore-friendly High Elf characters.</em></p>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 1.5: Pronunciation Guide -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="elven-pronunciation-content">
+                    <span class="accordion-title">🎵 Elven Pronunciation Guide</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="elven-pronunciation-content">
+            
+            <div class="edu-card intro-note">
+                <p><strong>📌 How to Read Pronunciations:</strong> Each generated name now includes a phonetic guide (e.g., 🎵 Mair-ee-ehl). This section explains how to pronounce each sound in Espruar, the High Elf language.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>📖 Vowel Sounds</h3>
+                <p>Elven vowels are always pronounced clearly—there are no silent letters in Espruar.</p>
+                
+                <div class="pronunciation-table">
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">A</div>
+                        <div class="pronunciation-sound">"ah"</div>
+                        <div class="pronunciation-example">Like the 'a' in <strong>father</strong></div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">E</div>
+                        <div class="pronunciation-sound">"eh"</div>
+                        <div class="pronunciation-example">Like the 'e' in <strong>bed</strong></div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">I</div>
+                        <div class="pronunciation-sound">"ee"</div>
+                        <div class="pronunciation-example">Like the 'ee' in <strong>feel</strong> (long)</div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">O</div>
+                        <div class="pronunciation-sound">"oh"</div>
+                        <div class="pronunciation-example">Like the 'o' in <strong>go</strong></div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">U</div>
+                        <div class="pronunciation-sound">"oo"</div>
+                        <div class="pronunciation-example">Like the 'oo' in <strong>tool</strong></div>
+                    </div>
+                </div>
+                
+                <div class="important-note">
+                    <strong>No Silent E:</strong> Final 'e' is always pronounced as "eh" — Sarae = "Sah-ray-<strong>eh</strong>"
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🔀 Diphthongs (Blended Vowels)</h3>
+                
+                <div class="pronunciation-table">
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">Ae</div>
+                        <div class="pronunciation-sound">"ay"</div>
+                        <div class="pronunciation-example">Like the 'ay' in <strong>say</strong> or 'eye' in <strong>eye</strong></div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">Ie</div>
+                        <div class="pronunciation-sound">"ee-eh"</div>
+                        <div class="pronunciation-example">Two separate sounds, like <strong>see</strong> + quick "eh"</div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">Au</div>
+                        <div class="pronunciation-sound">"ow"</div>
+                        <div class="pronunciation-example">Like the 'ow' in <strong>now</strong> (rare in High Elf)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🗣️ Consonant Rules</h3>
+                
+                <div class="pronunciation-table">
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">G</div>
+                        <div class="pronunciation-sound">Always hard</div>
+                        <div class="pronunciation-example">Like 'g' in <strong>go</strong>, never soft like 'j'</div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">Qu</div>
+                        <div class="pronunciation-sound">"kw"</div>
+                        <div class="pronunciation-example">Like 'qu' in <strong>queen</strong></div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">Rh</div>
+                        <div class="pronunciation-sound">"R"</div>
+                        <div class="pronunciation-example">Pronounced as 'R' with a light roll</div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">Th</div>
+                        <div class="pronunciation-sound">Soft "th"</div>
+                        <div class="pronunciation-example">Like 'th' in <strong>thing</strong>, not "the"</div>
+                    </div>
+                    <div class="pronunciation-row">
+                        <div class="pronunciation-letter">S</div>
+                        <div class="pronunciation-sound">Always soft</div>
+                        <div class="pronunciation-example">Like 's' in <strong>sun</strong>, never as 'z'</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>📍 Syllable Stress & Flow</h3>
+                <p>Elven names flow naturally with these patterns:</p>
+                
+                <ul>
+                    <li><strong>Stress the first syllable</strong> of the root component: <strong>MAIR</strong>-ee-ehl, <strong>AY</strong>-lah-ris</li>
+                    <li><strong>Lightly roll your R's</strong> for authenticity (optional but adds flavor)</li>
+                    <li><strong>Hyphens show syllable breaks:</strong> Sihl-wehn-day = "Sihl" + "wehn" + "day"</li>
+                    <li><strong>Speak smoothly:</strong> Let liquid consonants (L, R, N, M) flow together</li>
+                </ul>
+                
+                <div class="example-box">
+                    <strong>Practice Examples:</strong><br>
+                    <strong>Meriel</strong> → 🎵 <em>Mair-ee-ehl</em> → Say: "MAIR-ee-ell"<br>
+                    <strong>Silwendae</strong> → 🎵 <em>Sihl-wehn-day</em> → Say: "SIHL-wen-day-eh"<br>
+                    <strong>Aelrith</strong> → 🎵 <em>Ayl-rihth</em> → Say: "AYL-rith"
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🎭 Drow Pronunciation Differences</h3>
+                <p>Drow (Dark Elves) intentionally use harsher sounds that surface Elves avoid:</p>
+                
+                <ul>
+                    <li><strong>Zh:</strong> Like 's' in "plea<strong>s</strong>ure" or French 'j' — Zhaun = "Zhawn"</li>
+                    <li><strong>Hard consonant clusters:</strong> Embrace the harshness — Qilgloth = "Kwihl-glohth"</li>
+                    <li><strong>X endings:</strong> Hard "ks" sound — Zhaunax = "Zhawn-<strong>ahks</strong>"</li>
+                </ul>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 2: A Brief History of the Tel'Quessir -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="elven-history-content">
+                    <span class="accordion-title">🌳 A Brief History of the Tel'Quessir</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="elven-history-content">
+            
+            <div class="edu-card">
+                <p>The elves call themselves the Tel'Quessir (The People) or the Fair Folk. They are one of Faerûn's most ancient and magical races, with a history spanning tens of thousands of years.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌟 The Arrival from Faerie</h3>
+                <p>Elves were not native to Toril. They migrated from the Feywild (the plane of primal nature and magic) in three great waves, arriving on Faerûn around 25,000 years before the present day. They brought with them powerful magic and a deep connection to the natural world.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>👑 The Golden Age</h3>
+                <p>The elves established magnificent magical empires across Faerûn, building cities of wonder and art. Their mastery of magic was unrivaled, and their kingdoms flourished for millennia. High elves ruled vast territories, wood elves guarded ancient forests, and all lived in relative harmony.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>⚔️ The Crown Wars</h3>
+                <p>For over 3,000 years, the elven empires tore themselves apart in a series of devastating civil wars known as the Crown Wars. Driven by pride, ambition, and the corrupting influence of the demon goddess Lolth, elf fought elf in conflicts that destroyed entire nations and reshaped the continent.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🕷️ The Descent of the Drow</h3>
+                <p>The followers of Lolth, who had committed unspeakable atrocities during the Crown Wars, were cursed by the Seldarine (elven gods). Their skin turned black as pitch, and they were driven into the Underdark. These Dark Elves became the Drow, twisted by millennia of hatred and Lolth's influence into the cruel civilization they are today.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🏛️ Great Kingdoms</h3>
+                <p>After the Crown Wars, the surviving elves rebuilt. Myth Drannor became the greatest elven city in history, a beacon of learning and cooperation between races. Other kingdoms like Evereska, Evermeet, and the forests of the High Forest maintained elven traditions and power.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌅 The Retreat</h3>
+                <p>Over the last millennium, as humans rose to dominance and elven populations dwindled, many elves began The Retreat—a mass exodus to the hidden island of Evermeet or back to the Feywild. This marked the elves stepping back from the wider world, leaving Faerûn to the younger races. Today, elves are a fading power, legends of a bygone golden age.</p>
+            </div>
+            
+            <div class="edu-card historical-timeline">
+                <h3>📜 Key Timeline</h3>
+                <div class="timeline-entry">
+                    <strong>~25,000 DR (Before Present):</strong> First elves arrive from the Feywild
+                </div>
+                <div class="timeline-entry">
+                    <strong>~12,000 - 9,000 DR:</strong> The Crown Wars devastate elven civilization
+                </div>
+                <div class="timeline-entry">
+                    <strong>~10,500 DR:</strong> The Descent of the Drow - banishment to the Underdark
+                </div>
+                <div class="timeline-entry">
+                    <strong>261 DR:</strong> Founding of Myth Drannor, the greatest elven city
+                </div>
+                <div class="timeline-entry">
+                    <strong>714 DR:</strong> Fall of Myth Drannor to an army of devils and demons
+                </div>
+                <div class="timeline-entry">
+                    <strong>1371 DR:</strong> The Retreat begins - mass exodus to Evermeet
+                </div>
+                <div class="timeline-entry">
+                    <strong>Present Day:</strong> Elves are a fading power, legends of a bygone age
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+        </section>
+        
+        <!-- Halfling Lore & Linguistics -->
+        <section class="educational-section" id="halflingEducationalSection" aria-labelledby="halfling-education-heading" style="display: none;">
+            <h2 id="halfling-education-heading">Lore & Linguistics (Hin)</h2>
+
+            <!-- Accordion 1: Halfling Subraces of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="halfling-subraces-content">
+                    <span class="accordion-title">🌾 Halfling Subraces of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="halfling-subraces-content">
+                    <div class="edu-card">
+                        <p>Halflings (the Hin) prize comfort, community, and quick wits. Names are short, friendly, and often come with nicknames—especially among Lightfoot and Strongheart.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🗡️ Lightfoot / Strongheart</h3>
+                        <p><strong>Style:</strong> Breezy, sociable, travel-friendly; personal + family, frequent nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Milo Goodbarrel “Quickstep”, Rosa Tealeaf, Bree Underbough</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🛡️ Stout</h3>
+                        <p><strong>Style:</strong> Hearty, earthy roots; sturdy consonants; fewer nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Dann Hardbottle, Pella Thorngage</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🌫️ Ghostwise</h3>
+                        <p><strong>Style:</strong> Quiet, understated, sometimes single-word bynames; nicknames kept within the clan.</p>
+                        <div class="example-box"><strong>Examples:</strong> Whis Understep, Shaela Reedbank</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🗡️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion 2: How Halfling Names Work -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="halfling-structure-content">
+                    <span class="accordion-title">📖 How Halfling Names Work</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="halfling-structure-content">
+                    <div class="edu-card intro-note">
+                        <p><strong>📌 Structure:</strong> Personal + Family, with an optional nickname placed in quotes. Nicknames are common for Lightfoot/Strongheart, less so for Ghostwise.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🧍 Personal Name</h3>
+                        <p>Short, friendly, vowel-rich. Often one or two roots blended for warmth or agility.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏠 Family Name</h3>
+                        <p>Describes craft, homeland, or a family trait (Goodbarrel, Tealeaf, Underbough, Hardbottle).</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏷️ Nickname (Optional)</h3>
+                        <p>Earned by habit or deed (Quickstep, Kettlewhistle). Common in casual use; formal documents may drop it.</p>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🗡️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Orc Lore & Linguistics -->
+        <section class="educational-section" id="orcEducationalSection" aria-labelledby="orc-education-heading" style="display: none;">
+            <h2 id="orc-education-heading">Lore & Linguistics (Orc)</h2>
+
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="orc-subraces-content">
+                    <span class="accordion-title">⚔️ Orcish Kindreds</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="orc-subraces-content">
+                    <div class="edu-card">
+                        <p>Orc names are short, harsh, and proud. Epithets mark deeds and scars. The generator uses one shared pool across kindreds; use these notes as flavor cues.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⚔️ Mountain Orcs</h3>
+                        <p><strong>Characteristics:</strong> High crags, warbands, conquest ethos.</p>
+                        <p><strong>Naming Style:</strong> Blunt, hammer/tusk imagery; battle epithets.</p>
+                        <div class="example-box"><strong>Examples:</strong> Grom the Skull-Taker, Brakka the Stone-Cleaver</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🪓 Gray Orcs</h3>
+                        <p><strong>Characteristics:</strong> Ash wastes, long marches, oathbound faith.</p>
+                        <p><strong>Naming Style:</strong> Ash/stone motifs; epithets tied to vows or visions.</p>
+                        <div class="example-box"><strong>Examples:</strong> Vrash the Ashwalker, Grisha the Doom-Singer</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🩸 Half-Orcs</h3>
+                        <p><strong>Characteristics:</strong> Bridge Common and Orc; keep pride, temper cadence.</p>
+                        <p><strong>Naming Style:</strong> Slightly softer vowels; epithets earned but sometimes omitted in formal settings.</p>
+                        <div class="example-box"><strong>Examples:</strong> Lara the Redclaw, Dren the Grimscar</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🛡️ Orogs</h3>
+                        <p><strong>Characteristics:</strong> Disciplined shock troops; tactical leaders from the depths.</p>
+                        <p><strong>Naming Style:</strong> Martial, iron/stone themes; epithets about strategy or might.</p>
+                        <div class="example-box"><strong>Examples:</strong> Ovak the Ironfist, Harg the War-Planner</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🪓 Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gnomish Lore & Linguistics -->
+        <section class="educational-section" id="gnomishEducationalSection" aria-labelledby="gnomish-education-heading" style="display: none;">
+            <h2 id="gnomish-education-heading">Lore & Linguistics (Gnim)</h2>
+
+            <!-- Accordion 1: Gnome Subraces of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="gnome-subraces-content">
+                    <span class="accordion-title">🌍 Gnome Subraces of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="gnome-subraces-content">
+                    <div class="edu-card">
+                        <p>Gnomes favor bright, playful names that reflect craft, curiosity, and family pride. Nicknames are common among rock/forest gnomes, but deep gnomes use them sparingly in formal settings.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⚙️ Rock Gnomes (Tinker Traditions)</h3>
+                        <p><strong>Characteristics:</strong> Inventive, meticulous, fond of clockworks and alchemy.</p>
+                        <p><strong>Naming Style:</strong> 2–3 syllables, playful blends, frequent nicknames.</p>
+                        <div class="example-box"><strong>Examples:</strong> Alnib, Bryntik, Coggle, Pipwhistle</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🌿 Forest Gnomes (Green Whisperers)</h3>
+                        <p><strong>Characteristics:</strong> Reclusive, nature-linked, illusion-savvy.</p>
+                        <p><strong>Naming Style:</strong> Soft consonants, leafy/animal roots, gentle cadence.</p>
+                        <div class="example-box"><strong>Examples:</strong> Fenella, Mossik, Liriwyn, Thistle</div>
+                    </div>
+                    <div class="edu-card">
+                        <h3>⛏️ Deep Gnomes (Svirfneblin)</h3>
+                        <p><strong>Characteristics:</strong> Stoic, stone-wise, wary of the Underdark.</p>
+                        <p><strong>Naming Style:</strong> Short, gravelly, fewer nicknames, earth/mineral roots.</p>
+                        <div class="example-box"><strong>Examples:</strong> Korvid, Drunn, Sparvyn, Nelbrin</div>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🛠️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion 2: How Gnomish Names Work -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="gnome-structure-content">
+                    <span class="accordion-title">📖 How Gnomish Names Work</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="gnome-structure-content">
+                    <div class="edu-card intro-note">
+                        <p><strong>📌 Structure:</strong> Personal + optional Nickname + Clan. Nicknames are common for rock/forest gnomes; deep gnomes often omit them in formal use.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🧩 Personal Name</h3>
+                        <p>2–3 syllables; playful consonant-vowel swings; roots tied to craft, wit, or nature.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏷️ Nickname (Optional)</h3>
+                        <p>Earned from deeds or quirks. Often inserted in quotes between personal and clan.</p>
+                    </div>
+                    <div class="edu-card">
+                        <h3>🏠 Clan Name</h3>
+                        <p>Family pride: minerals, tools, jokes, or exploits. Combines Dethek-style roots with Common words.</p>
+                    </div>
+                    <div class="accordion-footer-buttons">
+                        <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                        <button class="back-to-top-btn">🛠️ Back to Generator</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        
+        <!-- Dwarven Educational Section (hidden by default) -->
+        <section class="educational-section" id="dwarvenEducationalSection" style="display: none;" aria-labelledby="dwarven-education-heading">
+            <h2 id="dwarven-education-heading">Lore & Linguistics</h2>
+            
+            <!-- Accordion 1: Dwarven Races of Faerûn -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="dwarven-races-content">
+                    <span class="accordion-title">⛏️ Dwarven Races of Faerûn</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="dwarven-races-content">
+            
+            <div class="edu-card">
+                <p>The dwarves of Faerûn are a proud and ancient race, divided into several distinct subraces. Each has adapted to their environment while maintaining the core dwarven values of clan, craft, and honor.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>💰 Gold Dwarves (Hill Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Deep southern kingdoms, master crafters and merchants. Bronze-brown skin, lighter hair.</p>
+                <p><strong>Naming Style:</strong> Favor names with themes of wealth, honor, sun, and craftsmanship.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Goldbeard, Sunforge, Gemhammer
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🛡️ Shield Dwarves (Mountain Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Northern kingdoms, fierce warriors and defenders. Pale skin, often fair-haired.</p>
+                <p><strong>Naming Style:</strong> Favor names with themes of battle, iron, defense, and strength.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Ironshield, Battlehammer, Steelguard
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>💀 Duergar (Gray Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Underdark dwellers, cruel slavers with psionic powers. Gray skin, bald.</p>
+                <p><strong>Naming Style:</strong> Favor names with themes of darkness, stone, ash, and the deep earth.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Deepstone, Ashhammer, Darkforge
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>❄️ Arctic Dwarves (Inugaakalikurit)</h3>
+                <p><strong>Characteristics:</strong> Isolated far-north dwellers, adapted to frozen tundra. White or light blonde hair, pale skin.</p>
+                <p><strong>Naming Style:</strong> Short, harsh names reflecting ice, survival, and isolation. Often monosyllabic.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Frostbeard, Iceforge, Coldstone
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🪨 Urdunnir (Stone Dwarves)</h3>
+                <p><strong>Characteristics:</strong> Deep Underdark dwellers, even more isolated than duergar. Stone-like skin, extremely rare.</p>
+                <p><strong>Naming Style:</strong> Ancient, earth-focused names emphasizing stone, depth, and endurance.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Stoneheart, Deepdelver, Earthborn
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌿 Wild Dwarves</h3>
+                <p><strong>Characteristics:</strong> Jungle-dwelling, tribal, and primitive. Darker skin, less technologically advanced.</p>
+                <p><strong>Naming Style:</strong> Simple, direct names focused on nature, hunting, and survival. Shortest dwarven names.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Boar, Thorn, Flint, Ironjaw
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🌋 Derro</h3>
+                <p><strong>Characteristics:</strong> Insane Underdark dwellers, corrupted by ancient magic. Blue-gray skin, white hair, mad.</p>
+                <p><strong>Naming Style:</strong> Chaotic, often harsh or nonsensical. Reflect madness and cruelty.</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Grimshackle, Madstone, Gloomfang
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 2: Understanding Dwarven Names -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="understanding-dwarven-content">
+                    <span class="accordion-title">📖 Understanding Dwarven Names</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="understanding-dwarven-content">
+            
+            <div class="edu-card intro-note">
+                <p><strong>📌 Note:</strong> Dwarven names in the Dethek tradition are fundamentally different from Elven. They combine practical, descriptive elements rather than flowing syllables, reflecting dwarven culture's emphasis on heritage, craft, and deeds over poetic beauty.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Structure of Dwarven Names</h3>
+                <p>A full dwarven name consists of two parts:</p>
+                <ul>
+                    <li><strong>Given Name (First Name):</strong> Personal name given at birth, often reflecting traits or aspirations</li>
+                    <li><strong>Clan Name:</strong> Inherited family name describing the clan's trade, location, or legendary deeds</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Example:</strong> <em>Thorin Oakenshield</em><br>
+                    <strong>Thorin</strong> (first) = "Bold One"<br>
+                    <strong>Oakenshield</strong> (clan) = "Shield made of Oak"
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>First Names: Personal Identity</h3>
+                <p>Dwarven first names are constructed from meaningful roots that combine into short, strong names (typically 2-3 syllables).</p>
+                <p><strong>Common First Name Prefixes:</strong></p>
+                <p>Bar- (strong), Thorin- (bold), Dor- (steadfast), Gimli- (spark), Barin- (enduring)</p>
+                <p><strong>Common First Name Suffixes:</strong></p>
+                <p>-in (diminutive, son of), -rim (shield), -gar (spear), -dain (slayer)</p>
+                <div class="example-box">
+                    <strong>Examples:</strong> Thorin, Balin, Gimli, Dwalin, Bombur
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Clan Names: Family Legacy</h3>
+                <p>Clan names describe the family's defining characteristic - their trade, a legendary deed, their stronghold, or a notable feature.</p>
+                <p><strong>Structure:</strong> Usually [Noun/Adjective] + [Noun/Verb]</p>
+                <p><strong>Common Elements:</strong></p>
+                <ul>
+                    <li><strong>Craft:</strong> Forge, Anvil, Hammer, Smith, Gear</li>
+                    <li><strong>Materials:</strong> Iron, Steel, Stone, Gold, Mithril</li>
+                    <li><strong>Actions:</strong> -breaker, -maker, -bearer, -hewer</li>
+                    <li><strong>Places:</strong> -hall, -gate, -keep, -mountain</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Examples:</strong> Ironfoot, Stonehelm, Bronzebeard, Battlehammer, Goreblade
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Gender in Dwarven Names</h3>
+                <p>Unlike Elven names, dwarven first names can have gender-specific forms:</p>
+                <ul>
+                    <li><strong>Male:</strong> Often end in -in, -ur, -ar, -or</li>
+                    <li><strong>Female:</strong> Often end in -a, -dis, -trasa, -ja, -ra</li>
+                    <li><strong>Neutral:</strong> Many names work for both genders</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Male Examples:</strong> Thorin, Dwalin, Balin<br>
+                    <strong>Female Examples:</strong> Kathra, Amber, Diesa
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 3: Dwarven Pronunciation Guide -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="dwarven-pronunciation-content">
+                    <span class="accordion-title">🎵 Dwarven Pronunciation Guide</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="dwarven-pronunciation-content">
+            
+            <div class="edu-card">
+                <h3>Dethek Phonetic Rules</h3>
+                <p>Dwarven names are designed to be spoken with strength and clarity, even when shouted across a forge or battlefield.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Consonant Clusters</h3>
+                <p>Dwarven embraces strong consonant combinations:</p>
+                <ul>
+                    <li><strong>Initial Clusters:</strong> Thr-, Dr-, Gr-, Kr-, Br-</li>
+                    <li><strong>Medial Clusters:</strong> -ld-, -rg-, -mb-, -ng-</li>
+                    <li><strong>Final Clusters:</strong> -rd, -rn, -ld, -mb</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Examples:</strong> Thror (THROR), Gror (GROR), Groin (GRO-in)
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3>Stress Patterns</h3>
+                <p>Dwarven names typically stress the first syllable heavily:</p>
+                <ul>
+                    <li><strong>THO</strong>-rin (not tho-RIN)</li>
+                    <li><strong>BA</strong>-lin (not ba-LIN)</li>
+                    <li><strong>DWA</strong>-lin (not dwa-LIN)</li>
+                </ul>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+            <!-- Accordion 4: A Brief History of the Khazad -->
+            <div class="accordion">
+                <button class="accordion-header" aria-expanded="false" aria-controls="dwarven-history-content">
+                    <span class="accordion-title">⚒️ A Brief History of the Khazad</span>
+                    <span class="accordion-icon" aria-hidden="true">▼</span>
+                </button>
+                <div class="accordion-content" id="dwarven-history-content">
+            
+            <div class="edu-card">
+                <p>The dwarves call themselves the Stout Folk or Khazad. They are one of Faerûn's oldest and most enduring races, with a history stretching back to the world's creation.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🏔️ The First Dwarves</h3>
+                <p>According to legend, the dwarves were forged by Moradin the Soulforger from the heart of the mountains. They emerged from deep caverns fully formed, already masters of stone and metal.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>⚔️ The Great Rift</h3>
+                <p>Thousands of years ago, philosophical differences split the dwarven race. Gold dwarves retreated deep into southern mountains, while shield dwarves remained closer to the surface in the north, leading to the cultural and physical differences seen today.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>💔 The Descent of the Duergar</h3>
+                <p>The gray dwarves, or duergar, were once shield dwarves captured by mind flayers and enslaved in the Underdark. Over millennia they were twisted by psionic torment and dark magic, becoming the cruel, bitter race known today.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>🏛️ Great Kingdoms</h3>
+                <p>Throughout history, dwarves have built magnificent underground kingdoms: Gauntlgrym, Citadel Adbar, Mithral Hall, and many more. These strongholds stand as testaments to dwarven engineering and determination.</p>
+            </div>
+            
+            <div class="edu-card">
+                <h3>⚒️ Culture & Values</h3>
+                <p>Dwarven culture centers on three pillars:</p>
+                <ul>
+                    <li><strong>Clan:</strong> Family and heritage above all</li>
+                    <li><strong>Craft:</strong> Mastery of stone, metal, and creation</li>
+                    <li><strong>Honor:</strong> Keeping oaths and remembering grudges</li>
+                </ul>
+            </div>
+            
+            <div class="edu-card historical-timeline">
+                <h3>📜 Key Timeline</h3>
+                <div class="timeline-entry">
+                    <strong>~37,000 DR (Before Present):</strong> Moradin forges the first dwarves in the heart of the mountains
+                </div>
+                <div class="timeline-entry">
+                    <strong>~35,000 DR:</strong> The Founding - First great dwarven kingdoms established
+                </div>
+                <div class="timeline-entry">
+                    <strong>~12,000 DR:</strong> The Great Rift - Gold and Shield dwarves diverge
+                </div>
+                <div class="timeline-entry">
+                    <strong>~8,100 DR:</strong> Shield dwarves captured by mind flayers, beginning of the Duergar
+                </div>
+                <div class="timeline-entry">
+                    <strong>~3,389 DR:</strong> Founding of Gauntlgrym, greatest northern dwarven city
+                </div>
+                <div class="timeline-entry">
+                    <strong>1,306 DR:</strong> Founding of Mithral Hall by Clan Battlehammer
+                </div>
+                <div class="timeline-entry">
+                    <strong>1,358 DR:</strong> Fall of many dwarven kingdoms during the Time of Troubles
+                </div>
+                <div class="timeline-entry">
+                    <strong>Present Day:</strong> Dwarves endure, reclaiming lost kingdoms and forging new alliances
+                </div>
+            </div>
+            
+            <div class="accordion-footer-buttons">
+                <button class="back-to-section-btn" data-target="self">↑ Back to Top of Section</button>
+                <button class="back-to-top-btn">✨ Back to Generator</button>
+            </div>
+            
+                </div><!-- end accordion-content -->
+            </div><!-- end accordion -->
+            
+        </section>
+        
+        <footer class="disclaimer">
+            <p>This is an unofficial fan-made tool for Dungeons & Dragons® and the Forgotten Realms®.</p>
+            <p>It is not affiliated with, endorsed, sponsored, or approved by Wizards of the Coast LLC.</p>
+            <p>Dungeons & Dragons®, Forgotten Realms®, Faerûn®, and related trademarks and lore are the property of Wizards of the Coast LLC.</p>
+            <p>The algorithms, code, and interface design used on this site are original works © 2025 Bradley Nelson and are released under the 
+                <span class="license-popover-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="mitLicense">
+                    MIT License
+                    <span class="license-popover" id="mitLicense" role="dialog" aria-label="MIT License">
+                        <strong>MIT License</strong><br><br>
+                        Copyright (c) 2025 Brad Nelson<br><br>
+                        Permission is hereby granted, free of charge, to any person obtaining a copy
+                        of this software and associated documentation files (the "Software"), to deal
+                        in the Software without restriction, including without limitation the rights
+                        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                        copies of the Software, and to permit persons to whom the Software is
+                        furnished to do so, subject to the following conditions:<br><br>
+                        The above copyright notice and this permission notice shall be included in all
+                        copies or substantial portions of the Software.<br><br>
+                        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                        SOFTWARE.
+                    </span>
+                </span>.
+            </p>
+            <p>Per MIT terms, any copies or derivative works must retain the original copyright notice and license text.</p>
+        </footer>
+        
+        <div class="version-box">
+            <p>v3.1.4a - Last Updated 12-07-25</p>
+        </div>
+    </div>
+
+    <!-- Main application script - now using ES6 modules -->
+    <script type="module" src="js/app.js"></script>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal" hidden role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="contactTitle">Contact</h2>
+                <button class="modal-close" id="contactClose" aria-label="Close contact dialog">×</button>
+            </div>
+            <p class="modal-body-text muted">
+                Email <strong class="modal-email">contact@espruar.com</strong> for feedback, inquiries, requests, or bug reports.
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="modal-secondary" id="contactCancel">Close</button>
+                <a class="modal-primary" href="mailto:contact@espruar.com?subject=Espruar%20Contact" aria-label="Email contact@espruar.com">Open Email</a>
+            </div>
+            <p class="modal-note subrace-description" id="contactNote">GitHub Pages has zero-backend support for email forms.</p>
+        </div>
+    </div>
+</body>
+</html>

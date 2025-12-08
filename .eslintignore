@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Test coverage
+coverage/
+
+# Build outputs
+dist/
+build/
+
+# Config files
+*.config.js
+vitest.config.js
+
+# Data files (not code)
+data/
+*.json
+
+# Logs
+*.log
+test-log.txt
+test-results.txt
+
+# Scripts (optional - can lint these if needed)
+# scripts/
+
+# Large generated files
+.eslintcache
+
+
+

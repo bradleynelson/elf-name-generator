@@ -1,0 +1,12 @@
+[
+  { "root": "ironmaw", "text": "Ironmaw", "meaning": "jaw of iron", "subrace": ["mountain"], "phonetic": "EYE-ern-maw" },
+  { "root": "bloodtusk", "text": "Bloodtusk", "meaning": "tusks crimsoned", "subrace": ["mountain", "gray"], "phonetic": "BLUD-tusk" },
+  { "root": "skullcleaver", "text": "Skullcleaver", "meaning": "hewer of skulls", "subrace": ["mountain"], "phonetic": "SKUHL-klee-ver" },
+  { "root": "ashwalker", "text": "Ashwalker", "meaning": "treads the wastes", "subrace": ["gray"], "phonetic": "ASH-walk-er" },
+  { "root": "blackfang", "text": "Blackfang", "meaning": "obsidian tooth", "subrace": ["gray", "orog"], "phonetic": "BLAK-fang" },
+  { "root": "stormhand", "text": "Stormhand", "meaning": "hand of storms", "subrace": ["mountain", "half-orc"], "phonetic": "STORM-hand" },
+  { "root": "bonebreaker", "text": "Bonebreaker", "meaning": "breaker of bones", "subrace": ["mountain", "orog"], "phonetic": "BOHN-bray-ker" },
+  { "root": "redclaw", "text": "Redclaw", "meaning": "claws stained red", "subrace": ["half-orc", "mountain"], "phonetic": "RED-klaw" },
+  { "root": "stonefury", "text": "Stonefury", "meaning": "wrath of stone", "subrace": ["gray"], "phonetic": "STOHN-fyur-ee" },
+  { "root": "grimscar", "text": "Grimscar", "meaning": "scarred grimly", "subrace": ["half-orc"], "phonetic": "GRIM-skar" }
+]

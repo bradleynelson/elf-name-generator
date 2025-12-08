@@ -1,0 +1,129 @@
+[
+  {
+    "text": "-a-",
+    "function": "Simple vowel bridge for flow",
+    "phonetic": "ah"
+  },
+  {
+    "text": "-e-",
+    "function": "Simple vowel bridge for flow",
+    "phonetic": "eh"
+  },
+  {
+    "text": "-o-",
+    "function": "Simple vowel bridge for flow",
+    "phonetic": "oh"
+  },
+  {
+    "text": "-an-",
+    "function": "Spirit / Common smooth bridge",
+    "meaning": "Spirit",
+    "phonetic": "ahn"
+  },
+  {
+    "text": "-ani-",
+    "function": "Implies \"spirit of\" or \"essence of\"",
+    "meaning": "Spirit Of, Essence Of",
+    "phonetic": "ahnee"
+  },
+  {
+    "text": "-ea-",
+    "function": "Adds a pause or weight to the name",
+    "phonetic": "ee-ah"
+  },
+  {
+    "text": "-ella-",
+    "function": "gentle, elegant",
+    "meaning": "Gentle, Elegant",
+    "phonetic": "eh-lah"
+  },
+  {
+    "text": "-en-",
+    "function": "Breaks up harsh consonants to add softness, often means \"small\" or \"dear\"",
+    "meaning": "Small, Dear",
+    "phonetic": "ehn"
+  },
+  {
+    "text": "-i-",
+    "function": "A soft connector bridge that breaks up the consonants",
+    "phonetic": "ee"
+  },
+  {
+    "text": "-il-",
+    "function": "Common Moon Elf bridge; adds a \"silvery\" sound",
+    "phonetic": "ill"
+  },
+  {
+    "text": "-ira-",
+    "function": "dreaming, soul-deep",
+    "meaning": "Dreaming, Soul-Deep",
+    "phonetic": "ih-rah"
+  },
+  {
+    "text": "-la-",
+    "function": "grace, beauty",
+    "meaning": "Grace, Beauty",
+    "phonetic": "lah"
+  },
+  {
+    "text": "-l\u00eb-",
+    "function": "A melodic, quick bridge (from tel\u00eb or la) often used for Moon/Star root to a status suffix",
+    "phonetic": "leh"
+  },
+  {
+    "text": "-na-",
+    "function": "heart, spirit",
+    "meaning": "Heart, Spirit",
+    "phonetic": "nah"
+  },
+  {
+    "text": "-or-",
+    "function": "Adds a sturdy or strong tone",
+    "phonetic": "orr"
+  },
+  {
+    "text": "-ri-",
+    "function": "light, movement",
+    "meaning": "Light, Movement",
+    "phonetic": "ree"
+  },
+  {
+    "text": "-sae-",
+    "function": "sky, ethereal",
+    "meaning": "Sky, Ethereal",
+    "phonetic": "say"
+  },
+  {
+    "text": "-sha-",
+    "function": "moonlit, enchanted",
+    "meaning": "Moonlit, Enchanted",
+    "phonetic": "shah"
+  },
+  {
+    "text": "-th-",
+    "function": "Separates two vowels or a consonant and a vowel for an airy sound.",
+    "phonetic": "th"
+  },
+  {
+    "text": "-the-",
+    "function": "kin, heritage",
+    "meaning": "Kin, Heritage",
+    "phonetic": "theh"
+  },
+  {
+    "text": "-v-",
+    "function": "Very rare; Used when the root already contains an 'r' or 'l' and another vowel is needed.",
+    "phonetic": "v"
+  },
+  {
+    "text": "-va-",
+    "function": "strength, vitality",
+    "meaning": "Strength, Vitality",
+    "phonetic": "vah"
+  },
+  {
+    "text": "-yr-",
+    "function": "Used between two strong consonants to add a rich, ancient, or rare tone",
+    "phonetic": "eer"
+  }
+]
