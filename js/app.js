@@ -220,6 +220,7 @@ export class UnifiedNameGenerator {
         const moreTab = document.getElementById('moreTab');
         const favoritesInfo = document.querySelector('.info-icon');
         const licenseTrigger = document.querySelector('.license-popover-trigger');
+        const betaLabel = document.getElementById('betaLabel');
         const contactTab = document.getElementById('contactTab');
         const contactModal = document.getElementById('contactModal');
         const contactClose = document.getElementById('contactClose');
@@ -361,6 +362,61 @@ export class UnifiedNameGenerator {
             if (licensePopover) {
                 licensePopover.addEventListener('click', (e) => e.stopPropagation());
             }
+        }
+
+        // Beta/Alfa badge popover
+        if (betaLabel) {
+            betaLabel.style.display = 'block';
+            betaLabel.style.visibility = 'hidden';
+            const badgePopover = document.createElement('div');
+            badgePopover.className = 'badge-popover';
+            badgePopover.textContent = betaLabel.getAttribute('title') || betaLabel.textContent || 'Beta';
+            badgePopover.style.display = 'none';
+            document.body.appendChild(badgePopover);
+            // store reference for later updates during generator switches
+            betaLabel._popover = badgePopover;
+
+            const positionBadge = () => {
+                const rect = betaLabel.getBoundingClientRect();
+                badgePopover.style.top = `${rect.bottom + 8}px`;
+                badgePopover.style.left = `${rect.left + (rect.width / 2) - (badgePopover.offsetWidth / 2)}px`;
+            };
+
+            const toggleBadge = (open) => {
+                if (open) {
+                    badgePopover.style.display = 'block';
+                    positionBadge();
+                } else {
+                    badgePopover.style.display = 'none';
+                }
+                betaLabel.setAttribute('aria-expanded', open ? 'true' : 'false');
+            };
+
+            betaLabel.setAttribute('role', 'button');
+            betaLabel.setAttribute('tabindex', '0');
+            betaLabel.setAttribute('aria-expanded', 'false');
+
+            betaLabel.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = badgePopover.style.display === 'block';
+                toggleBadge(!isOpen);
+            });
+
+            betaLabel.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const isOpen = badgePopover.style.display === 'block';
+                    toggleBadge(!isOpen);
+                } else if (e.key === 'Escape') {
+                    toggleBadge(false);
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!badgePopover.contains(e.target) && !betaLabel.contains(e.target)) {
+                    toggleBadge(false);
+                }
+            });
         }
 
         // Contact modal (click/keyboard)
@@ -705,8 +761,12 @@ export class UnifiedNameGenerator {
             if (titleName) titleName.textContent = 'Elven Name';
             if (subtitle) subtitle.textContent = 'Espruar Naming System - Forgotten Realms';
             if (betaLabel) {
-                betaLabel.style.display = 'none';
+                betaLabel.style.visibility = 'hidden';
                 betaLabel.setAttribute('title', '');
+                if (betaLabel._popover) {
+                    betaLabel._popover.textContent = '';
+                    betaLabel._popover.style.display = 'none';
+                }
             }
             if (elvenEducation) elvenEducation.style.display = 'block';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
@@ -737,9 +797,13 @@ export class UnifiedNameGenerator {
             if (titleName) titleName.textContent = 'Dwarven Name';
             if (subtitle) subtitle.textContent = 'Dethek Naming System - Forgotten Realms';
             if (betaLabel) {
-                betaLabel.style.display = 'block';
+                betaLabel.style.visibility = 'visible';
                 betaLabel.textContent = 'BETA';
                 betaLabel.setAttribute('title', betaTooltip);
+                if (betaLabel._popover) {
+                    betaLabel._popover.textContent = betaTooltip;
+                    betaLabel._popover.style.display = 'none';
+                }
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'block';
@@ -769,9 +833,13 @@ export class UnifiedNameGenerator {
             if (titleName) titleName.textContent = 'Gnomish Name';
             if (subtitle) subtitle.textContent = 'Gnim Naming System - Forgotten Realms';
             if (betaLabel) {
-                betaLabel.style.display = 'block';
+                betaLabel.style.visibility = 'visible';
                 betaLabel.textContent = 'ALFA';
                 betaLabel.setAttribute('title', alphaTooltip);
+                if (betaLabel._popover) {
+                    betaLabel._popover.textContent = alphaTooltip;
+                    betaLabel._popover.style.display = 'none';
+                }
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
@@ -800,9 +868,13 @@ export class UnifiedNameGenerator {
             if (titleName) titleName.textContent = 'Halfling Name';
             if (subtitle) subtitle.textContent = 'Hin Naming (Common Script) - Forgotten Realms';
             if (betaLabel) {
-                betaLabel.style.display = 'block';
+                betaLabel.style.visibility = 'visible';
                 betaLabel.textContent = 'ALFA';
                 betaLabel.setAttribute('title', alphaTooltip);
+                if (betaLabel._popover) {
+                    betaLabel._popover.textContent = alphaTooltip;
+                    betaLabel._popover.style.display = 'none';
+                }
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
@@ -831,9 +903,13 @@ export class UnifiedNameGenerator {
             if (titleName) titleName.textContent = 'Orc Name';
             if (subtitle) subtitle.textContent = 'Orcish (Da’esh) Naming - Forgotten Realms';
             if (betaLabel) {
-                betaLabel.style.display = 'block';
+                betaLabel.style.visibility = 'visible';
                 betaLabel.textContent = 'ALFA';
                 betaLabel.setAttribute('title', alphaTooltip);
+                if (betaLabel._popover) {
+                    betaLabel._popover.textContent = alphaTooltip;
+                    betaLabel._popover.style.display = 'none';
+                }
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';

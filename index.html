@@ -82,59 +82,60 @@
     
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
-    <!-- Generator Tabs -->
-    <div class="generator-tabs">
-        <button class="generator-tab active" id="elvenTab" aria-label="Switch to Elven Name Generator">
-            <span class="tab-icon" aria-hidden="true">✨</span>
-            <span class="tab-label">ESPRUAR</span>
-        </button>
-        <button class="generator-tab" id="dwarvenTab" aria-label="Switch to Dwarven Name Generator">
-            <span class="tab-icon" aria-hidden="true">⚒️</span>
-            <span class="tab-label">DETHEK</span>
-        </button>
-        <button class="generator-tab" id="gnomishTab" aria-label="Switch to Gnomish Name Generator">
-            <span class="tab-icon" aria-hidden="true">🛠️</span>
-            <span class="tab-label">GNIM</span>
-        </button>
-        <button class="generator-tab" id="halflingTab" aria-label="Switch to Halfling Name Generator">
-            <span class="tab-icon" aria-hidden="true">🗡️</span>
-            <span class="tab-label">HIN</span>
-        </button>
-        <button class="generator-tab" id="orcTab" aria-label="Switch to Orc Name Generator">
-            <span class="tab-icon" aria-hidden="true">⚔️</span>
-            <span class="tab-label">ORC</span>
-        </button>
-        <button class="generator-tab" id="moreTab" aria-label="More generators and links" aria-expanded="false">
-            <span class="tab-icon" aria-hidden="true">⋯</span>
-            <span class="tab-label">MORE</span>
-        </button>
-    </div>
-    
-    <!-- Footer Tabs -->
-    <div class="footer-tabs">
-        <button class="footer-tab" id="orcTabMore" aria-label="Switch to Orc Name Generator">
-            <span class="tab-icon" aria-hidden="true">⚔️</span>
-            <span class="tab-label">ORC</span>
-        </button>
-        <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="Buy Me a Coffee - Opens in new window">
-            <span class="tab-icon" aria-hidden="true">☕</span>
-            <span class="tab-label">KAETH</span>
-            <span class="external-link-icon" aria-hidden="true">⧉</span>
-        </a>
-        <a href="https://github.com/bradleynelson/elf-name-generator" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="GitHub Repository - Opens in new window">
-            <span class="tab-icon" aria-hidden="true">📦</span>
-            <span class="tab-label">REPO</span>
-            <span class="external-link-icon" aria-hidden="true">⧉</span>
-        </a>
-        <button class="footer-tab" id="contactTab" aria-label="Contact and feedback">
-            <span class="tab-icon" aria-hidden="true">✉️</span>
-            <span class="tab-label">MAIL</span>
-        </button>
+    <!-- Tabs Stack (primary + secondary) -->
+    <div class="tabs-stack">
+        <div class="generator-tabs">
+            <button class="generator-tab active" id="elvenTab" aria-label="Switch to Elven Name Generator">
+                <span class="tab-icon" aria-hidden="true">✨</span>
+                <span class="tab-label">ESPRUAR</span>
+            </button>
+            <button class="generator-tab" id="dwarvenTab" aria-label="Switch to Dwarven Name Generator">
+                <span class="tab-icon" aria-hidden="true">⚒️</span>
+                <span class="tab-label">DETHEK</span>
+            </button>
+            <button class="generator-tab" id="gnomishTab" aria-label="Switch to Gnomish Name Generator">
+                <span class="tab-icon" aria-hidden="true">🛠️</span>
+                <span class="tab-label">GNIM</span>
+            </button>
+            <button class="generator-tab" id="halflingTab" aria-label="Switch to Halfling Name Generator">
+                <span class="tab-icon" aria-hidden="true">🗡️</span>
+                <span class="tab-label">HIN</span>
+            </button>
+            <button class="generator-tab" id="orcTab" aria-label="Switch to Orc Name Generator">
+                <span class="tab-icon" aria-hidden="true">⚔️</span>
+                <span class="tab-label">ORC</span>
+            </button>
+            <button class="generator-tab" id="moreTab" aria-label="More generators and links" aria-expanded="false">
+                <span class="tab-icon" aria-hidden="true">⋯</span>
+                <span class="tab-label">MORE</span>
+            </button>
+        </div>
+        
+        <div class="footer-tabs">
+            <button class="footer-tab" id="orcTabMore" aria-label="Switch to Orc Name Generator">
+                <span class="tab-icon" aria-hidden="true">⚔️</span>
+                <span class="tab-label">ORC</span>
+            </button>
+            <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="Buy Me a Coffee - Opens in new window">
+                <span class="tab-icon" aria-hidden="true">☕</span>
+                <span class="tab-label">KAETH</span>
+                <span class="external-link-icon" aria-hidden="true">⧉</span>
+            </a>
+            <a href="https://github.com/bradleynelson/elf-name-generator" target="_blank" rel="noopener noreferrer" class="footer-tab" aria-label="GitHub Repository - Opens in new window">
+                <span class="tab-icon" aria-hidden="true">📦</span>
+                <span class="tab-label">REPO</span>
+                <span class="external-link-icon" aria-hidden="true">⧉</span>
+            </a>
+            <button class="footer-tab" id="contactTab" aria-label="Contact and feedback">
+                <span class="tab-icon" aria-hidden="true">✉️</span>
+                <span class="tab-label">MAIL</span>
+            </button>
+        </div>
     </div>
     
     <div class="container">
         <!-- Beta Badge for Dwarven Generator -->
-        <div class="beta-badge" id="betaLabel" style="display: none;">BETA</div>
+        <div class="beta-badge" id="betaLabel" style="visibility: hidden;">BETA</div>
         
         <h1>
             <span class="title-sword">⚔️</span>
@@ -1507,7 +1508,7 @@
         </footer>
         
         <div class="version-box">
-            <p>v3.1.3 - Last Updated 12-07-25</p>
+            <p>v3.1.4 - Last Updated 12-07-25</p>
         </div>
     </div>
 

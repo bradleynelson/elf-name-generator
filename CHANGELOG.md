@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.1.4] - 2025-12-07
+
+### Patch
+- Consolidated desktop tabs into a single stack, fixed their anchor to the container, and adjusted z-index to sit behind content.
+- Tweaked desktop tab offset for precise alignment and consistent small-tab borders (including Mail).
+- Mobile “More” menu now overlays above the nav bar instead of pushing it upward.
+- Prevented ALFA badge flicker by keeping it in-DOM with visibility toggling.
+
 ## [3.1.3] - 2025-12-07
 
 ### Patch
