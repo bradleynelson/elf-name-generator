@@ -9,24 +9,24 @@ export class OrcNameGenerator {
     generate(options = {}) {
         const {
             // subrace/gender kept for compatibility but ignored (shared pool)
-            nameType = 'full'
+            nameType = "full"
         } = options;
 
-        const includeEpithet = nameType === 'full' || nameType === 'full-with-epithet' || nameType === 'epithet';
+        const includeEpithet = nameType === "full" || nameType === "full-with-epithet" || nameType === "epithet";
         const personal = this._generatePersonal();
         const epithet = includeEpithet ? this._generateEpithet() : null;
         const formattedEpithetText = epithet ? this._formatEpithetText(epithet.text) : null;
 
-        let name = '';
-        let meaning = '';
+        let name = "";
+        let meaning = "";
         const breakdown = {};
 
-        if (nameType === 'personal') {
+        if (nameType === "personal") {
             name = personal.text;
             meaning = personal.meaning || personal.text;
             breakdown.personal = personal;
-        } else if (nameType === 'epithet') {
-            if (!epithet) throw new Error('No epithets available');
+        } else if (nameType === "epithet") {
+            if (!epithet) throw new Error("No epithets available");
             name = formattedEpithetText;
             meaning = epithet.meaning || epithet.text;
             breakdown.epithet = { ...epithet, displayText: formattedEpithetText };
@@ -66,7 +66,7 @@ export class OrcNameGenerator {
     _formatEpithetText(text) {
         if (!text) return text;
         const lower = text.toLowerCase();
-        if (lower.startsWith('the ')) return text;
+        if (lower.startsWith("the ")) return text;
         return `the ${text}`;
     }
 

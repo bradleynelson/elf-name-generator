@@ -1,72 +1,72 @@
 [
-  {
-    "root": "goodbarrel",
-    "text": "Goodbarrel",
-    "meaning": "brewkeeper",
-    "subrace": ["lightfoot", "strongheart"],
-    "phonetic": "GOOD-bar-rel"
-  },
-  {
-    "root": "tealeaf",
-    "text": "Tealeaf",
-    "meaning": "tea grower",
-    "subrace": ["lightfoot"],
-    "phonetic": "TEE-leef"
-  },
-  {
-    "root": "underbough",
-    "text": "Underbough",
-    "meaning": "dweller under the boughs",
-    "subrace": ["lightfoot", "ghostwise"],
-    "phonetic": "UN-der-bow"
-  },
-  {
-    "root": "tallfellow",
-    "text": "Tallfellow",
-    "meaning": "long-limbed branch",
-    "subrace": ["lightfoot", "strongheart"],
-    "phonetic": "TAWL-fel-oh"
-  },
-  {
-    "root": "hardbottle",
-    "text": "Hardbottle",
-    "meaning": "strong brew",
-    "subrace": ["stout", "strongheart"],
-    "phonetic": "HARD-bot-ul"
-  },
-  {
-    "root": "hilltopple",
-    "text": "Hilltopple",
-    "meaning": "top of the hill",
-    "subrace": ["stout"],
-    "phonetic": "HILL-top-ul"
-  },
-  {
-    "root": "thorngage",
-    "text": "Thorngage",
-    "meaning": "thorn hedge guardian",
-    "subrace": ["stout", "ghostwise"],
-    "phonetic": "THORN-gayj"
-  },
-  {
-    "root": "reedbank",
-    "text": "Reedbank",
-    "meaning": "home by the reeds",
-    "subrace": ["ghostwise", "strongheart"],
-    "phonetic": "REED-bank"
-  },
-  {
-    "root": "greenbottle",
-    "text": "Greenbottle",
-    "meaning": "vintner of greens",
-    "subrace": ["lightfoot"],
-    "phonetic": "GREEN-bot-ul"
-  },
-  {
-    "root": "brushgather",
-    "text": "Brushgather",
-    "meaning": "forager of brush",
-    "subrace": ["ghostwise", "lightfoot"],
-    "phonetic": "BRUSH-gath-er"
-  }
+    {
+        "root": "goodbarrel",
+        "text": "Goodbarrel",
+        "meaning": "brewkeeper",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "GOOD-bar-rel"
+    },
+    {
+        "root": "tealeaf",
+        "text": "Tealeaf",
+        "meaning": "tea grower",
+        "subrace": ["lightfoot"],
+        "phonetic": "TEE-leef"
+    },
+    {
+        "root": "underbough",
+        "text": "Underbough",
+        "meaning": "dweller under the boughs",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "UN-der-bow"
+    },
+    {
+        "root": "tallfellow",
+        "text": "Tallfellow",
+        "meaning": "long-limbed branch",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "TAWL-fel-oh"
+    },
+    {
+        "root": "hardbottle",
+        "text": "Hardbottle",
+        "meaning": "strong brew",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "HARD-bot-ul"
+    },
+    {
+        "root": "hilltopple",
+        "text": "Hilltopple",
+        "meaning": "top of the hill",
+        "subrace": ["stout"],
+        "phonetic": "HILL-top-ul"
+    },
+    {
+        "root": "thorngage",
+        "text": "Thorngage",
+        "meaning": "thorn hedge guardian",
+        "subrace": ["stout", "ghostwise"],
+        "phonetic": "THORN-gayj"
+    },
+    {
+        "root": "reedbank",
+        "text": "Reedbank",
+        "meaning": "home by the reeds",
+        "subrace": ["ghostwise", "strongheart"],
+        "phonetic": "REED-bank"
+    },
+    {
+        "root": "greenbottle",
+        "text": "Greenbottle",
+        "meaning": "vintner of greens",
+        "subrace": ["lightfoot"],
+        "phonetic": "GREEN-bot-ul"
+    },
+    {
+        "root": "brushgather",
+        "text": "Brushgather",
+        "meaning": "forager of brush",
+        "subrace": ["ghostwise", "lightfoot"],
+        "phonetic": "BRUSH-gath-er"
+    }
 ]

@@ -18,6 +18,7 @@ This checklist covers everything you need to configure for a proper development 
 **Go to:** Repository Settings → Branches
 
 #### For `main` branch:
+
 - [ ] Add branch protection rule for `main`
 - [ ] Require pull request before merging
 - [ ] Require at least 1 approval
@@ -27,6 +28,7 @@ This checklist covers everything you need to configure for a proper development 
 - [ ] (Optional) Restrict who can push to matching branches
 
 #### For `develop` branch:
+
 - [ ] Add branch protection rule for `develop`
 - [ ] (Optional) Require pull request before merging
 - [ ] Require status checks to pass (select "test / Run Tests")
@@ -46,12 +48,14 @@ This checklist covers everything you need to configure for a proper development 
 **Go to:** Repository Settings → Environments
 
 #### Create Production Environment:
+
 - [ ] Click "New environment"
 - [ ] Name: `production`
 - [ ] (Optional) Add protection rules (require reviewers)
 - [ ] Deployment branches: Only `main` branch
 
 #### Create Development Environment:
+
 - [ ] Click "New environment"
 - [ ] Name: `development`
 - [ ] Deployment branches: Only `develop` branch
@@ -68,6 +72,7 @@ This checklist covers everything you need to configure for a proper development 
 **Current Status:** Public repository
 
 **Decisions Needed:**
+
 - [ ] Keep repository public (current)
 - [ ] OR make repository private and only make `main` branch public
 - [ ] OR create separate private repository for development
@@ -94,21 +99,25 @@ This checklist covers everything you need to configure for a proper development 
 ## 📋 Additional Recommendations
 
 ### Code Review Process
+
 - [ ] Decide on review requirements (1 approval? 2?)
 - [ ] Set up CODEOWNERS file (already created)
 - [ ] Configure auto-request reviews from code owners
 
 ### Testing Strategy
+
 - [ ] Ensure all tests pass locally before pushing
 - [ ] Run `npm test` before creating PRs
 - [ ] Consider adding pre-commit hooks (optional)
 
 ### Documentation
+
 - [ ] Review and customize `DEVELOPMENT_WORKFLOW.md` if needed
 - [ ] Share workflow guide with any collaborators
 - [ ] Document any project-specific conventions
 
 ### Monitoring
+
 - [ ] Set up notifications for failed workflows
 - [ ] Monitor GitHub Actions usage (free tier has limits)
 - [ ] Consider adding status badges to README
@@ -145,4 +154,3 @@ This checklist covers everything you need to configure for a proper development 
 - GitHub Docs: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository
 - GitHub Actions Docs: https://docs.github.com/en/actions
 - Check the workflow logs if something fails: Repository → Actions tab
-

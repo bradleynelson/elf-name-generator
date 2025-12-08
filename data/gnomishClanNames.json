@@ -1,7 +1,49 @@
 [
-  {"root":"baffle","prefix_text":"Baffle","prefix_meaning":"Confound","can_be_prefix":true,"can_be_suffix":false,"subrace":["rock","forest"],"phonetic":"Bah-fuhl"},
-  {"root":"spark","prefix_text":"Spark","prefix_meaning":"Spark","can_be_prefix":true,"can_be_suffix":false,"subrace":["rock"],"phonetic":"Spahrk"},
-  {"root":"whistle","prefix_text":null,"suffix_text":"whistle","suffix_meaning":"Whistle","can_be_prefix":false,"can_be_suffix":true,"subrace":["forest"],"phonetic":"Whis-ul"},
-  {"root":"gem","prefix_text":null,"suffix_text":"gem","suffix_meaning":"Gemstone","can_be_prefix":false,"can_be_suffix":true,"subrace":["rock"],"phonetic":"Jem"},
-  {"root":"tumble","prefix_text":"Tumble","prefix_meaning":"Roll","can_be_prefix":true,"can_be_suffix":false,"subrace":["forest"],"phonetic":"Tuhm-bul"}
+    {
+        "root": "baffle",
+        "prefix_text": "Baffle",
+        "prefix_meaning": "Confound",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "Bah-fuhl"
+    },
+    {
+        "root": "spark",
+        "prefix_text": "Spark",
+        "prefix_meaning": "Spark",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "Spahrk"
+    },
+    {
+        "root": "whistle",
+        "prefix_text": null,
+        "suffix_text": "whistle",
+        "suffix_meaning": "Whistle",
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "subrace": ["forest"],
+        "phonetic": "Whis-ul"
+    },
+    {
+        "root": "gem",
+        "prefix_text": null,
+        "suffix_text": "gem",
+        "suffix_meaning": "Gemstone",
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "subrace": ["rock"],
+        "phonetic": "Jem"
+    },
+    {
+        "root": "tumble",
+        "prefix_text": "Tumble",
+        "prefix_meaning": "Roll",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["forest"],
+        "phonetic": "Tuhm-bul"
+    }
 ]

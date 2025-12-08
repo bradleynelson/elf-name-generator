@@ -1,10 +1,16 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { UnifiedNameGenerator } from '../../js/app.js';
-import { NameGenerator } from '../../js/core/NameGenerator.js';
-import { loadGeneratorData, loadDwarvenGeneratorData, loadGnomishGeneratorData, loadHalflingGeneratorData, loadOrcGeneratorData } from '../../js/utils/dataLoader.js';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { UnifiedNameGenerator } from "../../js/app.js";
+import { NameGenerator } from "../../js/core/NameGenerator.js";
+import {
+    loadGeneratorData,
+    loadDwarvenGeneratorData,
+    loadGnomishGeneratorData,
+    loadHalflingGeneratorData,
+    loadOrcGeneratorData
+} from "../../js/utils/dataLoader.js";
 
 // Mock data loading
-vi.mock('../../js/utils/dataLoader.js', () => ({
+vi.mock("../../js/utils/dataLoader.js", () => ({
     loadGeneratorData: vi.fn(),
     loadDwarvenGeneratorData: vi.fn(),
     loadGnomishGeneratorData: vi.fn(),
@@ -20,93 +26,122 @@ vi.mock('../../js/utils/dataLoader.js', () => ({
 const mockElvenData = {
     components: [
         {
-            root: 'mair',
-            prefix_text: 'Mair',
-            suffix_text: 'Mair',
-            prefix_phonetic: 'Mair',
-            suffix_phonetic: 'Mair',
-            prefix_meaning: 'Light',
-            suffix_meaning: 'Light',
+            root: "mair",
+            prefix_text: "Mair",
+            suffix_text: "Mair",
+            prefix_phonetic: "Mair",
+            suffix_phonetic: "Mair",
+            prefix_meaning: "Light",
+            suffix_meaning: "Light",
             can_be_prefix: true,
             can_be_suffix: true,
-            tags: ['high-elf', 'moon-elf']
+            tags: ["high-elf", "moon-elf"]
         },
         {
-            root: 'tel',
-            prefix_text: 'Tel',
-            suffix_text: 'Tel',
-            prefix_phonetic: 'Tel',
-            suffix_phonetic: 'Tel',
-            prefix_meaning: 'Star',
-            suffix_meaning: 'Star',
+            root: "tel",
+            prefix_text: "Tel",
+            suffix_text: "Tel",
+            prefix_phonetic: "Tel",
+            suffix_phonetic: "Tel",
+            prefix_meaning: "Star",
+            suffix_meaning: "Star",
             can_be_prefix: true,
             can_be_suffix: true,
-            tags: ['high-elf', 'moon-elf']
+            tags: ["high-elf", "moon-elf"]
         }
     ],
-    connectors: [
-        { text: '-a-', phonetic: 'ah', function: 'Simple vowel bridge' }
-    ]
+    connectors: [{ text: "-a-", phonetic: "ah", function: "Simple vowel bridge" }]
 };
 
 const mockDwarvenData = {
     firstNames: [
         {
-            root: 'thorin',
-            prefix_text: 'Thorin',
-            suffix_text: 'Thorin',
-            prefix_phonetic: 'Thoh-rin',
-            suffix_phonetic: 'Thoh-rin',
-            prefix_meaning: 'Bold',
-            suffix_meaning: 'Bold',
+            root: "thorin",
+            prefix_text: "Thorin",
+            suffix_text: "Thorin",
+            prefix_phonetic: "Thoh-rin",
+            suffix_phonetic: "Thoh-rin",
+            prefix_meaning: "Bold",
+            suffix_meaning: "Bold",
             can_be_prefix: true,
             can_be_suffix: true
         }
     ],
     clanNames: [
         {
-            root: 'stone',
-            meaning: 'Stone',
-            text: 'Stone'
+            root: "stone",
+            meaning: "Stone",
+            text: "Stone"
         }
     ]
 };
 
 const mockGnomishData = {
     personalNames: [
-        { root: 'al', prefix_text: 'Al', suffix_text: 'al', prefix_meaning: 'High', suffix_meaning: 'High', can_be_prefix: true, can_be_suffix: true, gender: 'neutral', subrace: ['rock'], prefix_phonetic: 'Ahl', suffix_phonetic: 'Ahl' }
+        {
+            root: "al",
+            prefix_text: "Al",
+            suffix_text: "al",
+            prefix_meaning: "High",
+            suffix_meaning: "High",
+            can_be_prefix: true,
+            can_be_suffix: true,
+            gender: "neutral",
+            subrace: ["rock"],
+            prefix_phonetic: "Ahl",
+            suffix_phonetic: "Ahl"
+        }
     ],
     clanNames: [
-        { root: 'spark', prefix_text: 'Spark', suffix_text: 'spark', prefix_meaning: 'Spark', suffix_meaning: 'Spark', can_be_prefix: true, can_be_suffix: true, subrace: ['rock'], phonetic: 'Spahrk' }
+        {
+            root: "spark",
+            prefix_text: "Spark",
+            suffix_text: "spark",
+            prefix_meaning: "Spark",
+            suffix_meaning: "Spark",
+            can_be_prefix: true,
+            can_be_suffix: true,
+            subrace: ["rock"],
+            phonetic: "Spahrk"
+        }
     ],
-    nicknames: [
-        { text: 'Cogs', meaning: 'Inventor', phonetic: 'Kogs' }
-    ]
+    nicknames: [{ text: "Cogs", meaning: "Inventor", phonetic: "Kogs" }]
 };
 
 const mockHalflingData = {
     personalNames: [
-        { root: 'milo', prefix_text: 'Milo', suffix_text: 'milo', prefix_meaning: 'gracious', suffix_meaning: 'gracious', can_be_prefix: true, can_be_suffix: true, gender: 'male', subrace: ['lightfoot'], phonetic: 'MY-loh' }
+        {
+            root: "milo",
+            prefix_text: "Milo",
+            suffix_text: "milo",
+            prefix_meaning: "gracious",
+            suffix_meaning: "gracious",
+            can_be_prefix: true,
+            can_be_suffix: true,
+            gender: "male",
+            subrace: ["lightfoot"],
+            phonetic: "MY-loh"
+        }
     ],
     familyNames: [
-        { root: 'goodbarrel', text: 'Goodbarrel', meaning: 'brewkeeper', subrace: ['lightfoot'], phonetic: 'GOOD-bar-rel' }
+        {
+            root: "goodbarrel",
+            text: "Goodbarrel",
+            meaning: "brewkeeper",
+            subrace: ["lightfoot"],
+            phonetic: "GOOD-bar-rel"
+        }
     ],
-    nicknames: [
-        { text: 'Quickstep', meaning: 'moves lightly', phonetic: 'KWIK-step' }
-    ]
+    nicknames: [{ text: "Quickstep", meaning: "moves lightly", phonetic: "KWIK-step" }]
 };
 
 const mockOrcData = {
-    personalNames: [
-        { root: 'grom', text: 'Grom', meaning: 'thunder', subrace: ['mountain'] }
-    ],
+    personalNames: [{ root: "grom", text: "Grom", meaning: "thunder", subrace: ["mountain"] }],
     clanNames: [],
-    epithets: [
-        { text: 'Skull-Taker', meaning: 'claims skulls' }
-    ]
+    epithets: [{ text: "Skull-Taker", meaning: "claims skulls" }]
 };
 
-describe('Integration Tests - App Functionality', () => {
+describe("Integration Tests - App Functionality", () => {
     beforeEach(() => {
         // Reset mocks
         vi.clearAllMocks();
@@ -115,7 +150,7 @@ describe('Integration Tests - App Functionality', () => {
         loadGnomishGeneratorData.mockResolvedValue(mockGnomishData);
         loadHalflingGeneratorData.mockResolvedValue(mockHalflingData);
         loadOrcGeneratorData.mockResolvedValue(mockOrcData);
-        
+
         // Setup minimal DOM structure
         document.body.innerHTML = `
             <button class="generate-btn-large"></button>
@@ -160,16 +195,16 @@ describe('Integration Tests - App Functionality', () => {
                 <select id="orcGender"><option value="neutral">Neutral</option></select>
             </div>
         `;
-        
+
         // Clear localStorage
         localStorage.clear();
     });
 
-    describe('App Initialization', () => {
-        it('should initialize app and create generators', async () => {
+    describe("App Initialization", () => {
+        it("should initialize app and create generators", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
-            
+
             expect(app.elvenGenerator).toBeDefined();
             expect(app.dwarvenGenerator).toBeDefined();
             expect(app.gnomishGenerator).toBeDefined();
@@ -180,47 +215,47 @@ describe('Integration Tests - App Functionality', () => {
             expect(app.isInitialized).toBe(true);
         });
 
-        it('should wire up generate button click handler', async () => {
+        it("should wire up generate button click handler", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
-            
-            const generateBtn = document.querySelector('.generate-btn-large');
+
+            const generateBtn = document.querySelector(".generate-btn-large");
             expect(generateBtn).toBeDefined();
-            
+
             // Mock generateName to verify it's called
-            const generateSpy = vi.spyOn(app, 'generateName');
-            
+            const generateSpy = vi.spyOn(app, "generateName");
+
             // Simulate button click
             generateBtn.click();
-            
+
             expect(generateSpy).toHaveBeenCalled();
         });
     });
 
-    describe('Generate Button Functionality', () => {
-        it('should generate and display name when button clicked', async () => {
+    describe("Generate Button Functionality", () => {
+        it("should generate and display name when button clicked", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
-            
-            const generateBtn = document.querySelector('.generate-btn-large');
-            const nameDisplay = document.getElementById('generatedName');
-            
+
+            const generateBtn = document.querySelector(".generate-btn-large");
+            const nameDisplay = document.getElementById("generatedName");
+
             // Get initial name (may be populated from initialization)
-            const initialName = nameDisplay.textContent || '';
-            
+            const initialName = nameDisplay.textContent || "";
+
             // Click generate button multiple times to ensure we get a different name
             // (in case first click generates same name by chance)
             let newName = initialName;
             for (let i = 0; i < 5 && newName === initialName; i++) {
                 generateBtn.click();
-                await new Promise(resolve => setTimeout(resolve, 100));
-                newName = nameDisplay.textContent || '';
+                await new Promise((resolve) => setTimeout(resolve, 100));
+                newName = nameDisplay.textContent || "";
             }
-            
+
             // Verify name appeared on page
             expect(newName).toBeTruthy();
             expect(newName.length).toBeGreaterThan(0);
-            
+
             // If initial name existed, verify it changed (or we tried 5 times)
             if (initialName) {
                 // After 5 attempts, name should have changed (very unlikely to get same name 5 times)
@@ -228,26 +263,26 @@ describe('Integration Tests - App Functionality', () => {
             }
         });
 
-        it('should show name meaning after generation', async () => {
+        it("should show name meaning after generation", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
-            
-            const generateBtn = document.querySelector('.generate-btn-large');
-            const meaningDisplay = document.getElementById('nameMeaning');
-            
+
+            const generateBtn = document.querySelector(".generate-btn-large");
+            const meaningDisplay = document.getElementById("nameMeaning");
+
             generateBtn.click();
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
             // Verify meaning is displayed
             expect(meaningDisplay.textContent).toBeTruthy();
         });
     });
 
-    describe('Tab Switching', () => {
-        it('should have generator initialized', async () => {
+    describe("Tab Switching", () => {
+        it("should have generator initialized", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
-            
+
             // Verify generators are initialized
             expect(app.elvenGenerator).toBeDefined();
             expect(app.elvenGenerator).toBeInstanceOf(NameGenerator);
@@ -257,27 +292,26 @@ describe('Integration Tests - App Functionality', () => {
             expect(app.orcGenerator).toBeDefined();
         });
 
-        it('should switch to halfling when halfling tab clicked', async () => {
+        it("should switch to halfling when halfling tab clicked", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
 
-            const halflingTab = document.getElementById('halflingTab');
+            const halflingTab = document.getElementById("halflingTab");
             halflingTab.click();
 
-            expect(app.currentGeneratorType).toBe('halfling');
+            expect(app.currentGeneratorType).toBe("halfling");
             expect(app.currentGenerator).toBe(app.halflingGenerator);
         });
 
-        it('should switch to orc when orc tab clicked', async () => {
+        it("should switch to orc when orc tab clicked", async () => {
             const app = new UnifiedNameGenerator();
             await app.init();
 
-            const orcTab = document.getElementById('orcTab');
+            const orcTab = document.getElementById("orcTab");
             orcTab.click();
 
-            expect(app.currentGeneratorType).toBe('orc');
+            expect(app.currentGeneratorType).toBe("orc");
             expect(app.currentGenerator).toBe(app.orcGenerator);
         });
     });
 });
-

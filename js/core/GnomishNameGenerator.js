@@ -7,20 +7,15 @@ export class GnomishNameGenerator {
     }
 
     generate(options = {}) {
-        const {
-            subrace = 'rock',
-            nameType = 'full',
-            gender = 'neutral',
-            includeNickname = true
-        } = options;
+        const { subrace = "rock", nameType = "full", gender = "neutral", includeNickname = true } = options;
 
-        if (nameType === 'personal') {
+        if (nameType === "personal") {
             return this._generatePersonalName(gender, subrace);
         }
-        if (nameType === 'clan') {
+        if (nameType === "clan") {
             return this._generateClanName(subrace);
         }
-        if (nameType === 'nickname') {
+        if (nameType === "nickname") {
             return this._generateNicknameOnly();
         }
 
@@ -29,21 +24,17 @@ export class GnomishNameGenerator {
         const clan = this._generateClanName(subrace);
         const nickname = includeNickname ? this._generateNickname() : null;
 
-        const name = nickname
-            ? `${personal.name} "${nickname.text}" ${clan.name}`
-            : `${personal.name} ${clan.name}`;
+        const name = nickname ? `${personal.name} "${nickname.text}" ${clan.name}` : `${personal.name} ${clan.name}`;
         const meaning = nickname
             ? `${personal.meaning} + "${nickname.meaning}" + ${clan.meaning}`
             : `${personal.meaning} + ${clan.meaning}`;
-        const pronunciation = [personal.pronunciation, nickname?.phonetic, clan.phonetic]
-            .filter(Boolean)
-            .join(' · ');
+        const pronunciation = [personal.pronunciation, nickname?.phonetic, clan.phonetic].filter(Boolean).join(" · ");
 
         return {
             name,
             meaning,
             pronunciation,
-            generatorType: 'gnomish',
+            generatorType: "gnomish",
             breakdown: {
                 personal,
                 nickname,
@@ -62,7 +53,7 @@ export class GnomishNameGenerator {
     _filterByGender(items, gender) {
         return items.filter((item) => {
             if (!item.gender) return true;
-            if (item.gender === 'neutral') return true;
+            if (item.gender === "neutral") return true;
             return item.gender === gender;
         });
     }
@@ -71,7 +62,7 @@ export class GnomishNameGenerator {
         let pool = this._filterByGender(this._filterBySubrace(this.personalNames, subrace), gender);
         if (!pool.length) pool = this._filterByGender(this.personalNames, gender);
         if (!pool.length) pool = this.personalNames;
-        
+
         const prefixPool = pool.filter((p) => p.can_be_prefix !== false);
         const suffixPool = pool.filter((p) => p.can_be_suffix);
         const prefix = this._randomElement(prefixPool.length ? prefixPool : pool);
@@ -91,18 +82,18 @@ export class GnomishNameGenerator {
             if (suffix.suffix_phonetic) phonParts.push(suffix.suffix_phonetic);
         }
 
-        const name = parts.join('');
+        const name = parts.join("");
         return {
             name,
-            meaning: meaningParts.join(', '),
-            pronunciation: phonParts.join(' ')
+            meaning: meaningParts.join(", "),
+            pronunciation: phonParts.join(" ")
         };
     }
 
     _generateClanName(subrace) {
         let pool = this._filterBySubrace(this.clanNames, subrace);
         if (!pool.length) pool = this.clanNames;
-        
+
         const prefixPool = pool.filter((p) => p.can_be_prefix !== false);
         const suffixPool = pool.filter((p) => p.can_be_suffix);
         const prefix = this._randomElement(prefixPool.length ? prefixPool : pool);
@@ -124,9 +115,9 @@ export class GnomishNameGenerator {
         }
 
         return {
-            name: parts.join(''),
-            meaning: meaningParts.join(', '),
-            phonetic: phonParts.join(' ')
+            name: parts.join(""),
+            meaning: meaningParts.join(", "),
+            phonetic: phonParts.join(" ")
         };
     }
 
@@ -138,7 +129,7 @@ export class GnomishNameGenerator {
     }
 
     _generateNicknameOnly() {
-        const nickname = this._generateNickname() || { text: '', meaning: '', phonetic: '' };
+        const nickname = this._generateNickname() || { text: "", meaning: "", phonetic: "" };
         return {
             name: `"${nickname.text}"`,
             meaning: nickname.meaning,
@@ -148,7 +139,7 @@ export class GnomishNameGenerator {
 
     _randomElement(arr) {
         if (!arr || arr.length === 0) {
-            throw new Error('No components available for generation');
+            throw new Error("No components available for generation");
         }
         const idx = Math.floor(Math.random() * arr.length);
         return arr[idx];
