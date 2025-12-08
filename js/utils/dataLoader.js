@@ -24,17 +24,17 @@ async function loadJSON(path) {
 export async function loadGeneratorData() {
     try {
         const [components, connectors] = await Promise.all([
-            loadJSON('data/components.json'),
-            loadJSON('data/connectors.json')
+            loadJSON("data/components.json"),
+            loadJSON("data/connectors.json")
         ]);
-        
+
         return {
             components,
             connectors
         };
     } catch (error) {
-        console.error('Failed to load generator data:', error);
-        throw new Error('Could not load name generator data. Please refresh the page.');
+        console.error("Failed to load generator data:", error);
+        throw new Error("Could not load name generator data. Please refresh the page.");
     }
 }
 
@@ -45,17 +45,17 @@ export async function loadGeneratorData() {
 export async function loadDwarvenGeneratorData() {
     try {
         const [firstNames, clanNames] = await Promise.all([
-            loadJSON('data/dwarvenFirstNames.json'),
-            loadJSON('data/dwarvenClanNames.json')
+            loadJSON("data/dwarvenFirstNames.json"),
+            loadJSON("data/dwarvenClanNames.json")
         ]);
-        
+
         return {
             firstNames,
             clanNames
         };
     } catch (error) {
-        console.error('Failed to load Dwarven generator data:', error);
-        throw new Error('Could not load Dwarven name generator data. Please refresh the page.');
+        console.error("Failed to load Dwarven generator data:", error);
+        throw new Error("Could not load Dwarven name generator data. Please refresh the page.");
     }
 }
 
@@ -66,19 +66,19 @@ export async function loadDwarvenGeneratorData() {
 export async function loadGnomishGeneratorData() {
     try {
         const [personalNames, clanNames, nicknames] = await Promise.all([
-            loadJSON('data/gnomishPersonalNames.json'),
-            loadJSON('data/gnomishClanNames.json'),
-            loadJSON('data/gnomishNicknames.json')
+            loadJSON("data/gnomishPersonalNames.json"),
+            loadJSON("data/gnomishClanNames.json"),
+            loadJSON("data/gnomishNicknames.json")
         ]);
-        
+
         return {
             personalNames,
             clanNames,
             nicknames
         };
     } catch (error) {
-        console.error('Failed to load Gnomish generator data:', error);
-        throw new Error('Could not load Gnomish name generator data. Please refresh the page.');
+        console.error("Failed to load Gnomish generator data:", error);
+        throw new Error("Could not load Gnomish name generator data. Please refresh the page.");
     }
 }
 
@@ -89,19 +89,19 @@ export async function loadGnomishGeneratorData() {
 export async function loadOrcGeneratorData() {
     try {
         const [personalNames, clanNames, epithets] = await Promise.all([
-            loadJSON('data/orcPersonalNames.json'),
-            loadJSON('data/orcClanNames.json'),
-            loadJSON('data/orcEpithets.json')
+            loadJSON("data/orcPersonalNames.json"),
+            loadJSON("data/orcClanNames.json"),
+            loadJSON("data/orcEpithets.json")
         ]);
-        
+
         return {
             personalNames,
             clanNames,
             epithets
         };
     } catch (error) {
-        console.error('Failed to load Orc generator data:', error);
-        throw new Error('Could not load Orc name generator data. Please refresh the page.');
+        console.error("Failed to load Orc generator data:", error);
+        throw new Error("Could not load Orc name generator data. Please refresh the page.");
     }
 }
 
@@ -112,19 +112,19 @@ export async function loadOrcGeneratorData() {
 export async function loadHalflingGeneratorData() {
     try {
         const [personalNames, familyNames, nicknames] = await Promise.all([
-            loadJSON('data/halflingPersonalNames.json'),
-            loadJSON('data/halflingFamilyNames.json'),
-            loadJSON('data/halflingNicknames.json')
+            loadJSON("data/halflingPersonalNames.json"),
+            loadJSON("data/halflingFamilyNames.json"),
+            loadJSON("data/halflingNicknames.json")
         ]);
-        
+
         return {
             personalNames,
             familyNames,
             nicknames
         };
     } catch (error) {
-        console.error('Failed to load Halfling generator data:', error);
-        throw new Error('Could not load Halfling name generator data. Please refresh the page.');
+        console.error("Failed to load Halfling generator data:", error);
+        throw new Error("Could not load Halfling name generator data. Please refresh the page.");
     }
 }
 
@@ -135,12 +135,12 @@ export async function loadHalflingGeneratorData() {
  */
 export function validateComponents(components) {
     if (!Array.isArray(components) || components.length === 0) {
-        console.error('Invalid components data');
+        console.error("Invalid components data");
         return false;
     }
-    
+
     // Check that components have required fields
-    const requiredFields = ['root', 'can_be_prefix', 'can_be_suffix'];
+    const requiredFields = ["root", "can_be_prefix", "can_be_suffix"];
     for (const component of components) {
         for (const field of requiredFields) {
             if (!(field in component)) {
@@ -149,7 +149,7 @@ export function validateComponents(components) {
             }
         }
     }
-    
+
     return true;
 }
 
@@ -160,18 +160,18 @@ export function validateComponents(components) {
  */
 export function validateConnectors(connectors) {
     if (!Array.isArray(connectors) || connectors.length === 0) {
-        console.error('Invalid connectors data');
+        console.error("Invalid connectors data");
         return false;
     }
-    
+
     // Check that connectors have required fields
     for (const connector of connectors) {
         if (!connector.text || !connector.function) {
-            console.error('Connector missing required fields', connector);
+            console.error("Connector missing required fields", connector);
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -182,12 +182,12 @@ export function validateConnectors(connectors) {
  */
 export function validateDwarvenFirstNames(firstNames) {
     if (!Array.isArray(firstNames) || firstNames.length === 0) {
-        console.error('Invalid Dwarven first names data');
+        console.error("Invalid Dwarven first names data");
         return false;
     }
-    
+
     // Check that first names have required fields
-    const requiredFields = ['root', 'can_be_prefix', 'can_be_suffix'];
+    const requiredFields = ["root", "can_be_prefix", "can_be_suffix"];
     for (const name of firstNames) {
         for (const field of requiredFields) {
             if (!(field in name)) {
@@ -196,7 +196,7 @@ export function validateDwarvenFirstNames(firstNames) {
             }
         }
     }
-    
+
     return true;
 }
 
@@ -207,12 +207,12 @@ export function validateDwarvenFirstNames(firstNames) {
  */
 export function validateDwarvenClanNames(clanNames) {
     if (!Array.isArray(clanNames) || clanNames.length === 0) {
-        console.error('Invalid Dwarven clan names data');
+        console.error("Invalid Dwarven clan names data");
         return false;
     }
-    
+
     // Check that clan names have required fields
-    const requiredFields = ['root', 'can_be_prefix', 'can_be_suffix'];
+    const requiredFields = ["root", "can_be_prefix", "can_be_suffix"];
     for (const name of clanNames) {
         for (const field of requiredFields) {
             if (!(field in name)) {
@@ -221,6 +221,6 @@ export function validateDwarvenClanNames(clanNames) {
             }
         }
     }
-    
+
     return true;
 }

@@ -1,47 +1,47 @@
 {
-  "name": "elf-name-generator",
-  "version": "3.1.4b",
-  "description": "Faerûn Name Generator - Elven & Dwarven Names",
-  "type": "module",
-  "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:run:log": "node scripts/run-tests-with-log.js",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
-    "test:watch": "vitest --watch",
-    "test:log-update": "node scripts/log-test-update.js",
-    "lint": "eslint js/ tests/ --ext .js --cache --cache-location .eslintcache --max-warnings 0",
-    "lint:fix": "eslint js/ tests/ --ext .js --fix --cache --cache-location .eslintcache",
-    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
-    "a11y": "pa11y http://localhost:4173",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare": "husky install",
-    "version:major": "node scripts/version.js major",
-    "version:minor": "node scripts/version.js minor",
-    "version:patch": "node scripts/version.js patch",
-    "version": "npm run version:patch"
-  },
-  "devDependencies": {
-    "@vitest/coverage-v8": "^4.0.15",
-    "@vitest/ui": "^4.0.15",
-    "eslint": "^8.57.0",
-    "eslint-plugin-markdown": "^3.0.1",
-    "husky": "^9.1.6",
-    "jsdom": "^23.0.0",
-    "lint-staged": "^15.2.10",
-    "markdownlint-cli": "^0.46.0",
-    "pa11y": "^9.0.1",
-    "prettier": "^3.4.1",
-    "vitest": "^4.0.15"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
-    ],
-    "*.{js,jsx,ts,tsx,json,css,md,html}": [
-      "prettier --write"
-    ]
-  }
+    "name": "elf-name-generator",
+    "version": "3.1.4b",
+    "description": "Faerûn Name Generator - Elven & Dwarven Names",
+    "type": "module",
+    "scripts": {
+        "test": "vitest",
+        "test:run": "vitest run",
+        "test:run:log": "node scripts/run-tests-with-log.js",
+        "test:ui": "vitest --ui",
+        "test:coverage": "vitest --coverage",
+        "test:watch": "vitest --watch",
+        "test:log-update": "node scripts/log-test-update.js",
+        "lint": "eslint js/ tests/ --ext .js --cache --cache-location .eslintcache --max-warnings 0",
+        "lint:fix": "eslint js/ tests/ --ext .js --fix --cache --cache-location .eslintcache",
+        "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+        "a11y": "pa11y http://localhost:4173",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "prepare": "husky install",
+        "version:major": "node scripts/version.js major",
+        "version:minor": "node scripts/version.js minor",
+        "version:patch": "node scripts/version.js patch",
+        "version": "npm run version:patch"
+    },
+    "devDependencies": {
+        "@vitest/coverage-v8": "^4.0.15",
+        "@vitest/ui": "^4.0.15",
+        "eslint": "^8.57.0",
+        "eslint-plugin-markdown": "^3.0.1",
+        "husky": "^9.1.6",
+        "jsdom": "^23.0.0",
+        "lint-staged": "^15.2.10",
+        "markdownlint-cli": "^0.46.0",
+        "pa11y": "^9.0.1",
+        "prettier": "^3.4.1",
+        "vitest": "^4.0.15"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": [
+            "eslint --fix"
+        ],
+        "*.{js,jsx,ts,tsx,json,css,md,html}": [
+            "prettier --write"
+        ]
+    }
 }

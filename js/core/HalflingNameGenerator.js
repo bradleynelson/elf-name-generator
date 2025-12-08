@@ -6,35 +6,31 @@ export class HalflingNameGenerator {
     }
 
     generate(options = {}) {
-        const {
-            subrace = 'lightfoot',
-            nameType = 'full',
-            gender = 'neutral'
-        } = options;
+        const { subrace = "lightfoot", nameType = "full", gender = "neutral" } = options;
 
-        const includeNickname = nameType === 'full' || nameType === 'full_with_nickname';
+        const includeNickname = nameType === "full" || nameType === "full_with_nickname";
         const personal = this._generatePersonalName(subrace, gender);
         const family = this._generateFamilyName(subrace);
         let nickname = includeNickname ? this._generateNickname() : null;
 
-        let name = '';
-        let meaning = '';
+        let name = "";
+        let meaning = "";
         const breakdown = {};
 
-        if (nameType === 'personal') {
+        if (nameType === "personal") {
             name = personal.text;
             meaning = personal.meaning || personal.text;
             breakdown.personal = personal;
-        } else if (nameType === 'family') {
+        } else if (nameType === "family") {
             name = family.text;
             meaning = family.meaning || family.text;
             breakdown.family = family;
-        } else if (nameType === 'nickname') {
+        } else if (nameType === "nickname") {
             if (!nickname) {
                 nickname = this._generateNickname();
             }
             if (!nickname) {
-                throw new Error('No nicknames available for generation');
+                throw new Error("No nicknames available for generation");
             }
             name = `"${nickname.text}"`;
             meaning = nickname.meaning || nickname.text;
@@ -71,7 +67,7 @@ export class HalflingNameGenerator {
     _filterByGender(items, gender) {
         if (!Array.isArray(items)) return [];
         const filtered = items.filter((item) => {
-            if (!item.gender || item.gender === 'any' || item.gender === 'neutral') return true;
+            if (!item.gender || item.gender === "any" || item.gender === "neutral") return true;
             return item.gender === gender;
         });
         return filtered.length > 0 ? filtered : items;

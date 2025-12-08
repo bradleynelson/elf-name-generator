@@ -1,7 +1,7 @@
 [
-  {"text":"Aleslosh","meaning":"Ale drinker","phonetic":"Ayl-slohsh"},
-  {"text":"Sparklegem","meaning":"Bright gem","phonetic":"Spahr-kul-jem"},
-  {"text":"Bimp","meaning":"Little clever","phonetic":"Bimp"},
-  {"text":"Cogs","meaning":"Inventor","phonetic":"Kogs"},
-  {"text":"Puddle","meaning":"Mischievous","phonetic":"Puh-dul"}
+    { "text": "Aleslosh", "meaning": "Ale drinker", "phonetic": "Ayl-slohsh" },
+    { "text": "Sparklegem", "meaning": "Bright gem", "phonetic": "Spahr-kul-jem" },
+    { "text": "Bimp", "meaning": "Little clever", "phonetic": "Bimp" },
+    { "text": "Cogs", "meaning": "Inventor", "phonetic": "Kogs" },
+    { "text": "Puddle", "meaning": "Mischievous", "phonetic": "Puh-dul" }
 ]

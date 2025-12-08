@@ -5,13 +5,11 @@ This project uses automated versioning with semantic versioning (SemVer) format:
 ## Version Number Meanings
 
 - **MAJOR (X.0.0)**: Complete refactors, major architectural changes
-  - Example: v1 → v2 (complete refactor from 3-file site to modular architecture)
-  
+    - Example: v1 → v2 (complete refactor from 3-file site to modular architecture)
 - **MINOR (x.X.0)**: Major feature additions
-  - Example: Adding phonetic voice reader, new subrace support, complex mode
-  
+    - Example: Adding phonetic voice reader, new subrace support, complex mode
 - **PATCH (x.x.X)**: Bug fixes, minor enhancements, small updates
-  - Example: UI tweaks, performance improvements, small fixes, styling updates
+    - Example: UI tweaks, performance improvements, small fixes, styling updates
 
 ## How to Bump Version
 
@@ -39,19 +37,20 @@ npm run version:major
 ### Manual Steps After Versioning
 
 1. **Update CHANGELOG.md** - Add actual changes for the new version
-   - Replace the placeholder "Version bump" with real changes
-   - Use sections: Added, Changed, Fixed, Removed
+    - Replace the placeholder "Version bump" with real changes
+    - Use sections: Added, Changed, Fixed, Removed
 
 2. **Commit changes** (if using git):
-   ```bash
-   git add package.json index.html CHANGELOG.md
-   git commit -m "Bump version to vX.X.X"
-   git tag vX.X.X
-   ```
+    ```bash
+    git add package.json index.html CHANGELOG.md
+    git commit -m "Bump version to vX.X.X"
+    git tag vX.X.X
+    ```
 
 ## Examples
 
 ### Example 1: Small Bug Fix
+
 ```bash
 npm run version:patch
 # Updates: 2.0.1 → 2.0.2
@@ -59,6 +58,7 @@ npm run version:patch
 ```
 
 ### Example 2: Adding New Feature
+
 ```bash
 npm run version:minor
 # Updates: 2.0.2 → 2.1.0
@@ -66,6 +66,7 @@ npm run version:minor
 ```
 
 ### Example 3: Major Refactor
+
 ```bash
 npm run version:major
 # Updates: 2.1.0 → 3.0.0
@@ -75,6 +76,7 @@ npm run version:major
 ## Current Version
 
 Check the current version in:
+
 - `package.json` - `"version"` field
 - `index.html` - Line 808 (version display)
 - `CHANGELOG.md` - Top entry
@@ -82,5 +84,3 @@ Check the current version in:
 ## Version History
 
 See `CHANGELOG.md` for complete version history and changes.
-
-
