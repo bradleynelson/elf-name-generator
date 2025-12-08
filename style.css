@@ -1763,10 +1763,16 @@ input[type="range"]::-moz-range-progress {
         box-shadow: none !important;
         transform: none !important;
     }
+    /* Narrower secondary (footer) tabs while keeping left alignment */
+    .tabs-stack .footer-tabs {
+        width: 75px !important;
+        align-self: flex-start !important;
+    }
     .tabs-stack .footer-tab {
         border: 2px solid var(--color-border-accent) !important;
         border-left: none !important;
         background: #242424 !important;
+        min-width: 75px !important;
     }
     #moreTab { display: none !important; }
     #orcTabMore { display: none !important; }
