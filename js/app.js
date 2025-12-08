@@ -1,4 +1,3 @@
-        const alphaTooltip = 'Alpha: experimental generator with limited linguistic data; patterns may shift as more sources are analyzed.';
 // Main Application class - coordinates all modules for both Elven and Dwarven generators
 import { CONFIG } from './config.js';
 import { loadGeneratorData, validateComponents, validateConnectors, loadDwarvenGeneratorData, validateDwarvenFirstNames, validateDwarvenClanNames, loadGnomishGeneratorData, loadHalflingGeneratorData, loadOrcGeneratorData } from './utils/dataLoader.js';
@@ -225,9 +224,7 @@ export class UnifiedNameGenerator {
         const contactModal = document.getElementById('contactModal');
         const contactClose = document.getElementById('contactClose');
         const contactCancel = document.getElementById('contactCancel');
-        const contactForm = document.getElementById('contactForm'); // not used now, kept for safety
-        const contactEmail = document.getElementById('contactEmail'); // not used
-        const contactMessage = document.getElementById('contactMessage'); // not used
+        const contactEmail = document.getElementById('contactEmail'); // placeholder for focus
         
         if (elvenTab) {
             elvenTab.addEventListener('click', (e) => {
