@@ -89,8 +89,7 @@ export class HalflingNameGenerator {
         const text = pick.prefix_text || pick.text || pick.root;
         return {
             text,
-            meaning: pick.prefix_meaning || pick.meaning || text,
-            phonetic: pick.prefix_phonetic || pick.phonetic || text
+            meaning: pick.prefix_meaning || pick.meaning || text
         };
     }
 
@@ -105,8 +104,7 @@ export class HalflingNameGenerator {
         const text = pick.text || pick.root;
         return {
             text,
-            meaning: pick.meaning || text,
-            phonetic: pick.phonetic || text
+            meaning: pick.meaning || text
         };
     }
 
@@ -115,8 +113,7 @@ export class HalflingNameGenerator {
         const pick = this._randomElement(this.nicknames);
         return {
             text: pick.text,
-            meaning: pick.meaning || pick.text,
-            phonetic: pick.phonetic || pick.text
+            meaning: pick.meaning || pick.text
         };
     }
 

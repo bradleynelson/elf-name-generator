@@ -218,6 +218,13 @@ export class UnifiedNameGenerator {
         const orcTab = document.getElementById('orcTab');
         const orcTabMore = document.getElementById('orcTabMore');
         const moreTab = document.getElementById('moreTab');
+        const favoritesInfo = document.querySelector('.info-icon');
+        const licenseTrigger = document.querySelector('.license-popover-trigger');
+        const contactTab = document.getElementById('contactTab');
+        const contactModal = document.getElementById('contactModal');
+        const contactClose = document.getElementById('contactClose');
+        const contactCancel = document.getElementById('contactCancel');
+        const contactEmail = document.getElementById('contactEmail'); // placeholder for focus
         
         if (elvenTab) {
             elvenTab.addEventListener('click', (e) => {
@@ -291,6 +298,105 @@ export class UnifiedNameGenerator {
                 moreTab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             });
         }
+        
+        // Favorites info popover (click/keyboard)
+        if (favoritesInfo) {
+            const popover = favoritesInfo.querySelector('.info-popover');
+            const togglePopover = (open) => {
+                favoritesInfo.classList.toggle('open', open);
+                favoritesInfo.setAttribute('aria-expanded', open ? 'true' : 'false');
+            };
+            const closePopover = () => togglePopover(false);
+            favoritesInfo.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = favoritesInfo.classList.contains('open');
+                togglePopover(!isOpen);
+            });
+            favoritesInfo.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const isOpen = favoritesInfo.classList.contains('open');
+                    togglePopover(!isOpen);
+                } else if (e.key === 'Escape') {
+                    closePopover();
+                }
+            });
+            document.addEventListener('click', (e) => {
+                if (!favoritesInfo.contains(e.target)) {
+                    closePopover();
+                }
+            });
+            if (popover) {
+                popover.addEventListener('click', (e) => e.stopPropagation());
+            }
+        }
+
+        // License popover (click/keyboard)
+        if (licenseTrigger) {
+            const licensePopover = licenseTrigger.querySelector('.license-popover');
+            const toggleLicense = (open) => {
+                licenseTrigger.classList.toggle('open', open);
+                licenseTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+            };
+            const closeLicense = () => toggleLicense(false);
+            licenseTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = licenseTrigger.classList.contains('open');
+                toggleLicense(!isOpen);
+            });
+            licenseTrigger.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const isOpen = licenseTrigger.classList.contains('open');
+                    toggleLicense(!isOpen);
+                } else if (e.key === 'Escape') {
+                    closeLicense();
+                }
+            });
+            document.addEventListener('click', (e) => {
+                if (!licenseTrigger.contains(e.target)) {
+                    closeLicense();
+                }
+            });
+            if (licensePopover) {
+                licensePopover.addEventListener('click', (e) => e.stopPropagation());
+            }
+        }
+
+        // Contact modal (click/keyboard)
+        const openContact = () => {
+            if (contactModal) {
+                contactModal.hidden = false;
+                contactModal.classList.add('open');
+                contactEmail?.focus();
+            }
+        };
+        const closeContact = () => {
+            if (contactModal) {
+                contactModal.hidden = true;
+                contactModal.classList.remove('open');
+            }
+        };
+        if (contactTab) {
+            contactTab.addEventListener('click', (e) => {
+                e.preventDefault();
+                openContact();
+            });
+        }
+        contactClose?.addEventListener('click', closeContact);
+        contactCancel?.addEventListener('click', closeContact);
+        if (contactModal) {
+            contactModal.addEventListener('click', (e) => {
+                if (e.target === contactModal) {
+                    closeContact();
+                }
+            });
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeContact();
+            }
+        });
         
         // Elven Subrace selector
         if (this.ui.elements.subraceSelect) {
@@ -583,6 +689,8 @@ export class UnifiedNameGenerator {
         const orcControls = document.querySelector('.orc-controls');
         const titleIcons = document.querySelectorAll('.title-sword');
         const orcTabMore = document.getElementById('orcTabMore');
+        const betaTooltip = 'Beta: this feature is functional but still in testing. Performance, accuracy, and stability may vary. APIs, outputs, or behavior may change without notice during the beta period.';
+        const alphaTooltip = 'Alfa: experimental generator with limited linguistic data; patterns may shift as more sources are analyzed.';
         
         if (generatorType === 'elven') {
             if (elvenTab) elvenTab.classList.add('active');
@@ -596,7 +704,10 @@ export class UnifiedNameGenerator {
             
             if (titleName) titleName.textContent = 'Elven Name';
             if (subtitle) subtitle.textContent = 'Espruar Naming System - Forgotten Realms';
-            if (betaLabel) betaLabel.style.display = 'none';
+            if (betaLabel) {
+                betaLabel.style.display = 'none';
+                betaLabel.setAttribute('title', '');
+            }
             if (elvenEducation) elvenEducation.style.display = 'block';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
             if (gnomishEducation) gnomishEducation.style.display = 'none';
@@ -628,6 +739,7 @@ export class UnifiedNameGenerator {
             if (betaLabel) {
                 betaLabel.style.display = 'block';
                 betaLabel.textContent = 'BETA';
+                betaLabel.setAttribute('title', betaTooltip);
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'block';
@@ -659,6 +771,7 @@ export class UnifiedNameGenerator {
             if (betaLabel) {
                 betaLabel.style.display = 'block';
                 betaLabel.textContent = 'ALFA';
+                betaLabel.setAttribute('title', alphaTooltip);
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
@@ -689,6 +802,7 @@ export class UnifiedNameGenerator {
             if (betaLabel) {
                 betaLabel.style.display = 'block';
                 betaLabel.textContent = 'ALFA';
+                betaLabel.setAttribute('title', alphaTooltip);
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';
@@ -719,6 +833,7 @@ export class UnifiedNameGenerator {
             if (betaLabel) {
                 betaLabel.style.display = 'block';
                 betaLabel.textContent = 'ALFA';
+                betaLabel.setAttribute('title', alphaTooltip);
             }
             if (elvenEducation) elvenEducation.style.display = 'none';
             if (dwarvenEducation) dwarvenEducation.style.display = 'none';

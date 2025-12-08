@@ -126,6 +126,10 @@
             <span class="tab-label">REPO</span>
             <span class="external-link-icon" aria-hidden="true">⧉</span>
         </a>
+        <button class="footer-tab" id="contactTab" aria-label="Contact and feedback">
+            <span class="tab-icon" aria-hidden="true">✉️</span>
+            <span class="tab-label">MAIL</span>
+        </button>
     </div>
     
     <div class="container">
@@ -386,7 +390,7 @@
                 <div class="name-pronunciation-wrapper">
                     <div class="name-pronunciation" id="namePronunciation"></div>
                     <div class="speaker-container" style="display: none;" id="speakerContainer">
-                        <button class="speaker-btn" id="speakerBtn" aria-label="Pronounce name" title="Pronounce name">
+                        <button class="speaker-btn" id="speakerBtn" aria-label="Pronounce name" title="Pronounce name (Beta: this feature is functional but still in testing. Performance, accuracy, and stability may vary. APIs, outputs, or behavior may change without notice during the beta period.)">
                             <span class="speaker-icon speaker-icon-default">🔈</span>
                             <span class="speaker-icon speaker-icon-playing">🔊</span>
                             <span class="speaker-beta">BETA</span>
@@ -426,8 +430,11 @@
         <div class="favorites">
             <div class="favorites-title">
                 <span aria-hidden="true">⭐</span> Saved Favorites 
-                <span class="info-icon" title="Favorites are saved locally in your browser and won't sync across devices" aria-label="Favorites are saved locally in your browser and won't sync across devices">
+                <span class="info-icon" role="button" tabindex="0" aria-expanded="false" aria-controls="favoritesInfo">
                     <span class="info-circle" aria-hidden="true">i</span>
+                    <span class="info-popover" id="favoritesInfo" role="status">
+                        Favorites are saved locally in your browser and won't sync across devices.
+                    </span>
                 </span>
             </div>
             <div class="favorites-filter" role="group" aria-label="Filter favorites by generator type">
@@ -1469,15 +1476,60 @@
         </section>
         
         <footer class="disclaimer">
-            <p>This is an unofficial fan-made tool for Dungeons & Dragons. Not affiliated with or endorsed by Wizards of the Coast. D&D and Forgotten Realms are trademarks of Wizards of the Coast LLC.</p>
+            <p>This is an unofficial fan-made tool for Dungeons & Dragons® and the Forgotten Realms®.</p>
+            <p>It is not affiliated with, endorsed, sponsored, or approved by Wizards of the Coast LLC.</p>
+            <p>Dungeons & Dragons®, Forgotten Realms®, Faerûn®, and related trademarks and lore are the property of Wizards of the Coast LLC.</p>
+            <p>The algorithms, code, and interface design used on this site are original works © 2025 Bradley Nelson and are released under the 
+                <span class="license-popover-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="mitLicense">
+                    MIT License
+                    <span class="license-popover" id="mitLicense" role="dialog" aria-label="MIT License">
+                        <strong>MIT License</strong><br><br>
+                        Copyright (c) 2025 Brad Nelson<br><br>
+                        Permission is hereby granted, free of charge, to any person obtaining a copy
+                        of this software and associated documentation files (the "Software"), to deal
+                        in the Software without restriction, including without limitation the rights
+                        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                        copies of the Software, and to permit persons to whom the Software is
+                        furnished to do so, subject to the following conditions:<br><br>
+                        The above copyright notice and this permission notice shall be included in all
+                        copies or substantial portions of the Software.<br><br>
+                        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                        SOFTWARE.
+                    </span>
+                </span>.
+            </p>
+            <p>Per MIT terms, any copies or derivative works must retain the original copyright notice and license text.</p>
         </footer>
         
         <div class="version-box">
-            <p>v3.1.2 - Last Updated 12-07-25</p>
+            <p>v3.1.3 - Last Updated 12-07-25</p>
         </div>
     </div>
 
     <!-- Main application script - now using ES6 modules -->
     <script type="module" src="js/app.js"></script>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal" hidden role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="contactTitle">Contact</h2>
+                <button class="modal-close" id="contactClose" aria-label="Close contact dialog">×</button>
+            </div>
+            <p class="modal-body-text muted">
+                Email <strong class="modal-email">contact@espruar.com</strong> for feedback, inquiries, requests, or bug reports.
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="modal-secondary" id="contactCancel">Close</button>
+                <a class="modal-primary" href="mailto:contact@espruar.com?subject=Espruar%20Contact" aria-label="Email contact@espruar.com">Open Email</a>
+            </div>
+            <p class="modal-note subrace-description" id="contactNote">GitHub Pages has zero-backend support for email forms.</p>
+        </div>
+    </div>
 </body>
 </html>
