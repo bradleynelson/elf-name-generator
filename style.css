@@ -204,7 +204,8 @@
     background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent) 65%, var(--color-accent-light) 100%);
     color: var(--color-bg-primary);
     border: 1px solid var(--color-accent-darker);
-    box-shadow: 0 0 8px var(--color-accent-glow);
+    box-shadow: none;
+    cursor: help;
 }
 
 [data-generator="orc"] .generate-btn-large {
@@ -283,7 +284,8 @@
     background: var(--color-accent-secondary);
     color: var(--color-bg-primary);
     border: 1px solid var(--color-accent-secondary-dark);
-    box-shadow: 0 0 8px var(--color-accent-glow);
+    box-shadow: none;
+    cursor: help;
 }
 
 /* Gnomish generate button - copper + green blend */
@@ -330,7 +332,8 @@
     background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-accent) 65%, var(--color-accent-light) 100%);
     color: var(--color-bg-primary);
     border: 1px solid var(--color-accent-darker);
-    box-shadow: 0 0 8px var(--color-accent-glow);
+    box-shadow: none;
+    cursor: help;
 }
 
 [data-generator="halfling"] .generate-btn-large {
@@ -1628,6 +1631,27 @@ input[type="range"]::-moz-range-progress {
     border-radius: var(--radius-sm);
     box-shadow: 0 6px 18px rgba(0,0,0,0.4);
     z-index: 5;
+}
+
+.badge-popover {
+    display: none;
+    position: fixed;
+    padding: var(--spacing-sm);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(20, 24, 32, 0.98) 0px,
+        rgba(20, 24, 32, 0.98) 10px,
+        rgba(23, 26, 36, 0.98) 10px,
+        rgba(23, 26, 36, 0.98) 20px
+    );
+    color: var(--color-text-primary);
+    border: 1px solid rgba(138, 180, 248, 0.4);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    z-index: 6000;
+    line-height: 1.4;
+    font-size: var(--font-size-sm);
+    max-width: 280px;
 }
 
 .info-icon.open .info-popover {
@@ -3484,7 +3508,7 @@ html[data-generator="dwarven"] select option {
     text-transform: uppercase;
     border-radius: var(--radius-md);
     z-index: 100;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: none;
     cursor: help;
 }
 
