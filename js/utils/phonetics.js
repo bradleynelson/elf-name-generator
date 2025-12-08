@@ -1,5 +1,5 @@
 // Phonetic utility functions for Elven name generation
-import { CONFIG } from '../config.js';
+import { CONFIG } from "../config.js";
 
 /**
  * Check if a character is a vowel
@@ -57,11 +57,11 @@ export function isLiquidConsonant(char) {
  */
 export function countSyllables(word) {
     if (!word || word.length === 0) return 0;
-    
+
     word = word.toLowerCase();
     let count = 0;
     let prevVowel = false;
-    
+
     for (const char of word) {
         if (isVowel(char)) {
             if (!prevVowel) count++;
@@ -70,12 +70,12 @@ export function countSyllables(word) {
             prevVowel = false;
         }
     }
-    
+
     // Silent 'e' at the end reduces count (but not if it's the only syllable)
-    if (word.endsWith('e') && count > 1) {
+    if (word.endsWith("e") && count > 1) {
         count--;
     }
-    
+
     return Math.max(1, count);
 }
 
@@ -88,10 +88,10 @@ export function countSyllables(word) {
  */
 export function needsConnector(comp1Text, comp2Text) {
     if (!comp1Text || !comp2Text) return false;
-    
+
     const end = comp1Text[comp1Text.length - 1];
     const start = comp2Text[0];
-    
+
     // Need connector if both are consonants
     if (!isVowel(end) && !isVowel(start)) {
         // Exception: Liquid consonants blend well together
@@ -100,7 +100,7 @@ export function needsConnector(comp1Text, comp2Text) {
         }
         return true;
     }
-    
+
     return false;
 }
 
@@ -114,10 +114,10 @@ export function needsConnector(comp1Text, comp2Text) {
 export function shouldSuggestFinalVowel(name, syllables, targetSyllables) {
     // Suggest if name is short
     if (syllables < targetSyllables) return true;
-    
+
     // Suggest if ends with hard consonant
     if (endsWithHardConsonant(name)) return true;
-    
+
     return false;
 }
 
@@ -127,8 +127,8 @@ export function shouldSuggestFinalVowel(name, syllables, targetSyllables) {
  * @returns {string} Clean text
  */
 export function cleanComponentText(text) {
-    if (!text) return '';
-    return text.replace(/-/g, '');
+    if (!text) return "";
+    return text.replace(/-/g, "");
 }
 
 /**
@@ -137,7 +137,7 @@ export function cleanComponentText(text) {
  * @returns {string}
  */
 export function capitalize(str) {
-    if (!str || str.length === 0) return '';
+    if (!str || str.length === 0) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -148,15 +148,16 @@ export function capitalize(str) {
  * @returns {string} Formatted meaning
  */
 export function formatMeaning(meaning) {
-    if (!meaning) return '';
-    
+    if (!meaning) return "";
+
     // Replace slashes with commas
-    meaning = meaning.replace(/\s*\/\s*/g, ', ');
-    
+    meaning = meaning.replace(/\s*\/\s*/g, ", ");
+
     // Capitalize every word (Title Case)
-    return meaning.split(' ').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    return meaning
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 }
 
 /**
@@ -166,10 +167,10 @@ export function formatMeaning(meaning) {
  */
 export function getMainVowel(text) {
     if (!text) return null;
-    
+
     const vowelMatches = text.toLowerCase().match(/[aeiou]+/g);
     if (!vowelMatches || vowelMatches.length === 0) return null;
-    
+
     // Return the first vowel cluster
     return vowelMatches[0];
 }
@@ -183,14 +184,14 @@ export function getMainVowel(text) {
 export function sharesVowelSound(text1, text2) {
     const vowel1 = getMainVowel(text1);
     const vowel2 = getMainVowel(text2);
-    
+
     if (!vowel1 || !vowel2) return false;
-    
+
     // Check if they share any vowel character
     for (const v of vowel1) {
         if (vowel2.includes(v)) return true;
     }
-    
+
     return false;
 }
 
@@ -203,19 +204,17 @@ export function sharesVowelSound(text1, text2) {
  */
 export function hasHarshCluster(comp1Text, comp2Text) {
     if (!comp1Text || !comp2Text) return false;
-    
+
     const end = comp1Text.slice(-2).toLowerCase(); // Last 2 chars
     const start = comp2Text.slice(0, 2).toLowerCase(); // First 2 chars
     const junction = (comp1Text.slice(-1) + comp2Text.slice(0, 1)).toLowerCase();
-    
+
     // Harsh clusters to avoid
-    const harshClusters = ['gr', 'kr', 'dr', 'tr', 'thr', 'str'];
-    
+    const harshClusters = ["gr", "kr", "dr", "tr", "thr", "str"];
+
     // Check if junction or either end creates a harsh cluster
-    return harshClusters.some(cluster => 
-        junction.includes(cluster) || 
-        end.includes(cluster) || 
-        start.includes(cluster)
+    return harshClusters.some(
+        (cluster) => junction.includes(cluster) || end.includes(cluster) || start.includes(cluster)
     );
 }
 
@@ -226,7 +225,7 @@ export function hasHarshCluster(comp1Text, comp2Text) {
  */
 export function hasExcessiveConsonantCluster(name) {
     if (!name) return false;
-    
+
     // Find all consonant clusters
     const consonantClusters = name.match(/[^aeiou]{3,}/gi);
     return consonantClusters && consonantClusters.length > 0;
@@ -239,35 +238,35 @@ export function hasExcessiveConsonantCluster(name) {
  */
 export function detectSuffixGender(nameData) {
     // Check for gender modifier suffixes
-    const feminineEndings = ['iel', 'ael', 'wen', 'yn', 'ae', 'a'];
-    const masculineEndings = ['ion', 'on', 'or', 'ar'];
-    
+    const feminineEndings = ["iel", "ael", "wen", "yn", "ae", "a"];
+    const masculineEndings = ["ion", "on", "or", "ar"];
+
     let suffix = null;
     if (nameData.suffix && nameData.suffix.suffix_text) {
-        suffix = nameData.suffix.suffix_text.toLowerCase().replace('-', '');
+        suffix = nameData.suffix.suffix_text.toLowerCase().replace("-", "");
     } else if (nameData.components && nameData.components.length > 0) {
         // Complex mode - check last component
         const lastComp = nameData.components[nameData.components.length - 1];
         suffix = lastComp.text.toLowerCase();
     }
-    
-    if (!suffix) return 'neutral';
-    
+
+    if (!suffix) return "neutral";
+
     // Check if it's explicitly marked as gender modifier
     if (nameData.suffix && nameData.suffix.is_gender_modifier) {
-        if (suffix.includes('iel') || suffix.includes('ial')) return 'feminine';
-        if (suffix.includes('ion')) return 'masculine';
+        if (suffix.includes("iel") || suffix.includes("ial")) return "feminine";
+        if (suffix.includes("ion")) return "masculine";
     }
-    
+
     // Check endings
     for (const ending of feminineEndings) {
-        if (suffix.endsWith(ending)) return 'feminine';
+        if (suffix.endsWith(ending)) return "feminine";
     }
     for (const ending of masculineEndings) {
-        if (suffix.endsWith(ending)) return 'masculine';
+        if (suffix.endsWith(ending)) return "masculine";
     }
-    
-    return 'neutral';
+
+    return "neutral";
 }
 
 /**

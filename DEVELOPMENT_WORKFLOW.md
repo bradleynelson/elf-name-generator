@@ -84,6 +84,7 @@ git push origin main
 ```
 
 **Important:** Always use a Pull Request to merge `develop` → `main` so that:
+
 - Tests run automatically
 - You can review changes
 - Branch protection rules are enforced
@@ -131,6 +132,7 @@ Test: Test addition/update
 ```
 
 Examples:
+
 - `Add: Drow component expansion to 30+ components`
 - `Fix: Phonetic flow issue with liquid consonants`
 - `Update: Improve accessibility for screen readers`
@@ -152,6 +154,7 @@ npm run version:major
 ```
 
 Version updates will:
+
 - Update `package.json`
 - Update `CHANGELOG.md`
 - Create a git commit with the version change
@@ -227,4 +230,3 @@ git pull origin develop
 - Check `.github/ENVIRONMENT_SETUP.md` for environment configuration
 - Review GitHub Actions logs if deployment fails
 - Check test logs for test failures
-

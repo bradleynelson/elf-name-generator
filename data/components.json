@@ -1,1982 +1,1607 @@
 [
-  {
-    "root": "ae",
-    "prefix_text": "Ae-",
-    "prefix_meaning": "ever, eternal",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ae",
-    "suffix_meaning": "Whisper / Secret",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "mysterious",
-      "neutral"
-    ],
-    "prefix_phonetic": "Ay",
-    "suffix_phonetic": "ay"
-  },
-  {
-    "root": "ael",
-    "prefix_text": "Ael-",
-    "prefix_meaning": "Knight / Warrior",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ael",
-    "suffix_meaning": "noble light",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "nocturnal",
-      "nobility",
-      "martial",
-      "wood"
-    ],
-    "prefix_phonetic": "Ayl",
-    "suffix_phonetic": "ayl"
-  },
-  {
-    "root": "aer",
-    "prefix_text": "Aer-",
-    "prefix_meaning": "Law / Sky",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-aer",
-    "suffix_meaning": "Law / Sky",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "neutral"
-    ],
-    "prefix_phonetic": "Air",
-    "suffix_phonetic": "air"
-  },
-  {
-    "root": "ala",
-    "prefix_text": "Ala-",
-    "prefix_meaning": "memory, kinship",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ala",
-    "suffix_meaning": "memory, kinship",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Ah-lah",
-    "suffix_phonetic": "ah-lah"
-  },
-  {
-    "root": "an",
-    "prefix_text": "An-",
-    "prefix_meaning": "Light / Sky",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-an",
-    "suffix_meaning": "Light / Sky",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Ahn",
-    "suffix_phonetic": "ahn"
-  },
-  {
-    "root": "ara",
-    "prefix_text": "Ara-",
-    "prefix_meaning": "Great / King",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ara",
-    "suffix_meaning": "Great / King",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "neutral"
-    ],
-    "prefix_phonetic": "Ah-rah",
-    "suffix_phonetic": "ah-rah"
-  },
-  {
-    "root": "aran",
-    "prefix_text": "Aran-",
-    "prefix_meaning": "King / High",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-aran",
-    "suffix_meaning": "King / High",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun"
-    ],
-    "prefix_phonetic": "Ah-rahn",
-    "suffix_phonetic": "ah-rahn"
-  },
-  {
-    "root": "ath",
-    "prefix_text": "Ath-",
-    "prefix_meaning": "Loyalty / Steadfast",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ath",
-    "suffix_meaning": "Loyalty / Steadfast",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Ahth",
-    "suffix_phonetic": "ahth"
-  },
-  {
-    "root": "bi",
-    "prefix_text": "Bi-",
-    "prefix_meaning": "Jade / Green",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-bi",
-    "suffix_meaning": "Jade / Green",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "prefix_phonetic": "Bee",
-    "suffix_phonetic": "bee"
-  },
-  {
-    "root": "cae",
-    "prefix_text": "Cae-",
-    "prefix_meaning": "Lady / Noble",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-cae",
-    "suffix_meaning": "Lady / Noble",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "feminine",
-      "neutral"
-    ],
-    "prefix_phonetic": "Kay",
-    "suffix_phonetic": "kay"
-  },
-  {
-    "root": "cela",
-    "prefix_text": "Cela-",
-    "prefix_meaning": "silver, moon-silver",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-cela",
-    "suffix_meaning": "silver, moon-silver",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon"
-    ],
-    "prefix_phonetic": "Seh-lah",
-    "suffix_phonetic": "seh-lah"
-  },
-  {
-    "root": "cor",
-    "prefix_text": "Cor-",
-    "prefix_meaning": "Legend / Ancient",
-    "can_be_prefix": true,
-    "can_be_suffix": false,
-    "suffix_text": null,
-    "suffix_meaning": null,
-    "is_gender_modifier": false,
-    "tags": [
-      "ancient",
-      "sun",
-      "neutral"
-    ],
-    "prefix_phonetic": "Korr"
-  },
-  {
-    "root": "del",
-    "prefix_text": "Del-",
-    "prefix_meaning": "Earth / Ground",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-del",
-    "suffix_meaning": "Earth / Ground",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "prefix_phonetic": "Dell",
-    "suffix_phonetic": "dell"
-  },
-  {
-    "root": "eir",
-    "prefix_text": "Eir-",
-    "prefix_meaning": "Sharp / Grim",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-eir",
-    "suffix_meaning": "Sharp / Grim",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Air",
-    "suffix_phonetic": "air"
-  },
-  {
-    "root": "ela",
-    "prefix_text": "Ela-",
-    "prefix_meaning": "bright, radiant",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ela",
-    "suffix_meaning": "bright, radiant",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light",
-      "neutral"
-    ],
-    "prefix_phonetic": "Eh-lah",
-    "suffix_phonetic": "eh-lah"
-  },
-  {
-    "root": "faer",
-    "prefix_text": "Faer-",
-    "prefix_meaning": "weave, magic",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-faer",
-    "suffix_meaning": "weave, magic",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Fair",
-    "suffix_phonetic": "fair"
-  },
-  {
-    "root": "fha",
-    "prefix_text": "Fha-",
-    "prefix_meaning": "Faerie / Fey",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-fha",
-    "suffix_meaning": "Faerie / Fey",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Fah",
-    "suffix_phonetic": "fah"
-  },
-  {
-    "root": "gyl",
-    "prefix_text": "Gyl-",
-    "prefix_meaning": "Song / Music",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-gyl",
-    "suffix_meaning": "Song / Music",
-    "is_gender_modifier": false,
-    "tags": [
-      "musical",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Gill",
-    "suffix_phonetic": "gill"
-  },
-  {
-    "root": "iar",
-    "prefix_text": "Iar-",
-    "prefix_meaning": "Sea / Wave",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-iar",
-    "suffix_meaning": "Sea / Wave",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "flowing"
-    ],
-    "prefix_phonetic": "Ee-arr",
-    "suffix_phonetic": "ee-arr"
-  },
-  {
-    "root": "ilan",
-    "prefix_text": "Ilan-",
-    "prefix_meaning": "Silver / Moon",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ilan",
-    "suffix_meaning": "Silver / Moon",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Ih-lahn",
-    "suffix_phonetic": "ih-lahn"
-  },
-  {
-    "root": "im",
-    "prefix_text": "Im-",
-    "prefix_meaning": "Deep / Ocean",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-im",
-    "suffix_meaning": "Deep / Ocean",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Ihm",
-    "suffix_phonetic": "ihm"
-  },
-  {
-    "root": "iri",
-    "prefix_text": "Iri-",
-    "prefix_meaning": "dream, mist",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-iri",
-    "suffix_meaning": "dream, mist",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "mysterious",
-      "neutral"
-    ],
-    "prefix_phonetic": "Ih-ree",
-    "suffix_phonetic": "ih-ree"
-  },
-  {
-    "root": "la",
-    "prefix_text": "La-",
-    "prefix_meaning": "Night / Crescent",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-la",
-    "suffix_meaning": "Night / Crescent",
-    "is_gender_modifier": false,
-    "tags": [
-      "nocturnal",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Lah",
-    "suffix_phonetic": "lah"
-  },
-  {
-    "root": "lae",
-    "prefix_text": "Lae-",
-    "prefix_meaning": "dawn, light",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-lae",
-    "suffix_meaning": "dawn, light",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Lay",
-    "suffix_phonetic": "lay"
-  },
-  {
-    "root": "lia",
-    "prefix_text": "Lia-",
-    "prefix_meaning": "Moon / Arcane",
-    "can_be_prefix": true,
-    "can_be_suffix": false,
-    "suffix_text": null,
-    "suffix_meaning": null,
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Lee-ah"
-  },
-  {
-    "root": "luin",
-    "prefix_text": "Luin-",
-    "prefix_meaning": "Blue / Sapphire",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-luin",
-    "suffix_meaning": "Blue / Sapphire",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Loo-in",
-    "suffix_phonetic": "loo-in"
-  },
-  {
-    "root": "mae",
-    "prefix_text": "Mae-",
-    "prefix_meaning": "Shadow, Mystery",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-mae",
-    "suffix_meaning": "Shadow, Mystery",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "shadow",
-      "mysterious",
-      "neutral"
-    ],
-    "prefix_phonetic": "May",
-    "suffix_phonetic": "may"
-  },
-  {
-    "root": "menal",
-    "prefix_text": "Menal-",
-    "prefix_meaning": "Moon",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-menal",
-    "suffix_meaning": "Moon",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Meh-nahl",
-    "suffix_phonetic": "meh-nahl"
-  },
-  {
-    "root": "mer",
-    "prefix_text": "Mer-",
-    "prefix_meaning": "Star / Noble",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-mer",
-    "suffix_meaning": "Star / Noble",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "nobility",
-      "celestial"
-    ],
-    "prefix_phonetic": "Mair",
-    "suffix_phonetic": "mair"
-  },
-  {
-    "root": "min",
-    "prefix_text": "Min-",
-    "prefix_meaning": "Tower / High Place",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-min",
-    "suffix_meaning": "Tower / High Place",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "neutral"
-    ],
-    "prefix_phonetic": "Mihn",
-    "suffix_phonetic": "mihn"
-  },
-  {
-    "root": "mon",
-    "prefix_text": "Mon-",
-    "prefix_meaning": "Moon (a common simplification of Menal)",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-mon",
-    "suffix_meaning": "Moon (a common simplification of Menal)",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Mohn",
-    "suffix_phonetic": "mohn"
-  },
-  {
-    "root": "mon",
-    "prefix_text": "Mon-",
-    "prefix_meaning": "Stone, Mountain, Great",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-mon",
-    "suffix_meaning": "Stone, Mountain, Great",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "neutral"
-    ],
-    "prefix_phonetic": "Mohn",
-    "suffix_phonetic": "mohn"
-  },
-  {
-    "root": "morn",
-    "prefix_text": "Morn-",
-    "prefix_meaning": "Stone, Mountain, Great",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-morn",
-    "suffix_meaning": "Stone, Mountain, Great",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "wood"
-    ],
-    "prefix_phonetic": "Morn",
-    "suffix_phonetic": "morn"
-  },
-  {
-    "root": "morn",
-    "prefix_text": "Morn-",
-    "prefix_meaning": "Darkness (sometimes)",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-morn",
-    "suffix_meaning": "Darkness (sometimes)",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "shadow",
-      "wood"
-    ],
-    "prefix_phonetic": "Morn",
-    "suffix_phonetic": "morn"
-  },
-  {
-    "root": "myr",
-    "prefix_text": "Myr-",
-    "prefix_meaning": "Onyx / Rare / Jewel",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-myr",
-    "suffix_meaning": "Onyx / Rare / Jewel",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Meer",
-    "suffix_phonetic": "meer"
-  },
-  {
-    "root": "nae",
-    "prefix_text": "Nae-",
-    "prefix_meaning": "Wind, Breeze",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-nae",
-    "suffix_meaning": "Wind, Breeze",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Nay",
-    "suffix_phonetic": "nay"
-  },
-  {
-    "root": "nae",
-    "prefix_text": "Nae-",
-    "prefix_meaning": "Whisper / Secret",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-nae",
-    "suffix_meaning": "Whisper / Secret",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "mysterious",
-      "neutral"
-    ],
-    "prefix_phonetic": "Nay",
-    "suffix_phonetic": "nay"
-  },
-  {
-    "root": "qil",
-    "prefix_text": "Qil-",
-    "prefix_meaning": "Arrow / Bolt",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-qil",
-    "suffix_meaning": "Arrow / Bolt",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "prefix_phonetic": "Kwihl",
-    "suffix_phonetic": "kwihl"
-  },
-  {
-    "root": "quess",
-    "prefix_text": "Quess-",
-    "prefix_meaning": "Elf / People",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-quess",
-    "suffix_meaning": "Elf / People",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Kwehs",
-    "suffix_phonetic": "kwehs"
-  },
-  {
-    "root": "rath",
-    "prefix_text": "Rath-",
-    "prefix_meaning": "Path / Way",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-rath",
-    "suffix_meaning": "Path / Way",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "prefix_phonetic": "Rahth",
-    "suffix_phonetic": "rahth"
-  },
-  {
-    "root": "rho",
-    "prefix_text": "Rho-",
-    "prefix_meaning": "Shining, Bright, Golden",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-rho",
-    "suffix_meaning": "Shining, Bright, Golden",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light"
-    ],
-    "prefix_phonetic": "Roh",
-    "suffix_phonetic": "roh"
-  },
-  {
-    "root": "rhyn",
-    "prefix_text": "Rhyn-",
-    "prefix_meaning": "Shining, Bright, Golden",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-rhyn",
-    "suffix_meaning": "Shining, Bright, Golden",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light"
-    ],
-    "prefix_phonetic": "Rihn",
-    "suffix_phonetic": "rihn"
-  },
-  {
-    "root": "ro",
-    "prefix_text": "Ro-",
-    "prefix_meaning": "Song, Music, Flowing",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ro",
-    "suffix_meaning": "Song, Music, Flowing",
-    "is_gender_modifier": false,
-    "tags": [
-      "musical",
-      "moon",
-      "flowing",
-      "neutral"
-    ],
-    "prefix_phonetic": "Roh",
-    "suffix_phonetic": "roh"
-  },
-  {
-    "root": "roe",
-    "prefix_text": "Roe-",
-    "prefix_meaning": "Song, Music, Flowing",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-roe",
-    "suffix_meaning": "Song, Music, Flowing",
-    "is_gender_modifier": false,
-    "tags": [
-      "musical",
-      "moon",
-      "flowing",
-      "neutral"
-    ],
-    "prefix_phonetic": "Roh",
-    "suffix_phonetic": "roh"
-  },
-  {
-    "root": "sar",
-    "prefix_text": "Sar-",
-    "prefix_meaning": "Eye / Watcher",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-sar",
-    "suffix_meaning": "Eye / Watcher",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "prefix_phonetic": "Sahr",
-    "suffix_phonetic": "sahr"
-  },
-  {
-    "root": "shae",
-    "prefix_text": "Shae-",
-    "prefix_meaning": "Starlit, Fey-touched",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-shae",
-    "suffix_meaning": "fey-touched, moon-blessed",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon",
-      "celestial",
-      "neutral"
-    ],
-    "prefix_phonetic": "Shay",
-    "suffix_phonetic": "shay"
-  },
-  {
-    "root": "sil",
-    "prefix_text": "Sil-",
-    "prefix_meaning": "Silver / Moon",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-sil",
-    "suffix_meaning": "Silver / Moon",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon",
-      "neutral"
-    ],
-    "prefix_phonetic": "Sihl",
-    "suffix_phonetic": "sihl"
-  },
-  {
-    "root": "silv",
-    "prefix_text": "Silv-",
-    "prefix_meaning": "Shade / Dusk",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-silv",
-    "suffix_meaning": "Shade / Dusk",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "shadow",
-      "neutral"
-    ],
-    "prefix_phonetic": "Sihlv",
-    "suffix_phonetic": "sihlv"
-  },
-  {
-    "root": "sol",
-    "prefix_text": "Sol-",
-    "prefix_meaning": "Sun / History",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-sol",
-    "suffix_meaning": "Sun / History",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light",
-      "neutral"
-    ],
-    "prefix_phonetic": "Sohl",
-    "suffix_phonetic": "sohl"
-  },
-  {
-    "root": "syl",
-    "prefix_text": "Syl-",
-    "prefix_meaning": "Forest, Wild Grace",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-syl",
-    "suffix_meaning": "Forest, Wild Grace",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Sihl",
-    "suffix_phonetic": "sihl"
-  },
-  {
-    "root": "tan",
-    "prefix_text": "Tan-",
-    "prefix_meaning": "Maker / Shaper",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-tan",
-    "suffix_meaning": "Maker / Shaper",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Tahn",
-    "suffix_phonetic": "tahn"
-  },
-  {
-    "root": "thal",
-    "prefix_text": "Thal-",
-    "prefix_meaning": "Peace / Calm",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-thal",
-    "suffix_meaning": "Foot / Step",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Thahl",
-    "suffix_phonetic": "thahl"
-  },
-  {
-    "root": "thorn",
-    "prefix_text": "Thorn-",
-    "prefix_meaning": "Stone / Permanent / Enduring",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-thorn",
-    "suffix_meaning": "Stone / Permanent / Enduring",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Thorn",
-    "suffix_phonetic": "thorn"
-  },
-  {
-    "root": "thor",
-    "prefix_text": "Thor-",
-    "prefix_meaning": "Stone / Permanent / Enduring",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-thor",
-    "suffix_meaning": "Stone / Permanent / Enduring",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Thor",
-    "suffix_phonetic": "thor"
-  },
-  {
-    "root": "vael",
-    "prefix_text": "Vael-",
-    "prefix_meaning": "Destiny, Chosen Path",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-vael",
-    "suffix_meaning": "Destiny, Chosen Path",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Vayl",
-    "suffix_phonetic": "vayl"
-  },
-  {
-    "root": "val",
-    "prefix_text": "Val-",
-    "prefix_meaning": "Watcher / Vigilant",
-    "can_be_prefix": true,
-    "can_be_suffix": false,
-    "suffix_text": null,
-    "suffix_meaning": null,
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Vahl"
-  },
-  {
-    "root": "xil",
-    "prefix_text": "Xil-",
-    "prefix_meaning": "Gold / Petal",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-xil",
-    "suffix_meaning": "Gold / Petal",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light",
-      "neutral"
-    ],
-    "prefix_phonetic": "Zihl",
-    "suffix_phonetic": "zihl"
-  },
-  {
-    "root": "yae",
-    "prefix_text": "Yae-",
-    "prefix_meaning": "Sky, Celestial",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-yae",
-    "suffix_meaning": "Sky, Celestial",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "prefix_phonetic": "Yay",
-    "suffix_phonetic": "yay"
-  },
-  {
-    "root": "zyl",
-    "prefix_text": "Zyl-",
-    "prefix_meaning": "Shadow / Dusk",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-zyl",
-    "suffix_meaning": "Shadow / Dusk",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "shadow",
-      "neutral"
-    ],
-    "prefix_phonetic": "Zihl",
-    "suffix_phonetic": "zihl"
-  },
-  {
-    "root": "ael",
-    "prefix_text": "Ael-",
-    "prefix_meaning": "Blade, Edge, Warrior",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ael",
-    "suffix_meaning": "Blade, Edge, Warrior",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "martial",
-      "wood"
-    ],
-    "suffix_phonetic": "ayl",
-    "prefix_phonetic": "Ayl"
-  },
-  {
-    "root": "ail",
-    "prefix_text": "Ail-",
-    "prefix_meaning": "Blade, Edge, Warrior",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ail",
-    "suffix_meaning": "Blade, Edge, Warrior",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "martial",
-      "wood"
-    ],
-    "suffix_phonetic": "ayl",
-    "prefix_phonetic": "Ayl"
-  },
-  {
-    "root": "aera",
-    "prefix_text": "Aera-",
-    "prefix_meaning": "of the sky",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-aera",
-    "suffix_meaning": "of the sky",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "air-ah",
-    "prefix_phonetic": "Air-ah"
-  },
-  {
-    "root": "ar",
-    "prefix_text": "Ar-",
-    "prefix_meaning": "Lord / Master / King",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ar",
-    "suffix_meaning": "Lord / Master / King",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "neutral"
-    ],
-    "suffix_phonetic": "arr",
-    "prefix_phonetic": "Arr"
-  },
-  {
-    "root": "ariel",
-    "prefix_text": "Ariel-",
-    "prefix_meaning": "bright spirit",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ariel",
-    "suffix_meaning": "bright spirit",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light",
-      "neutral"
-    ],
-    "suffix_phonetic": "ah-ree-ehl",
-    "prefix_phonetic": "Ah-ree-ehl"
-  },
-  {
-    "root": "aris",
-    "prefix_text": "Aris-",
-    "prefix_meaning": "beloved, precious",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-aris",
-    "suffix_meaning": "beloved, precious",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ah-rihs",
-    "prefix_phonetic": "Ah-rihs"
-  },
-  {
-    "root": "astra",
-    "prefix_text": "Astra-",
-    "prefix_meaning": "Storm / Power",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-astra",
-    "suffix_meaning": "Storm / Power",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ahs-trah",
-    "prefix_phonetic": "Ahs-trah"
-  },
-  {
-    "root": "athar",
-    "prefix_text": "Athar-",
-    "prefix_meaning": "Watcher / Guardian",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-athar",
-    "suffix_meaning": "Watcher / Guardian",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ah-thahr",
-    "prefix_phonetic": "Ah-thahr"
-  },
-  {
-    "root": "ayne",
-    "prefix_text": "Ayne-",
-    "prefix_meaning": "wanderer, traveler",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ayne",
-    "suffix_meaning": "wanderer, traveler",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ayn",
-    "prefix_phonetic": "Ayn"
-  },
-  {
-    "root": "beth",
-    "prefix_text": "Beth-",
-    "prefix_meaning": "Renown / Fame",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-beth",
-    "suffix_meaning": "Renown / Fame",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "behth",
-    "prefix_phonetic": "Behth"
-  },
-  {
-    "root": "brae",
-    "prefix_text": "Brae-",
-    "prefix_meaning": "Craft / Maker",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-brae",
-    "suffix_meaning": "Craft / Maker",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "suffix_phonetic": "bray",
-    "prefix_phonetic": "Bray"
-  },
-  {
-    "root": "dil",
-    "prefix_text": "Dil-",
-    "prefix_meaning": "Friend / Devoted",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-dil",
-    "suffix_meaning": "Friend / Devoted",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "dihl",
-    "prefix_phonetic": "Dihl"
-  },
-  {
-    "root": "dor",
-    "prefix_text": "Dor-",
-    "prefix_meaning": "Master / Land",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-dor",
-    "suffix_meaning": "Master / Land",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "neutral"
-    ],
-    "suffix_phonetic": "dorr",
-    "prefix_phonetic": "Dorr"
-  },
-  {
-    "root": "dorei",
-    "prefix_text": "Dorei-",
-    "prefix_meaning": "people, tribe (archaic)",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-dorei",
-    "suffix_meaning": "people, tribe (archaic)",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "doh-ray",
-    "prefix_phonetic": "Doh-ray"
-  },
-  {
-    "root": "drel",
-    "prefix_text": "Drel-",
-    "prefix_meaning": "Skill, Dexterity, Precision",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-drel",
-    "suffix_meaning": "Skill, Dexterity, Precision",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "drehl",
-    "prefix_phonetic": "Drehl"
-  },
-  {
-    "root": "dril",
-    "prefix_text": "Dril-",
-    "prefix_meaning": "Tress, Braid, Fine Hair",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-dril",
-    "suffix_meaning": "Tress, Braid, Fine Hair",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "drihl",
-    "prefix_phonetic": "Drihl"
-  },
-  {
-    "root": "drith",
-    "prefix_text": null,
-    "prefix_meaning": null,
-    "can_be_prefix": false,
-    "can_be_suffix": true,
-    "suffix_text": "-drith",
-    "suffix_meaning": "Widow / Sorrow",
-    "is_gender_modifier": true,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "drihth"
-  },
-  {
-    "root": "dul",
-    "prefix_text": "Dul-",
-    "prefix_meaning": "Glade / Valley",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-dul",
-    "suffix_meaning": "Glade / Valley",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "suffix_phonetic": "duhl",
-    "prefix_phonetic": "Duhl"
-  },
-  {
-    "root": "estel",
-    "prefix_text": "Estel-",
-    "prefix_meaning": "Hope / Trust",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-estel",
-    "suffix_meaning": "Hope / Trust",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ehs-tehl",
-    "prefix_phonetic": "Ehs-tehl"
-  },
-  {
-    "root": "eth",
-    "prefix_text": "Eth-",
-    "prefix_meaning": "ancient, sacred",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-eth",
-    "suffix_meaning": "ancient, sacred",
-    "is_gender_modifier": false,
-    "tags": [
-      "ancient",
-      "sun",
-      "wood"
-    ],
-    "suffix_phonetic": "ehth",
-    "prefix_phonetic": "Ehth"
-  },
-  {
-    "root": "felle",
-    "prefix_text": "Felle-",
-    "prefix_meaning": "Bloom / Spring",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-felle",
-    "suffix_meaning": "Bloom / Spring",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "fehl-leh",
-    "prefix_phonetic": "Fehl-leh"
-  },
-  {
-    "root": "findel",
-    "prefix_text": "Findel-",
-    "prefix_meaning": "Tress / Braid (of hair)",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-findel",
-    "suffix_meaning": "Tress / Braid (of hair)",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "fihn-dehl",
-    "prefix_phonetic": "Fihn-dehl"
-  },
-  {
-    "root": "gal",
-    "prefix_text": "Gal-",
-    "prefix_meaning": "Shine / Radiance",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-gal",
-    "suffix_meaning": "Shine / Radiance",
-    "is_gender_modifier": false,
-    "tags": [
-      "sun",
-      "light",
-      "neutral"
-    ],
-    "suffix_phonetic": "gahl",
-    "prefix_phonetic": "Gahl"
-  },
-  {
-    "root": "gwyn",
-    "prefix_text": "Gwyn-",
-    "prefix_meaning": "Pale / Ice / White",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-gwyn",
-    "suffix_meaning": "Pale / Ice / White",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "neutral"
-    ],
-    "suffix_phonetic": "gwihn",
-    "prefix_phonetic": "Gwihn"
-  },
-  {
-    "root": "iel",
-    "prefix_text": null,
-    "prefix_meaning": null,
-    "can_be_prefix": false,
-    "can_be_suffix": true,
-    "suffix_text": "-iel",
-    "suffix_meaning": "radiant one",
-    "is_gender_modifier": true,
-    "tags": [
-      "neutral",
-      "light"
-    ],
-    "suffix_phonetic": "ee-ehl"
-  },
-  {
-    "root": "ion",
-    "prefix_text": null,
-    "prefix_meaning": null,
-    "can_be_prefix": false,
-    "can_be_suffix": true,
-    "suffix_text": "-ion",
-    "suffix_meaning": "Son of",
-    "is_gender_modifier": true,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ee-ohn"
-  },
-  {
-    "root": "ira",
-    "prefix_text": "Ira-",
-    "prefix_meaning": "dreamer",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ira",
-    "suffix_meaning": "dreamer",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "neutral"
-    ],
-    "suffix_phonetic": "ih-rah",
-    "prefix_phonetic": "Ih-rah"
-  },
-  {
-    "root": "is",
-    "prefix_text": "Is-",
-    "prefix_meaning": "one who sees",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-is",
-    "suffix_meaning": "one who sees",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ihs",
-    "prefix_phonetic": "Ihs"
-  },
-  {
-    "root": "ith",
-    "prefix_text": "Ith-",
-    "prefix_meaning": "Wisdom / Mind",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ith",
-    "suffix_meaning": "Wisdom / Mind",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "suffix_phonetic": "ihth",
-    "prefix_phonetic": "Ihth"
-  },
-  {
-    "root": "kian",
-    "prefix_text": null,
-    "prefix_meaning": null,
-    "can_be_prefix": false,
-    "can_be_suffix": true,
-    "suffix_text": "-kian",
-    "suffix_meaning": "Bane / Killer",
-    "is_gender_modifier": true,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "kee-ahn"
-  },
-  {
-    "root": "lamin",
-    "prefix_text": "Lamin-",
-    "prefix_meaning": "Path / Quest",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-lamin",
-    "suffix_meaning": "Path / Quest",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "lah-mihn",
-    "prefix_phonetic": "Lah-mihn"
-  },
-  {
-    "root": "lar",
-    "prefix_text": "Lar-",
-    "prefix_meaning": "Lord / Master / King",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-lar",
-    "suffix_meaning": "Lord / Master / King",
-    "is_gender_modifier": false,
-    "tags": [
-      "nobility",
-      "sun",
-      "neutral"
-    ],
-    "suffix_phonetic": "lahr",
-    "prefix_phonetic": "Lahr"
-  },
-  {
-    "root": "lor",
-    "prefix_text": "Lor-",
-    "prefix_meaning": "knowledge, lore",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-lor",
-    "suffix_meaning": "knowledge, lore",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "lorr",
-    "prefix_phonetic": "Lorr"
-  },
-  {
-    "root": "los",
-    "prefix_text": "Los-",
-    "prefix_meaning": "Snow / Frost",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-los",
-    "suffix_meaning": "Snow / Frost",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "neutral"
-    ],
-    "suffix_phonetic": "lohs",
-    "prefix_phonetic": "Lohs"
-  },
-  {
-    "root": "mith",
-    "prefix_text": "Mith-",
-    "prefix_meaning": "Grey / Mist",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-mith",
-    "suffix_meaning": "Grey / Mist",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "mysterious",
-      "neutral"
-    ],
-    "suffix_phonetic": "mihth",
-    "prefix_phonetic": "Mihth"
-  },
-  {
-    "root": "nail",
-    "prefix_text": "Nail-",
-    "prefix_meaning": "Spike, Point, Fixed Position",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-nail",
-    "suffix_meaning": "Spike, Point, Fixed Position",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "wood"
-    ],
-    "suffix_phonetic": "nayl",
-    "prefix_phonetic": "Nayl"
-  },
-  {
-    "root": "no",
-    "prefix_text": "No-",
-    "prefix_meaning": "Son of",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-no",
-    "suffix_meaning": "Son of",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "noh",
-    "prefix_phonetic": "Noh"
-  },
-  {
-    "root": "nodel",
-    "prefix_text": "Nodel-",
-    "prefix_meaning": "Moon (as a final component)",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-nodel",
-    "suffix_meaning": "Moon (as a final component)",
-    "is_gender_modifier": false,
-    "tags": [
-      "silver",
-      "moon"
-    ],
-    "suffix_phonetic": "noh-dehl",
-    "prefix_phonetic": "Noh-dehl"
-  },
-  {
-    "root": "on",
-    "prefix_text": "On-",
-    "prefix_meaning": "Son of",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-on",
-    "suffix_meaning": "Son of",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ohn",
-    "prefix_phonetic": "Ohn"
-  },
-  {
-    "root": "ra",
-    "prefix_text": "Ra-",
-    "prefix_meaning": "warrior, protector",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ra",
-    "suffix_meaning": "warrior, protector",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "martial"
-    ],
-    "suffix_phonetic": "rah",
-    "prefix_phonetic": "Rah"
-  },
-  {
-    "root": "riel",
-    "prefix_text": "Riel-",
-    "prefix_meaning": "shining maiden",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-riel",
-    "suffix_meaning": "shining maiden",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "feminine",
-      "neutral"
-    ],
-    "suffix_phonetic": "ree-ehl",
-    "prefix_phonetic": "Ree-ehl"
-  },
-  {
-    "root": "rion",
-    "prefix_text": "Rion-",
-    "prefix_meaning": "wanderer, seeker",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-rion",
-    "suffix_meaning": "wanderer, seeker",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "ree-ohn",
-    "prefix_phonetic": "Ree-ohn"
-  },
-  {
-    "root": "ser",
-    "prefix_text": "Ser-",
-    "prefix_meaning": "Soft / Gentle",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ser",
-    "suffix_meaning": "Soft / Gentle",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "sehr",
-    "prefix_phonetic": "Sehr"
-  },
-  {
-    "root": "thae",
-    "prefix_text": "Thae-",
-    "prefix_meaning": "starlit, blessed",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-thae",
-    "suffix_meaning": "starlit, blessed",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "celestial",
-      "neutral"
-    ],
-    "suffix_phonetic": "thay",
-    "prefix_phonetic": "Thay"
-  },
-  {
-    "root": "thala",
-    "prefix_text": "Thala-",
-    "prefix_meaning": "Healer",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-thala",
-    "suffix_meaning": "Healer",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "thah-lah",
-    "prefix_phonetic": "Thah-lah"
-  },
-  {
-    "root": "thir",
-    "prefix_text": "Thir-",
-    "prefix_meaning": "guardian",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-thir",
-    "suffix_meaning": "guardian",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "theer",
-    "prefix_phonetic": "Theer"
-  },
-  {
-    "root": "ue",
-    "prefix_text": "Ue-",
-    "prefix_meaning": "Cloud / Mystery",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ue",
-    "suffix_meaning": "Cloud / Mystery",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "mysterious",
-      "neutral"
-    ],
-    "suffix_phonetic": "oo-eh",
-    "prefix_phonetic": "Oo-eh"
-  },
-  {
-    "root": "vrae",
-    "prefix_text": "Vrae-",
-    "prefix_meaning": "Fire / Madness",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-vrae",
-    "suffix_meaning": "Fire / Madness",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "vray",
-    "prefix_phonetic": "Vray"
-  },
-  {
-    "root": "we",
-    "prefix_text": "We-",
-    "prefix_meaning": "song, melody",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-we",
-    "suffix_meaning": "song, melody",
-    "is_gender_modifier": false,
-    "tags": [
-      "musical",
-      "moon",
-      "neutral"
-    ],
-    "suffix_phonetic": "weh",
-    "prefix_phonetic": "Weh"
-  },
-  {
-    "root": "wen",
-    "prefix_text": "Wen-",
-    "prefix_meaning": "Maiden / Young Woman",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-wen",
-    "suffix_meaning": "Maiden / Young Woman",
-    "is_gender_modifier": false,
-    "tags": [
-      "moon",
-      "feminine",
-      "neutral"
-    ],
-    "suffix_phonetic": "wehn",
-    "prefix_phonetic": "Wehn"
-  },
-  {
-    "root": "wiir",
-    "prefix_text": "Wiir-",
-    "prefix_meaning": "Gem / Stone",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-wiir",
-    "suffix_meaning": "Gem / Stone",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "weer",
-    "prefix_phonetic": "Weer"
-  },
-  {
-    "root": "wyn",
-    "prefix_text": "Wyn-",
-    "prefix_meaning": "graceful one",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-wyn",
-    "suffix_meaning": "graceful one",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral"
-    ],
-    "suffix_phonetic": "wihn",
-    "prefix_phonetic": "Wihn"
-  },
-  {
-    "root": "yn",
-    "prefix_text": "Yn-",
-    "prefix_meaning": "Flower / Blossom",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-yn",
-    "suffix_meaning": "Flower / Blossom",
-    "is_gender_modifier": false,
-    "tags": [
-      "neutral",
-      "flowing"
-    ],
-    "suffix_phonetic": "ihn",
-    "prefix_phonetic": "Ihn"
-  },
-  {
-    "root": "zhaun",
-    "prefix_text": "Zhaun-",
-    "prefix_meaning": "Skull, Death",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-zhaun",
-    "suffix_meaning": "Skull, Death",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female",
-      "drow-male"
-    ],
-    "prefix_phonetic": "Zhawn",
-    "suffix_phonetic": "zhawn"
-  },
-  {
-    "root": "phar",
-    "prefix_text": "Phar-",
-    "prefix_meaning": "Mistress, Ruler",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-phar",
-    "suffix_meaning": "Mistress, Ruler",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female"
-    ],
-    "prefix_phonetic": "Fahr",
-    "suffix_phonetic": "fahr"
-  },
-  {
-    "root": "faer-drow",
-    "prefix_text": "Faer-",
-    "prefix_meaning": "Demon, Chaos",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-faer",
-    "suffix_meaning": "Demon, Chaos",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female"
-    ],
-    "prefix_phonetic": "Fair",
-    "suffix_phonetic": "fair"
-  },
-  {
-    "root": "driz",
-    "prefix_text": "Driz-",
-    "prefix_meaning": "Exile, Outcast",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-driz",
-    "suffix_meaning": "Exile, Outcast",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-male"
-    ],
-    "prefix_phonetic": "Drihz",
-    "suffix_phonetic": "drihz"
-  },
-  {
-    "root": "qil-drow",
-    "prefix_text": "Qil-",
-    "prefix_meaning": "Web, Spider",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-qil",
-    "suffix_meaning": "Web, Spider",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female"
-    ],
-    "prefix_phonetic": "Kwihl",
-    "suffix_phonetic": "kwihl"
-  },
-  {
-    "root": "tyl",
-    "prefix_text": "Tyl-",
-    "prefix_meaning": "Venom, Lethal",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-tyl",
-    "suffix_meaning": "Venom, Lethal",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female"
-    ],
-    "suffix_phonetic": "tihl",
-    "prefix_phonetic": "Tihl"
-  },
-  {
-    "root": "tana",
-    "prefix_text": "Tana-",
-    "prefix_meaning": "Fortress, Ruler",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-tana",
-    "suffix_meaning": "Fortress, Ruler",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female"
-    ],
-    "suffix_phonetic": "tah-nah",
-    "prefix_phonetic": "Tah-nah"
-  },
-  {
-    "root": "xia",
-    "prefix_text": "Xia-",
-    "prefix_meaning": "Queen, Power",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-xia",
-    "suffix_meaning": "Queen, Power",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female"
-    ],
-    "suffix_phonetic": "zee-ah",
-    "prefix_phonetic": "Zee-ah"
-  },
-  {
-    "root": "raen",
-    "prefix_text": "Raen-",
-    "prefix_meaning": "Darkness, Shadow",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-raen",
-    "suffix_meaning": "Darkness, Shadow",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-female",
-      "drow-male"
-    ],
-    "suffix_phonetic": "rayn",
-    "prefix_phonetic": "Rayn"
-  },
-  {
-    "root": "ax",
-    "prefix_text": "Ax-",
-    "prefix_meaning": "Blade, Weapon",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-ax",
-    "suffix_meaning": "Blade, Weapon",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-male"
-    ],
-    "suffix_phonetic": "ahks",
-    "prefix_phonetic": "Ahks"
-  },
-  {
-    "root": "gloth",
-    "prefix_text": "Gloth-",
-    "prefix_meaning": "Servitude, Slave",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-gloth",
-    "suffix_meaning": "Servitude, Slave",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-male"
-    ],
-    "suffix_phonetic": "glohth",
-    "prefix_phonetic": "Glohth"
-  },
-  {
-    "root": "lim",
-    "prefix_text": "Lim-",
-    "prefix_meaning": "Shadow, Warrior",
-    "can_be_prefix": true,
-    "can_be_suffix": true,
-    "suffix_text": "-lim",
-    "suffix_meaning": "Shadow, Warrior",
-    "is_gender_modifier": false,
-    "tags": [
-      "drow",
-      "drow-male"
-    ],
-    "suffix_phonetic": "lihm",
-    "prefix_phonetic": "Lihm"
-  }
+    {
+        "root": "ae",
+        "prefix_text": "Ae-",
+        "prefix_meaning": "ever, eternal",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ae",
+        "suffix_meaning": "Whisper / Secret",
+        "is_gender_modifier": false,
+        "tags": ["moon", "mysterious", "neutral"],
+        "prefix_phonetic": "Ay",
+        "suffix_phonetic": "ay"
+    },
+    {
+        "root": "ael",
+        "prefix_text": "Ael-",
+        "prefix_meaning": "Knight / Warrior",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ael",
+        "suffix_meaning": "noble light",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "nocturnal", "nobility", "martial", "wood"],
+        "prefix_phonetic": "Ayl",
+        "suffix_phonetic": "ayl"
+    },
+    {
+        "root": "aer",
+        "prefix_text": "Aer-",
+        "prefix_meaning": "Law / Sky",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-aer",
+        "suffix_meaning": "Law / Sky",
+        "is_gender_modifier": false,
+        "tags": ["sun", "neutral"],
+        "prefix_phonetic": "Air",
+        "suffix_phonetic": "air"
+    },
+    {
+        "root": "ala",
+        "prefix_text": "Ala-",
+        "prefix_meaning": "memory, kinship",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ala",
+        "suffix_meaning": "memory, kinship",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Ah-lah",
+        "suffix_phonetic": "ah-lah"
+    },
+    {
+        "root": "an",
+        "prefix_text": "An-",
+        "prefix_meaning": "Light / Sky",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-an",
+        "suffix_meaning": "Light / Sky",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Ahn",
+        "suffix_phonetic": "ahn"
+    },
+    {
+        "root": "ara",
+        "prefix_text": "Ara-",
+        "prefix_meaning": "Great / King",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ara",
+        "suffix_meaning": "Great / King",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "neutral"],
+        "prefix_phonetic": "Ah-rah",
+        "suffix_phonetic": "ah-rah"
+    },
+    {
+        "root": "aran",
+        "prefix_text": "Aran-",
+        "prefix_meaning": "King / High",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-aran",
+        "suffix_meaning": "King / High",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun"],
+        "prefix_phonetic": "Ah-rahn",
+        "suffix_phonetic": "ah-rahn"
+    },
+    {
+        "root": "ath",
+        "prefix_text": "Ath-",
+        "prefix_meaning": "Loyalty / Steadfast",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ath",
+        "suffix_meaning": "Loyalty / Steadfast",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Ahth",
+        "suffix_phonetic": "ahth"
+    },
+    {
+        "root": "bi",
+        "prefix_text": "Bi-",
+        "prefix_meaning": "Jade / Green",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-bi",
+        "suffix_meaning": "Jade / Green",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "prefix_phonetic": "Bee",
+        "suffix_phonetic": "bee"
+    },
+    {
+        "root": "cae",
+        "prefix_text": "Cae-",
+        "prefix_meaning": "Lady / Noble",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-cae",
+        "suffix_meaning": "Lady / Noble",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "feminine", "neutral"],
+        "prefix_phonetic": "Kay",
+        "suffix_phonetic": "kay"
+    },
+    {
+        "root": "cela",
+        "prefix_text": "Cela-",
+        "prefix_meaning": "silver, moon-silver",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-cela",
+        "suffix_meaning": "silver, moon-silver",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon"],
+        "prefix_phonetic": "Seh-lah",
+        "suffix_phonetic": "seh-lah"
+    },
+    {
+        "root": "cor",
+        "prefix_text": "Cor-",
+        "prefix_meaning": "Legend / Ancient",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "is_gender_modifier": false,
+        "tags": ["ancient", "sun", "neutral"],
+        "prefix_phonetic": "Korr"
+    },
+    {
+        "root": "del",
+        "prefix_text": "Del-",
+        "prefix_meaning": "Earth / Ground",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-del",
+        "suffix_meaning": "Earth / Ground",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "prefix_phonetic": "Dell",
+        "suffix_phonetic": "dell"
+    },
+    {
+        "root": "eir",
+        "prefix_text": "Eir-",
+        "prefix_meaning": "Sharp / Grim",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-eir",
+        "suffix_meaning": "Sharp / Grim",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Air",
+        "suffix_phonetic": "air"
+    },
+    {
+        "root": "ela",
+        "prefix_text": "Ela-",
+        "prefix_meaning": "bright, radiant",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ela",
+        "suffix_meaning": "bright, radiant",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light", "neutral"],
+        "prefix_phonetic": "Eh-lah",
+        "suffix_phonetic": "eh-lah"
+    },
+    {
+        "root": "faer",
+        "prefix_text": "Faer-",
+        "prefix_meaning": "weave, magic",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-faer",
+        "suffix_meaning": "weave, magic",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Fair",
+        "suffix_phonetic": "fair"
+    },
+    {
+        "root": "fha",
+        "prefix_text": "Fha-",
+        "prefix_meaning": "Faerie / Fey",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-fha",
+        "suffix_meaning": "Faerie / Fey",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Fah",
+        "suffix_phonetic": "fah"
+    },
+    {
+        "root": "gyl",
+        "prefix_text": "Gyl-",
+        "prefix_meaning": "Song / Music",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-gyl",
+        "suffix_meaning": "Song / Music",
+        "is_gender_modifier": false,
+        "tags": ["musical", "moon", "neutral"],
+        "prefix_phonetic": "Gill",
+        "suffix_phonetic": "gill"
+    },
+    {
+        "root": "iar",
+        "prefix_text": "Iar-",
+        "prefix_meaning": "Sea / Wave",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-iar",
+        "suffix_meaning": "Sea / Wave",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "flowing"],
+        "prefix_phonetic": "Ee-arr",
+        "suffix_phonetic": "ee-arr"
+    },
+    {
+        "root": "ilan",
+        "prefix_text": "Ilan-",
+        "prefix_meaning": "Silver / Moon",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ilan",
+        "suffix_meaning": "Silver / Moon",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon", "neutral"],
+        "prefix_phonetic": "Ih-lahn",
+        "suffix_phonetic": "ih-lahn"
+    },
+    {
+        "root": "im",
+        "prefix_text": "Im-",
+        "prefix_meaning": "Deep / Ocean",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-im",
+        "suffix_meaning": "Deep / Ocean",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Ihm",
+        "suffix_phonetic": "ihm"
+    },
+    {
+        "root": "iri",
+        "prefix_text": "Iri-",
+        "prefix_meaning": "dream, mist",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-iri",
+        "suffix_meaning": "dream, mist",
+        "is_gender_modifier": false,
+        "tags": ["moon", "mysterious", "neutral"],
+        "prefix_phonetic": "Ih-ree",
+        "suffix_phonetic": "ih-ree"
+    },
+    {
+        "root": "la",
+        "prefix_text": "La-",
+        "prefix_meaning": "Night / Crescent",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-la",
+        "suffix_meaning": "Night / Crescent",
+        "is_gender_modifier": false,
+        "tags": ["nocturnal", "moon", "neutral"],
+        "prefix_phonetic": "Lah",
+        "suffix_phonetic": "lah"
+    },
+    {
+        "root": "lae",
+        "prefix_text": "Lae-",
+        "prefix_meaning": "dawn, light",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-lae",
+        "suffix_meaning": "dawn, light",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Lay",
+        "suffix_phonetic": "lay"
+    },
+    {
+        "root": "lia",
+        "prefix_text": "Lia-",
+        "prefix_meaning": "Moon / Arcane",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon", "neutral"],
+        "prefix_phonetic": "Lee-ah"
+    },
+    {
+        "root": "luin",
+        "prefix_text": "Luin-",
+        "prefix_meaning": "Blue / Sapphire",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-luin",
+        "suffix_meaning": "Blue / Sapphire",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Loo-in",
+        "suffix_phonetic": "loo-in"
+    },
+    {
+        "root": "mae",
+        "prefix_text": "Mae-",
+        "prefix_meaning": "Shadow, Mystery",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-mae",
+        "suffix_meaning": "Shadow, Mystery",
+        "is_gender_modifier": false,
+        "tags": ["moon", "shadow", "mysterious", "neutral"],
+        "prefix_phonetic": "May",
+        "suffix_phonetic": "may"
+    },
+    {
+        "root": "menal",
+        "prefix_text": "Menal-",
+        "prefix_meaning": "Moon",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-menal",
+        "suffix_meaning": "Moon",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon", "neutral"],
+        "prefix_phonetic": "Meh-nahl",
+        "suffix_phonetic": "meh-nahl"
+    },
+    {
+        "root": "mer",
+        "prefix_text": "Mer-",
+        "prefix_meaning": "Star / Noble",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-mer",
+        "suffix_meaning": "Star / Noble",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "nobility", "celestial"],
+        "prefix_phonetic": "Mair",
+        "suffix_phonetic": "mair"
+    },
+    {
+        "root": "min",
+        "prefix_text": "Min-",
+        "prefix_meaning": "Tower / High Place",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-min",
+        "suffix_meaning": "Tower / High Place",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "neutral"],
+        "prefix_phonetic": "Mihn",
+        "suffix_phonetic": "mihn"
+    },
+    {
+        "root": "mon",
+        "prefix_text": "Mon-",
+        "prefix_meaning": "Moon (a common simplification of Menal)",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-mon",
+        "suffix_meaning": "Moon (a common simplification of Menal)",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon", "neutral"],
+        "prefix_phonetic": "Mohn",
+        "suffix_phonetic": "mohn"
+    },
+    {
+        "root": "mon",
+        "prefix_text": "Mon-",
+        "prefix_meaning": "Stone, Mountain, Great",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-mon",
+        "suffix_meaning": "Stone, Mountain, Great",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "neutral"],
+        "prefix_phonetic": "Mohn",
+        "suffix_phonetic": "mohn"
+    },
+    {
+        "root": "morn",
+        "prefix_text": "Morn-",
+        "prefix_meaning": "Stone, Mountain, Great",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-morn",
+        "suffix_meaning": "Stone, Mountain, Great",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "wood"],
+        "prefix_phonetic": "Morn",
+        "suffix_phonetic": "morn"
+    },
+    {
+        "root": "morn",
+        "prefix_text": "Morn-",
+        "prefix_meaning": "Darkness (sometimes)",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-morn",
+        "suffix_meaning": "Darkness (sometimes)",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "shadow", "wood"],
+        "prefix_phonetic": "Morn",
+        "suffix_phonetic": "morn"
+    },
+    {
+        "root": "myr",
+        "prefix_text": "Myr-",
+        "prefix_meaning": "Onyx / Rare / Jewel",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-myr",
+        "suffix_meaning": "Onyx / Rare / Jewel",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Meer",
+        "suffix_phonetic": "meer"
+    },
+    {
+        "root": "nae",
+        "prefix_text": "Nae-",
+        "prefix_meaning": "Wind, Breeze",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-nae",
+        "suffix_meaning": "Wind, Breeze",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Nay",
+        "suffix_phonetic": "nay"
+    },
+    {
+        "root": "nae",
+        "prefix_text": "Nae-",
+        "prefix_meaning": "Whisper / Secret",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-nae",
+        "suffix_meaning": "Whisper / Secret",
+        "is_gender_modifier": false,
+        "tags": ["moon", "mysterious", "neutral"],
+        "prefix_phonetic": "Nay",
+        "suffix_phonetic": "nay"
+    },
+    {
+        "root": "qil",
+        "prefix_text": "Qil-",
+        "prefix_meaning": "Arrow / Bolt",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-qil",
+        "suffix_meaning": "Arrow / Bolt",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "prefix_phonetic": "Kwihl",
+        "suffix_phonetic": "kwihl"
+    },
+    {
+        "root": "quess",
+        "prefix_text": "Quess-",
+        "prefix_meaning": "Elf / People",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-quess",
+        "suffix_meaning": "Elf / People",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Kwehs",
+        "suffix_phonetic": "kwehs"
+    },
+    {
+        "root": "rath",
+        "prefix_text": "Rath-",
+        "prefix_meaning": "Path / Way",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-rath",
+        "suffix_meaning": "Path / Way",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "prefix_phonetic": "Rahth",
+        "suffix_phonetic": "rahth"
+    },
+    {
+        "root": "rho",
+        "prefix_text": "Rho-",
+        "prefix_meaning": "Shining, Bright, Golden",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-rho",
+        "suffix_meaning": "Shining, Bright, Golden",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light"],
+        "prefix_phonetic": "Roh",
+        "suffix_phonetic": "roh"
+    },
+    {
+        "root": "rhyn",
+        "prefix_text": "Rhyn-",
+        "prefix_meaning": "Shining, Bright, Golden",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-rhyn",
+        "suffix_meaning": "Shining, Bright, Golden",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light"],
+        "prefix_phonetic": "Rihn",
+        "suffix_phonetic": "rihn"
+    },
+    {
+        "root": "ro",
+        "prefix_text": "Ro-",
+        "prefix_meaning": "Song, Music, Flowing",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ro",
+        "suffix_meaning": "Song, Music, Flowing",
+        "is_gender_modifier": false,
+        "tags": ["musical", "moon", "flowing", "neutral"],
+        "prefix_phonetic": "Roh",
+        "suffix_phonetic": "roh"
+    },
+    {
+        "root": "roe",
+        "prefix_text": "Roe-",
+        "prefix_meaning": "Song, Music, Flowing",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-roe",
+        "suffix_meaning": "Song, Music, Flowing",
+        "is_gender_modifier": false,
+        "tags": ["musical", "moon", "flowing", "neutral"],
+        "prefix_phonetic": "Roh",
+        "suffix_phonetic": "roh"
+    },
+    {
+        "root": "sar",
+        "prefix_text": "Sar-",
+        "prefix_meaning": "Eye / Watcher",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-sar",
+        "suffix_meaning": "Eye / Watcher",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "prefix_phonetic": "Sahr",
+        "suffix_phonetic": "sahr"
+    },
+    {
+        "root": "shae",
+        "prefix_text": "Shae-",
+        "prefix_meaning": "Starlit, Fey-touched",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-shae",
+        "suffix_meaning": "fey-touched, moon-blessed",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon", "celestial", "neutral"],
+        "prefix_phonetic": "Shay",
+        "suffix_phonetic": "shay"
+    },
+    {
+        "root": "sil",
+        "prefix_text": "Sil-",
+        "prefix_meaning": "Silver / Moon",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-sil",
+        "suffix_meaning": "Silver / Moon",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon", "neutral"],
+        "prefix_phonetic": "Sihl",
+        "suffix_phonetic": "sihl"
+    },
+    {
+        "root": "silv",
+        "prefix_text": "Silv-",
+        "prefix_meaning": "Shade / Dusk",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-silv",
+        "suffix_meaning": "Shade / Dusk",
+        "is_gender_modifier": false,
+        "tags": ["moon", "shadow", "neutral"],
+        "prefix_phonetic": "Sihlv",
+        "suffix_phonetic": "sihlv"
+    },
+    {
+        "root": "sol",
+        "prefix_text": "Sol-",
+        "prefix_meaning": "Sun / History",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-sol",
+        "suffix_meaning": "Sun / History",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light", "neutral"],
+        "prefix_phonetic": "Sohl",
+        "suffix_phonetic": "sohl"
+    },
+    {
+        "root": "syl",
+        "prefix_text": "Syl-",
+        "prefix_meaning": "Forest, Wild Grace",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-syl",
+        "suffix_meaning": "Forest, Wild Grace",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Sihl",
+        "suffix_phonetic": "sihl"
+    },
+    {
+        "root": "tan",
+        "prefix_text": "Tan-",
+        "prefix_meaning": "Maker / Shaper",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-tan",
+        "suffix_meaning": "Maker / Shaper",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Tahn",
+        "suffix_phonetic": "tahn"
+    },
+    {
+        "root": "thal",
+        "prefix_text": "Thal-",
+        "prefix_meaning": "Peace / Calm",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-thal",
+        "suffix_meaning": "Foot / Step",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Thahl",
+        "suffix_phonetic": "thahl"
+    },
+    {
+        "root": "thorn",
+        "prefix_text": "Thorn-",
+        "prefix_meaning": "Stone / Permanent / Enduring",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-thorn",
+        "suffix_meaning": "Stone / Permanent / Enduring",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Thorn",
+        "suffix_phonetic": "thorn"
+    },
+    {
+        "root": "thor",
+        "prefix_text": "Thor-",
+        "prefix_meaning": "Stone / Permanent / Enduring",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-thor",
+        "suffix_meaning": "Stone / Permanent / Enduring",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Thor",
+        "suffix_phonetic": "thor"
+    },
+    {
+        "root": "vael",
+        "prefix_text": "Vael-",
+        "prefix_meaning": "Destiny, Chosen Path",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-vael",
+        "suffix_meaning": "Destiny, Chosen Path",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Vayl",
+        "suffix_phonetic": "vayl"
+    },
+    {
+        "root": "val",
+        "prefix_text": "Val-",
+        "prefix_meaning": "Watcher / Vigilant",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Vahl"
+    },
+    {
+        "root": "xil",
+        "prefix_text": "Xil-",
+        "prefix_meaning": "Gold / Petal",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-xil",
+        "suffix_meaning": "Gold / Petal",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light", "neutral"],
+        "prefix_phonetic": "Zihl",
+        "suffix_phonetic": "zihl"
+    },
+    {
+        "root": "yae",
+        "prefix_text": "Yae-",
+        "prefix_meaning": "Sky, Celestial",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-yae",
+        "suffix_meaning": "Sky, Celestial",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "prefix_phonetic": "Yay",
+        "suffix_phonetic": "yay"
+    },
+    {
+        "root": "zyl",
+        "prefix_text": "Zyl-",
+        "prefix_meaning": "Shadow / Dusk",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-zyl",
+        "suffix_meaning": "Shadow / Dusk",
+        "is_gender_modifier": false,
+        "tags": ["moon", "shadow", "neutral"],
+        "prefix_phonetic": "Zihl",
+        "suffix_phonetic": "zihl"
+    },
+    {
+        "root": "ael",
+        "prefix_text": "Ael-",
+        "prefix_meaning": "Blade, Edge, Warrior",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ael",
+        "suffix_meaning": "Blade, Edge, Warrior",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "martial", "wood"],
+        "suffix_phonetic": "ayl",
+        "prefix_phonetic": "Ayl"
+    },
+    {
+        "root": "ail",
+        "prefix_text": "Ail-",
+        "prefix_meaning": "Blade, Edge, Warrior",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ail",
+        "suffix_meaning": "Blade, Edge, Warrior",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "martial", "wood"],
+        "suffix_phonetic": "ayl",
+        "prefix_phonetic": "Ayl"
+    },
+    {
+        "root": "aera",
+        "prefix_text": "Aera-",
+        "prefix_meaning": "of the sky",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-aera",
+        "suffix_meaning": "of the sky",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "air-ah",
+        "prefix_phonetic": "Air-ah"
+    },
+    {
+        "root": "ar",
+        "prefix_text": "Ar-",
+        "prefix_meaning": "Lord / Master / King",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ar",
+        "suffix_meaning": "Lord / Master / King",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "neutral"],
+        "suffix_phonetic": "arr",
+        "prefix_phonetic": "Arr"
+    },
+    {
+        "root": "ariel",
+        "prefix_text": "Ariel-",
+        "prefix_meaning": "bright spirit",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ariel",
+        "suffix_meaning": "bright spirit",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light", "neutral"],
+        "suffix_phonetic": "ah-ree-ehl",
+        "prefix_phonetic": "Ah-ree-ehl"
+    },
+    {
+        "root": "aris",
+        "prefix_text": "Aris-",
+        "prefix_meaning": "beloved, precious",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-aris",
+        "suffix_meaning": "beloved, precious",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ah-rihs",
+        "prefix_phonetic": "Ah-rihs"
+    },
+    {
+        "root": "astra",
+        "prefix_text": "Astra-",
+        "prefix_meaning": "Storm / Power",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-astra",
+        "suffix_meaning": "Storm / Power",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ahs-trah",
+        "prefix_phonetic": "Ahs-trah"
+    },
+    {
+        "root": "athar",
+        "prefix_text": "Athar-",
+        "prefix_meaning": "Watcher / Guardian",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-athar",
+        "suffix_meaning": "Watcher / Guardian",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ah-thahr",
+        "prefix_phonetic": "Ah-thahr"
+    },
+    {
+        "root": "ayne",
+        "prefix_text": "Ayne-",
+        "prefix_meaning": "wanderer, traveler",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ayne",
+        "suffix_meaning": "wanderer, traveler",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ayn",
+        "prefix_phonetic": "Ayn"
+    },
+    {
+        "root": "beth",
+        "prefix_text": "Beth-",
+        "prefix_meaning": "Renown / Fame",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-beth",
+        "suffix_meaning": "Renown / Fame",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "behth",
+        "prefix_phonetic": "Behth"
+    },
+    {
+        "root": "brae",
+        "prefix_text": "Brae-",
+        "prefix_meaning": "Craft / Maker",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-brae",
+        "suffix_meaning": "Craft / Maker",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "suffix_phonetic": "bray",
+        "prefix_phonetic": "Bray"
+    },
+    {
+        "root": "dil",
+        "prefix_text": "Dil-",
+        "prefix_meaning": "Friend / Devoted",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-dil",
+        "suffix_meaning": "Friend / Devoted",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "dihl",
+        "prefix_phonetic": "Dihl"
+    },
+    {
+        "root": "dor",
+        "prefix_text": "Dor-",
+        "prefix_meaning": "Master / Land",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-dor",
+        "suffix_meaning": "Master / Land",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "neutral"],
+        "suffix_phonetic": "dorr",
+        "prefix_phonetic": "Dorr"
+    },
+    {
+        "root": "dorei",
+        "prefix_text": "Dorei-",
+        "prefix_meaning": "people, tribe (archaic)",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-dorei",
+        "suffix_meaning": "people, tribe (archaic)",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "doh-ray",
+        "prefix_phonetic": "Doh-ray"
+    },
+    {
+        "root": "drel",
+        "prefix_text": "Drel-",
+        "prefix_meaning": "Skill, Dexterity, Precision",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-drel",
+        "suffix_meaning": "Skill, Dexterity, Precision",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "drehl",
+        "prefix_phonetic": "Drehl"
+    },
+    {
+        "root": "dril",
+        "prefix_text": "Dril-",
+        "prefix_meaning": "Tress, Braid, Fine Hair",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-dril",
+        "suffix_meaning": "Tress, Braid, Fine Hair",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "drihl",
+        "prefix_phonetic": "Drihl"
+    },
+    {
+        "root": "drith",
+        "prefix_text": null,
+        "prefix_meaning": null,
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "suffix_text": "-drith",
+        "suffix_meaning": "Widow / Sorrow",
+        "is_gender_modifier": true,
+        "tags": ["neutral"],
+        "suffix_phonetic": "drihth"
+    },
+    {
+        "root": "dul",
+        "prefix_text": "Dul-",
+        "prefix_meaning": "Glade / Valley",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-dul",
+        "suffix_meaning": "Glade / Valley",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "suffix_phonetic": "duhl",
+        "prefix_phonetic": "Duhl"
+    },
+    {
+        "root": "estel",
+        "prefix_text": "Estel-",
+        "prefix_meaning": "Hope / Trust",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-estel",
+        "suffix_meaning": "Hope / Trust",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ehs-tehl",
+        "prefix_phonetic": "Ehs-tehl"
+    },
+    {
+        "root": "eth",
+        "prefix_text": "Eth-",
+        "prefix_meaning": "ancient, sacred",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-eth",
+        "suffix_meaning": "ancient, sacred",
+        "is_gender_modifier": false,
+        "tags": ["ancient", "sun", "wood"],
+        "suffix_phonetic": "ehth",
+        "prefix_phonetic": "Ehth"
+    },
+    {
+        "root": "felle",
+        "prefix_text": "Felle-",
+        "prefix_meaning": "Bloom / Spring",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-felle",
+        "suffix_meaning": "Bloom / Spring",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "fehl-leh",
+        "prefix_phonetic": "Fehl-leh"
+    },
+    {
+        "root": "findel",
+        "prefix_text": "Findel-",
+        "prefix_meaning": "Tress / Braid (of hair)",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-findel",
+        "suffix_meaning": "Tress / Braid (of hair)",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "fihn-dehl",
+        "prefix_phonetic": "Fihn-dehl"
+    },
+    {
+        "root": "gal",
+        "prefix_text": "Gal-",
+        "prefix_meaning": "Shine / Radiance",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-gal",
+        "suffix_meaning": "Shine / Radiance",
+        "is_gender_modifier": false,
+        "tags": ["sun", "light", "neutral"],
+        "suffix_phonetic": "gahl",
+        "prefix_phonetic": "Gahl"
+    },
+    {
+        "root": "gwyn",
+        "prefix_text": "Gwyn-",
+        "prefix_meaning": "Pale / Ice / White",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-gwyn",
+        "suffix_meaning": "Pale / Ice / White",
+        "is_gender_modifier": false,
+        "tags": ["moon", "neutral"],
+        "suffix_phonetic": "gwihn",
+        "prefix_phonetic": "Gwihn"
+    },
+    {
+        "root": "iel",
+        "prefix_text": null,
+        "prefix_meaning": null,
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "suffix_text": "-iel",
+        "suffix_meaning": "radiant one",
+        "is_gender_modifier": true,
+        "tags": ["neutral", "light"],
+        "suffix_phonetic": "ee-ehl"
+    },
+    {
+        "root": "ion",
+        "prefix_text": null,
+        "prefix_meaning": null,
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "suffix_text": "-ion",
+        "suffix_meaning": "Son of",
+        "is_gender_modifier": true,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ee-ohn"
+    },
+    {
+        "root": "ira",
+        "prefix_text": "Ira-",
+        "prefix_meaning": "dreamer",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ira",
+        "suffix_meaning": "dreamer",
+        "is_gender_modifier": false,
+        "tags": ["moon", "neutral"],
+        "suffix_phonetic": "ih-rah",
+        "prefix_phonetic": "Ih-rah"
+    },
+    {
+        "root": "is",
+        "prefix_text": "Is-",
+        "prefix_meaning": "one who sees",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-is",
+        "suffix_meaning": "one who sees",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ihs",
+        "prefix_phonetic": "Ihs"
+    },
+    {
+        "root": "ith",
+        "prefix_text": "Ith-",
+        "prefix_meaning": "Wisdom / Mind",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ith",
+        "suffix_meaning": "Wisdom / Mind",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "suffix_phonetic": "ihth",
+        "prefix_phonetic": "Ihth"
+    },
+    {
+        "root": "kian",
+        "prefix_text": null,
+        "prefix_meaning": null,
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "suffix_text": "-kian",
+        "suffix_meaning": "Bane / Killer",
+        "is_gender_modifier": true,
+        "tags": ["neutral"],
+        "suffix_phonetic": "kee-ahn"
+    },
+    {
+        "root": "lamin",
+        "prefix_text": "Lamin-",
+        "prefix_meaning": "Path / Quest",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-lamin",
+        "suffix_meaning": "Path / Quest",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "lah-mihn",
+        "prefix_phonetic": "Lah-mihn"
+    },
+    {
+        "root": "lar",
+        "prefix_text": "Lar-",
+        "prefix_meaning": "Lord / Master / King",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-lar",
+        "suffix_meaning": "Lord / Master / King",
+        "is_gender_modifier": false,
+        "tags": ["nobility", "sun", "neutral"],
+        "suffix_phonetic": "lahr",
+        "prefix_phonetic": "Lahr"
+    },
+    {
+        "root": "lor",
+        "prefix_text": "Lor-",
+        "prefix_meaning": "knowledge, lore",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-lor",
+        "suffix_meaning": "knowledge, lore",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "lorr",
+        "prefix_phonetic": "Lorr"
+    },
+    {
+        "root": "los",
+        "prefix_text": "Los-",
+        "prefix_meaning": "Snow / Frost",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-los",
+        "suffix_meaning": "Snow / Frost",
+        "is_gender_modifier": false,
+        "tags": ["moon", "neutral"],
+        "suffix_phonetic": "lohs",
+        "prefix_phonetic": "Lohs"
+    },
+    {
+        "root": "mith",
+        "prefix_text": "Mith-",
+        "prefix_meaning": "Grey / Mist",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-mith",
+        "suffix_meaning": "Grey / Mist",
+        "is_gender_modifier": false,
+        "tags": ["moon", "mysterious", "neutral"],
+        "suffix_phonetic": "mihth",
+        "prefix_phonetic": "Mihth"
+    },
+    {
+        "root": "nail",
+        "prefix_text": "Nail-",
+        "prefix_meaning": "Spike, Point, Fixed Position",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-nail",
+        "suffix_meaning": "Spike, Point, Fixed Position",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "wood"],
+        "suffix_phonetic": "nayl",
+        "prefix_phonetic": "Nayl"
+    },
+    {
+        "root": "no",
+        "prefix_text": "No-",
+        "prefix_meaning": "Son of",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-no",
+        "suffix_meaning": "Son of",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "noh",
+        "prefix_phonetic": "Noh"
+    },
+    {
+        "root": "nodel",
+        "prefix_text": "Nodel-",
+        "prefix_meaning": "Moon (as a final component)",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-nodel",
+        "suffix_meaning": "Moon (as a final component)",
+        "is_gender_modifier": false,
+        "tags": ["silver", "moon"],
+        "suffix_phonetic": "noh-dehl",
+        "prefix_phonetic": "Noh-dehl"
+    },
+    {
+        "root": "on",
+        "prefix_text": "On-",
+        "prefix_meaning": "Son of",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-on",
+        "suffix_meaning": "Son of",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ohn",
+        "prefix_phonetic": "Ohn"
+    },
+    {
+        "root": "ra",
+        "prefix_text": "Ra-",
+        "prefix_meaning": "warrior, protector",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ra",
+        "suffix_meaning": "warrior, protector",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "martial"],
+        "suffix_phonetic": "rah",
+        "prefix_phonetic": "Rah"
+    },
+    {
+        "root": "riel",
+        "prefix_text": "Riel-",
+        "prefix_meaning": "shining maiden",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-riel",
+        "suffix_meaning": "shining maiden",
+        "is_gender_modifier": false,
+        "tags": ["moon", "feminine", "neutral"],
+        "suffix_phonetic": "ree-ehl",
+        "prefix_phonetic": "Ree-ehl"
+    },
+    {
+        "root": "rion",
+        "prefix_text": "Rion-",
+        "prefix_meaning": "wanderer, seeker",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-rion",
+        "suffix_meaning": "wanderer, seeker",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "ree-ohn",
+        "prefix_phonetic": "Ree-ohn"
+    },
+    {
+        "root": "ser",
+        "prefix_text": "Ser-",
+        "prefix_meaning": "Soft / Gentle",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ser",
+        "suffix_meaning": "Soft / Gentle",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "sehr",
+        "prefix_phonetic": "Sehr"
+    },
+    {
+        "root": "thae",
+        "prefix_text": "Thae-",
+        "prefix_meaning": "starlit, blessed",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-thae",
+        "suffix_meaning": "starlit, blessed",
+        "is_gender_modifier": false,
+        "tags": ["moon", "celestial", "neutral"],
+        "suffix_phonetic": "thay",
+        "prefix_phonetic": "Thay"
+    },
+    {
+        "root": "thala",
+        "prefix_text": "Thala-",
+        "prefix_meaning": "Healer",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-thala",
+        "suffix_meaning": "Healer",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "thah-lah",
+        "prefix_phonetic": "Thah-lah"
+    },
+    {
+        "root": "thir",
+        "prefix_text": "Thir-",
+        "prefix_meaning": "guardian",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-thir",
+        "suffix_meaning": "guardian",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "theer",
+        "prefix_phonetic": "Theer"
+    },
+    {
+        "root": "ue",
+        "prefix_text": "Ue-",
+        "prefix_meaning": "Cloud / Mystery",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ue",
+        "suffix_meaning": "Cloud / Mystery",
+        "is_gender_modifier": false,
+        "tags": ["moon", "mysterious", "neutral"],
+        "suffix_phonetic": "oo-eh",
+        "prefix_phonetic": "Oo-eh"
+    },
+    {
+        "root": "vrae",
+        "prefix_text": "Vrae-",
+        "prefix_meaning": "Fire / Madness",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-vrae",
+        "suffix_meaning": "Fire / Madness",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "vray",
+        "prefix_phonetic": "Vray"
+    },
+    {
+        "root": "we",
+        "prefix_text": "We-",
+        "prefix_meaning": "song, melody",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-we",
+        "suffix_meaning": "song, melody",
+        "is_gender_modifier": false,
+        "tags": ["musical", "moon", "neutral"],
+        "suffix_phonetic": "weh",
+        "prefix_phonetic": "Weh"
+    },
+    {
+        "root": "wen",
+        "prefix_text": "Wen-",
+        "prefix_meaning": "Maiden / Young Woman",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-wen",
+        "suffix_meaning": "Maiden / Young Woman",
+        "is_gender_modifier": false,
+        "tags": ["moon", "feminine", "neutral"],
+        "suffix_phonetic": "wehn",
+        "prefix_phonetic": "Wehn"
+    },
+    {
+        "root": "wiir",
+        "prefix_text": "Wiir-",
+        "prefix_meaning": "Gem / Stone",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-wiir",
+        "suffix_meaning": "Gem / Stone",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "weer",
+        "prefix_phonetic": "Weer"
+    },
+    {
+        "root": "wyn",
+        "prefix_text": "Wyn-",
+        "prefix_meaning": "graceful one",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-wyn",
+        "suffix_meaning": "graceful one",
+        "is_gender_modifier": false,
+        "tags": ["neutral"],
+        "suffix_phonetic": "wihn",
+        "prefix_phonetic": "Wihn"
+    },
+    {
+        "root": "yn",
+        "prefix_text": "Yn-",
+        "prefix_meaning": "Flower / Blossom",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-yn",
+        "suffix_meaning": "Flower / Blossom",
+        "is_gender_modifier": false,
+        "tags": ["neutral", "flowing"],
+        "suffix_phonetic": "ihn",
+        "prefix_phonetic": "Ihn"
+    },
+    {
+        "root": "zhaun",
+        "prefix_text": "Zhaun-",
+        "prefix_meaning": "Skull, Death",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-zhaun",
+        "suffix_meaning": "Skull, Death",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female", "drow-male"],
+        "prefix_phonetic": "Zhawn",
+        "suffix_phonetic": "zhawn"
+    },
+    {
+        "root": "phar",
+        "prefix_text": "Phar-",
+        "prefix_meaning": "Mistress, Ruler",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-phar",
+        "suffix_meaning": "Mistress, Ruler",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female"],
+        "prefix_phonetic": "Fahr",
+        "suffix_phonetic": "fahr"
+    },
+    {
+        "root": "faer-drow",
+        "prefix_text": "Faer-",
+        "prefix_meaning": "Demon, Chaos",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-faer",
+        "suffix_meaning": "Demon, Chaos",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female"],
+        "prefix_phonetic": "Fair",
+        "suffix_phonetic": "fair"
+    },
+    {
+        "root": "driz",
+        "prefix_text": "Driz-",
+        "prefix_meaning": "Exile, Outcast",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-driz",
+        "suffix_meaning": "Exile, Outcast",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-male"],
+        "prefix_phonetic": "Drihz",
+        "suffix_phonetic": "drihz"
+    },
+    {
+        "root": "qil-drow",
+        "prefix_text": "Qil-",
+        "prefix_meaning": "Web, Spider",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-qil",
+        "suffix_meaning": "Web, Spider",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female"],
+        "prefix_phonetic": "Kwihl",
+        "suffix_phonetic": "kwihl"
+    },
+    {
+        "root": "tyl",
+        "prefix_text": "Tyl-",
+        "prefix_meaning": "Venom, Lethal",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-tyl",
+        "suffix_meaning": "Venom, Lethal",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female"],
+        "suffix_phonetic": "tihl",
+        "prefix_phonetic": "Tihl"
+    },
+    {
+        "root": "tana",
+        "prefix_text": "Tana-",
+        "prefix_meaning": "Fortress, Ruler",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-tana",
+        "suffix_meaning": "Fortress, Ruler",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female"],
+        "suffix_phonetic": "tah-nah",
+        "prefix_phonetic": "Tah-nah"
+    },
+    {
+        "root": "xia",
+        "prefix_text": "Xia-",
+        "prefix_meaning": "Queen, Power",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-xia",
+        "suffix_meaning": "Queen, Power",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female"],
+        "suffix_phonetic": "zee-ah",
+        "prefix_phonetic": "Zee-ah"
+    },
+    {
+        "root": "raen",
+        "prefix_text": "Raen-",
+        "prefix_meaning": "Darkness, Shadow",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-raen",
+        "suffix_meaning": "Darkness, Shadow",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-female", "drow-male"],
+        "suffix_phonetic": "rayn",
+        "prefix_phonetic": "Rayn"
+    },
+    {
+        "root": "ax",
+        "prefix_text": "Ax-",
+        "prefix_meaning": "Blade, Weapon",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-ax",
+        "suffix_meaning": "Blade, Weapon",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-male"],
+        "suffix_phonetic": "ahks",
+        "prefix_phonetic": "Ahks"
+    },
+    {
+        "root": "gloth",
+        "prefix_text": "Gloth-",
+        "prefix_meaning": "Servitude, Slave",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-gloth",
+        "suffix_meaning": "Servitude, Slave",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-male"],
+        "suffix_phonetic": "glohth",
+        "prefix_phonetic": "Glohth"
+    },
+    {
+        "root": "lim",
+        "prefix_text": "Lim-",
+        "prefix_meaning": "Shadow, Warrior",
+        "can_be_prefix": true,
+        "can_be_suffix": true,
+        "suffix_text": "-lim",
+        "suffix_meaning": "Shadow, Warrior",
+        "is_gender_modifier": false,
+        "tags": ["drow", "drow-male"],
+        "suffix_phonetic": "lihm",
+        "prefix_phonetic": "Lihm"
+    }
 ]
