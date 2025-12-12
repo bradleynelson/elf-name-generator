@@ -381,11 +381,17 @@ Free to use, modify, and distribute with attribution.
 
 ## 📝 Version History
 
-### v3.2.0 - Halfling Generator
+### v3.2.0 - "The Name Generator Level-Update"
 
-- Added Halfling (Hin) generator with personal/family/nickname options, dagger tab, warm theme, and lore section
-- Added halfling data loader, JSON pools, and tests
-- Favorites filter and integration updated for halfling/gnomish types
+- **Massive Component Expansion**: Added 531 new components across all generators (+133% overall)
+    - Elven: Added 65 components (Drow houses, famous characters, expanded Drow pool)
+    - Dwarven: Added famous characters and expanded clan names (+65%)
+    - Gnomish: Personal names from 5e supplements, clan names 5→33 (+560%), nicknames 5→49 (+880%)
+    - Halfling: Personal names from 5e supplements, family names 10→63 (+530%), nicknames 10→65 (+550%)
+    - Orc: Personal names from Volo's Guide, added 12 clan names, epithets 30→82 (+173%)
+- **Drow Generation Improvements**: Major formula enhancements (repetition prevention, weighting, adaptive syllables, famous guard)
+- **Pattern-Based Naming Systems**: Implemented for Gnomes, Halflings, and Orcs with proper source attribution
+- **Quality Fixes**: Fixed long names, double parentheses, source deduplication, capitalization
 
 ### v3.1.0 - Gnomish Generator & Mobile Nav
 

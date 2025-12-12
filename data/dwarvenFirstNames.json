@@ -220,17 +220,6 @@
         "prefix_phonetic": "Fuhnd"
     },
     {
-        "root": "or",
-        "prefix_text": "Or-",
-        "prefix_meaning": "Ore, Metal",
-        "can_be_prefix": true,
-        "can_be_suffix": false,
-        "suffix_text": null,
-        "suffix_meaning": null,
-        "gender": "neutral",
-        "prefix_phonetic": "Ohr"
-    },
-    {
         "root": "ur",
         "prefix_text": "Ur-",
         "prefix_meaning": "Ancient, First",
@@ -748,17 +737,6 @@
         "suffix_phonetic": "ahr"
     },
     {
-        "root": "or",
-        "prefix_text": null,
-        "prefix_meaning": null,
-        "can_be_prefix": false,
-        "can_be_suffix": true,
-        "suffix_text": "-or",
-        "suffix_meaning": "Son, Heir",
-        "gender": "neutral",
-        "suffix_phonetic": "ohr"
-    },
-    {
         "root": "ok",
         "prefix_text": null,
         "prefix_meaning": null,
@@ -1208,5 +1186,101 @@
         "suffix_meaning": "Gag, Joke",
         "gender": "female",
         "suffix_phonetic": "ggah"
+    },
+    {
+        "root": "korgan",
+        "prefix_text": "Korgan",
+        "prefix_meaning": "Battlehammer mercenary",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "KOR-gan",
+        "source": "Baldur's Gate II – Korgan Bloodaxe"
+    },
+    {
+        "root": "pwent",
+        "prefix_text": "Pwent",
+        "prefix_meaning": "Battlerager of Mithral Hall",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "PWENT",
+        "source": "Thibbledorf Pwent – Salvatore novels"
+    },
+    {
+        "root": "bruenn",
+        "prefix_text": "Bruen-",
+        "prefix_meaning": "Bruenor lineage",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "BROO-en",
+        "source": "Bruenor Battlehammer – Salvatore novels/BG/BG3"
+    },
+    {
+        "root": "gund",
+        "prefix_text": "Gund-",
+        "prefix_meaning": "Gundren lineage",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "GOOND",
+        "source": "Gundren Rockseeker – Lost Mine of Phandelver"
+    },
+    {
+        "root": "thibb",
+        "prefix_text": "Thibb-",
+        "prefix_meaning": "Thibbledorf root",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "THIB",
+        "source": "Thibbledorf Pwent – Salvatore novels"
+    },
+    {
+        "root": "drizzt-dw",
+        "prefix_text": "Drizzt",
+        "prefix_meaning": "character from Salvatore novels",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "DRIHZ-it",
+        "source": "Drizzt Do'Urden – cameo naming for cross-race flexibility"
+    },
+    {
+        "root": "athrogate",
+        "prefix_text": "Athrogate",
+        "prefix_meaning": "character from Salvatore novels",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "male",
+        "prefix_phonetic": "ATH-roe-gate",
+        "source": "Athrogate – Salvatore novels"
+    },
+    {
+        "root": "ambergris",
+        "prefix_text": "Ambergris",
+        "prefix_meaning": "character from Salvatore novels",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "suffix_text": null,
+        "suffix_meaning": null,
+        "gender": "female",
+        "prefix_phonetic": "AM-ber-griss",
+        "source": "Ambergris – Salvatore novels"
     }
 ]

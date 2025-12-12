@@ -1,10 +1,2 @@
 === Test Log ===
 
-[UPDATE] 2024-12-19T00:00:00.000Z
-  File: tests/core/FavoritesManager.test.js
-  Reason: Updated for unified storage with generatorType tagging
-
-[UPDATE] 2024-12-19T00:00:00.000Z
-  File: tests/accessibility/aria.test.js
-  Reason: Added comprehensive ARIA attribute tests for filters, accordions, and tabs
-
