@@ -1,7 +1,260 @@
 [
-    { "text": "Aleslosh", "meaning": "Ale drinker", "phonetic": "Ayl-slohsh" },
-    { "text": "Sparklegem", "meaning": "Bright gem", "phonetic": "Spahr-kul-jem" },
-    { "text": "Bimp", "meaning": "Little clever", "phonetic": "Bimp" },
-    { "text": "Cogs", "meaning": "Inventor", "phonetic": "Kogs" },
-    { "text": "Puddle", "meaning": "Mischievous", "phonetic": "Puh-dul" }
+    {
+        "text": "Aleslosh",
+        "meaning": "Ale drinker",
+        "phonetic": "Ayl-slohsh",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Sparklegem",
+        "meaning": "Bright gem",
+        "phonetic": "Spahr-kul-jem",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Bimp",
+        "meaning": "(pattern-based)",
+        "phonetic": "BIMP"
+    },
+    {
+        "text": "Cogs",
+        "meaning": "(pattern-based)",
+        "phonetic": "KOGS"
+    },
+    {
+        "text": "Puddle",
+        "meaning": "(pattern-based)",
+        "phonetic": "PUH-dul"
+    },
+    {
+        "text": "Ashhearth",
+        "meaning": "Warm hearth",
+        "phonetic": "ASH-harth",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Badger",
+        "meaning": "Persistent",
+        "phonetic": "BAJ-er",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Cloak",
+        "meaning": "Secretive",
+        "phonetic": "KLOHK",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Doublelock",
+        "meaning": "Cautious",
+        "phonetic": "DUH-bul-lok",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Filchbatter",
+        "meaning": "Quick fingers",
+        "phonetic": "FILCH-bat-er",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Fnipper",
+        "meaning": "Nimble",
+        "phonetic": "FNIP-er",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Ku",
+        "meaning": "Short name",
+        "phonetic": "KOO",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Nim",
+        "meaning": "Quick",
+        "phonetic": "NIM",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Oneshoe",
+        "meaning": "Unbalanced",
+        "phonetic": "WUN-shoo",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Pock",
+        "meaning": "Pockmarked",
+        "phonetic": "POK",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Stumbleduck",
+        "meaning": "Clumsy",
+        "phonetic": "STUM-bul-duk",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "text": "Gears",
+        "meaning": "(pattern-based)",
+        "phonetic": "GEERS"
+    },
+    {
+        "text": "Springs",
+        "meaning": "(pattern-based)",
+        "phonetic": "SPRINGS"
+    },
+    {
+        "text": "Wrench",
+        "meaning": "(pattern-based)",
+        "phonetic": "RENCH"
+    },
+    {
+        "text": "Bolt",
+        "meaning": "(pattern-based)",
+        "phonetic": "BOHLT"
+    },
+    {
+        "text": "Sprocket",
+        "meaning": "(pattern-based)",
+        "phonetic": "SPROK-et"
+    },
+    {
+        "text": "Cogwheel",
+        "meaning": "(pattern-based)",
+        "phonetic": "KOG-weel"
+    },
+    {
+        "text": "Ratchet",
+        "meaning": "(pattern-based)",
+        "phonetic": "RATCH-et"
+    },
+    {
+        "text": "Tinker",
+        "meaning": "(pattern-based)",
+        "phonetic": "TIN-ker"
+    },
+    {
+        "text": "Twinkle",
+        "meaning": "(pattern-based)",
+        "phonetic": "TWIN-kul"
+    },
+    {
+        "text": "Glimmer",
+        "meaning": "(pattern-based)",
+        "phonetic": "GLIM-er"
+    },
+    {
+        "text": "Sparkle",
+        "meaning": "(pattern-based)",
+        "phonetic": "SPAR-kul"
+    },
+    {
+        "text": "Fizz",
+        "meaning": "(pattern-based)",
+        "phonetic": "FIZ"
+    },
+    {
+        "text": "Pop",
+        "meaning": "(pattern-based)",
+        "phonetic": "POP"
+    },
+    {
+        "text": "Snap",
+        "meaning": "(pattern-based)",
+        "phonetic": "SNAP"
+    },
+    {
+        "text": "Crackle",
+        "meaning": "(pattern-based)",
+        "phonetic": "KRAK-ul"
+    },
+    {
+        "text": "Quick",
+        "meaning": "(pattern-based)",
+        "phonetic": "KWIK"
+    },
+    {
+        "text": "Swift",
+        "meaning": "(pattern-based)",
+        "phonetic": "SWIFT"
+    },
+    {
+        "text": "Bright",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRYT"
+    },
+    {
+        "text": "Cheer",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHEER"
+    },
+    {
+        "text": "Jolly",
+        "meaning": "(pattern-based)",
+        "phonetic": "JOL-ee"
+    },
+    {
+        "text": "Merry",
+        "meaning": "(pattern-based)",
+        "phonetic": "MER-ee"
+    },
+    {
+        "text": "Wink",
+        "meaning": "(pattern-based)",
+        "phonetic": "WINK"
+    },
+    {
+        "text": "Grin",
+        "meaning": "(pattern-based)",
+        "phonetic": "GRIN"
+    },
+    {
+        "text": "Chuckle",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHUK-ul"
+    },
+    {
+        "text": "Giggle",
+        "meaning": "(pattern-based)",
+        "phonetic": "GIG-ul"
+    },
+    {
+        "text": "Tinkertop",
+        "meaning": "(pattern-based)",
+        "phonetic": "TIN-ker-top"
+    },
+    {
+        "text": "Sparkletoes",
+        "meaning": "(pattern-based)",
+        "phonetic": "SPAR-kul-tohz"
+    },
+    {
+        "text": "Glimmergleam",
+        "meaning": "(pattern-based)",
+        "phonetic": "GLIM-er-gleem"
+    },
+    {
+        "text": "Fizzlebang",
+        "meaning": "(pattern-based)",
+        "phonetic": "FIZ-ul-bang"
+    },
+    {
+        "text": "Twinklewhistle",
+        "meaning": "(pattern-based)",
+        "phonetic": "TWIN-kul-whis-ul"
+    },
+    {
+        "text": "Sparklefizz",
+        "meaning": "(pattern-based)",
+        "phonetic": "SPAR-kul-fiz"
+    },
+    {
+        "text": "Glimmerpop",
+        "meaning": "(pattern-based)",
+        "phonetic": "GLIM-er-pop"
+    },
+    {
+        "text": "Tinkersnap",
+        "meaning": "(pattern-based)",
+        "phonetic": "TIN-ker-snap"
+    }
 ]

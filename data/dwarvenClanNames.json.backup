@@ -306,6 +306,24 @@
         "prefix_phonetic": "Deep"
     },
     {
+        "root": "red",
+        "prefix_text": "Red",
+        "prefix_meaning": "Red, Color",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "category": "geography",
+        "prefix_phonetic": "Rehd"
+    },
+    {
+        "root": "high",
+        "prefix_text": "High",
+        "prefix_meaning": "High, Elevated",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "category": "geography",
+        "prefix_phonetic": "Hay"
+    },
+    {
         "root": "oak",
         "prefix_text": "Oak",
         "prefix_meaning": "Oak, Tree",

@@ -1,12 +1,327 @@
 [
-    { "text": "Quickstep", "meaning": "moves lightly", "phonetic": "KWIK-step" },
-    { "text": "Chatter", "meaning": "talkative", "phonetic": "CHAT-er" },
-    { "text": "Hillhopper", "meaning": "bounds over hills", "phonetic": "HILL-hop-er" },
-    { "text": "Kettlewhistle", "meaning": "cheerful whistle", "phonetic": "KET-ul-whis-ul" },
-    { "text": "Softshoe", "meaning": "quiet-footed", "phonetic": "SOFT-shoo" },
-    { "text": "Goodberry", "meaning": "bringer of treats", "phonetic": "GOOD-beh-ree" },
-    { "text": "Oakroot", "meaning": "steady as an oak", "phonetic": "OHK-root" },
-    { "text": "Slipstream", "meaning": "always ahead", "phonetic": "SLIP-streem" },
-    { "text": "Merryleaf", "meaning": "bright spirit", "phonetic": "MEH-ree-leef" },
-    { "text": "Understep", "meaning": "walks unseen", "phonetic": "UN-der-step" }
+    {
+        "text": "Quickstep",
+        "meaning": "(pattern-based)",
+        "phonetic": "KWIK-step"
+    },
+    {
+        "text": "Chatter",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHAT-er"
+    },
+    {
+        "text": "Hillhopper",
+        "meaning": "(pattern-based)",
+        "phonetic": "HILL-hop-er"
+    },
+    {
+        "text": "Kettlewhistle",
+        "meaning": "(pattern-based)",
+        "phonetic": "KET-ul-whis-ul"
+    },
+    {
+        "text": "Softshoe",
+        "meaning": "(pattern-based)",
+        "phonetic": "SOFT-shoo"
+    },
+    {
+        "text": "Goodberry",
+        "meaning": "(pattern-based)",
+        "phonetic": "GOOD-beh-ree"
+    },
+    {
+        "text": "Oakroot",
+        "meaning": "(pattern-based)",
+        "phonetic": "OHK-root"
+    },
+    {
+        "text": "Slipstream",
+        "meaning": "(pattern-based)",
+        "phonetic": "SLIP-streem"
+    },
+    {
+        "text": "Merryleaf",
+        "meaning": "(pattern-based)",
+        "phonetic": "MEH-ree-leef"
+    },
+    {
+        "text": "Understep",
+        "meaning": "(pattern-based)",
+        "phonetic": "UN-der-step"
+    },
+    {
+        "text": "Swiftfoot",
+        "meaning": "(pattern-based)",
+        "phonetic": "SWIFT-foot"
+    },
+    {
+        "text": "Lightfoot",
+        "meaning": "(pattern-based)",
+        "phonetic": "LYT-foot"
+    },
+    {
+        "text": "Quickfeet",
+        "meaning": "(pattern-based)",
+        "phonetic": "KWIK-feet"
+    },
+    {
+        "text": "Silentstep",
+        "meaning": "(pattern-based)",
+        "phonetic": "SY-lent-step"
+    },
+    {
+        "text": "Briskwalk",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRISK-wawk"
+    },
+    {
+        "text": "Faststride",
+        "meaning": "(pattern-based)",
+        "phonetic": "FAST-stryd"
+    },
+    {
+        "text": "Sneakstep",
+        "meaning": "(pattern-based)",
+        "phonetic": "SNEEK-step"
+    },
+    {
+        "text": "Leafwhisper",
+        "meaning": "(pattern-based)",
+        "phonetic": "LEEF-whis-per"
+    },
+    {
+        "text": "Brookstone",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRUK-stohn"
+    },
+    {
+        "text": "Sunshadow",
+        "meaning": "(pattern-based)",
+        "phonetic": "SUN-shad-oh"
+    },
+    {
+        "text": "Meadowstep",
+        "meaning": "(pattern-based)",
+        "phonetic": "MED-oh-step"
+    },
+    {
+        "text": "Riverrun",
+        "meaning": "(pattern-based)",
+        "phonetic": "RIV-er-run"
+    },
+    {
+        "text": "Fieldwalker",
+        "meaning": "(pattern-based)",
+        "phonetic": "FEELD-wawk-er"
+    },
+    {
+        "text": "Stonebrook",
+        "meaning": "(pattern-based)",
+        "phonetic": "STOHN-bruk"
+    },
+    {
+        "text": "Willowbend",
+        "meaning": "(pattern-based)",
+        "phonetic": "WIL-oh-bend"
+    },
+    {
+        "text": "Thistlewind",
+        "meaning": "(pattern-based)",
+        "phonetic": "THIS-ul-wind"
+    },
+    {
+        "text": "Fernstep",
+        "meaning": "(pattern-based)",
+        "phonetic": "FERN-step"
+    },
+    {
+        "text": "Mossfoot",
+        "meaning": "(pattern-based)",
+        "phonetic": "MOS-foot"
+    },
+    {
+        "text": "Merryheart",
+        "meaning": "(pattern-based)",
+        "phonetic": "MEH-ree-hart"
+    },
+    {
+        "text": "Boldstride",
+        "meaning": "(pattern-based)",
+        "phonetic": "BOHLD-stryd"
+    },
+    {
+        "text": "Gentlevoice",
+        "meaning": "(pattern-based)",
+        "phonetic": "JEN-tul-voys"
+    },
+    {
+        "text": "Cheerful",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHEER-ful"
+    },
+    {
+        "text": "Jolly",
+        "meaning": "(pattern-based)",
+        "phonetic": "JOL-ee"
+    },
+    {
+        "text": "Bright",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRYT"
+    },
+    {
+        "text": "Kindheart",
+        "meaning": "(pattern-based)",
+        "phonetic": "KYND-hart"
+    },
+    {
+        "text": "Warmheart",
+        "meaning": "(pattern-based)",
+        "phonetic": "WARM-hart"
+    },
+    {
+        "text": "Trueheart",
+        "meaning": "(pattern-based)",
+        "phonetic": "TROO-hart"
+    },
+    {
+        "text": "Braveheart",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRAYV-hart"
+    },
+    {
+        "text": "Stoutheart",
+        "meaning": "(pattern-based)",
+        "phonetic": "STOWT-hart"
+    },
+    {
+        "text": "Brewmaster",
+        "meaning": "(pattern-based)",
+        "phonetic": "BROO-mas-ter"
+    },
+    {
+        "text": "Honeycrisp",
+        "meaning": "(pattern-based)",
+        "phonetic": "HUN-ee-krisp"
+    },
+    {
+        "text": "Applepie",
+        "meaning": "(pattern-based)",
+        "phonetic": "AP-ul-py"
+    },
+    {
+        "text": "Sweetbread",
+        "meaning": "(pattern-based)",
+        "phonetic": "SWEET-bred"
+    },
+    {
+        "text": "Buttercup",
+        "meaning": "(pattern-based)",
+        "phonetic": "BUT-er-kup"
+    },
+    {
+        "text": "Honeycomb",
+        "meaning": "(pattern-based)",
+        "phonetic": "HUN-ee-kohm"
+    },
+    {
+        "text": "Teacup",
+        "meaning": "(pattern-based)",
+        "phonetic": "TEE-kup"
+    },
+    {
+        "text": "Muggle",
+        "meaning": "(pattern-based)",
+        "phonetic": "MUG-ul"
+    },
+    {
+        "text": "Piecrust",
+        "meaning": "(pattern-based)",
+        "phonetic": "PY-krust"
+    },
+    {
+        "text": "Quickfingers",
+        "meaning": "(pattern-based)",
+        "phonetic": "KWIK-fing-ers"
+    },
+    {
+        "text": "Songsmith",
+        "meaning": "(pattern-based)",
+        "phonetic": "SONG-smith"
+    },
+    {
+        "text": "Taleweaver",
+        "meaning": "(pattern-based)",
+        "phonetic": "TAYL-weev-er"
+    },
+    {
+        "text": "Storyteller",
+        "meaning": "(pattern-based)",
+        "phonetic": "STOR-ee-tel-er"
+    },
+    {
+        "text": "Breadbaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRED-bay-ker"
+    },
+    {
+        "text": "Cheesemaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHEEZ-may-ker"
+    },
+    {
+        "text": "Herbgather",
+        "meaning": "(pattern-based)",
+        "phonetic": "ERB-gath-er"
+    },
+    {
+        "text": "Seedkeeper",
+        "meaning": "(pattern-based)",
+        "phonetic": "SEED-kee-per"
+    },
+    {
+        "text": "Flowerpicker",
+        "meaning": "(pattern-based)",
+        "phonetic": "FLOW-er-pik-er"
+    },
+    {
+        "text": "Berrypicker",
+        "meaning": "(pattern-based)",
+        "phonetic": "BEH-ree-pik-er"
+    },
+    {
+        "text": "Merrybounce",
+        "meaning": "(pattern-based)",
+        "phonetic": "MEH-ree-bowns"
+    },
+    {
+        "text": "Cheerfulskip",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHEER-ful-skip"
+    },
+    {
+        "text": "Jollyhop",
+        "meaning": "(pattern-based)",
+        "phonetic": "JOL-ee-hop"
+    },
+    {
+        "text": "Brightsmile",
+        "meaning": "(pattern-based)",
+        "phonetic": "BRYT-smyl"
+    },
+    {
+        "text": "Warmhug",
+        "meaning": "(pattern-based)",
+        "phonetic": "WARM-hug"
+    },
+    {
+        "text": "Cozycorner",
+        "meaning": "(pattern-based)",
+        "phonetic": "KOH-zee-kor-ner"
+    },
+    {
+        "text": "Snugblanket",
+        "meaning": "(pattern-based)",
+        "phonetic": "SNUG-blank-et"
+    }
 ]

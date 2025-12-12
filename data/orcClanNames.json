@@ -68,5 +68,21 @@
         "meaning": "scarred grimly",
         "subrace": ["half-orc"],
         "phonetic": "GRIM-skar"
+    },
+    {
+        "root": "manyarrows",
+        "text": "Many-Arrows",
+        "meaning": "banner of Obould",
+        "subrace": ["mountain", "gray"],
+        "phonetic": "MANY-arrows",
+        "source": "Many-Arrows tribe – FR lore/BG3"
+    },
+    {
+        "root": "stormfang",
+        "text": "Stormfang",
+        "meaning": "fang of the tempest",
+        "subrace": ["gray", "mountain"],
+        "phonetic": "STORM-fang",
+        "source": "BG3 orc warband naming"
     }
 ]

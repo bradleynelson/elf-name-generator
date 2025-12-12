@@ -68,5 +68,378 @@
         "meaning": "forager of brush",
         "subrace": ["ghostwise", "lightfoot"],
         "phonetic": "BRUSH-gath-er"
+    },
+    {
+        "root": "goldberry",
+        "text": "Goldberry",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "GOLDBERRY"
+    },
+    {
+        "root": "silverbrook",
+        "text": "Silverbrook",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "SILVERBROOK"
+    },
+    {
+        "root": "brownstone",
+        "text": "Brownstone",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "BROWNSTONE"
+    },
+    {
+        "root": "amberleaf",
+        "text": "Amberleaf",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "AMBERLEAF"
+    },
+    {
+        "root": "copperpot",
+        "text": "Copperpot",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout"],
+        "phonetic": "COPPERPOT"
+    },
+    {
+        "root": "whiteflower",
+        "text": "Whiteflower",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "WHITEFLOWER"
+    },
+    {
+        "root": "blackthorn",
+        "text": "Blackthorn",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "ghostwise"],
+        "phonetic": "BLACKTHORN"
+    },
+    {
+        "root": "graybrook",
+        "text": "Graybrook",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout"],
+        "phonetic": "GRAYBROOK"
+    },
+    {
+        "root": "meadowbrook",
+        "text": "Meadowbrook",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "MEADOWBROOK"
+    },
+    {
+        "root": "riverbank",
+        "text": "Riverbank",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "stout"],
+        "phonetic": "RIVERBANK"
+    },
+    {
+        "root": "stonewell",
+        "text": "Stonewell",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "STONEWELL"
+    },
+    {
+        "root": "woodbough",
+        "text": "Woodbough",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "WOODBOUGH"
+    },
+    {
+        "root": "fieldflower",
+        "text": "Fieldflower",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "FIELDFLOWER"
+    },
+    {
+        "root": "valeberry",
+        "text": "Valeberry",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "VALEBERRY"
+    },
+    {
+        "root": "glenbrook",
+        "text": "Glenbrook",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "GLENBROOK"
+    },
+    {
+        "root": "hilltop",
+        "text": "Hilltop",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout"],
+        "phonetic": "HILLTOP"
+    },
+    {
+        "root": "creekbank",
+        "text": "Creekbank",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "stout"],
+        "phonetic": "CREEKBANK"
+    },
+    {
+        "root": "pondside",
+        "text": "Pondside",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "PONDSIDE"
+    },
+    {
+        "root": "springwell",
+        "text": "Springwell",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "stout"],
+        "phonetic": "SPRINGWELL"
+    },
+    {
+        "root": "leafbrook",
+        "text": "Leafbrook",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "LEAFBROOK"
+    },
+    {
+        "root": "berryvale",
+        "text": "Berryvale",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "BERRYVALE"
+    },
+    {
+        "root": "flowerglen",
+        "text": "Flowerglen",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "FLOWERGLEN"
+    },
+    {
+        "root": "stonebrook",
+        "text": "Stonebrook",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "STONEBROOK"
+    },
+    {
+        "root": "rootvale",
+        "text": "Rootvale",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "ghostwise"],
+        "phonetic": "ROOTVALE"
+    },
+    {
+        "root": "seedfield",
+        "text": "Seedfield",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "SEEDFIELD"
+    },
+    {
+        "root": "hearthkeeper",
+        "text": "Hearthkeeper",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "HEARTHKEEPER"
+    },
+    {
+        "root": "meadowtender",
+        "text": "Meadowtender",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "MEADOWTENDER"
+    },
+    {
+        "root": "brookweaver",
+        "text": "Brookweaver",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "BROOKWEAVER"
+    },
+    {
+        "root": "berrygather",
+        "text": "Berrygather",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "BERRYGATHER"
+    },
+    {
+        "root": "flowerkeeper",
+        "text": "Flowerkeeper",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "FLOWERKEEPER"
+    },
+    {
+        "root": "seedkeeper",
+        "text": "Seedkeeper",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "SEEDKEEPER"
+    },
+    {
+        "root": "sweetberry",
+        "text": "Sweetberry",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "SWEETBERRY"
+    },
+    {
+        "root": "brightleaf",
+        "text": "Brightleaf",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "BRIGHTLEAF"
+    },
+    {
+        "root": "warmhearth",
+        "text": "Warmhearth",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "WARMHEARTH"
+    },
+    {
+        "root": "softstep",
+        "text": "Softstep",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "SOFTSTEP"
+    },
+    {
+        "root": "trueheart",
+        "text": "Trueheart",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "TRUEHEART"
+    },
+    {
+        "root": "quickfingers",
+        "text": "Quickfingers",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "QUICKFINGERS"
+    },
+    {
+        "root": "honeycrisp",
+        "text": "Honeycrisp",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "HONEYCRISP"
+    },
+    {
+        "root": "appledew",
+        "text": "Appledew",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "APPLEDEW"
+    },
+    {
+        "root": "mugberry",
+        "text": "Mugberry",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "stout"],
+        "phonetic": "MUGBERRY"
+    },
+    {
+        "root": "thistletea",
+        "text": "Thistletea",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "THISTLETEA"
+    },
+    {
+        "root": "saltbaker",
+        "text": "Saltbaker",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "SALTBAKER"
+    },
+    {
+        "root": "buttercrumb",
+        "text": "Buttercrumb",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "BUTTERCRUMB"
+    },
+    {
+        "root": "woolysock",
+        "text": "Woolysock",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "WOOLYSOCK"
+    },
+    {
+        "root": "snugblanket",
+        "text": "Snugblanket",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "strongheart"],
+        "phonetic": "SNUGBLANKET"
+    },
+    {
+        "root": "willowrush",
+        "text": "Willowrush",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "WILLOWRUSH"
+    },
+    {
+        "root": "barleyfield",
+        "text": "Barleyfield",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "BARLEYFIELD"
+    },
+    {
+        "root": "cobblestone",
+        "text": "Cobblestone",
+        "meaning": "(pattern-based)",
+        "subrace": ["stout"],
+        "phonetic": "COBBLESTONE"
+    },
+    {
+        "root": "ivyhedge",
+        "text": "Ivyhedge",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "IVYHEDGE"
+    },
+    {
+        "root": "thistledown",
+        "text": "Thistledown",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot"],
+        "phonetic": "THISTLEDOWN"
+    },
+    {
+        "root": "cloudgather",
+        "text": "Cloudgather",
+        "meaning": "(pattern-based)",
+        "subrace": ["lightfoot", "ghostwise"],
+        "phonetic": "CLOUDGATHER"
+    },
+    {
+        "root": "highhill",
+        "text": "Highhill",
+        "meaning": "dweller on the high hill",
+        "subrace": ["stout"],
+        "phonetic": "HIGH-hill",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "tosscobble",
+        "text": "Tosscobble",
+        "meaning": "cobble thrower",
+        "subrace": ["stout", "strongheart"],
+        "phonetic": "TOSS-cob-ul",
+        "source": "Player's Handbook (5e)"
     }
 ]
