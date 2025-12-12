@@ -310,7 +310,66 @@ export class NameGenerator {
 
         // Standard 2-component generation
         let prefix = this._selectPrefix(style, subrace);
+        
+        // Check if prefix is a complete famous character name (should be used as-is)
+        const isCompleteFamousName = this._isFamous(prefix) && 
+                                     prefix.prefix_text && 
+                                     (!prefix.can_be_suffix || !prefix.suffix_text) &&
+                                     complexity === "simple";
+        
+        // If it's a complete famous character name, use it as-is without combining
+        if (isCompleteFamousName) {
+            const fullName = phonetics.capitalize(phonetics.cleanComponentText(prefix.prefix_text));
+            const meaning = phonetics.formatMeaning(prefix.prefix_meaning);
+            const pronunciation = prefix.prefix_phonetic || "";
+            
+            return {
+                name: fullName,
+                prefix: prefix,
+                suffix: null,
+                connector: null,
+                meaning,
+                pronunciation,
+                syllables: phonetics.countSyllables(fullName),
+                genderPrefixVowel: null,
+                finalVowel: null
+            };
+        }
+        
         let suffix = this._selectSuffix(style, subrace);
+
+        // Reduce frequency of famous names for non-Drow subraces
+        // Heavily bias against famous names (95% chance to reroll)
+        const isNonDrowElf = subrace === "high-elf" || subrace === "sun-elf" || subrace === "moon-elf" || subrace === "wood-elf";
+        if (isNonDrowElf) {
+            let nonDrowFamousGuard = 0;
+            while (this._isFamous(prefix) && nonDrowFamousGuard < 10 && Math.random() < 0.95) {
+                prefix = this._selectPrefix(style, subrace);
+                nonDrowFamousGuard++;
+                // Re-check if new prefix is complete famous name
+                const newIsComplete = this._isFamous(prefix) && 
+                                     prefix.prefix_text && 
+                                     (!prefix.can_be_suffix || !prefix.suffix_text) &&
+                                     complexity === "simple";
+                if (newIsComplete) {
+                    const fullName = phonetics.capitalize(phonetics.cleanComponentText(prefix.prefix_text));
+                    const meaning = phonetics.formatMeaning(prefix.prefix_meaning);
+                    const pronunciation = prefix.prefix_phonetic || "";
+                    
+                    return {
+                        name: fullName,
+                        prefix: prefix,
+                        suffix: null,
+                        connector: null,
+                        meaning,
+                        pronunciation,
+                        syllables: phonetics.countSyllables(fullName),
+                        genderPrefixVowel: null,
+                        finalVowel: null
+                    };
+                }
+            }
+        }
 
         // Drow simple: prefer non-famous prefixes; allow famous suffix with low odds; avoid famous+famous
         if (subrace === "drow" || subrace === "drow-female" || subrace === "drow-male") {
@@ -861,6 +920,15 @@ export class NameGenerator {
                 // Only filter if we have enough left
                 availableCandidates = filtered;
             }
+        }
+
+        // Exclude Drow-tagged components from non-Drow subraces
+        const isNonDrowElf = subrace === "high-elf" || subrace === "sun-elf" || subrace === "moon-elf" || subrace === "wood-elf";
+        if (isNonDrowElf) {
+            availableCandidates = availableCandidates.filter((c) => {
+                // Exclude components tagged with "drow", "drow-male", or "drow-female"
+                return !c.tags || !c.tags.some((tag) => tag.startsWith("drow"));
+            });
         }
 
         // If no subrace filtering, use random selection
