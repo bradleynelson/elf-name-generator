@@ -1,32 +1,424 @@
 [
-    { "text": "Bloodied", "meaning": "marked by battle", "phonetic": "BLUD-eed" },
-    { "text": "Bone-Eater", "meaning": "devours foes", "phonetic": "BOHN-ee-ter" },
-    { "text": "Skull-Taker", "meaning": "claims skulls", "phonetic": "SKUHL-tay-ker" },
-    { "text": "Stormborn", "meaning": "born of storms", "phonetic": "STORM-born" },
-    { "text": "One-Eye", "meaning": "scarred eye", "phonetic": "WUN-eye" },
-    { "text": "Warchanter", "meaning": "leads war songs", "phonetic": "WAR-chan-ter" },
-    { "text": "Ironhide", "meaning": "hide like iron", "phonetic": "EYE-ern-hide" },
-    { "text": "Ashwalker", "meaning": "walks the wastes", "phonetic": "ASH-walk-er" },
-    { "text": "Red-Fang", "meaning": "fangs bloodied", "phonetic": "RED-fang" },
-    { "text": "Grim Howl", "meaning": "howls doom", "phonetic": "GRIM howl" },
-    { "text": "Ironhide", "meaning": "hide like iron", "phonetic": "EYE-ern-hide" },
-    { "text": "War-Born", "meaning": "born for war", "phonetic": "WAR-born" },
-    { "text": "Stone-Eye", "meaning": "unyielding gaze", "phonetic": "STOHN-eye" },
-    { "text": "Shield-Breaker", "meaning": "shatters shields", "phonetic": "SHEELD-bray-ker" },
-    { "text": "Two-Tusk", "meaning": "prominent tusks", "phonetic": "TOO-tusk" },
-    { "text": "One-Tusk", "meaning": "one broken tusk", "phonetic": "WUN-tusk" },
-    { "text": "Black-Blood", "meaning": "blood of the deep earth", "phonetic": "BLAK-blud" },
-    { "text": "Steel-Grin", "meaning": "unyielding grin", "phonetic": "STEEL-grin" },
-    { "text": "Skull-Splitter", "meaning": "splits skulls", "phonetic": "SKUHL-split-er" },
-    { "text": "Doomhand", "meaning": "hand of doom", "phonetic": "DOOM-hand" },
-    { "text": "Grim-Banner", "meaning": "banner feared", "phonetic": "GRIM-ban-er" },
-    { "text": "Stone-Maw", "meaning": "mouth like stone", "phonetic": "STOHN-maw" },
-    { "text": "Blood-Singer", "meaning": "sings in battle", "phonetic": "BLUD-sing-er" },
-    { "text": "Ashborn", "meaning": "born in ash", "phonetic": "ASH-born" },
-    { "text": "Fire-Eye", "meaning": "eyes of fire", "phonetic": "FY-er-eye" },
-    { "text": "Ragebound", "meaning": "bound to rage", "phonetic": "RAYJ-bound" },
-    { "text": "Night-Tusk", "meaning": "tusk in shadow", "phonetic": "NYT-tusk" },
-    { "text": "Iron-Will", "meaning": "unyielding will", "phonetic": "EYE-ern-will" },
-    { "text": "Red-Hand", "meaning": "hand stained red", "phonetic": "RED-hand" },
-    { "text": "Gravesinger", "meaning": "sings for the dead", "phonetic": "GRAYV-sing-er" }
+    {
+        "text": "Bloodied",
+        "meaning": "marked by battle",
+        "phonetic": "BLUD-eed"
+    },
+    {
+        "text": "Bone-Eater",
+        "meaning": "devours foes",
+        "phonetic": "BOHN-ee-ter"
+    },
+    {
+        "text": "Skull-Taker",
+        "meaning": "claims skulls",
+        "phonetic": "SKUHL-tay-ker"
+    },
+    {
+        "text": "Stormborn",
+        "meaning": "born of storms",
+        "phonetic": "STORM-born"
+    },
+    {
+        "text": "One-Eye",
+        "meaning": "scarred eye",
+        "phonetic": "WUN-eye"
+    },
+    {
+        "text": "Warchanter",
+        "meaning": "leads war songs",
+        "phonetic": "WAR-chan-ter"
+    },
+    {
+        "text": "Ironhide",
+        "meaning": "hide like iron",
+        "phonetic": "EYE-ern-hide"
+    },
+    {
+        "text": "Ashwalker",
+        "meaning": "walks the wastes",
+        "phonetic": "ASH-walk-er"
+    },
+    {
+        "text": "Red-Fang",
+        "meaning": "fangs bloodied",
+        "phonetic": "RED-fang"
+    },
+    {
+        "text": "Grim Howl",
+        "meaning": "howls doom",
+        "phonetic": "GRIM howl"
+    },
+    {
+        "text": "Ironhide",
+        "meaning": "hide like iron",
+        "phonetic": "EYE-ern-hide"
+    },
+    {
+        "text": "War-Born",
+        "meaning": "born for war",
+        "phonetic": "WAR-born"
+    },
+    {
+        "text": "Stone-Eye",
+        "meaning": "unyielding gaze",
+        "phonetic": "STOHN-eye"
+    },
+    {
+        "text": "Shield-Breaker",
+        "meaning": "shatters shields",
+        "phonetic": "SHEELD-bray-ker"
+    },
+    {
+        "text": "Two-Tusk",
+        "meaning": "prominent tusks",
+        "phonetic": "TOO-tusk"
+    },
+    {
+        "text": "One-Tusk",
+        "meaning": "one broken tusk",
+        "phonetic": "WUN-tusk"
+    },
+    {
+        "text": "Black-Blood",
+        "meaning": "blood of the deep earth",
+        "phonetic": "BLAK-blud"
+    },
+    {
+        "text": "Steel-Grin",
+        "meaning": "unyielding grin",
+        "phonetic": "STEEL-grin"
+    },
+    {
+        "text": "Skull-Splitter",
+        "meaning": "splits skulls",
+        "phonetic": "SKUHL-split-er"
+    },
+    {
+        "text": "Doomhand",
+        "meaning": "hand of doom",
+        "phonetic": "DOOM-hand"
+    },
+    {
+        "text": "Grim-Banner",
+        "meaning": "banner feared",
+        "phonetic": "GRIM-ban-er"
+    },
+    {
+        "text": "Stone-Maw",
+        "meaning": "mouth like stone",
+        "phonetic": "STOHN-maw"
+    },
+    {
+        "text": "Blood-Singer",
+        "meaning": "sings in battle",
+        "phonetic": "BLUD-sing-er"
+    },
+    {
+        "text": "Ashborn",
+        "meaning": "born in ash",
+        "phonetic": "ASH-born"
+    },
+    {
+        "text": "Fire-Eye",
+        "meaning": "eyes of fire",
+        "phonetic": "FY-er-eye"
+    },
+    {
+        "text": "Ragebound",
+        "meaning": "bound to rage",
+        "phonetic": "RAYJ-bound"
+    },
+    {
+        "text": "Night-Tusk",
+        "meaning": "tusk in shadow",
+        "phonetic": "NYT-tusk"
+    },
+    {
+        "text": "Iron-Will",
+        "meaning": "unyielding will",
+        "phonetic": "EYE-ern-will"
+    },
+    {
+        "text": "Red-Hand",
+        "meaning": "hand stained red",
+        "phonetic": "RED-hand"
+    },
+    {
+        "text": "Gravesinger",
+        "meaning": "sings for the dead",
+        "phonetic": "GRAYV-sing-er"
+    },
+    {
+        "text": "The Filthy",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "THE FILTHY",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Skull Cleaver",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "SKULL CLEAVER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Eye Gouger",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "EYE GOUGER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Iron Tusk",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "IRON TUSK",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Skin Flayer",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "SKIN FLAYER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Bone Crusher",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "BONE CRUSHER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Flesh Ripper",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "FLESH RIPPER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Doom Hammer",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "DOOM HAMMER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Elf Butcher",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "ELF BUTCHER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Spine Snapper",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "SPINE SNAPPER",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Death Spear",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "DEATH SPEAR",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "The Brutal",
+        "meaning": "Orc epithet from Volo's Guide to Monsters (5e)",
+        "phonetic": "THE BRUTAL",
+        "source": "Volo's Guide to Monsters (5e)"
+    },
+    {
+        "text": "Iron-Fist",
+        "meaning": "(pattern-based)",
+        "phonetic": "EYE-ern-fist"
+    },
+    {
+        "text": "Blood-Axe",
+        "meaning": "(pattern-based)",
+        "phonetic": "BLUD-ax"
+    },
+    {
+        "text": "Steel-Arm",
+        "meaning": "(pattern-based)",
+        "phonetic": "STEEL-arm"
+    },
+    {
+        "text": "Stone-Fist",
+        "meaning": "(pattern-based)",
+        "phonetic": "STOHN-fist"
+    },
+    {
+        "text": "Iron-Jaw",
+        "meaning": "(pattern-based)",
+        "phonetic": "EYE-ern-jaw"
+    },
+    {
+        "text": "Blood-Eye",
+        "meaning": "(pattern-based)",
+        "phonetic": "BLUD-eye"
+    },
+    {
+        "text": "Steel-Back",
+        "meaning": "(pattern-based)",
+        "phonetic": "STEEL-bak"
+    },
+    {
+        "text": "Iron-Leg",
+        "meaning": "(pattern-based)",
+        "phonetic": "EYE-ern-leg"
+    },
+    {
+        "text": "Skull-Crusher",
+        "meaning": "(pattern-based)",
+        "phonetic": "SKUHL-krush-er"
+    },
+    {
+        "text": "Bone-Breaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "BOHN-bray-ker"
+    },
+    {
+        "text": "Shield-Smasher",
+        "meaning": "(pattern-based)",
+        "phonetic": "SHEELD-smash-er"
+    },
+    {
+        "text": "Armor-Ripper",
+        "meaning": "(pattern-based)",
+        "phonetic": "AR-mor-rip-er"
+    },
+    {
+        "text": "Blade-Wielder",
+        "meaning": "(pattern-based)",
+        "phonetic": "BLAYDE-weeld-er"
+    },
+    {
+        "text": "Axe-Swinger",
+        "meaning": "(pattern-based)",
+        "phonetic": "AX-swing-er"
+    },
+    {
+        "text": "Spear-Thrower",
+        "meaning": "(pattern-based)",
+        "phonetic": "SPEER-throw-er"
+    },
+    {
+        "text": "Hammer-Striker",
+        "meaning": "(pattern-based)",
+        "phonetic": "HAM-er-stry-ker"
+    },
+    {
+        "text": "Chain-Breaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "CHAYN-bray-ker"
+    },
+    {
+        "text": "Wall-Breaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "WAWL-bray-ker"
+    },
+    {
+        "text": "Dragon-Bane",
+        "meaning": "(pattern-based)",
+        "phonetic": "DRAG-on-bayn"
+    },
+    {
+        "text": "Elf-Slayer",
+        "meaning": "(pattern-based)",
+        "phonetic": "ELF-slay-er"
+    },
+    {
+        "text": "Dwarf-Killer",
+        "meaning": "(pattern-based)",
+        "phonetic": "DWORF-kil-er"
+    },
+    {
+        "text": "Human-Breaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "HYOO-man-bray-ker"
+    },
+    {
+        "text": "Siege-Breaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "SEEJ-bray-ker"
+    },
+    {
+        "text": "Gate-Crasher",
+        "meaning": "(pattern-based)",
+        "phonetic": "GAYT-krash-er"
+    },
+    {
+        "text": "Fort-Breaker",
+        "meaning": "(pattern-based)",
+        "phonetic": "FORT-bray-ker"
+    },
+    {
+        "text": "City-Burner",
+        "meaning": "(pattern-based)",
+        "phonetic": "SIT-ee-burn-er"
+    },
+    {
+        "text": "Grim-Face",
+        "meaning": "(pattern-based)",
+        "phonetic": "GRIM-fays"
+    },
+    {
+        "text": "Fierce-Roar",
+        "meaning": "(pattern-based)",
+        "phonetic": "FEERS-ror"
+    },
+    {
+        "text": "Wild-Rage",
+        "meaning": "(pattern-based)",
+        "phonetic": "WYLD-rayj"
+    },
+    {
+        "text": "Dark-Storm",
+        "meaning": "(pattern-based)",
+        "phonetic": "DARK-storm"
+    },
+    {
+        "text": "Blood-Rage",
+        "meaning": "(pattern-based)",
+        "phonetic": "BLUD-rayj"
+    },
+    {
+        "text": "War-Cry",
+        "meaning": "(pattern-based)",
+        "phonetic": "WAR-kry"
+    },
+    {
+        "text": "Death-Grin",
+        "meaning": "(pattern-based)",
+        "phonetic": "DETH-grin"
+    },
+    {
+        "text": "Rage-Fire",
+        "meaning": "(pattern-based)",
+        "phonetic": "RAYJ-fyr"
+    },
+    {
+        "text": "Ruthless",
+        "meaning": "(pattern-based)",
+        "phonetic": "ROOTH-les"
+    },
+    {
+        "text": "Savage",
+        "meaning": "(pattern-based)",
+        "phonetic": "SAV-ij"
+    },
+    {
+        "text": "Brutal",
+        "meaning": "(pattern-based)",
+        "phonetic": "BROO-tal"
+    },
+    {
+        "text": "Fierce",
+        "meaning": "(pattern-based)",
+        "phonetic": "FEERS"
+    },
+    {
+        "text": "Merciless",
+        "meaning": "(pattern-based)",
+        "phonetic": "MER-sil-es"
+    },
+    {
+        "text": "Relentless",
+        "meaning": "(pattern-based)",
+        "phonetic": "re-LENT-les"
+    }
 ]

@@ -282,14 +282,20 @@ export class UIController {
         let html = "";
         if (personal) {
             const personalText = personal.text || personal.name || personal.root || "";
-            html += `<div class="component"><span class="component-label">Personal:</span> ${personalText} <span class="component-meaning">(${personal.meaning || personalText})</span></div>`;
+            const meaning = personal.meaning || personalText;
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personalText} <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         if (nickname && nickname.text) {
-            html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">(${nickname.meaning || ""})</span></div>`;
+            const meaning = nickname.meaning || "";
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         if (clan) {
             const clanText = clan.text || clan.name || clan.root || "";
-            html += `<div class="component"><span class="component-label">Clan:</span> ${clanText} <span class="component-meaning">(${clan.meaning || clanText})</span></div>`;
+            const meaning = clan.meaning || clanText;
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Clan:</span> ${clanText} <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         this.elements.breakdown.innerHTML = html;
     }
@@ -303,13 +309,19 @@ export class UIController {
         const { personal, family, nickname } = nameData.breakdown;
         let html = "";
         if (personal) {
-            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">(${personal.meaning || ""})</span></div>`;
+            const meaning = personal.meaning || "";
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         if (family) {
-            html += `<div class="component"><span class="component-label">Family:</span> ${family.text} <span class="component-meaning">(${family.meaning || ""})</span></div>`;
+            const meaning = family.meaning || "";
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Family:</span> ${family.text} <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         if (nickname && nickname.text) {
-            html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">(${nickname.meaning || ""})</span></div>`;
+            const meaning = nickname.meaning || "";
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Nickname:</span> "${nickname.text}" <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         this.elements.breakdown.innerHTML = html;
     }
@@ -323,11 +335,15 @@ export class UIController {
         const { personal, epithet } = nameData.breakdown;
         let html = "";
         if (personal) {
-            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">(${personal.meaning || ""})</span></div>`;
+            const meaning = personal.meaning || "";
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Personal:</span> ${personal.text} <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         if (epithet && epithet.text) {
             const display = epithet.displayText || epithet.text;
-            html += `<div class="component"><span class="component-label">Epithet:</span> ${display} <span class="component-meaning">(${epithet.meaning || ""})</span></div>`;
+            const meaning = epithet.meaning || "";
+            const meaningDisplay = meaning.startsWith("(") && meaning.endsWith(")") ? meaning : `(${meaning})`;
+            html += `<div class="component"><span class="component-label">Epithet:</span> ${display} <span class="component-meaning">${meaningDisplay}</span></div>`;
         }
         this.elements.breakdown.innerHTML = html;
     }

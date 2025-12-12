@@ -5,12 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# Changelog
+## [3.2.0] - 2025-12-12 - "The Name Generator Level-Update"
 
-All notable changes to this project will be documented in this file.
+### Added
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+- **Massive Component Expansion**: Added 531 new components across all generators (+133% overall)
+    - **Elven Components**: Added 65 new components including Drow houses (Do'Urden, Baenre, Agrach Dyrr), famous character names (Drizzt, Jarlaxle, Coran, etc.), and expanded Drow-specific components
+    - **Dwarven Names**: Added famous Dwarf characters (Bruenor, Pwent, Gundren, etc.) from BG2, BG3, and Salvatore novels; expanded clan names
+    - **Gnomish Names**: Added 57 personal names from Volo's Guide & Mordenkainen's Tome; expanded clan names from 5 to 33 (+560%); expanded nicknames from 5 to 49 (+880%)
+    - **Halfling Names**: Added 58 personal names from Mordenkainen's Tome; expanded family names from 10 to 63 (+530%); expanded nicknames from 10 to 65 (+550%)
+    - **Orc Names**: Added 24 personal names from Volo's Guide; added 12 clan names; expanded epithets from 30 to 82 (+173%)
+
+- **Pattern-Based Naming Systems**: Implemented pattern-based name generation for Gnomes, Halflings, and Orcs
+    - All pattern-based names clearly marked with "(pattern-based)" in meanings
+    - Official sources properly attributed
+    - Follows official D&D naming conventions
+
+- **Drow Generation Improvements**: Major formula enhancements
+    - Root repetition prevention (max 2 occurrences per name)
+    - Adjusted component selection weighting for Drow-specific components
+    - Neutral fallback for Drow selection
+    - Adaptive minimum syllables (4-6 for Drow females)
+    - Simple-mode guard (prevents prefix.root === suffix.root)
+    - Famous component guard (prevents too many famous+famous combinations)
+    - Lore accuracy: Prevented Drow from using Moon Elf components
+
+### Changed
+
+- **Component Quality**: All pattern-based names now clearly marked; official sources properly attributed
+- **Source String Formatting**: Removed .md extensions, combined duplicate sources, improved readability
+- **Display Improvements**: Fixed double parentheses in component breakdowns
+- **Name Generation Logic**:
+    - Gnome clan names now use single components (not combined) to prevent overly long names
+    - Halfling/Gnome personal names prevent combining two complete names
+    - Proper capitalization for clan/family names
+
+### Fixed
+
+- **Long Name Issue**: Prevented combining complete names (e.g., "Qualnusderukoskai" → "Qualnus" or "Derukoskai")
+- **Double Parentheses**: Fixed breakdown display showing "(pattern-based)" instead of "((pattern-based))"
+- **Source Deduplication**: Fixed duplicate source strings in generated name meanings
+- **Clan Name Capitalization**: Fixed lowercase clan names (e.g., "crystalwhistle" → "Crystalwhistle")
+
+### Updated
+
+- Test suite for all generator improvements
+- Documentation with comprehensive improvement metrics
+- All JSON data files cleaned and structured appropriately
 
 ## [3.1.5] - 2025-12-07
 

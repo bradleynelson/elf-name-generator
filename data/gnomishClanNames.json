@@ -45,5 +45,289 @@
         "can_be_suffix": false,
         "subrace": ["forest"],
         "phonetic": "Tuhm-bul"
+    },
+    {
+        "root": "glimmergear",
+        "prefix_text": "Glimmergear",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "GLIMMERGEAR",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "sparkstone",
+        "prefix_text": "Sparkstone",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "SPARKSTONE",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "crystalwhistle",
+        "prefix_text": null,
+        "suffix_text": "crystalwhistle",
+        "suffix_meaning": "(pattern-based)",
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "subrace": ["rock"],
+        "phonetic": "CRYSTALWHISTLE",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "gemspark",
+        "prefix_text": "Gemspark",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "GEMSPARK",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "gearspark",
+        "prefix_text": "Gearspark",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "GEARSPARK",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "cogwhistle",
+        "prefix_text": null,
+        "suffix_text": "cogwhistle",
+        "suffix_meaning": "(pattern-based)",
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "subrace": ["rock"],
+        "phonetic": "COGWHISTLE",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "springtumble",
+        "prefix_text": "Springtumble",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "SPRINGTUMBLE",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "ratchetwhistle",
+        "prefix_text": null,
+        "suffix_text": "ratchetwhistle",
+        "suffix_meaning": "(pattern-based)",
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "subrace": ["rock"],
+        "phonetic": "RATCHETWHISTLE",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "tinkertop",
+        "prefix_text": "Tinkertop",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "TINKERTOP",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "fizzlebang",
+        "prefix_text": "Fizzlebang",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "FIZZLEBANG",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "muddlefoot",
+        "prefix_text": "Muddlefoot",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["forest"],
+        "phonetic": "MUDDLEFOOT",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "bafflegab",
+        "prefix_text": "Bafflegab",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "BAFFLEGAB",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "glimmergleam",
+        "prefix_text": "Glimmergleam",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock"],
+        "phonetic": "GLIMMERGLEAM",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "twinkletoes",
+        "prefix_text": "Twinkletoes",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["forest"],
+        "phonetic": "TWINKLETOES",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "whisperleaf",
+        "prefix_text": "Whisperleaf",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["forest"],
+        "phonetic": "WHISPERLEAF",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "shadowbough",
+        "prefix_text": "Shadowbough",
+        "prefix_meaning": "(pattern-based)",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["forest"],
+        "phonetic": "SHADOWBOUGH",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "mossywhistle",
+        "prefix_text": null,
+        "suffix_text": "mossywhistle",
+        "suffix_meaning": "(pattern-based)",
+        "can_be_prefix": false,
+        "can_be_suffix": true,
+        "subrace": ["forest"],
+        "phonetic": "MOSSYWHISTLE",
+        "source": "Pattern-based (not from official source)"
+    },
+    {
+        "root": "beren",
+        "prefix_text": "Beren",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "BEH-ren",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "daergel",
+        "prefix_text": "Daergel",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "DAIR-gel",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "folkor",
+        "prefix_text": "Folkor",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "FOHL-kor",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "garrick",
+        "prefix_text": "Garrick",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "GAR-rik",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "nackle",
+        "prefix_text": "Nackle",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "NAK-ul",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "murnig",
+        "prefix_text": "Murnig",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "MUR-nig",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "ningel",
+        "prefix_text": "Ningel",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "NIN-gel",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "raulnor",
+        "prefix_text": "Raulnor",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "RAWL-nor",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "scheppen",
+        "prefix_text": "Scheppen",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "SHEP-en",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "timbers",
+        "prefix_text": "Timbers",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "TIM-bers",
+        "source": "Player's Handbook (5e)"
+    },
+    {
+        "root": "turen",
+        "prefix_text": "Turen",
+        "prefix_meaning": "Gnome clan name",
+        "can_be_prefix": true,
+        "can_be_suffix": false,
+        "subrace": ["rock", "forest"],
+        "phonetic": "TOO-ren",
+        "source": "Player's Handbook (5e)"
     }
 ]

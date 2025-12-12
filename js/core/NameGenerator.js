@@ -55,16 +55,26 @@ export class NameGenerator {
         const acceptableCandidates = []; // Store all acceptable candidates for random selection
 
         // Define subrace-specific minimums and maximums
-        const minSyllables =
+        const baseMinSyllables =
             effectiveSubrace === "drow-female" ? 4 : subrace === "wood-elf" || effectiveSubrace === "drow-male" ? 2 : 0;
         const maxSyllables =
             effectiveSubrace === "drow-female" ? 6 : subrace === "wood-elf" || effectiveSubrace === "drow-male" ? 3 : 5;
 
         // Try multiple attempts to get close to target syllable count
         // Increase attempts if we need to meet minimums (more attempts for stricter requirements)
-        const maxAttempts = minSyllables > 0 ? CONFIG.MAX_GENERATION_ATTEMPTS * 2 : CONFIG.MAX_GENERATION_ATTEMPTS;
+        const maxAttempts = baseMinSyllables > 0 ? CONFIG.MAX_GENERATION_ATTEMPTS * 2 : CONFIG.MAX_GENERATION_ATTEMPTS;
 
         for (let attempts = 0; attempts < maxAttempts; attempts++) {
+            // Adaptive minimum for drow-female to reduce starvation on later attempts
+            let minSyllables = baseMinSyllables;
+            if (effectiveSubrace === "drow-female") {
+                if (attempts > maxAttempts) {
+                    minSyllables = Math.max(2, baseMinSyllables - 2);
+                } else if (attempts > maxAttempts / 2) {
+                    minSyllables = Math.max(2, baseMinSyllables - 1);
+                }
+            }
+
             const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
 
             // Reject candidates that don't meet subrace minimums or exceed maximums
@@ -107,13 +117,13 @@ export class NameGenerator {
 
         // Final validation: ensure we have a valid name meeting subrace minimums
         // (This is a fallback in case the main loop didn't find any valid candidates)
-        if (minSyllables > 0) {
+        if (baseMinSyllables > 0) {
             // If we don't have a valid name yet, keep trying until we get one
-            if (!bestName || bestName.syllables < minSyllables) {
+            if (!bestName || bestName.syllables < baseMinSyllables) {
                 // Last resort: try many more times to get a valid name
                 for (let retry = 0; retry < 50; retry++) {
                     const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
-                    if (candidate.syllables >= minSyllables) {
+                    if (candidate.syllables >= baseMinSyllables) {
                         bestName = candidate;
                         break;
                     }
@@ -123,19 +133,19 @@ export class NameGenerator {
 
         // Safety check: if we still don't have a valid name, something is wrong
         // But we should have found one by now with all the retries
-        if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+        if (!bestName || (baseMinSyllables > 0 && bestName.syllables < baseMinSyllables)) {
             console.warn(`Failed to generate valid name for ${subrace} ${style} after ${maxAttempts + 50} attempts`);
             // Keep trying until we get a valid name (absolute last resort)
             for (let finalRetry = 0; finalRetry < 100; finalRetry++) {
                 const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
-                if (minSyllables === 0 || candidate.syllables >= minSyllables) {
+                if (baseMinSyllables === 0 || candidate.syllables >= baseMinSyllables) {
                     bestName = candidate;
                     break;
                 }
             }
             // If we STILL don't have a valid name, something is seriously wrong
             // But we must return something, so return the last attempt even if invalid
-            if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+            if (!bestName || (baseMinSyllables > 0 && bestName.syllables < baseMinSyllables)) {
                 console.error(
                     `CRITICAL: Could not generate valid name for ${subrace} ${style} after ${maxAttempts + 150} attempts`
                 );
@@ -145,13 +155,13 @@ export class NameGenerator {
 
         // Final validation: ensure we have a valid name meeting subrace minimums
         // (This is a fallback in case the main loop didn't find any valid candidates)
-        if (minSyllables > 0) {
+        if (baseMinSyllables > 0) {
             // If we don't have a valid name yet, keep trying until we get one
-            if (!bestName || bestName.syllables < minSyllables) {
+            if (!bestName || bestName.syllables < baseMinSyllables) {
                 // Last resort: try many more times to get a valid name
                 for (let retry = 0; retry < 50; retry++) {
                     const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
-                    if (candidate.syllables >= minSyllables) {
+                    if (candidate.syllables >= baseMinSyllables) {
                         bestName = candidate;
                         break;
                     }
@@ -161,19 +171,19 @@ export class NameGenerator {
 
         // Safety check: if we still don't have a valid name, something is wrong
         // But we should have found one by now with all the retries
-        if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+        if (!bestName || (baseMinSyllables > 0 && bestName.syllables < baseMinSyllables)) {
             console.warn(`Failed to generate valid name for ${subrace} ${style} after ${maxAttempts + 50} attempts`);
             // Keep trying until we get a valid name (absolute last resort)
             for (let finalRetry = 0; finalRetry < 100; finalRetry++) {
                 const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
-                if (minSyllables === 0 || candidate.syllables >= minSyllables) {
+                if (baseMinSyllables === 0 || candidate.syllables >= baseMinSyllables) {
                     bestName = candidate;
                     break;
                 }
             }
             // If we STILL don't have a valid name, something is seriously wrong
             // But we must return something, so return the last attempt even if invalid
-            if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+            if (!bestName || (baseMinSyllables > 0 && bestName.syllables < baseMinSyllables)) {
                 console.error(
                     `CRITICAL: Could not generate valid name for ${subrace} ${style} after ${maxAttempts + 150} attempts`
                 );
@@ -183,13 +193,13 @@ export class NameGenerator {
 
         // Final validation: ensure we have a valid name meeting subrace minimums
         // (This is a fallback in case the main loop didn't find any valid candidates)
-        if (minSyllables > 0) {
+        if (baseMinSyllables > 0) {
             // If we don't have a valid name yet, keep trying until we get one
-            if (!bestName || bestName.syllables < minSyllables) {
+            if (!bestName || bestName.syllables < baseMinSyllables) {
                 // Last resort: try many more times to get a valid name
                 for (let retry = 0; retry < 50; retry++) {
                     const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
-                    if (candidate.syllables >= minSyllables) {
+                    if (candidate.syllables >= baseMinSyllables) {
                         bestName = candidate;
                         break;
                     }
@@ -199,19 +209,19 @@ export class NameGenerator {
 
         // Safety check: if we still don't have a valid name, something is wrong
         // But we should have found one by now with all the retries
-        if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+        if (!bestName || (baseMinSyllables > 0 && bestName.syllables < baseMinSyllables)) {
             console.warn(`Failed to generate valid name for ${subrace} ${style} after ${maxAttempts + 50} attempts`);
             // Keep trying until we get a valid name (absolute last resort)
             for (let finalRetry = 0; finalRetry < 100; finalRetry++) {
                 const candidate = this._generateCandidate(complexity, style, effectiveSubrace, adjustedTarget);
-                if (minSyllables === 0 || candidate.syllables >= minSyllables) {
+                if (baseMinSyllables === 0 || candidate.syllables >= baseMinSyllables) {
                     bestName = candidate;
                     break;
                 }
             }
             // If we STILL don't have a valid name, something is seriously wrong
             // But we must return something, so return the last attempt even if invalid
-            if (!bestName || (minSyllables > 0 && bestName.syllables < minSyllables)) {
+            if (!bestName || (baseMinSyllables > 0 && bestName.syllables < baseMinSyllables)) {
                 console.error(
                     `CRITICAL: Could not generate valid name for ${subrace} ${style} after ${maxAttempts + 150} attempts`
                 );
@@ -299,8 +309,43 @@ export class NameGenerator {
         }
 
         // Standard 2-component generation
-        const prefix = this._selectPrefix(style, subrace);
-        const suffix = this._selectSuffix(style, subrace);
+        let prefix = this._selectPrefix(style, subrace);
+        let suffix = this._selectSuffix(style, subrace);
+
+        // Drow simple: prefer non-famous prefixes; allow famous suffix with low odds; avoid famous+famous
+        if (subrace === "drow" || subrace === "drow-female" || subrace === "drow-male") {
+            let refGuard = 0;
+            if (complexity === "simple") {
+                // Bias away from famous prefix
+                while (this._isFamous(prefix) && refGuard < 5 && Math.random() < 0.7) {
+                    prefix = this._selectPrefix(style, subrace);
+                    refGuard++;
+                }
+            }
+            let sufGuard = 0;
+            if (complexity === "simple") {
+                // Famous suffix allowed but try to avoid pairing famous+famous
+                while (this._isFamous(suffix) && (this._isFamous(prefix) || Math.random() < 0.5) && sufGuard < 5) {
+                    suffix = this._selectSuffix(style, subrace);
+                    sufGuard++;
+                }
+            }
+        }
+
+        // For Drow, avoid identical root pairs in simple mode (unless we intentionally allow it)
+        if (subrace === "drow" || subrace === "drow-female" || subrace === "drow-male") {
+            let guard = 0;
+            while (prefix.root === suffix.root && guard < 5) {
+                suffix = this._selectSuffix(style, subrace);
+                guard++;
+            }
+            // Avoid famous+famous pairing in simple mode
+            let famousGuard = 0;
+            while (this._isFamous(prefix) && this._isFamous(suffix) && famousGuard < 5) {
+                suffix = this._selectSuffix(style, subrace);
+                famousGuard++;
+            }
+        }
 
         // Get clean text (remove hyphens)
         const prefixText = phonetics.cleanComponentText(prefix.prefix_text);
@@ -382,6 +427,8 @@ export class NameGenerator {
         const connectors = [];
         const nameParts = [];
         let currentSyllables = 0;
+        const rootCounts = new Map(); // enforce max two uses per root
+        let usedFamous = false; // avoid multiple famous components per name
         // Use the passed targetSyllables, not hardcoded
 
         // Get flexible components (can be either prefix or suffix)
@@ -392,12 +439,25 @@ export class NameGenerator {
         // Start with a flexible component (can be both prefix and suffix)
         // This ensures all non-final components are flexible
         let component = this._selectWeightedComponent(flexibleComponents, subrace);
+        // Prevent over-using the same root (max 2 per name)
+        let guardAttempts = 0;
+        while (
+            (rootCounts.get(component.root) >= 2 || (usedFamous && this._isFamous(component))) &&
+            guardAttempts < 10
+        ) {
+            component = this._selectWeightedComponent(flexibleComponents, subrace);
+            guardAttempts++;
+        }
         let componentText = phonetics.cleanComponentText(component.prefix_text);
         let componentMeaning = phonetics.formatMeaning(component.prefix_meaning);
 
         components.push({ component, text: componentText, meaning: componentMeaning });
         nameParts.push(componentText);
         currentSyllables = phonetics.countSyllables(componentText);
+        rootCounts.set(component.root, (rootCounts.get(component.root) || 0) + 1);
+        if (this._isFamous(component)) {
+            usedFamous = true;
+        }
 
         let lastText = componentText;
         let attempts = 0;
@@ -410,6 +470,15 @@ export class NameGenerator {
 
             // Select next component from flexible pool
             component = this._selectWeightedComponent(flexibleComponents, subrace);
+            // Enforce max two uses of the same root in a single name
+            let innerGuard = 0;
+            while (
+                (rootCounts.get(component.root) >= 2 || (usedFamous && this._isFamous(component))) &&
+                innerGuard < 10
+            ) {
+                component = this._selectWeightedComponent(flexibleComponents, subrace);
+                innerGuard++;
+            }
 
             // Randomly use as prefix or suffix (ensure component has the required form)
             let useAsPrefix = Math.random() > 0.5;
@@ -480,6 +549,10 @@ export class NameGenerator {
             components.push({ component, text: componentText, meaning: componentMeaning });
             nameParts.push(componentText);
             currentSyllables += componentSyllables;
+            rootCounts.set(component.root, (rootCounts.get(component.root) || 0) + 1);
+            if (this._isFamous(component)) {
+                usedFamous = true;
+            }
             lastText = componentText;
 
             // Stop immediately if we've met the target (don't wait for next loop)
@@ -492,7 +565,16 @@ export class NameGenerator {
         const lastComponent = components[components.length - 1].component;
         if (!lastComponent.suffix_text || !lastComponent.can_be_suffix) {
             // Replace last component with a proper suffix
-            const finalSuffix = this._selectSuffix(style, subrace);
+            let finalSuffix = this._selectSuffix(style, subrace);
+            // Avoid exceeding root reuse limit
+            let suffixGuard = 0;
+            while (
+                (rootCounts.get(finalSuffix.root) >= 2 || (usedFamous && this._isFamous(finalSuffix))) &&
+                suffixGuard < 10
+            ) {
+                finalSuffix = this._selectSuffix(style, subrace);
+                suffixGuard++;
+            }
             const finalSuffixText = phonetics.cleanComponentText(finalSuffix.suffix_text);
             const finalSuffixMeaning = phonetics.formatMeaning(finalSuffix.suffix_meaning);
 
@@ -524,6 +606,10 @@ export class NameGenerator {
                 meaning: finalSuffixMeaning
             });
             nameParts.push(finalSuffixText);
+            rootCounts.set(finalSuffix.root, (rootCounts.get(finalSuffix.root) || 0) + 1);
+            if (this._isFamous(finalSuffix)) {
+                usedFamous = true;
+            }
         }
 
         // Build the final name - join first, THEN capitalize only first letter
@@ -542,7 +628,15 @@ export class NameGenerator {
         if (syllables < minSyllablesComplex) {
             // Try to add another component to reach minimum (even if it exceeds target+1)
             for (let retry = 0; retry < 10 && syllables < minSyllablesComplex; retry++) {
-                const extraComponent = this._selectWeightedComponent(flexibleComponents, subrace);
+                let extraComponent = this._selectWeightedComponent(flexibleComponents, subrace);
+                let extraGuard = 0;
+                while (
+                    (rootCounts.get(extraComponent.root) >= 2 || (usedFamous && this._isFamous(extraComponent))) &&
+                    extraGuard < 10
+                ) {
+                    extraComponent = this._selectWeightedComponent(flexibleComponents, subrace);
+                    extraGuard++;
+                }
                 const extraText = phonetics.cleanComponentText(
                     extraComponent.prefix_text || extraComponent.suffix_text
                 );
@@ -566,7 +660,10 @@ export class NameGenerator {
                 }
 
                 // Add component if it doesn't exceed maximum
-                if (syllables + extraSyllables <= maxSyllablesComplex) {
+                if (
+                    syllables + extraSyllables <= maxSyllablesComplex &&
+                    (rootCounts.get(extraComponent.root) || 0) < 2
+                ) {
                     components.push({
                         component: extraComponent,
                         text: extraText,
@@ -575,6 +672,10 @@ export class NameGenerator {
                     nameParts.push(extraText);
                     syllables += extraSyllables;
                     lastText = extraText;
+                    rootCounts.set(extraComponent.root, (rootCounts.get(extraComponent.root) || 0) + 1);
+                    if (this._isFamous(extraComponent)) {
+                        usedFamous = true;
+                    }
                 }
 
                 if (syllables >= minSyllablesComplex) {
@@ -793,14 +894,20 @@ export class NameGenerator {
         );
 
         // Weighted random selection
-        // Drow use ONLY their specific components (no neutral fallback for authenticity)
-        // 90% chance preferred, 10% chance other drow components
+        // Drow: now use same weighting as elves (60% preferred, 30% neutral, 10% other)
         if (subrace === "drow-female" || subrace === "drow-male") {
-            const drow = availableCandidates.filter((c) => c.tags && c.tags.includes("drow"));
-            if (Math.random() < 0.9 && preferred.length > 0) {
-                return this._randomElement(preferred);
-            } else if (drow.length > 0) {
-                return this._randomElement(drow);
+            const drowAll = availableCandidates.filter((c) => c.tags && c.tags.includes("drow"));
+            const drowPreferred = preferred;
+            const rollDrow = Math.random();
+
+            if (rollDrow < 0.6 && drowPreferred.length > 0) {
+                return this._randomElement(drowPreferred);
+            } else if (rollDrow < 0.9 && neutral.length > 0) {
+                return this._randomElement(neutral);
+            } else if (other.length > 0) {
+                return this._randomElement(other);
+            } else if (drowAll.length > 0) {
+                return this._randomElement(drowAll);
             }
             return this._randomElement(availableCandidates);
         }
@@ -819,5 +926,13 @@ export class NameGenerator {
 
         // Fallback: pick from any available
         return this._randomElement(availableCandidates);
+    }
+
+    /**
+     * Check if a component is tagged as famous
+     * @private
+     */
+    _isFamous(component) {
+        return Boolean(component && component.tags && component.tags.includes("famous"));
     }
 }
