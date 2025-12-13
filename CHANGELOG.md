@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2025-12-12
+
+### Added
+
+- **History Section**: Added a new "History (Last 10 Names)" accordion section that displays the last 10 generated names, allowing users to click on any name to restore it as the current generated name
+- **Spacebar Keybind**: Added spacebar keyboard shortcut to generate a new name (works when not focused on form inputs)
+- **Desktop Helper Text**: Added "Click or Press Spacebar" helper text under the Generate Name button on desktop (hidden on mobile)
+
+### Changed
+
+- **Gnome Name Randomization**: Enhanced anti-repeat logic for Gnomish name generation to prevent immediate repetition of personal names, clan names, and nicknames
+- **Mobile Name Display**: Fixed name overflow on mobile devices - names now wrap properly instead of running off the screen
+- **Mobile UI**: Hidden title sword icons on mobile devices for cleaner mobile experience
+
+### Fixed
+
+- **Mobile Overflow**: Fixed issue where long names would overflow horizontally on mobile devices
+- **Gnome Repetition**: Addressed repetition issues in Gnome name generation with improved anti-repeat tracking
+
 ## [3.2.2] - 2025-12-12
 
 ### Fixed
