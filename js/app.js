@@ -35,6 +35,8 @@ export class UnifiedNameGenerator {
         this.ui = null;
         this.isInitialized = false;
         this.currentGeneratorType = "elven";
+        this.nameHistory = []; // Track last 10 generated names
+        this.maxHistorySize = 10;
 
         // Subrace icon mapping for generate button (Elven)
         this.subraceIcons = {
@@ -532,6 +534,27 @@ export class UnifiedNameGenerator {
             });
         }
 
+        // Spacebar keybind to generate name
+        document.addEventListener("keydown", (e) => {
+            // Only trigger on spacebar
+            if (e.code === "Space" || e.key === " ") {
+                // Don't trigger if user is typing in an input, textarea, or select
+                const activeElement = document.activeElement;
+                const isInputFocused =
+                    activeElement &&
+                    (activeElement.tagName === "INPUT" ||
+                        activeElement.tagName === "TEXTAREA" ||
+                        activeElement.tagName === "SELECT" ||
+                        activeElement.isContentEditable);
+
+                // Only generate if not typing in a form field and app is initialized
+                if (!isInputFocused && this.isInitialized) {
+                    e.preventDefault(); // Prevent page scroll
+                    this.generateName();
+                }
+            }
+        });
+
         // Save to favorites button
         const saveFavoriteBtn = document.querySelector(".save-favorite");
         if (saveFavoriteBtn) {
@@ -601,6 +624,35 @@ export class UnifiedNameGenerator {
                 this.applyFinalVowel(vowel);
             }
         });
+
+        // History items (event delegation)
+        const historyContainer = document.getElementById("historyItems");
+        if (historyContainer) {
+            historyContainer.addEventListener("click", (e) => {
+                const historyItem = e.target.closest(".history-item");
+                if (historyItem) {
+                    const index = parseInt(historyItem.getAttribute("data-history-index"), 10);
+                    if (!isNaN(index)) {
+                        this.setNameFromHistory(index);
+                    }
+                }
+            });
+        }
+
+        // History toggle (same style as breakdown toggle)
+        const historyToggle = document.getElementById("historyToggle");
+        const historyContent = document.getElementById("historyContent");
+        if (historyToggle && historyContent) {
+            historyToggle.addEventListener("click", () => {
+                const isExpanded = historyToggle.getAttribute("aria-expanded") === "true";
+                historyToggle.setAttribute("aria-expanded", !isExpanded);
+                if (isExpanded) {
+                    historyContent.setAttribute("hidden", "");
+                } else {
+                    historyContent.removeAttribute("hidden");
+                }
+            });
+        }
 
         // Favorites list (event delegation)
         this.ui.elements.favoritesList.addEventListener("click", (e) => {
@@ -699,10 +751,84 @@ export class UnifiedNameGenerator {
             const preferences = this.ui.getPreferences(this.currentGeneratorType);
             const nameData = this.currentGenerator.generate(preferences);
             this.ui.displayName(nameData, this.currentGeneratorType);
+
+            // Add to history
+            this._addToHistory(nameData);
         } catch (error) {
             console.error("Error generating name:", error);
             this.ui.showNotification("Error generating name. Please try again.", "error");
         }
+    }
+
+    /**
+     * Add a generated name to history (last 10)
+     * @private
+     */
+    _addToHistory(nameData) {
+        // Add to beginning of array
+        this.nameHistory.unshift({
+            name: nameData.name,
+            meaning: nameData.meaning,
+            pronunciation: nameData.pronunciation,
+            generatorType: this.currentGeneratorType,
+            fullData: nameData // Store full data for restoration
+        });
+
+        // Keep only last 10
+        if (this.nameHistory.length > this.maxHistorySize) {
+            this.nameHistory = this.nameHistory.slice(0, this.maxHistorySize);
+        }
+
+        // Update history display
+        this._updateHistoryDisplay();
+    }
+
+    /**
+     * Update the history display in the UI
+     * @private
+     */
+    _updateHistoryDisplay() {
+        const historyContainer = document.getElementById("historyItems");
+        if (!historyContainer) return;
+
+        if (this.nameHistory.length === 0) {
+            historyContainer.innerHTML = '<div class="history-empty">No names generated yet</div>';
+            return;
+        }
+
+        const historyHTML = this.nameHistory
+            .map(
+                (item, index) => `
+            <div class="history-item" data-history-index="${index}">
+                <span class="history-name">${item.name}</span>
+                <span class="history-meaning">${item.meaning || ""}</span>
+            </div>
+        `
+            )
+            .join("");
+
+        historyContainer.innerHTML = historyHTML;
+    }
+
+    /**
+     * Set name from history (called when clicking a history item)
+     * @param {number} index - Index in history array
+     */
+    setNameFromHistory(index) {
+        if (index < 0 || index >= this.nameHistory.length) return;
+
+        const historyItem = this.nameHistory[index];
+        const nameData = historyItem.fullData;
+
+        // Display the name
+        this.ui.displayName(nameData, historyItem.generatorType);
+
+        // Move to top of history (remove from current position and add to beginning)
+        this.nameHistory.splice(index, 1);
+        this.nameHistory.unshift(historyItem);
+
+        // Update display
+        this._updateHistoryDisplay();
     }
 
     /**
