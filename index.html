@@ -491,6 +491,7 @@
                         </svg>
                         <span class="generate-btn-text">✨ Generate Name ✨</span>
                         <span class="generate-btn-text-shimmer" aria-hidden="true">✨ Generate Name ✨</span>
+                        <span class="generate-btn-helper">Click or Press Spacebar</span>
                     </button>
 
                     <div class="name-content">
@@ -536,6 +537,31 @@
                         </button>
                         <div class="breakdown-content" id="breakdownContent" hidden>
                             <div id="breakdown"></div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown">
+                        <button
+                            class="breakdown-toggle"
+                            id="historyToggle"
+                            aria-expanded="false"
+                            aria-controls="historyContent"
+                        >
+                            <span class="breakdown-title">History (Last 10 Names)</span>
+                        </button>
+                        <div class="breakdown-content" id="historyContent" hidden>
+                            <p
+                                style="
+                                    margin-bottom: var(--spacing-md);
+                                    color: var(--color-text-muted);
+                                    font-size: var(--font-size-sm);
+                                "
+                            >
+                                Click on any name below to restore it as the current generated name.
+                            </p>
+                            <div id="historyItems" class="history-items">
+                                <div class="history-empty">No names generated yet</div>
+                            </div>
                         </div>
                     </div>
 
@@ -2113,7 +2139,7 @@
             </footer>
 
             <div class="version-box">
-                <p>v3.2.2 - Last Updated 12-12-25</p>
+                <p>v3.3.0 - Last Updated 12-12-25</p>
             </div>
         </div>
 

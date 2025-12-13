@@ -381,6 +381,14 @@ Free to use, modify, and distribute with attribution.
 
 ## 📝 Version History
 
+### v3.3.0 - UX Enhancements & Mobile Fixes
+
+- **History Section**: Added "History (Last 10 Names)" accordion that displays recently generated names with click-to-restore functionality
+- **Spacebar Keybind**: Added keyboard shortcut (spacebar) to generate new names quickly
+- **Gnome Randomization**: Enhanced anti-repeat logic to prevent immediate repetition of personal names, clan names, and nicknames
+- **Mobile Improvements**: Fixed name overflow issues (names now wrap properly), hidden title icons on mobile for cleaner UI
+- **Desktop Helper Text**: Added "Click or Press Spacebar" helper text under Generate button on desktop
+
 ### v3.2.0 - "The Name Generator Level-Update"
 
 - **Massive Component Expansion**: Added 531 new components across all generators (+133% overall)

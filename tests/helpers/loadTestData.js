@@ -14,8 +14,19 @@ const __dirname = dirname(__filename);
 export function loadTestData() {
     const components = JSON.parse(readFileSync(join(__dirname, "../../data/components.json"), "utf-8"));
     const connectors = JSON.parse(readFileSync(join(__dirname, "../../data/connectors.json"), "utf-8"));
+    const gnomishPersonalNames = JSON.parse(
+        readFileSync(join(__dirname, "../../data/gnomishPersonalNames.json"), "utf-8")
+    );
+    const gnomishClanNames = JSON.parse(readFileSync(join(__dirname, "../../data/gnomishClanNames.json"), "utf-8"));
+    const gnomishNicknames = JSON.parse(readFileSync(join(__dirname, "../../data/gnomishNicknames.json"), "utf-8"));
 
-    return { components, connectors };
+    return {
+        components,
+        connectors,
+        gnomishPersonalNames,
+        gnomishClanNames,
+        gnomishNicknames
+    };
 }
 
 /**

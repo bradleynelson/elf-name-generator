@@ -779,10 +779,22 @@ h1 {
     position: relative;
     z-index: 2;
     text-align: center;
+    display: block;
 }
 
 .generate-btn-large > .generate-btn-text-shimmer {
     display: none; /* Hide shimmer text */
+}
+
+.generate-btn-large > .generate-btn-helper {
+    display: block;
+    font-size: 0.65em;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-top: 0.25em;
+    text-align: center;
+    position: relative;
+    z-index: 2;
 }
 
 /* Glimmer effect on button background - only on hover */
@@ -1458,6 +1470,52 @@ input[type="range"]::-moz-range-progress {
 .vowel-option-tone {
     color: var(--color-text-muted);
     font-size: var(--font-size-xs);
+    font-style: italic;
+}
+
+/* History Items - matches breakdown style */
+.history-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.history-item {
+    padding: var(--spacing-md);
+    background: var(--color-bg-overlay-dark);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border: 1px solid var(--color-border);
+}
+
+.history-item:hover {
+    background: var(--color-bg-overlay);
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 8px rgba(201, 160, 80, 0.2);
+}
+
+.history-name {
+    display: block;
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-xs);
+}
+
+.history-meaning {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.history-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: var(--spacing-xl);
     font-style: italic;
 }
 
@@ -3147,6 +3205,11 @@ input[type="range"]::-moz-range-progress {
         display: block !important;
     }
 
+    /* Hide title icons on mobile */
+    .title-sword {
+        display: none;
+    }
+
     /* Add vertical spacing to cards */
     .controls {
         padding: var(--spacing-xl) 0;
@@ -3155,9 +3218,11 @@ input[type="range"]::-moz-range-progress {
     }
 
     .result {
-        padding: var(--spacing-xl) 0;
+        padding: var(--spacing-xl) var(--spacing-sm);
         margin: 0;
         border-radius: 0;
+        overflow-x: hidden;
+        max-width: 100%;
     }
 
     .favorites {
@@ -3191,15 +3256,22 @@ input[type="range"]::-moz-range-progress {
         width: 100%;
     }
 
+    /* Hide helper text on mobile */
+    .generate-btn-large > .generate-btn-helper {
+        display: none;
+    }
+
     /* Add extra vertical space around generated name */
     .generated-name {
         font-size: clamp(1.5rem, 8vw, 2.5rem);
-        word-break: normal;
-        hyphens: none;
-        white-space: nowrap;
-        overflow: visible;
-        margin: var(--spacing-2xl) 0;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        white-space: normal;
+        overflow: hidden;
+        margin: var(--spacing-2xl) var(--spacing-sm);
         padding: 0 var(--spacing-xs) var(--spacing-xl);
+        max-width: 100%;
     }
 
     .name-pronunciation-wrapper {
