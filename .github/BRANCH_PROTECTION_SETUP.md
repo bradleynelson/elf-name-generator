@@ -18,7 +18,8 @@ This guide explains how to configure branch protection rules in GitHub to ensure
     - Require branches to be up to date before merging
     - Status checks required:
         - `test / Run Tests`
-        - `deploy-prod / Deploy to Production` (optional, but recommended)
+    - Select the actual CI check name shown by GitHub. Do not require the production
+      deployment job for merging; deployment runs only after an explicit manual release.
 - ✅ **Require conversation resolution before merging**
 - ✅ **Do not allow bypassing the above settings**
     - Even administrators should follow these rules
@@ -46,8 +47,8 @@ This guide explains how to configure branch protection rules in GitHub to ensure
 
 **Current Setup:**
 
-- Source: Deploy from a branch
-- Branch: `main` (or `gh-pages` if using the deploy action)
+- Source: Deploy from a branch (verify the actual setting before releasing)
+- Branch: `gh-pages`, populated only by the manual production deployment job
 - Folder: `/ (root)`
 
 **For Separate Dev Environment:**
@@ -63,7 +64,8 @@ This guide explains how to configure branch protection rules in GitHub to ensure
 **Production Environment:**
 
 - Name: `production`
-- Protection rules: Require reviewers (optional)
+- Protection rules: Require the owner's approval where supported; verify that the
+  owner can approve a release they trigger if they are the only reviewer
 - Deployment branches: Only `main` branch
 
 **Development Environment:**
@@ -90,7 +92,10 @@ This guide explains how to configure branch protection rules in GitHub to ensure
 2. Tests run automatically
 3. Require at least 1 approval
 4. After approval, merge to `main`
-5. `main` branch tests and deploys to production (espruar.com)
+5. `main` branch runs checks without deploying
+6. Review `release-files.json`, build and preview `dist/`, then explicitly run the
+   CI/CD Pipeline on production `main` with `confirm_production` checked
+7. Approve the production environment if configured, then verify espruar.com
 
 ## Quick Setup Checklist
 
@@ -100,7 +105,8 @@ This guide explains how to configure branch protection rules in GitHub to ensure
 - [ ] Set up environments (production/development)
 - [ ] Test the workflow by creating a test PR
 - [ ] Verify tests run on PR creation
-- [ ] Verify deployment works on merge to `main`
+- [ ] Verify merge/push to `main` runs checks without deploying
+- [ ] Verify the manual release publishes only the reviewed `dist/` contents
 
 ## Notes
 

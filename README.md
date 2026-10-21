@@ -1,431 +1,89 @@
 # Faerûn Name Generator
 
-A sophisticated web-based name generator for creating authentic Elven, Dwarven, Gnomish (Gnim), Halfling (Hin), and Orc names following Forgotten Realms D&D lore. Supports High Elves, Wood Elves, Drow (Beta), Dwarves, Gnomes, Halflings, and Orcs!
+Elf and drow names for Dungeons & Dragons, built from official Forgotten Realms lore and the naming systems published
+for them, with the meaning and source of every component shown.
 
-**Live Site:** [https://espruar.com](https://espruar.com)
-
----
-
-## 🎮 How to Use
-
-Simply visit **[espruar.com](https://espruar.com)** to start generating authentic Elven and Dwarven names! No download or installation required - everything runs in your browser.
-
-### Generator Types
-
-**✨ Elven (Espruar):** Generate names following the Espruar naming system  
-**⚒️ Dwarven (Dethek):** Generate names following the Dethek naming system  
-**⚙️ Gnomish (Gnim):** Generate names for rock/forest/deep gnomes with personal + clan + optional nickname  
-**🗡️ Halfling (Hin):** Generate names for Lightfoot/Strongheart, Stout, and Ghostwise; personal + family with optional nickname
-
-**⚔️ Orc:** Generate names for Mountain/Gray/Half-Orcs/Orogs with personal + epithet (no surname)
-
-Switch between generators using the tabs at the top of the page.
-
-### Generation Controls
-
-**Elven Subrace:** Choose High Elf (General/Sun/Moon), Wood Elf, or Drow (Female/Male)
-
-**Dwarven Subrace:** Choose from various Dwarven subraces (Gold Dwarf, Shield Dwarf, etc.)
-
-**Name Complexity:**
-
-- **Auto:** Follows phonetic rules, adds connectors when needed
-- **Simple:** 2 components, no connectors
-- **Complex Mode (Experimental):** 2-4 components, syllable-driven, multiple connectors
-
-**Target Syllable Count:** 3-position slider
-
-- Short (2-3 syllables)
-- Ideal (3-5 syllables) - Default
-- Long (4-6 syllables)
-
-_Note: Wood Elves and Drow automatically adjust targets based on subrace rules_
-
-**Gender/Style:**
-
-- Neutral, Feminine (softer sounds), Masculine (stronger sounds)
+**Live site:** [espruar.com](https://espruar.com)
 
 ---
 
-## 🌟 Features
+## Using the generator
 
-### Core Generation
+Choose a gender (neutral, female or male) and a lineage (any, sun elf, moon elf, wood elf or drow), then press
+**Roll Name** or the spacebar.
 
-- **Elven Generator:**
-    - **120+ Components**: Comprehensive morphological system with 108 High Elf + 12 Drow-specific components
-    - **Interchangeable System**: Implements the "Lego System" where most roots can function as prefix or suffix
-    - **Phonetic Intelligence**: Applies authentic Elven phonetic flow patterns (liquid consonants, vowel bridges, harsh cluster detection)
-    - **Multiple Subraces**: High Elf (General, Sun, Moon), Wood Elf, and Drow (Female/Male) with distinct naming rules
+- **Meanings above the name:** each word shows what its components mean. A family name published with a translation
+  (such as Galanodel, "Moonwhisper") shows that translation.
+- **Choose a component:** tap any component of a name to see every option that fits, with its meaning or source.
+- **Lock a component:** lock it to keep it while the rest of the name changes.
+- **Expanded Variety:** the wand mixes in components taken from published Forgotten Realms names. Their meanings are
+  unknown and marked as such.
+- **Roll 10 More, History and Saved names:** history and saved names are kept only in your browser.
+- **Name meanings and sources:** the breakdown under each name lists every component with its meaning or the
+  published names and books it comes from.
 
-- **Dwarven Generator:**
-    - **First Names + Clan Names**: Combines authentic Dwarven first names with clan names
-    - **Dethek System**: Follows traditional Dwarven naming conventions from Forgotten Realms
-    - **Multiple Subraces**: Supports various Dwarven subraces with appropriate naming styles
-    - **Phonetic Pronunciations**: Includes pronunciation guides for generated names
+Each name is also shown in Espruar, the elven alphabet (drow names in the High Drowic font).
 
-- **Gnomish Generator (Gnim):**
-    - **Personal + Clan + Nickname**: Full names with optional nickname; personal-only, clan-only, and nickname-only modes
-    - **Subraces**: Rock, forest, and deep gnomes with iconography (⚙️, 🌿, ⛏️)
-    - **Phonetic-friendly**: Vowel-rich, soft consonant patterns; nickname toggle via name type selection
+## How names are built
 
-- **Halfling Generator (Hin):**
-    - **Personal + Family + Nickname**: Full names default to include nicknames; personal-only, family-only, nickname-only modes
-    - **Subraces**: Lightfoot/Strongheart, Stout, Ghostwise with dagger icon for the tab
-    - **Style**: Warm, nickname-friendly names; Ghostwise nicknames are rarer/formal-use only
+**Surface elves.** First names come from the elven name tables in _Races of the Wild_ (3.5e), first published as
+"By Any Other Name" in _Dragon_ #251: a prefix and one or more suffixes, each with its own meaning, in the shapes the
+tables give. Suffixes take male or female forms where the tables list them; neutral names use the forms shared by
+both. Family names are published Forgotten Realms family names (with their translation when a book gives one), new
+ones built from the same tables, or Common-language names made from words found in published family names.
 
-- **Orc Generator:**
-    - **Personal + Clan + Epithet**: Full names default to include an epithet; personal-only, clan-only, epithet-only modes
-    - **Subraces**: Mountain, Gray, Half-Orc, Orog
-    - **Style**: Short, harsh roots; epithets for deeds (Skull-Taker, Ironhide)
+**Drow.** Names come from the tables in "By Any Other Name: The Drow" (_Dragon_ #267), with their published meanings.
+Houses are published Forgotten Realms houses or built from the same article's house tables. Drow naming taboos from
+_The Drow of the Underdark_ (2e) are respected: no names resembling drow deities, and no house names beginning with the
+"L" sound of Lolth.
 
-### User Experience
+**Sources.** Forgotten Realms books and setting-neutral core rulebooks. A small number of names come from Ed
+Greenwood's answers to fans; he created the Forgotten Realms, but those answers are not official publications, so they
+are labelled on the page.
 
-- **Moon Elf Theme**: Dark blue-purple theme with silver/moonlight palette
-- **Complexity Control**: Auto, Simple, or Complex Mode (2-4 components with sophisticated rules)
-- **Syllable Targeting**: 3-position slider (Short, Ideal, Long) with subrace-specific adjustments
-- **Favorites System**: Save your favorite names locally (browser-only, no cloud sync)
-- **Anti-Repeat Logic**: Tracks last 5 generations to reduce repeats
-- **Accessibility**: WCAG 2.1 AA compliant, screen reader support, keyboard navigation
-- **Mobile Navigation**: Full-width, scrollable bottom bar with “More” overflow for future generators
-- **Gnomish Theme**: Copper + green palette; copper beta badge and generate button
-- **Halfling Theme**: Warm earthy/gold palette; dagger tab and active states
+## Species
 
-### Modern Architecture
-
-- **Modular ES6**: Clean separation of concerns (Core, UI, Utils, Data)
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **No Dependencies**: Pure vanilla JavaScript, no frameworks
-- **GDPR Compliant**: Cookie consent for Google Analytics
-
-## 🎭 Subrace Support
-
-### ⚔️ Elven Subraces
-
-#### High Elf (Ar-Tel-Quessir / Teu-Tel-Quessir)
-
-**Style:** Lyrical, flowing, 3-5 syllables  
-**Themes:** Light, nobility, magic, stars, moon  
-**Components:** 108 interchangeable morphemes  
-**Example:** _Silanmeriel_ - "Silver + Spirit + Star + Maiden"
-
-#### Sun Elf Variant
-
-Emphasizes gold, light, nobility, ancient lore (formal)
-
-#### Moon Elf Variant
-
-Emphasizes silver, moonlight, stars, flow (lyrical, 4+ syllables preferred)
-
-### Wood Elf (Sy-Tel-Quessir) ✅
-
-**Style:** Concise, martial, 2-3 syllables  
-**Themes:** Nature, vigilance, martial skill  
-**Key Differences:**
-
-- Shorter than High Elves (2-3 vs 3-5 syllables)
-- Minimal connectors (prefer rough edges)
-- Hard consonant endings (-th, -r, -s)
-- Prioritizes martial/nature components
-
-**Example:** _Ratheth_ - "Path + Honor"
-
-### Drow (Ss'tel'Quessir) ⚠️ BETA
-
-**Style:** Gender-specific, harsh, chaotic  
-**Themes:** Lolth, spiders, poison, death, shadow, servitude  
-**Key Differences:**
-
-- **Female:** 4-6 syllables, complex, powerful, vowel endings
-- **Male:** 2-3 syllables, short, subservient, hard consonant endings
-- EMBRACES harsh clusters (gr-, kr-, dr-, tr-) that surface elves avoid
-- No connectors (deliberately clumsy sound)
-- Limited component pool (12 vs 108) - more coming soon!
-
-**Examples:**
-
-- Female: _Pharaqiltyl_ - "Mistress + Web + Venom"
-- Male: _Zhaunax_ - "Death + Blade"
-
-### ⚒️ Dwarven Subraces
-
-#### Gold Dwarf (Shield Dwarf)
-
-**Style:** Traditional, honor-bound, clan-focused  
-**Themes:** Gold, honor, tradition, craftsmanship  
-**Structure:** First Name + Clan Name  
-**Example:** _Thorin Ironforge_ - "Bold + Ironforge Clan"
-
-#### Shield Dwarf (Mountain Dwarf)
-
-**Style:** Strong, resilient, mountain-dwelling  
-**Themes:** Mountains, strength, endurance, stone  
-**Structure:** First Name + Clan Name  
-**Example:** _Balin Stonebeard_ - "Mighty + Stonebeard Clan"
-
-#### Other Dwarven Subraces
-
-The generator supports various Dwarven subraces from Forgotten Realms, each with appropriate naming conventions and clan associations.
-
-**Key Features:**
-
-- **First Names**: Authentic Dwarven first names with meanings
-- **Clan Names**: Traditional clan names that can be combined with first names
-- **Phonetic Pronunciations**: Includes pronunciation guides for proper Dwarven speech
-- **Cultural Accuracy**: Follows Dethek naming traditions from D&D lore
+Version 4 is a ground-up rebuild focused on elves and drow. Other species (dwarves, gnomes, halflings and orcs) are not
+available while each is reviewed against published sources; they will return as they meet the same standard.
 
 ---
 
-## 📜 License
+## Development
 
-MIT License - Copyright (c) 2025 Brad Nelson
-
-Free to use, modify, and distribute with attribution.
-
-## 🙏 Credits
-
-**Lore Research:** Forgotten Realms D&D canon sources, official WotC materials, community lore documentation
-
-**Created by:** Brad Nelson for the D&D community
-
-**Disclaimer:** This is an unofficial fan-made tool. Not affiliated with or endorsed by Wizards of the Coast. D&D and Forgotten Realms are trademarks of Wizards of the Coast LLC.
-
-## 🔮 Future Plans
-
-### Potential Expansions
-
-- [ ] More Drow components (expand from 12 to ~30+)
-- [ ] Sea Elf (Mar-Tel-Quessir) variant
-- [ ] Gray Elf (Fae-Tel-Quessir) variant
-- [ ] Surname generator
-- [ ] Export/share functionality
-- [ ] Cloud sync for favorites (with accounts)
-- [ ] Mobile app version
-- [ ] Additional language variants (Draconic, Dwarvish)
-
----
-
-## 🛠️ Technical Details (For Developers)
-
-### File Structure
+A static site: HTML, one stylesheet and vanilla JavaScript modules, with no framework or build step for the page.
 
 ```
-/
-├── index.html              # Main page (semantic HTML5)
-├── style.css               # All styling (~1600 lines)
-├── favicon.ico/png         # Gold star icons
-├── LICENSE                 # MIT License
-├── README.md               # This file
-├── CNAME                   # Domain configuration
-│
-├── js/
-│   ├── app.js              # Main application controller
-│   ├── config.js           # Constants and configuration
-│   │
-│   ├── core/
-│   │   ├── NameGenerator.js         # Elven name generation logic
-│   │   ├── DwarvenNameGenerator.js   # Dwarven name generation logic
-│   │   └── FavoritesManager.js       # LocalStorage favorites
-│   │
-│   ├── ui/
-│   │   └── UIController.js       # DOM manipulation & display
-│   │
-│   └── utils/
-│       ├── dataLoader.js         # JSON data loading
-│       ├── phonetics.js          # Syllable counting, flow rules
-│       └── storage.js            # LocalStorage helpers
-│
-└── data/
-    ├── components.json          # 120 Elven name components with tags
-    ├── connectors.json          # 23 phonetic bridges
-    ├── dwarvenFirstNames.json   # Dwarven first names
-    └── dwarvenClanNames.json    # Dwarven clan names
+index.html               page structure, lore and footer
+style.css                theme tokens, page basics, components
+js/app.js                page state and controls
+js/ui.js                 rendering
+js/favorites.js          saved names, history and remembered settings (browser storage)
+js/analytics.js          consent and Google Analytics events (see ANALYTICS.md)
+js/core/                 name generators (elf, drow) and shared helpers
+data/                    name tables and published names (JSON)
+fonts/                   Dalelands Uncial, Espruar, High Drowic (SIL Open Font License)
+tests/                   Vitest tests (generators, storage, rendering, page flows)
+scripts/release-site.js  builds dist/ from the approved file list in release-files.json
 ```
 
-### Technologies
+```bash
+npm ci
+npm run test:run
+npm run lint
+npm run build:site
+```
 
-- **Frontend:** Pure ES6 JavaScript (modules), CSS custom properties
-- **Fonts:** Lato (Google Fonts) with system fallbacks
-- **Storage:** LocalStorage for preferences and favorites
-- **Analytics:** Google Analytics (GDPR-compliant, opt-in)
-- **Hosting:** GitHub Pages with custom domain
+Releases publish only the files listed in `release-files.json` (built into `dist/` and checked by
+`npm run check:release`). Production deploys are started manually from GitHub Actions.
 
-### Key Features
+## License and credits
 
-**Complex Mode:**
+Code: MIT License, copyright (c) 2025 Brad Nelson. Names and naming data are drawn from Wizards of the Coast
+publications and remain their property.
 
-- Syllable-driven (not component-driven)
-- Supports 2-4 components with 0-3 connectors
-- Vowel repetition logic (Moon Elves, 33% chance)
-- Harsh cluster detection and avoidance
-- Minimum 2 components, 2 syllables enforced
+Fonts: Dalelands Uncial, Espruar and High Drowic by Neale Davidson, [Pixel Sagas](https://www.pixelsagas.com) (SIL
+Open Font License); the site icon is from his dPoly Gamedings font. Icons from [Lucide](https://lucide.dev) (ISC).
 
-**Phonetic Rules:**
-
-- Liquid consonant detection (L, R, N, M, W)
-- Hard consonant endings (K, P, T, B, D, G, etc.)
-- Vowel flow patterns
-- Connector insertion logic (subrace-specific)
-
-**Anti-Repeat System:**
-
-- Tracks last 5 generated names
-- Filters out recently used components
-- Only applies if 10+ alternatives available
-- Prevents pool exhaustion
-
-## 📊 Data Structure
-
-### Components (components.json)
-
-Each component has:
-
-- `root`: Unique identifier
-- `prefix_text` / `prefix_meaning`: For use as prefix
-- `suffix_text` / `suffix_meaning`: For use as suffix
-- `can_be_prefix` / `can_be_suffix`: Position flexibility
-- `is_gender_modifier`: Special handling flag
-- `tags`: Array for subrace filtering (`sun`, `moon`, `wood`, `drow`, `drow-female`, `drow-male`, `neutral`)
-
-### Connectors (connectors.json)
-
-Each connector has:
-
-- `text`: The connector string (e.g., "-ri-")
-- `function`: Technical description
-- `meaning`: Semantic meaning (optional, displayed in Complex Mode)
-
-## 🎨 Design System
-
-### Themes
-
-**Sun Elf (Light Mode):**
-
-- Background: Aged parchment (#f4e8d0)
-- Accent: Warm gold (#8b6914)
-- Contrast: 11.5:1 (primary), 9.2:1 (secondary)
-
-**Moon Elf (Dark Mode):**
-
-- Background: Deep blue gradient (#1a1a2e → #16213e)
-- Accent: Cool gold (#c9a050)
-- Contrast: WCAG AA compliant
-
-### Typography
-
-- **Primary:** Lato (300, 400, 700, 900 weights)
-- **Fallbacks:** System fonts (-apple-system, BlinkMacSystemFont, 'Segoe UI')
-- **Code:** 'Courier New' for examples only
-
-## 🧪 Testing
-
-### Validated With
-
-- Google's Rich Results Test (structured data)
-- WAVE accessibility checker
-- Lighthouse (Chrome DevTools)
-- Cross-browser: Chrome, Firefox, Safari, Edge
-
-### Test Checklist
-
-- [ ] Keyboard navigation (Tab through all controls)
-- [ ] Screen reader announcements
-- [ ] Mobile responsiveness
-- [ ] Theme switching
-- [ ] All subrace options
-- [ ] Complex Mode with 3+ components
-- [ ] Favorites save/load
-- [ ] Anti-repeat logic
-- [ ] Cookie consent flow
-
-## 🚀 Deployment
-
-1. Push to GitHub repository
-2. Enable GitHub Pages (Settings → Pages)
-3. Set custom domain in CNAME file
-4. Configure DNS (A records or CNAME)
-5. SSL auto-generates (10-30 minutes)
-
-## 📜 License
-
-MIT License - Copyright (c) 2025 Brad Nelson
-
-Free to use, modify, and distribute with attribution.
-
-## 🙏 Credits
-
-**Lore Research:** Forgotten Realms D&D canon sources, official WotC materials, community lore documentation
-
-**Created by:** Brad Nelson for the D&D community
-
-**Disclaimer:** This is an unofficial fan-made tool. Not affiliated with or endorsed by Wizards of the Coast. D&D and Forgotten Realms are trademarks of Wizards of the Coast LLC.
-
-## 🔮 Future Plans
-
-### Potential Expansions
-
-- [ ] More Drow components (expand from 12 to ~30+)
-- [ ] Sea Elf (Mar-Tel-Quessir) variant
-- [ ] Gray Elf (Fae-Tel-Quessir) variant
-- [ ] Surname generator
-- [ ] Export/share functionality
-- [ ] Cloud sync for favorites (with accounts)
-- [ ] Mobile app version
-- [ ] Additional language variants (Draconic, Dwarvish)
-
-### Known Limitations
-
-- Drow currently has limited component pool (Beta)
-- No cloud sync (browser-only favorites)
-- LocalStorage has size limits (~5-10MB)
-- Complex Mode may occasionally generate longer names than target
-
-## 📝 Version History
-
-### v3.3.0 - UX Enhancements & Mobile Fixes
-
-- **History Section**: Added "History (Last 10 Names)" accordion that displays recently generated names with click-to-restore functionality
-- **Spacebar Keybind**: Added keyboard shortcut (spacebar) to generate new names quickly
-- **Gnome Randomization**: Enhanced anti-repeat logic to prevent immediate repetition of personal names, clan names, and nicknames
-- **Mobile Improvements**: Fixed name overflow issues (names now wrap properly), hidden title icons on mobile for cleaner UI
-- **Desktop Helper Text**: Added "Click or Press Spacebar" helper text under Generate button on desktop
-
-### v3.2.0 - "The Name Generator Level-Update"
-
-- **Massive Component Expansion**: Added 531 new components across all generators (+133% overall)
-    - Elven: Added 65 components (Drow houses, famous characters, expanded Drow pool)
-    - Dwarven: Added famous characters and expanded clan names (+65%)
-    - Gnomish: Personal names from 5e supplements, clan names 5→33 (+560%), nicknames 5→49 (+880%)
-    - Halfling: Personal names from 5e supplements, family names 10→63 (+530%), nicknames 10→65 (+550%)
-    - Orc: Personal names from Volo's Guide, added 12 clan names, epithets 30→82 (+173%)
-- **Drow Generation Improvements**: Major formula enhancements (repetition prevention, weighting, adaptive syllables, famous guard)
-- **Pattern-Based Naming Systems**: Implemented for Gnomes, Halflings, and Orcs with proper source attribution
-- **Quality Fixes**: Fixed long names, double parentheses, source deduplication, capitalization
-
-### v3.1.0 - Gnomish Generator & Mobile Nav
-
-- Added Gnomish (Gnim) generator with personal/clan/nickname modes and rock/forest/deep subraces
-- Copper + green gnomish theme; updated mobile bottom nav to full-width, scrollable with “More” overflow
-- Added unit/integration coverage for gnomish generator and app wiring
-
-### v2.0 - Major Refactor
-
-- Modular ES6 architecture
-- Added Wood Elf support
-- Added Drow support (Beta)
-- Complex Mode implementation
-- Moon Elf theme
-- Anti-repeat logic
-- Stacked meaning display
-- GDPR compliance
-
-### v1.0 - Initial Release
-
-- Monolithic JavaScript (~1500 lines)
-- High Elf (Sun/Moon) only
-- Basic component system
-- Favorites functionality
-
----
-
-_"The name is the first gift given to a child by their parents. Choose wisely."_  
-— Elven Proverb
+Faerûn Name Generator is unofficial Fan Content permitted under the
+[Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy). Not approved/endorsed by Wizards.
+Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.

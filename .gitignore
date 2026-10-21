@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+dist/
 
 # Test coverage
 coverage/
@@ -22,4 +23,5 @@ test-log.txt
 # Cursor AI files (not for repository)
 .cursorrules
 
-
+# Lint cache
+.eslintcache

@@ -1,138 +1,77 @@
-# Environment Configuration Guide
+# Environment and Release Guide
 
-This document explains how to manage development and production environments.
+The application is a static website. The separate development repository is for
+local preparation; production publication requires the owner's explicit release.
+These instructions describe the workflow in this checkout. Verify remote settings
+before enabling it in production; a local change does not activate GitHub controls.
 
-## Current Setup
+## Website contents
 
-### Production (`main` branch)
+`release-files.json` is the explicit list of approved public files: the page,
+stylesheet, icons, license, production domain, runtime JavaScript, and naming data.
+`npm run build:site` copies only these files into `dist/` and adds an empty
+`.nojekyll`. It does not bundle or transform application behavior.
 
-- **URL:** https://espruar.com
-- **Branch:** `main`
-- **Deployment:** Automatic via GitHub Actions on push to `main`
-- **Status:** Public repository, public site
+The build and `npm run check:release` reject missing files, unapproved extra files,
+links, malformed JSON, changed copies, unexpected domains, and missing literal
+asset references. An extra file in an existing `dist/` stops the rebuild for
+inspection; the builder does not delete it. Add new public assets individually to
+the release list after reviewing their contents and dependencies.
 
-### Development (`develop` branch)
+These checks enforce the file boundary, not the privacy of every string inside an
+approved file. Review code and naming data before releasing. New dynamically
+constructed asset paths need an explicit check and preview; the dependency scanner
+covers the current literal references, not every possible JavaScript expression.
 
-- **Branch:** `develop`
-- **Deployment:** Currently manual (can be automated)
-- **Status:** Private development branch
+## Local verification
 
-## Environment-Specific Configuration
+Use the project's existing Node/npm runtime and lockfile:
 
-Currently, the application doesn't have environment-specific configs. If you need different settings for dev vs prod, consider:
-
-### Option 1: Environment Variables (Recommended for future)
-
-Create a config file that reads from environment:
-
-```javascript
-// js/config.js
-export const CONFIG = {
-    // ... existing config ...
-
-    // Environment-specific
-    ENVIRONMENT: import.meta.env?.MODE || "production",
-    ANALYTICS_ENABLED: import.meta.env?.VITE_ANALYTICS_ENABLED !== "false",
-    DEBUG_MODE: import.meta.env?.MODE === "development"
-};
+```sh
+npm run test:run
+npm run lint
+npm run test:release
+npm run build:site
+npm run check:release
+python -m http.server 8174 --bind 127.0.0.1 --directory dist
 ```
 
-### Option 2: Build-Time Configuration
+Preview the packaged website at <http://127.0.0.1:8174> and check all five generators.
+Keep private notes, source documents, tools, dependencies, and tests out of `dist/`.
+Generated output is ignored by Git. Preparing it does not authorize publication.
 
-Use a build script that injects environment variables:
+## CI and production release
 
-```json
-// package.json
-{
-    "scripts": {
-        "build:dev": "NODE_ENV=development node build.js",
-        "build:prod": "NODE_ENV=production node build.js"
-    }
-}
-```
+Pushes and pull requests to `main` or `develop` run checks without deploying.
+Ordinary CI has read-only repository permissions. Development hosting is disabled.
+The deployment job alone has repository write permission and is serialized.
 
-### Option 3: Separate Config Files
+After the owner transfers the reviewed changes to the production repository:
 
-Create separate config files:
+1. Verify GitHub Pages serves `gh-pages` from its root, not `main` from the
+   repository root. Keep the domain `espruar.com`.
+2. Configure the `production` environment for branch `main` only and an owner
+   reviewer where supported. A solo owner must be able to approve their own run;
+   do not enable a self-review prohibition that would prevent this.
+3. Verify branch protections and select the actual CI check name GitHub reports.
+   Do not require the deployment job as a pull-request merge check.
+4. Review the production `main` commit and release file list.
+5. In Actions, manually run **CI/CD Pipeline** on `main` with
+   **confirm_production** checked. The default is unchecked.
+6. Approve the environment if configured, then verify the published website.
 
-- `js/config.dev.js` - Development settings
-- `js/config.prod.js` - Production settings
-- `js/config.js` - Detects environment and imports appropriate config
+Deployment is allowed only for `bradleynelson/elf-name-generator`, branch `main`,
+a manual workflow dispatch, explicit confirmation, and passing checks. The deploy
+job checks out that run's commit, builds and verifies `dist/`, and publishes only
+`dist/` through the existing GitHub Pages action.
 
-## Recommended Setup
+Remote environment approvals and Pages settings must be configured on GitHub;
+referencing an environment in YAML does not create its reviewer protection.
+The workflow must be present on the default branch before manual dispatch is
+available. If Pages still serves `main` directly, its publication behavior can
+bypass the manual deployment job. Verify this before transferring release changes.
 
-### For Static Site (Current Setup)
+Official references:
 
-Since this is a static site deployed via GitHub Pages, you have a few options:
-
-1. **Keep it simple:** Use the same codebase for both environments
-    - Tests ensure quality before production
-    - `develop` branch is for testing changes
-    - `main` branch is always production-ready
-
-2. **Separate Dev Site:**
-    - Deploy `develop` to a separate GitHub Pages site
-    - Use a subdomain (dev.espruar.com) or separate domain
-    - Configure DNS and CNAME accordingly
-
-3. **Feature Flags:**
-    - Add feature flags in `config.js` that can be toggled
-    - Use URL parameters or localStorage to enable dev features
-    - Example: `?dev=true` enables debug mode
-
-## Current Recommendations
-
-For your current setup, I recommend:
-
-1. ✅ **Keep `main` as production** - Always stable, tested, deployed
-2. ✅ **Use `develop` for active development** - Test changes here first
-3. ✅ **Run tests on both branches** - Ensure quality
-4. ⚠️ **Consider a separate dev deployment** - If you want to preview changes live
-5. ⚠️ **Add feature flags if needed** - For experimental features
-
-## Testing Strategy
-
-### Development Testing
-
-- Run tests locally: `npm test`
-- Test in browser: Open `index.html` locally
-- Use browser dev tools for debugging
-
-### Pre-Production Testing
-
-- All tests must pass on `develop`
-- Manual testing on `develop` branch
-- Create PR to `main` when ready
-
-### Production
-
-- Only merge to `main` after thorough testing
-- Automatic deployment via GitHub Actions
-- Monitor production site after deployment
-
-## Future Enhancements
-
-If you need more sophisticated environment management:
-
-1. **Add environment detection:**
-
-    ```javascript
-    const isDevelopment = window.location.hostname === "dev.espruar.com" || window.location.hostname === "localhost";
-    ```
-
-2. **Add feature flags:**
-
-    ```javascript
-    const FEATURES = {
-        NEW_DROW_COMPONENTS: isDevelopment || localStorage.getItem("feature_drow") === "true",
-        EXPERIMENTAL_MODE: isDevelopment
-    };
-    ```
-
-3. **Add analytics separation:**
-    - Use different GA tracking IDs for dev/prod
-    - Or disable analytics in dev
-
-4. **Add error reporting:**
-    - Different error reporting endpoints for dev/prod
-    - More verbose logging in dev
+- [Manual workflow triggers and job permissions](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+- [Production environment protection](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)

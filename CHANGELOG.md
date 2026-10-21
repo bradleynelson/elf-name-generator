@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-10-21
+
+A ground-up rebuild of the generator, focused on elves and drow and grounded in the naming systems published for them.
+
+### Added
+
+- Surface-elf names built from the elven name tables in _Races of the Wild_ (first published in _Dragon_ #251), with
+  the meaning of every component shown above each word.
+- Family names from published Forgotten Realms families, including the translations the _Player's Handbook_ gives,
+  plus new family names built from the same tables.
+- Drow names from the _Dragon_ #267 tables with their published meanings, published Forgotten Realms houses, and the
+  drow naming taboos from _The Drow of the Underdark_.
+- A neutral option alongside female and male.
+- Choose any component of a name from every option that fits, or lock it while the rest changes.
+- Expanded Variety: mix in components taken from published Forgotten Realms names.
+- Name meanings and sources for every name, Roll 10 More, history kept in your browser, saved names with Undo, and
+  each name shown in the Espruar alphabet.
+- A new look: one charcoal and red theme with a parchment light mode, Pixel Sagas fonts and a d20 site icon.
+
+### Changed
+
+- Dwarves, gnomes, halflings and orcs are not available in this version. Each is being reviewed against published
+  sources before it returns; not every one is guaranteed to come back.
+- Analytics (only with consent) now records which features are used, never the names themselves.
+
+### Removed
+
+- Name complexity and syllable controls, and per-species themes.
+
 ## [3.3.0] - 2025-12-12
 
 ### Added

@@ -1,1491 +1,330 @@
-// Main Application class - coordinates all modules for both Elven and Dwarven generators
-import { CONFIG } from "./config.js";
+// Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
+import { reportError, setUpConsent, track } from "./analytics.js";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js";
 import {
-    loadGeneratorData,
-    validateComponents,
-    validateConnectors,
-    loadDwarvenGeneratorData,
-    validateDwarvenFirstNames,
-    validateDwarvenClanNames,
-    loadGnomishGeneratorData,
-    loadHalflingGeneratorData,
-    loadOrcGeneratorData
-} from "./utils/dataLoader.js";
-import { NameGenerator } from "./core/NameGenerator.js";
-import { DwarvenNameGenerator } from "./core/DwarvenNameGenerator.js";
-import { GnomishNameGenerator } from "./core/GnomishNameGenerator.js";
-import { HalflingNameGenerator } from "./core/HalflingNameGenerator.js";
-import { OrcNameGenerator } from "./core/OrcNameGenerator.js";
-import { FavoritesManager } from "./core/FavoritesManager.js";
-import { UIController } from "./ui/UIController.js";
+    MAX_FAVORITES,
+    addFavorite,
+    loadFavorites,
+    loadHistory,
+    loadSetting,
+    removeFavorite,
+    restoreFavorite,
+    saveHistory,
+    saveSetting
+} from "./favorites.js";
+import {
+    focusPart,
+    openPartPicker,
+    partLabel,
+    renderFavorites,
+    renderNameList,
+    renderResult,
+    renderSaved,
+    showNotice
+} from "./ui.js";
+
+const $ = (id) => document.getElementById(id);
+const LIST_SIZE = 10;
+const HISTORY_SIZE = 10;
+const state = { generator: null, result: null, locked: new Set(), favorites: [], history: [] };
+
+async function loadJson(path) {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`Could not load ${path} (${response.status})`);
+    return response.json();
+}
+
+function options() {
+    return {
+        subrace: $("pickerLineage").value,
+        style: $("pickerSex").value,
+        expanded: $("expandedToggle").getAttribute("aria-pressed") === "true"
+    };
+}
+
+// Usage analytics (event plan in ANALYTICS.md): controlled lowercase values, never names or their components
+const GENDER_VALUES = { neutral: "neutral", feminine: "female", masculine: "male" };
+const LINEAGE_VALUES = {
+    "high-elf": "any",
+    "sun-elf": "sun_elf",
+    "moon-elf": "moon_elf",
+    "wood-elf": "wood_elf",
+    drow: "drow"
+};
+
+/** The current settings as event parameters, plus any event-specific ones. */
+function usage(extra = {}) {
+    const { subrace, style, expanded } = options();
+    return {
+        species: "elf",
+        generation_mode: expanded ? "expanded" : "standard",
+        character_gender: GENDER_VALUES[style],
+        lineage: LINEAGE_VALUES[subrace],
+        ...extra
+    };
+}
+
+/** Where a component sits and what kind it is, without its text. */
+function describeComponent(part) {
+    const kind = part.role.match(/(prefix|suffix)$/)?.[1] || "whole";
+    return {
+        component_position: /^(family|house)/.test(part.role) ? "family_name" : "first_name",
+        component_type: kind
+    };
+}
+
+const ORIGINS = { split: "split", published: "published", composed: "common_words" };
+const originOf = (part) => ORIGINS[part.method] || "table";
+
+/** Locked parts of the current result, in the form the generators accept. */
+function locksFor(result, keys) {
+    if (!result || !keys.size) return {};
+    const locks = Object.fromEntries(result.parts.filter((p) => keys.has(p.key)).map((p) => [p.key, p]));
+    // table parts keep their places through the shape they came in (first name and table-built surname apart)
+    return {
+        ...locks,
+        ...(result.shape ? { shape: result.shape, sex: result.sex } : {}),
+        ...(result.familyShape ? { familyShape: result.familyShape } : {})
+    };
+}
 
 /**
- * Unified Name Generator - supports both Elven (Espruar) and Dwarven (Dethek) generators
- * Coordinates all modules and handles user interactions
+ * Shows a result; new results also go to the top of the history (restoring from a list does not).
+ * `focus` ({ key, control: "text" | "lock" }) returns keyboard focus to the part that was used, since redrawing
+ * replaces its buttons.
  */
-export class UnifiedNameGenerator {
-    constructor() {
-        this.elvenGenerator = null;
-        this.dwarvenGenerator = null;
-        this.gnomishGenerator = null;
-        this.halflingGenerator = null;
-        this.orcGenerator = null;
-        this.currentGenerator = null;
-        this.favorites = null;
-        this.ui = null;
-        this.isInitialized = false;
-        this.currentGeneratorType = "elven";
-        this.nameHistory = []; // Track last 10 generated names
-        this.maxHistorySize = 10;
-
-        // Subrace icon mapping for generate button (Elven)
-        this.subraceIcons = {
-            "high-elf": "✨",
-            "sun-elf": "☀️",
-            "moon-elf": "🌙",
-            "wood-elf": "🌲",
-            drow: "🕷️",
-            feyri: "🫧"
-        };
-
-        // Subrace icon mapping for Dwarven generate button
-        this.dwarvenSubraceIcons = {
-            general: "⚒️",
-            "gold-dwarf": "💰",
-            "shield-dwarf": "🛡️",
-            duergar: "💀"
-        };
-
-        // Subrace icon mapping for Gnomish generate button
-        this.gnomishSubraceIcons = {
-            rock: "⚙️",
-            forest: "🌿",
-            deep: "⛏️"
-        };
-
-        // Subrace icon mapping for Halfling generate button
-        this.halflingSubraceIcons = {
-            lightfoot: "🗡️",
-            stout: "🛡️",
-            ghostwise: "🌫️",
-            strongheart: "🪶"
-        };
-
-        this.orcSubraceIcons = {
-            orc: "⚔️",
-            mountain: "⚔️",
-            gray: "🪓",
-            "half-orc": "🩸",
-            orog: "🛡️"
-        };
+function show(result, { remember = true, focus = null } = {}) {
+    state.result = result;
+    if (remember) {
+        updateHistory([result, ...state.history.filter((r) => r.name !== result.name)].slice(0, HISTORY_SIZE));
     }
-
-    /**
-     * Initialize the application
-     * Loads data, sets up modules, and binds events
-     */
-    async init() {
-        try {
-            // Load Elven, Dwarven, Gnomish, Halfling, and Orc data
-            const [elvenData, dwarvenData, gnomishData, halflingData, orcData] = await Promise.all([
-                loadGeneratorData(),
-                loadDwarvenGeneratorData(),
-                loadGnomishGeneratorData(),
-                loadHalflingGeneratorData(),
-                loadOrcGeneratorData()
-            ]);
-
-            // Validate Elven data
-            if (!validateComponents(elvenData.components) || !validateConnectors(elvenData.connectors)) {
-                throw new Error("Invalid Elven data format");
-            }
-
-            // Validate Dwarven data
-            if (
-                !validateDwarvenFirstNames(dwarvenData.firstNames) ||
-                !validateDwarvenClanNames(dwarvenData.clanNames)
-            ) {
-                throw new Error("Invalid Dwarven data format");
-            }
-
-            // Initialize Elven generator
-            this.elvenGenerator = new NameGenerator(elvenData.components, elvenData.connectors);
-
-            // Initialize Dwarven generator
-            this.dwarvenGenerator = new DwarvenNameGenerator(dwarvenData.firstNames, dwarvenData.clanNames);
-
-            // Initialize Gnomish generator
-            this.gnomishGenerator = new GnomishNameGenerator(
-                gnomishData.personalNames,
-                gnomishData.clanNames,
-                gnomishData.nicknames
-            );
-
-            // Initialize Halfling generator
-            this.halflingGenerator = new HalflingNameGenerator(
-                halflingData.personalNames,
-                halflingData.familyNames,
-                halflingData.nicknames
-            );
-
-            // Initialize Orc generator
-            this.orcGenerator = new OrcNameGenerator(orcData.personalNames, orcData.clanNames, orcData.epithets);
-
-            // Initialize shared modules
-            this.favorites = new FavoritesManager();
-            this.ui = new UIController();
-
-            // Determine initial generator type based on:
-            // 1. URL parameter (?generator=dwarven)
-            // 2. Domain (dethek.com defaults to dwarven)
-            // 3. localStorage preference
-            // 4. Default to elven
-            const initialGenerator = this._determineInitialGenerator();
-            this.currentGeneratorType = initialGenerator;
-            this.currentGenerator =
-                initialGenerator === "dwarven"
-                    ? this.dwarvenGenerator
-                    : initialGenerator === "gnomish"
-                      ? this.gnomishGenerator
-                      : initialGenerator === "halfling"
-                        ? this.halflingGenerator
-                        : initialGenerator === "orc"
-                          ? this.orcGenerator
-                          : this.elvenGenerator;
-
-            // Set initial theme and generator attributes
-            if (initialGenerator === "dwarven") {
-                document.documentElement.setAttribute("data-generator", "dwarven");
-                document.documentElement.removeAttribute("data-theme");
-            } else if (initialGenerator === "gnomish") {
-                document.documentElement.setAttribute("data-generator", "gnomish");
-                document.documentElement.removeAttribute("data-theme");
-            } else if (initialGenerator === "halfling") {
-                document.documentElement.setAttribute("data-generator", "halfling");
-                document.documentElement.removeAttribute("data-theme");
-            } else if (initialGenerator === "orc") {
-                document.documentElement.setAttribute("data-generator", "orc");
-                document.documentElement.removeAttribute("data-theme");
-            } else {
-                document.documentElement.setAttribute("data-theme", "moon-elf");
-                document.documentElement.setAttribute("data-generator", "elven");
-            }
-
-            // Update favorites manager with current generator type
-            this.favorites.setGeneratorType(this.currentGeneratorType);
-
-            // Set up event listeners
-            this._bindEvents();
-
-            // Set up favorites change listener
-            this.favorites.onChange((favorites) => {
-                this.ui.displayFavorites(favorites);
-            });
-
-            // Display initial favorites
-            this.ui.displayFavorites(this.favorites.getAll());
-
-            // Listen for filter changes
-            window.addEventListener("favoritesFilterChanged", () => {
-                this.ui.displayFavorites(this.favorites.getAll());
-            });
-
-            // Initialize accordions
-            this._initAccordions();
-
-            // Initialize cookie consent banner
-            this._initCookieBanner();
-
-            // Initialize range slider fill
-            this._initRangeSliderFill();
-
-            this.isInitialized = true;
-            console.log("Faerûn Name Generator initialized successfully");
-
-            // Initialize UI state based on loaded generator
-            this._initializeUIForGenerator(this.currentGeneratorType);
-
-            // Set initial button icons based on current generator and subrace
-            if (this.currentGeneratorType === "elven") {
-                const initialSubrace = this.ui.elements.subraceSelect?.value || "high-elf";
-                this._updateButtonIcons(initialSubrace);
-            } else if (this.currentGeneratorType === "dwarven") {
-                const initialDwarvenSubrace = document.getElementById("dwarvenSubrace")?.value || "general";
-                this._updateDwarvenButtonIcons(initialDwarvenSubrace);
-            } else if (this.currentGeneratorType === "gnomish") {
-                const initialGnomishSubrace = document.getElementById("gnomishSubrace")?.value || "rock";
-                this._updateGnomishButtonIcons(initialGnomishSubrace);
-            } else if (this.currentGeneratorType === "halfling") {
-                const initialHalflingSubrace = document.getElementById("halflingSubrace")?.value || "lightfoot";
-                this._updateHalflingButtonIcons(initialHalflingSubrace);
-            }
-
-            // Generate initial name (after isInitialized = true)
-            this.generateName();
-        } catch (error) {
-            console.error("Failed to initialize application:", error);
-            this._showError("Failed to load the name generator. Please refresh the page.");
-        }
-    }
-
-    /**
-     * Bind all event listeners
-     * @private
-     */
-    _bindEvents() {
-        // Tab switching
-        const elvenTab = document.getElementById("elvenTab");
-        const dwarvenTab = document.getElementById("dwarvenTab");
-        const gnomishTab = document.getElementById("gnomishTab");
-        const halflingTab = document.getElementById("halflingTab");
-        const orcTab = document.getElementById("orcTab");
-        const orcTabMore = document.getElementById("orcTabMore");
-        const moreTab = document.getElementById("moreTab");
-        const favoritesInfo = document.querySelector(".info-icon");
-        const licenseTrigger = document.querySelector(".license-popover-trigger");
-        const betaLabel = document.getElementById("betaLabel");
-        const contactTab = document.getElementById("contactTab");
-        const contactModal = document.getElementById("contactModal");
-        const contactClose = document.getElementById("contactClose");
-        const contactCancel = document.getElementById("contactCancel");
-        const contactEmail = document.getElementById("contactEmail"); // placeholder for focus
-
-        if (elvenTab) {
-            elvenTab.addEventListener("click", (e) => {
-                if (elvenTab.classList.contains("active")) {
-                    e.preventDefault();
-                    return;
-                }
-                this.switchGenerator("elven");
-            });
-        }
-
-        if (dwarvenTab) {
-            dwarvenTab.addEventListener("click", (e) => {
-                if (dwarvenTab.classList.contains("active")) {
-                    e.preventDefault();
-                    return;
-                }
-                this.switchGenerator("dwarven");
-            });
-        }
-
-        if (gnomishTab) {
-            gnomishTab.addEventListener("click", (e) => {
-                if (gnomishTab.classList.contains("active")) {
-                    e.preventDefault();
-                    return;
-                }
-                document.body.classList.remove("footer-tabs-open");
-                if (moreTab) moreTab.setAttribute("aria-expanded", "false");
-                this.switchGenerator("gnomish");
-            });
-        }
-
-        if (halflingTab) {
-            halflingTab.addEventListener("click", (e) => {
-                if (halflingTab.classList.contains("active")) {
-                    e.preventDefault();
-                    return;
-                }
-                document.body.classList.remove("footer-tabs-open");
-                if (moreTab) moreTab.setAttribute("aria-expanded", "false");
-                this.switchGenerator("halfling");
-            });
-        }
-
-        if (orcTab) {
-            orcTab.addEventListener("click", (e) => {
-                if (orcTab.classList.contains("active")) {
-                    e.preventDefault();
-                    return;
-                }
-                document.body.classList.remove("footer-tabs-open");
-                if (moreTab) moreTab.setAttribute("aria-expanded", "false");
-                this.switchGenerator("orc");
-            });
-        }
-
-        if (orcTabMore) {
-            orcTabMore.addEventListener("click", (e) => {
-                e.preventDefault();
-                document.body.classList.remove("footer-tabs-open");
-                if (moreTab) moreTab.setAttribute("aria-expanded", "false");
-                this.switchGenerator("orc");
-            });
-        }
-
-        if (moreTab) {
-            moreTab.addEventListener("click", (e) => {
-                e.preventDefault();
-                const isOpen = document.body.classList.toggle("footer-tabs-open");
-                moreTab.setAttribute("aria-expanded", isOpen ? "true" : "false");
-            });
-        }
-
-        // Favorites info popover (click/keyboard)
-        if (favoritesInfo) {
-            const popover = favoritesInfo.querySelector(".info-popover");
-            const togglePopover = (open) => {
-                favoritesInfo.classList.toggle("open", open);
-                favoritesInfo.setAttribute("aria-expanded", open ? "true" : "false");
-            };
-            const closePopover = () => togglePopover(false);
-            favoritesInfo.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const isOpen = favoritesInfo.classList.contains("open");
-                togglePopover(!isOpen);
-            });
-            favoritesInfo.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    const isOpen = favoritesInfo.classList.contains("open");
-                    togglePopover(!isOpen);
-                } else if (e.key === "Escape") {
-                    closePopover();
-                }
-            });
-            document.addEventListener("click", (e) => {
-                if (!favoritesInfo.contains(e.target)) {
-                    closePopover();
-                }
-            });
-            if (popover) {
-                popover.addEventListener("click", (e) => e.stopPropagation());
-            }
-        }
-
-        // License popover (click/keyboard)
-        if (licenseTrigger) {
-            const licensePopover = licenseTrigger.querySelector(".license-popover");
-            const toggleLicense = (open) => {
-                licenseTrigger.classList.toggle("open", open);
-                licenseTrigger.setAttribute("aria-expanded", open ? "true" : "false");
-            };
-            const closeLicense = () => toggleLicense(false);
-            licenseTrigger.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const isOpen = licenseTrigger.classList.contains("open");
-                toggleLicense(!isOpen);
-            });
-            licenseTrigger.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    const isOpen = licenseTrigger.classList.contains("open");
-                    toggleLicense(!isOpen);
-                } else if (e.key === "Escape") {
-                    closeLicense();
-                }
-            });
-            document.addEventListener("click", (e) => {
-                if (!licenseTrigger.contains(e.target)) {
-                    closeLicense();
-                }
-            });
-            if (licensePopover) {
-                licensePopover.addEventListener("click", (e) => e.stopPropagation());
-            }
-        }
-
-        // Beta/Alfa badge popover
-        if (betaLabel) {
-            betaLabel.style.display = "block";
-            betaLabel.style.visibility = "hidden";
-            const badgePopover = document.createElement("div");
-            badgePopover.className = "badge-popover";
-            badgePopover.textContent = betaLabel.getAttribute("title") || betaLabel.textContent || "Beta";
-            badgePopover.style.display = "none";
-            document.body.appendChild(badgePopover);
-            // store reference for later updates during generator switches
-            betaLabel._popover = badgePopover;
-
-            const positionBadge = () => {
-                const rect = betaLabel.getBoundingClientRect();
-                badgePopover.style.top = `${rect.bottom + 8}px`;
-                badgePopover.style.left = `${rect.left + rect.width / 2 - badgePopover.offsetWidth / 2}px`;
-            };
-
-            const toggleBadge = (open) => {
-                if (open) {
-                    badgePopover.style.display = "block";
-                    positionBadge();
-                } else {
-                    badgePopover.style.display = "none";
-                }
-                betaLabel.setAttribute("aria-expanded", open ? "true" : "false");
-            };
-
-            betaLabel.setAttribute("role", "button");
-            betaLabel.setAttribute("tabindex", "0");
-            betaLabel.setAttribute("aria-expanded", "false");
-
-            betaLabel.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const isOpen = badgePopover.style.display === "block";
-                toggleBadge(!isOpen);
-            });
-
-            betaLabel.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    const isOpen = badgePopover.style.display === "block";
-                    toggleBadge(!isOpen);
-                } else if (e.key === "Escape") {
-                    toggleBadge(false);
-                }
-            });
-
-            document.addEventListener("click", (e) => {
-                if (!badgePopover.contains(e.target) && !betaLabel.contains(e.target)) {
-                    toggleBadge(false);
-                }
-            });
-        }
-
-        // Contact modal (click/keyboard)
-        const openContact = () => {
-            if (contactModal) {
-                contactModal.hidden = false;
-                contactModal.classList.add("open");
-                contactEmail?.focus();
-            }
-        };
-        const closeContact = () => {
-            if (contactModal) {
-                contactModal.hidden = true;
-                contactModal.classList.remove("open");
-            }
-        };
-        if (contactTab) {
-            contactTab.addEventListener("click", (e) => {
-                e.preventDefault();
-                openContact();
-            });
-        }
-        contactClose?.addEventListener("click", closeContact);
-        contactCancel?.addEventListener("click", closeContact);
-        if (contactModal) {
-            contactModal.addEventListener("click", (e) => {
-                if (e.target === contactModal) {
-                    closeContact();
-                }
-            });
-        }
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") {
-                closeContact();
-            }
-        });
-
-        // Elven Subrace selector
-        if (this.ui.elements.subraceSelect) {
-            this.ui.elements.subraceSelect.addEventListener("change", (e) => {
-                this.ui.updateSubraceDescription(e.target.value);
-                this._updateButtonIcons(e.target.value);
-            });
-        }
-
-        // Dwarven Subrace selector
-        const dwarvenSubraceSelect = document.getElementById("dwarvenSubrace");
-        if (dwarvenSubraceSelect) {
-            dwarvenSubraceSelect.addEventListener("change", (e) => {
-                this._updateDwarvenButtonIcons(e.target.value);
-            });
-        }
-
-        // Gnomish Subrace selector
-        const gnomishSubraceSelect = document.getElementById("gnomishSubrace");
-        if (gnomishSubraceSelect) {
-            gnomishSubraceSelect.addEventListener("change", (e) => {
-                this._updateGnomishButtonIcons(e.target.value);
-            });
-        }
-
-        // Halfling Subrace selector
-        const halflingSubraceSelect = document.getElementById("halflingSubrace");
-        if (halflingSubraceSelect) {
-            halflingSubraceSelect.addEventListener("change", (e) => {
-                this._updateHalflingButtonIcons(e.target.value);
-            });
-        }
-
-        const orcSubraceSelect = document.getElementById("orcSubrace");
-        if (orcSubraceSelect) {
-            orcSubraceSelect.addEventListener("change", (e) => {
-                this._updateOrcButtonIcons(e.target.value);
-            });
-        }
-
-        // Large generate button (main action)
-        const generateBtnLarge = document.querySelector(".generate-btn-large");
-        if (generateBtnLarge) {
-            generateBtnLarge.addEventListener("mousedown", () => {
-                // Add class to prevent shimmer animation on click
-                generateBtnLarge.classList.add("just-clicked");
-            });
-            generateBtnLarge.addEventListener("mouseup", () => {
-                // Remove class after a short delay to allow hover animation again
-                setTimeout(() => {
-                    generateBtnLarge.classList.remove("just-clicked");
-                }, 2000); // 2 seconds - longer than animation duration
-            });
-            generateBtnLarge.addEventListener("click", () => {
-                this.generateName();
-            });
-        }
-
-        // Spacebar keybind to generate name
-        document.addEventListener("keydown", (e) => {
-            // Only trigger on spacebar
-            if (e.code === "Space" || e.key === " ") {
-                // Don't trigger if user is typing in an input, textarea, or select
-                const activeElement = document.activeElement;
-                const isInputFocused =
-                    activeElement &&
-                    (activeElement.tagName === "INPUT" ||
-                        activeElement.tagName === "TEXTAREA" ||
-                        activeElement.tagName === "SELECT" ||
-                        activeElement.isContentEditable);
-
-                // Only generate if not typing in a form field and app is initialized
-                if (!isInputFocused && this.isInitialized) {
-                    e.preventDefault(); // Prevent page scroll
-                    this.generateName();
-                }
-            }
-        });
-
-        // Save to favorites button
-        const saveFavoriteBtn = document.querySelector(".save-favorite");
-        if (saveFavoriteBtn) {
-            saveFavoriteBtn.addEventListener("click", () => {
-                this.saveFavorite();
-            });
-        }
-
-        // Copy button (bottom)
-        const copyBtnBottom = document.getElementById("copyBtnBottom");
-        if (copyBtnBottom) {
-            copyBtnBottom.addEventListener("click", () => {
-                this.copyNameToClipboard();
-            });
-        }
-
-        // Settings accordion toggle
-        const settingsToggle = document.getElementById("settingsToggle");
-        const settingsContent = document.getElementById("settingsContent");
-        if (settingsToggle && settingsContent) {
-            settingsToggle.addEventListener("click", () => {
-                const isExpanded = settingsToggle.getAttribute("aria-expanded") === "true";
-                settingsToggle.setAttribute("aria-expanded", !isExpanded);
-                if (isExpanded) {
-                    settingsContent.setAttribute("hidden", "");
-                } else {
-                    settingsContent.removeAttribute("hidden");
-                }
-            });
-        }
-
-        // Breakdown toggle
-        const breakdownToggle = document.getElementById("breakdownToggle");
-        const breakdownContent = document.getElementById("breakdownContent");
-        if (breakdownToggle && breakdownContent) {
-            breakdownToggle.addEventListener("click", () => {
-                const isExpanded = breakdownToggle.getAttribute("aria-expanded") === "true";
-                breakdownToggle.setAttribute("aria-expanded", !isExpanded);
-                if (isExpanded) {
-                    breakdownContent.setAttribute("hidden", "");
-                } else {
-                    breakdownContent.removeAttribute("hidden");
-                }
-            });
-        }
-
-        // Keep window functions for vowel suggestions (they use onclick in HTML)
-        window.applyGenderPrefix = (vowel) => this.applyGenderPrefix(vowel);
-        window.applyFinalVowel = (vowel) => this.applyFinalVowel(vowel);
-
-        // Gender prefix options (event delegation)
-        if (this.ui.elements.genderPrefixOptions) {
-            this.ui.elements.genderPrefixOptions.addEventListener("click", (e) => {
-                const prefixOption = e.target.closest(".vowel-option");
-                if (prefixOption) {
-                    const vowel = prefixOption.dataset.vowel;
-                    this.applyGenderPrefix(vowel);
-                }
-            });
-        }
-
-        // Vowel options (event delegation)
-        this.ui.elements.vowelOptions.addEventListener("click", (e) => {
-            const vowelOption = e.target.closest(".vowel-option");
-            if (vowelOption) {
-                const vowel = vowelOption.dataset.vowel;
-                this.applyFinalVowel(vowel);
-            }
-        });
-
-        // History items (event delegation)
-        const historyContainer = document.getElementById("historyItems");
-        if (historyContainer) {
-            historyContainer.addEventListener("click", (e) => {
-                const historyItem = e.target.closest(".history-item");
-                if (historyItem) {
-                    const index = parseInt(historyItem.getAttribute("data-history-index"), 10);
-                    if (!isNaN(index)) {
-                        this.setNameFromHistory(index);
-                    }
-                }
-            });
-        }
-
-        // History toggle (same style as breakdown toggle)
-        const historyToggle = document.getElementById("historyToggle");
-        const historyContent = document.getElementById("historyContent");
-        if (historyToggle && historyContent) {
-            historyToggle.addEventListener("click", () => {
-                const isExpanded = historyToggle.getAttribute("aria-expanded") === "true";
-                historyToggle.setAttribute("aria-expanded", !isExpanded);
-                if (isExpanded) {
-                    historyContent.setAttribute("hidden", "");
-                } else {
-                    historyContent.removeAttribute("hidden");
-                }
-            });
-        }
-
-        // Favorites list (event delegation)
-        this.ui.elements.favoritesList.addEventListener("click", (e) => {
-            // Remove button - show confirmation
-            if (e.target.classList.contains("remove-btn")) {
-                const button = e.target;
-                // index parsed but not used in this branch (used in confirm-delete)
-                parseInt(button.dataset.index);
-
-                // Change to confirmation state
-                button.innerHTML = `
-                    <span class="confirm-cancel" title="Cancel">🛇</span>
-                    <span class="confirm-delete" title="Delete">🗑️</span>
-                `;
-                button.classList.add("confirming");
-
-                // Prevent immediate re-clicks
-                e.stopPropagation();
-            }
-
-            // Cancel confirmation
-            else if (e.target.classList.contains("confirm-cancel")) {
-                const button = e.target.closest(".remove-btn");
-                button.innerHTML = "Remove";
-                button.classList.remove("confirming");
-                e.stopPropagation();
-            }
-
-            // Confirm deletion
-            else if (e.target.classList.contains("confirm-delete")) {
-                const button = e.target.closest(".remove-btn");
-                const index = parseInt(button.dataset.index);
-                this.removeFavorite(index);
-                e.stopPropagation();
-            }
-        });
-    }
-
-    /**
-     * Determine initial generator type based on URL, domain, or localStorage
-     * @private
-     * @returns {string} 'elven' or 'dwarven'
-     */
-    _determineInitialGenerator() {
-        // 1. Check URL parameter (?generator=dwarven|gnomish or ?tab=...)
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlGenerator = urlParams.get("generator") || urlParams.get("tab");
-        if (urlGenerator === "dwarven" || urlGenerator === "dwarf") {
-            return "dwarven";
-        }
-        if (urlGenerator === "elven" || urlGenerator === "elf") {
-            return "elven";
-        }
-        if (urlGenerator === "gnomish" || urlGenerator === "gnome") {
-            return "gnomish";
-        }
-        if (urlGenerator === "halfling" || urlGenerator === "hin") {
-            return "halfling";
-        }
-        if (urlGenerator === "orc" || urlGenerator === "orog") {
-            return "orc";
-        }
-        if (urlGenerator === "halfling" || urlGenerator === "hin") {
-            return "halfling";
-        }
-
-        // 2. Check domain (dethek.com or dethek subdomain defaults to dwarven)
-        const hostname = window.location.hostname.toLowerCase();
-        if (hostname === "dethek.com" || hostname === "www.dethek.com" || hostname.startsWith("dethek.")) {
-            return "dwarven";
-        }
-
-        // 3. Check localStorage preference (for other domains)
-        const lastGenerator = localStorage.getItem(CONFIG.LAST_GENERATOR_KEY);
-        if (
-            lastGenerator === "dwarven" ||
-            lastGenerator === "elven" ||
-            lastGenerator === "gnomish" ||
-            lastGenerator === "halfling" ||
-            lastGenerator === "orc"
-        ) {
-            return lastGenerator;
-        }
-
-        // 4. Default to elven
-        return "elven";
-    }
-
-    /**
-     * Generate a new name
-     */
-    generateName() {
-        if (!this.isInitialized) return;
-
-        try {
-            const preferences = this.ui.getPreferences(this.currentGeneratorType);
-            const nameData = this.currentGenerator.generate(preferences);
-            this.ui.displayName(nameData, this.currentGeneratorType);
-
-            // Add to history
-            this._addToHistory(nameData);
-        } catch (error) {
-            console.error("Error generating name:", error);
-            this.ui.showNotification("Error generating name. Please try again.", "error");
-        }
-    }
-
-    /**
-     * Add a generated name to history (last 10)
-     * @private
-     */
-    _addToHistory(nameData) {
-        // Add to beginning of array
-        this.nameHistory.unshift({
-            name: nameData.name,
-            meaning: nameData.meaning,
-            pronunciation: nameData.pronunciation,
-            generatorType: this.currentGeneratorType,
-            fullData: nameData // Store full data for restoration
-        });
-
-        // Keep only last 10
-        if (this.nameHistory.length > this.maxHistorySize) {
-            this.nameHistory = this.nameHistory.slice(0, this.maxHistorySize);
-        }
-
-        // Update history display
-        this._updateHistoryDisplay();
-    }
-
-    /**
-     * Update the history display in the UI
-     * @private
-     */
-    _updateHistoryDisplay() {
-        const historyContainer = document.getElementById("historyItems");
-        if (!historyContainer) return;
-
-        if (this.nameHistory.length === 0) {
-            historyContainer.innerHTML = '<div class="history-empty">No names generated yet</div>';
-            return;
-        }
-
-        const historyHTML = this.nameHistory
-            .map(
-                (item, index) => `
-            <div class="history-item" data-history-index="${index}">
-                <span class="history-name">${item.name}</span>
-                <span class="history-meaning">${item.meaning || ""}</span>
-            </div>
-        `
-            )
-            .join("");
-
-        historyContainer.innerHTML = historyHTML;
-    }
-
-    /**
-     * Set name from history (called when clicking a history item)
-     * @param {number} index - Index in history array
-     */
-    setNameFromHistory(index) {
-        if (index < 0 || index >= this.nameHistory.length) return;
-
-        const historyItem = this.nameHistory[index];
-        const nameData = historyItem.fullData;
-
-        // Display the name
-        this.ui.displayName(nameData, historyItem.generatorType);
-
-        // Move to top of history (remove from current position and add to beginning)
-        this.nameHistory.splice(index, 1);
-        this.nameHistory.unshift(historyItem);
-
-        // Update display
-        this._updateHistoryDisplay();
-    }
-
-    /**
-     * Switch between Elven and Dwarven generators
-     * @param {string} generatorType - 'elven' or 'dwarven'
-     */
-    switchGenerator(generatorType) {
-        if (generatorType === this.currentGeneratorType) return;
-
-        this.currentGeneratorType = generatorType;
-
-        // Save to localStorage
-        localStorage.setItem(CONFIG.LAST_GENERATOR_KEY, generatorType);
-
-        // Close footer tabs on switch
-        document.body.classList.remove("footer-tabs-open");
-        const moreTab = document.getElementById("moreTab");
-        if (moreTab) moreTab.setAttribute("aria-expanded", "false");
-
-        // Update favorites manager generator type
-        this.favorites.setGeneratorType(generatorType);
-
-        // Update current generator
-        this.currentGenerator =
-            generatorType === "dwarven"
-                ? this.dwarvenGenerator
-                : generatorType === "gnomish"
-                  ? this.gnomishGenerator
-                  : generatorType === "halfling"
-                    ? this.halflingGenerator
-                    : generatorType === "orc"
-                      ? this.orcGenerator
-                      : this.elvenGenerator;
-
-        // Update UI state
-        this._initializeUIForGenerator(generatorType);
-
-        // Generate new name with new generator
-        this.generateName();
-    }
-
-    /**
-     * Initialize UI state for a specific generator
-     * @private
-     * @param {string} generatorType - 'elven' or 'dwarven'
-     */
-    _initializeUIForGenerator(generatorType) {
-        // Get UI elements
-        const elvenTab = document.getElementById("elvenTab");
-        const dwarvenTab = document.getElementById("dwarvenTab");
-        const gnomishTab = document.getElementById("gnomishTab");
-        const halflingTab = document.getElementById("halflingTab");
-        const orcTab = document.getElementById("orcTab");
-        const titleName = document.querySelector(".title-name");
-        const subtitle = document.querySelector(".subtitle");
-        const betaLabel = document.getElementById("betaLabel");
-        const elvenEducation = document.getElementById("elvenEducationalSection");
-        const dwarvenEducation = document.getElementById("dwarvenEducationalSection");
-        const gnomishEducation = document.getElementById("gnomishEducationalSection");
-        const halflingEducation = document.getElementById("halflingEducationalSection");
-        const orcEducation = document.getElementById("orcEducationalSection");
-        const elvenControls = document.querySelector(".elven-controls");
-        const dwarvenControls = document.querySelector(".dwarven-controls");
-        const gnomishControls = document.querySelector(".gnomish-controls");
-        const halflingControls = document.querySelector(".halfling-controls");
-        const orcControls = document.querySelector(".orc-controls");
-        const titleIcons = document.querySelectorAll(".title-sword");
-        const orcTabMore = document.getElementById("orcTabMore");
-        const betaTooltip =
-            "Beta: this feature is functional but still in testing. Performance, accuracy, and stability may vary. APIs, outputs, or behavior may change without notice during the beta period.";
-        const alphaTooltip =
-            "Alfa: experimental generator with limited linguistic data; patterns may shift as more sources are analyzed.";
-
-        if (generatorType === "elven") {
-            if (elvenTab) elvenTab.classList.add("active");
-            if (dwarvenTab) dwarvenTab.classList.remove("active");
-            if (gnomishTab) gnomishTab.classList.remove("active");
-            if (halflingTab) halflingTab.classList.remove("active");
-            if (orcTab) orcTab.classList.remove("active");
-            if (orcTabMore) orcTabMore.classList.remove("active");
-            document.documentElement.setAttribute("data-generator", "elven");
-            document.documentElement.setAttribute("data-theme", "moon-elf");
-
-            if (titleName) titleName.textContent = "Elven Name";
-            if (subtitle) subtitle.textContent = "Espruar Naming System - Forgotten Realms";
-            if (betaLabel) {
-                betaLabel.style.visibility = "hidden";
-                betaLabel.setAttribute("title", "");
-                if (betaLabel._popover) {
-                    betaLabel._popover.textContent = "";
-                    betaLabel._popover.style.display = "none";
-                }
-            }
-            if (elvenEducation) elvenEducation.style.display = "block";
-            if (dwarvenEducation) dwarvenEducation.style.display = "none";
-            if (gnomishEducation) gnomishEducation.style.display = "none";
-            if (halflingEducation) halflingEducation.style.display = "none";
-            if (orcEducation) orcEducation.style.display = "none";
-            if (elvenControls) elvenControls.style.display = "block";
-            if (dwarvenControls) dwarvenControls.style.display = "none";
-            if (gnomishControls) gnomishControls.style.display = "none";
-            if (halflingControls) halflingControls.style.display = "none";
-            if (orcControls) orcControls.style.display = "none";
-            titleIcons.forEach((icon) => (icon.textContent = "✨"));
-
-            // Update button icons for current elven subrace
-            const currentSubrace = this.ui.elements.subraceSelect?.value || "high-elf";
-            this._updateButtonIcons(currentSubrace);
-        } else if (generatorType === "dwarven") {
-            if (dwarvenTab) dwarvenTab.classList.add("active");
-            if (elvenTab) elvenTab.classList.remove("active");
-            if (gnomishTab) gnomishTab.classList.remove("active");
-            if (halflingTab) halflingTab.classList.remove("active");
-            if (orcTab) orcTab.classList.remove("active");
-            if (orcTabMore) orcTabMore.classList.remove("active");
-            document.documentElement.setAttribute("data-generator", "dwarven");
-            document.documentElement.removeAttribute("data-theme");
-
-            if (titleName) titleName.textContent = "Dwarven Name";
-            if (subtitle) subtitle.textContent = "Dethek Naming System - Forgotten Realms";
-            if (betaLabel) {
-                betaLabel.style.visibility = "visible";
-                betaLabel.textContent = "BETA";
-                betaLabel.setAttribute("title", betaTooltip);
-                if (betaLabel._popover) {
-                    betaLabel._popover.textContent = betaTooltip;
-                    betaLabel._popover.style.display = "none";
-                }
-            }
-            if (elvenEducation) elvenEducation.style.display = "none";
-            if (dwarvenEducation) dwarvenEducation.style.display = "block";
-            if (gnomishEducation) gnomishEducation.style.display = "none";
-            if (halflingEducation) halflingEducation.style.display = "none";
-            if (orcEducation) orcEducation.style.display = "none";
-            if (elvenControls) elvenControls.style.display = "none";
-            if (dwarvenControls) dwarvenControls.style.display = "block";
-            if (gnomishControls) gnomishControls.style.display = "none";
-            if (halflingControls) halflingControls.style.display = "none";
-            if (orcControls) orcControls.style.display = "none";
-            titleIcons.forEach((icon) => (icon.textContent = "⚒️"));
-
-            // Update button icons for current dwarven subrace
-            const currentDwarvenSubrace = document.getElementById("dwarvenSubrace")?.value || "general";
-            this._updateDwarvenButtonIcons(currentDwarvenSubrace);
-        } else if (generatorType === "gnomish") {
-            if (gnomishTab) gnomishTab.classList.add("active");
-            if (elvenTab) elvenTab.classList.remove("active");
-            if (dwarvenTab) dwarvenTab.classList.remove("active");
-            if (halflingTab) halflingTab.classList.remove("active");
-            if (orcTab) orcTab.classList.remove("active");
-            if (orcTabMore) orcTabMore.classList.remove("active");
-            document.documentElement.setAttribute("data-generator", "gnomish");
-            document.documentElement.removeAttribute("data-theme");
-
-            if (titleName) titleName.textContent = "Gnomish Name";
-            if (subtitle) subtitle.textContent = "Gnim Naming System - Forgotten Realms";
-            if (betaLabel) {
-                betaLabel.style.visibility = "visible";
-                betaLabel.textContent = "ALFA";
-                betaLabel.setAttribute("title", alphaTooltip);
-                if (betaLabel._popover) {
-                    betaLabel._popover.textContent = alphaTooltip;
-                    betaLabel._popover.style.display = "none";
-                }
-            }
-            if (elvenEducation) elvenEducation.style.display = "none";
-            if (dwarvenEducation) dwarvenEducation.style.display = "none";
-            if (gnomishEducation) gnomishEducation.style.display = "block";
-            if (halflingEducation) halflingEducation.style.display = "none";
-            if (orcEducation) orcEducation.style.display = "none";
-            if (elvenControls) elvenControls.style.display = "none";
-            if (dwarvenControls) dwarvenControls.style.display = "none";
-            if (gnomishControls) gnomishControls.style.display = "block";
-            if (halflingControls) halflingControls.style.display = "none";
-            if (orcControls) orcControls.style.display = "none";
-            titleIcons.forEach((icon) => (icon.textContent = "🛠️"));
-
-            const currentGnomishSubrace = document.getElementById("gnomishSubrace")?.value || "rock";
-            this._updateGnomishButtonIcons(currentGnomishSubrace);
-        } else if (generatorType === "halfling") {
-            if (halflingTab) halflingTab.classList.add("active");
-            if (elvenTab) elvenTab.classList.remove("active");
-            if (dwarvenTab) dwarvenTab.classList.remove("active");
-            if (gnomishTab) gnomishTab.classList.remove("active");
-            if (orcTab) orcTab.classList.remove("active");
-            if (orcTabMore) orcTabMore.classList.remove("active");
-            document.documentElement.setAttribute("data-generator", "halfling");
-            document.documentElement.removeAttribute("data-theme");
-
-            if (titleName) titleName.textContent = "Halfling Name";
-            if (subtitle) subtitle.textContent = "Hin Naming (Common Script) - Forgotten Realms";
-            if (betaLabel) {
-                betaLabel.style.visibility = "visible";
-                betaLabel.textContent = "ALFA";
-                betaLabel.setAttribute("title", alphaTooltip);
-                if (betaLabel._popover) {
-                    betaLabel._popover.textContent = alphaTooltip;
-                    betaLabel._popover.style.display = "none";
-                }
-            }
-            if (elvenEducation) elvenEducation.style.display = "none";
-            if (dwarvenEducation) dwarvenEducation.style.display = "none";
-            if (gnomishEducation) gnomishEducation.style.display = "none";
-            if (halflingEducation) halflingEducation.style.display = "block";
-            if (orcEducation) orcEducation.style.display = "none";
-            if (elvenControls) elvenControls.style.display = "none";
-            if (dwarvenControls) dwarvenControls.style.display = "none";
-            if (gnomishControls) gnomishControls.style.display = "none";
-            if (halflingControls) halflingControls.style.display = "block";
-            if (orcControls) orcControls.style.display = "none";
-            titleIcons.forEach((icon) => (icon.textContent = "🗡️"));
-
-            const currentHalflingSubrace = document.getElementById("halflingSubrace")?.value || "lightfoot";
-            this._updateHalflingButtonIcons(currentHalflingSubrace);
-        } else if (generatorType === "orc") {
-            if (orcTab) orcTab.classList.add("active");
-            if (elvenTab) elvenTab.classList.remove("active");
-            if (dwarvenTab) dwarvenTab.classList.remove("active");
-            if (gnomishTab) gnomishTab.classList.remove("active");
-            if (halflingTab) halflingTab.classList.remove("active");
-            if (orcTabMore) orcTabMore.classList.add("active");
-            document.documentElement.setAttribute("data-generator", "orc");
-            document.documentElement.removeAttribute("data-theme");
-
-            if (titleName) titleName.textContent = "Orc Name";
-            if (subtitle) subtitle.textContent = "Orcish (Da’esh) Naming - Forgotten Realms";
-            if (betaLabel) {
-                betaLabel.style.visibility = "visible";
-                betaLabel.textContent = "ALFA";
-                betaLabel.setAttribute("title", alphaTooltip);
-                if (betaLabel._popover) {
-                    betaLabel._popover.textContent = alphaTooltip;
-                    betaLabel._popover.style.display = "none";
-                }
-            }
-            if (elvenEducation) elvenEducation.style.display = "none";
-            if (dwarvenEducation) dwarvenEducation.style.display = "none";
-            if (gnomishEducation) gnomishEducation.style.display = "none";
-            if (halflingEducation) halflingEducation.style.display = "none";
-            if (orcEducation) orcEducation.style.display = "block";
-            if (elvenControls) elvenControls.style.display = "none";
-            if (dwarvenControls) dwarvenControls.style.display = "none";
-            if (gnomishControls) gnomishControls.style.display = "none";
-            if (halflingControls) halflingControls.style.display = "none";
-            if (orcControls) orcControls.style.display = "block";
-            titleIcons.forEach((icon) => (icon.textContent = "⚔️"));
-
-            const currentOrcSubrace = document.getElementById("orcSubrace")?.value || "orc";
-            this._updateOrcButtonIcons(currentOrcSubrace);
-        }
-    }
-
-    /**
-     * Save current name to favorites
-     */
-    saveFavorite() {
-        if (!this.isInitialized) return;
-
-        const currentName = this.ui.getCurrentName();
-        if (!currentName) {
-            this.ui.showNotification("No name to save!", "error");
-            return;
-        }
-
-        const result = this.favorites.add(currentName);
-        this.ui.showNotification(result.message, result.success ? "success" : "error");
-    }
-
-    /**
-     * Copy name to clipboard
-     */
-    copyNameToClipboard() {
-        if (!this.isInitialized) return;
-
-        const currentName = this.ui.getCurrentName();
-        if (!currentName || !currentName.name) {
-            this.ui.showNotification("No name to copy!", "error");
-            return;
-        }
-
-        // Use modern clipboard API
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard
-                .writeText(currentName.name)
-                .then(() => {
-                    this.ui.showNotification(`Copied "${currentName.name}" to clipboard!`, "success");
-                })
-                .catch(() => {
-                    this.ui.showNotification("Failed to copy to clipboard", "error");
-                });
-        } else {
-            // Fallback for older browsers
-            const textArea = document.createElement("textarea");
-            textArea.value = currentName.name;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand("copy");
-                this.ui.showNotification(`Copied "${currentName.name}" to clipboard!`, "success");
-            } catch (err) {
-                this.ui.showNotification("Failed to copy to clipboard", "error");
-            }
-            document.body.removeChild(textArea);
-        }
-    }
-
-    /**
-     * Remove a favorite by index
-     * @param {number} index - Index of favorite to remove
-     */
-    removeFavorite(index) {
-        if (!this.isInitialized) return;
-
-        const success = this.favorites.remove(index);
-        if (!success) {
-            this.ui.showNotification("Failed to remove favorite", "error");
-        }
-    }
-
-    /**
-     * Apply a gender prefix vowel to the current name
-     * @param {string} vowel - Vowel to apply
-     */
-    applyGenderPrefix(vowel) {
-        if (!this.isInitialized) return;
-        this.ui.applyGenderPrefix(vowel);
-    }
-
-    /**
-     * Apply a final vowel to the current name
-     * @param {string} vowel - Vowel to apply
-     */
-    applyFinalVowel(vowel) {
-        if (!this.isInitialized) return;
-        this.ui.applyFinalVowel(vowel);
-    }
-
-    /**
-     * Show error message to user
-     * @private
-     */
-    _showError(message) {
-        // Create error overlay
-        const overlay = document.createElement("div");
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            color: white;
-            font-family: 'Lato', sans-serif;
-            padding: 20px;
-        `;
-
-        overlay.innerHTML = `
-            <div style="text-align: center; max-width: 500px;">
-                <h2 style="color: #ff6666; margin-bottom: 20px;">⚠️ Error</h2>
-                <p style="font-size: 1.2em; margin-bottom: 20px;">${message}</p>
-                <button onclick="location.reload()" style="
-                    padding: 10px 30px;
-                    background: #c9a050;
-                    color: #1a1a2e;
-                    border: none;
-                    border-radius: 8px;
-                    font-size: 1em;
-                    cursor: pointer;
-                    font-weight: bold;
-                ">Reload Page</button>
-            </div>
-        `;
-
-        document.body.appendChild(overlay);
-    }
-
-    /**
-     * Initialize accordion functionality
-     * @private
-     */
-    _initAccordions() {
-        const accordionHeaders = document.querySelectorAll(".accordion-header");
-
-        accordionHeaders.forEach((header) => {
-            header.addEventListener("click", () => {
-                const isExpanded = header.getAttribute("aria-expanded") === "true";
-                const content = header.nextElementSibling;
-
-                // Toggle this accordion
-                header.setAttribute("aria-expanded", !isExpanded);
-
-                if (isExpanded) {
-                    content.classList.remove("open");
-                } else {
-                    content.classList.add("open");
-                }
-            });
-        });
-
-        // Back to section buttons
-        document.querySelectorAll(".back-to-section-btn").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-                const accordion = e.target.closest(".accordion");
-                const header = accordion.querySelector(".accordion-header");
-                header.scrollIntoView({ behavior: "smooth", block: "start" });
-            });
-        });
-
-        // Back to top buttons
-        document.querySelectorAll(".back-to-top-btn").forEach((btn) => {
-            btn.addEventListener("click", () => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-        });
-    }
-
-    /**
-     * Flip the card between result and settings
-     * @private
-     */
-
-    /**
-     * Initialize cookie consent banner
-     * @private
-     */
-    _initCookieBanner() {
-        const banner = document.getElementById("cookieBanner");
-        const modal = document.getElementById("cookieModal");
-        const acceptBtn = document.getElementById("cookieAccept");
-        const declineBtn = document.getElementById("cookieDecline");
-        const learnMoreLink = document.getElementById("cookieLearnMore");
-        const modalCloseBtn = document.getElementById("cookieModalClose");
-
-        // Safety check - ensure all elements exist
-        if (!banner || !modal || !acceptBtn || !declineBtn || !learnMoreLink || !modalCloseBtn) {
-            console.error("Cookie banner elements not found");
-            return;
-        }
-
-        // Check if consent already given
-        const consent = localStorage.getItem("analytics_consent");
-        if (consent === null) {
-            // No choice made yet, show banner
-            banner.removeAttribute("hidden");
-        } else if (consent === "true") {
-            // Previously accepted, load GA now
-            this._loadGoogleAnalytics();
-        }
-        // If consent === 'false', do nothing (GA stays unloaded)
-
-        // Accept button
-        acceptBtn.addEventListener("click", () => {
-            localStorage.setItem("analytics_consent", "true");
-            banner.setAttribute("hidden", "");
-            this._loadGoogleAnalytics();
-        });
-
-        // Decline button
-        declineBtn.addEventListener("click", () => {
-            localStorage.setItem("analytics_consent", "false");
-            banner.setAttribute("hidden", "");
-        });
-
-        // Learn more link
-        learnMoreLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            modal.removeAttribute("hidden");
-        });
-
-        // Close modal
-        modalCloseBtn.addEventListener("click", () => {
-            modal.setAttribute("hidden", "");
-        });
-
-        // Close modal on backdrop click
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.setAttribute("hidden", "");
-            }
-        });
-
-        // Escape key closes modal
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && !modal.hasAttribute("hidden")) {
-                modal.setAttribute("hidden", "");
-            }
-        });
-    }
-
-    /**
-     * Update button icons based on selected subrace
-     * @private
-     */
-    _updateButtonIcons(subrace) {
-        if (this.currentGeneratorType !== "elven") return;
-
-        const icon = this.subraceIcons[subrace] || "✨";
-
-        // Update main generate button text
-        const generateBtnText = document.querySelector(".generate-btn-large .generate-btn-text");
-        if (generateBtnText) {
-            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
-        }
-
-        // Update all "Back to Generator" buttons with sparkles
-        const backButtons = document.querySelectorAll(".back-to-top-btn");
-        backButtons.forEach((btn) => {
-            btn.innerHTML = `⚡ Back to Generator`;
-        });
-    }
-
-    /**
-     * Update button icons for Dwarven subrace
-     * @private
-     */
-    _updateDwarvenButtonIcons(subrace) {
-        if (this.currentGeneratorType !== "dwarven") return;
-
-        const icon = this.dwarvenSubraceIcons[subrace] || "⚒️";
-
-        const generateBtnText = document.querySelector(".generate-btn-large .generate-btn-text");
-        if (generateBtnText) {
-            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
-        }
-
-        const backButtons = document.querySelectorAll(".back-to-top-btn");
-        backButtons.forEach((btn) => {
-            btn.innerHTML = `⚡ Back to Generator`;
-        });
-    }
-
-    /**
-     * Update button icons for Gnomish subrace
-     * @private
-     */
-    _updateGnomishButtonIcons(subrace) {
-        if (this.currentGeneratorType !== "gnomish") return;
-        const icon = this.gnomishSubraceIcons[subrace] || "🛠️";
-
-        const generateBtnText = document.querySelector(".generate-btn-large .generate-btn-text");
-        if (generateBtnText) {
-            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
-        }
-
-        const backButtons = document.querySelectorAll(".back-to-top-btn");
-        backButtons.forEach((btn) => {
-            btn.innerHTML = `⚡ Back to Generator`;
-        });
-    }
-
-    /**
-     * Update button icons for Halfling subrace
-     * @private
-     */
-    _updateHalflingButtonIcons(subrace) {
-        if (this.currentGeneratorType !== "halfling") return;
-        const icon = this.halflingSubraceIcons[subrace] || "🗡️";
-
-        const generateBtnText = document.querySelector(".generate-btn-large .generate-btn-text");
-        if (generateBtnText) {
-            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
-        }
-
-        const backButtons = document.querySelectorAll(".back-to-top-btn");
-        backButtons.forEach((btn) => {
-            btn.innerHTML = `⚡ Back to Generator`;
-        });
-    }
-
-    /**
-     * Update button icons for Orc subrace
-     * @private
-     */
-    _updateOrcButtonIcons(subrace) {
-        if (this.currentGeneratorType !== "orc") return;
-        const icon = this.orcSubraceIcons[subrace] || this.orcSubraceIcons.orc || "⚔️";
-
-        const generateBtnText = document.querySelector(".generate-btn-large .generate-btn-text");
-        if (generateBtnText) {
-            generateBtnText.textContent = `${icon} Generate Name ${icon}`;
-        }
-
-        const backButtons = document.querySelectorAll(".back-to-top-btn");
-        backButtons.forEach((btn) => {
-            btn.innerHTML = `⚡ Back to Generator`;
-        });
-    }
-
-    /**
-     * Initialize range slider fill effect
-     * @private
-     */
-    _initRangeSliderFill() {
-        const rangeSlider = document.getElementById("syllables");
-        if (!rangeSlider) return;
-
-        // Moon-elf theme color (only theme used for elven)
-        const moonElfColor = "#b8c5d6";
-
-        const updateSliderFill = () => {
-            // Always use moon-elf color for elven generator
-            const color = moonElfColor;
-            const percent = ((rangeSlider.value - rangeSlider.min) / (rangeSlider.max - rangeSlider.min)) * 100;
-
-            rangeSlider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percent}%, rgba(255,255,255,0.1) ${percent}%, rgba(255,255,255,0.1) 100%)`;
-        };
-
-        // Update on input
-        rangeSlider.addEventListener("input", updateSliderFill);
-
-        // Initial update
-        updateSliderFill();
-    }
-
-    /**
-     * Load Google Analytics script
-     * @private
-     */
-    _loadGoogleAnalytics() {
-        if (window.gtag) {
-            console.log("Google Analytics already loaded");
-            return; // Already loaded
-        }
-
-        console.log("Loading Google Analytics...");
-
-        const script = document.createElement("script");
-        script.async = true;
-        script.src = "https://www.googletagmanager.com/gtag/js?id=G-8T9GFW6PVK";
-        document.head.appendChild(script);
-
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            window.dataLayer.push(arguments);
-        }
-        window.gtag = gtag;
-        gtag("js", new Date());
-        gtag("config", "G-8T9GFW6PVK");
-
-        console.log("Google Analytics loaded successfully");
+    renderResult(result, state.locked, { onToggleLock: toggleLock, onChoose: choosePart });
+    renderSaved(isSaved(result));
+    if (focus) focusPart(focus.key, focus.control);
+}
+
+const isSaved = (result) => Boolean(result) && state.favorites.some((f) => f.name === result.name);
+
+function updateHistory(history) {
+    state.history = history;
+    saveHistory(history);
+    renderNameList("historyList", history, (r) => restore(r, { remember: false }));
+    $("historyClear").hidden = !history.length;
+}
+
+/** Shows an earlier name and matches the controls to it, so the next name follows the same settings. */
+function restore(result, { remember = true } = {}) {
+    $("pickerLineage").value = result.subrace;
+    $("pickerSex").value = { female: "feminine", male: "masculine" }[result.sex] || "neutral";
+    show(result, { remember });
+}
+
+/** Runs a generator call; on failure keeps the current name on screen and explains what happened. */
+function attempt(action) {
+    try {
+        return action();
+    } catch (error) {
+        showNotice(error.message);
+        reportError(error);
+        return null;
     }
 }
 
-// Auto-initialize when DOM is ready
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-        const app = new UnifiedNameGenerator();
-        app.init();
+function generate() {
+    const result = attempt(() =>
+        state.generator.generate({ ...options(), locks: locksFor(state.result, state.locked) })
+    );
+    if (result) show(result);
+    return result;
+}
+
+/** A roll the visitor asked for (button or spacebar), as opposed to the new name shown when a setting changes. */
+function rollName(trigger) {
+    if (generate()) track("name_generated", usage({ roll_type: "single", name_count: 1, trigger }));
+}
+
+function toggleLock(key) {
+    const isLocked = !state.locked.has(key);
+    if (isLocked) state.locked.add(key);
+    else state.locked.delete(key);
+    const part = state.result.parts.find((p) => p.key === key);
+    track("component_lock_changed", usage({ ...describeComponent(part), locked: isLocked ? "on" : "off" }));
+    show(state.result, { remember: false, focus: { key, control: "lock" } });
+}
+
+/** Opens the options that fit one part; the chosen one replaces it while the rest of the name stays as it is. */
+function choosePart(key) {
+    const current = state.result;
+    const part = current.parts.find((p) => p.key === key);
+    const choices = attempt(() => state.generator.optionsFor(current, key));
+    if (!choices?.length) return;
+    track("component_picker_opened", usage(describeComponent(part)));
+    openPartPicker(`Choose the ${partLabel(part)}`, choices, part.text, (choice) => {
+        const locks = { ...locksFor(current, new Set(current.parts.map((p) => p.key))), [key]: choice };
+        const result = attempt(() => state.generator.generate({ ...options(), locks }));
+        if (!result) return;
+        track("component_selected", usage({ ...describeComponent(part), component_origin: originOf(choice) }));
+        show(result, { focus: { key, control: "text" } });
     });
-} else {
-    // DOM already loaded
-    const app = new UnifiedNameGenerator();
-    app.init();
 }
+
+function showList() {
+    const locks = locksFor(state.result, state.locked);
+    const results = [];
+    for (let i = 0; i < LIST_SIZE; i++) {
+        const result = attempt(() => state.generator.generate({ ...options(), locks }));
+        if (!result) break;
+        results.push(result);
+    }
+    renderNameList("nameList", results, (r) => show(r));
+    if (results.length) {
+        track("name_generated", usage({ roll_type: "list", name_count: results.length, trigger: "button" }));
+    }
+}
+
+function updateFavorites(change) {
+    try {
+        state.favorites = change(state.favorites);
+        renderSaved(isSaved(state.result));
+        renderFavorites(state.favorites, {
+            onLoad: (result) => restore(result),
+            onCopy: (name) => copyName(name, "saved"),
+            onRemove: (name) => {
+                const index = state.favorites.findIndex((f) => f.name === name);
+                const record = state.favorites[index];
+                updateFavorites((list) => removeFavorite(list, name));
+                // the removed row's button is gone: move focus to the next row, or the heading if none is left
+                const remaining = $("favoritesList").querySelectorAll(".favorites-remove");
+                (remaining[Math.min(index, remaining.length - 1)] || $("favoritesTitle")).focus();
+                showNotice(`Removed ${name}.`, {
+                    label: "Undo",
+                    onClick: () => {
+                        updateFavorites((list) => restoreFavorite(list, record, index));
+                        $("favoritesTitle").focus();
+                    }
+                });
+            },
+            max: MAX_FAVORITES
+        });
+    } catch (error) {
+        showNotice(error.message);
+    }
+}
+
+/** Copies a name; `source` is "current" (the name card) or "saved" (the saved list). Only a successful copy counts. */
+async function copyName(name, source) {
+    try {
+        await navigator.clipboard.writeText(name);
+        showNotice("Copied.");
+        track("name_copied", usage({ copy_source: source }));
+    } catch {
+        showNotice("Your browser would not copy the name. Select it and copy it instead.");
+    }
+}
+
+function wireControls() {
+    const fresh = () => {
+        state.locked.clear();
+        renderNameList("nameList", [], show);
+        generate();
+    };
+    const changeSetting = (settingName, settingValue) => {
+        track("name_setting_changed", usage({ setting_name: settingName, setting_value: settingValue }));
+        fresh();
+    };
+    $("pickerSex").addEventListener("change", (event) => changeSetting("gender", GENDER_VALUES[event.target.value]));
+    $("pickerLineage").addEventListener("change", (event) =>
+        changeSetting("lineage", LINEAGE_VALUES[event.target.value])
+    );
+    // Expanded Variety is off until chosen; the last choice is remembered in this browser
+    const expanded = $("expandedToggle");
+    expanded.setAttribute("aria-pressed", String(loadSetting("expandedVariety", false) === true));
+    expanded.addEventListener("click", () => {
+        const isOn = expanded.getAttribute("aria-pressed") !== "true";
+        expanded.setAttribute("aria-pressed", String(isOn));
+        saveSetting("expandedVariety", isOn);
+        track("expanded_variety_changed", usage({ setting_value: isOn ? "on" : "off" }));
+        fresh();
+    });
+    $("expandedInfo").addEventListener("click", (event) => {
+        const isOpen = event.currentTarget.getAttribute("aria-expanded") !== "true";
+        event.currentTarget.setAttribute("aria-expanded", String(isOpen));
+        $("expandedHint").hidden = !isOpen;
+    });
+    $("namePicker").addEventListener("submit", (event) => event.preventDefault());
+    $("generateButton").addEventListener("click", () => rollName("button"));
+    $("listButton").addEventListener("click", showList);
+    $("historyClear").addEventListener("click", () => {
+        const previous = state.history;
+        updateHistory([]);
+        $("historyTitle").focus(); // the Clear button hides itself
+        showNotice("History cleared.", {
+            label: "Undo",
+            onClick: () => {
+                updateHistory(previous);
+                $("historyTitle").focus();
+            }
+        });
+    });
+    // a tap outside the picker (on its backdrop) closes it
+    $("partPicker").addEventListener("click", (event) => {
+        const box = event.currentTarget.getBoundingClientRect();
+        const outside =
+            event.clientX < box.left ||
+            event.clientX > box.right ||
+            event.clientY < box.top ||
+            event.clientY > box.bottom;
+        if (event.target === event.currentTarget && outside) event.currentTarget.close();
+    });
+    $("copyButton").addEventListener("click", () => copyName(state.result.name, "current"));
+    // the bookmark toggles: save the current name, or remove it if it is already saved
+    $("saveButton").addEventListener("click", () => {
+        const wasSaved = isSaved(state.result);
+        updateFavorites((list) =>
+            wasSaved ? removeFavorite(list, state.result.name) : addFavorite(list, state.result)
+        );
+        if (!wasSaved && isSaved(state.result)) track("name_saved", usage());
+    });
+    $("nameSourcesSummary")
+        .closest("details")
+        .addEventListener("toggle", (event) => {
+            if (event.currentTarget.open) track("name_sources_opened", usage());
+        });
+    document.body.addEventListener("keydown", (event) => {
+        const typing = event.target.closest("input, select, textarea, button, summary, a");
+        if (event.code === "Space" && !typing) {
+            event.preventDefault();
+            rollName("spacebar");
+        }
+    });
+}
+
+async function start() {
+    window.addEventListener("error", (event) => reportError(event.error || event.message));
+    window.addEventListener("unhandledrejection", (event) => reportError(event.reason));
+    setUpConsent({
+        banner: $("cookieBanner"),
+        accept: $("cookieAccept"),
+        decline: $("cookieDecline"),
+        dialog: $("privacyDialog"),
+        links: document.querySelectorAll(".privacy-link")
+    });
+    try {
+        const [elfNames, drowNames] = await Promise.all([
+            loadJson("data/elfNames.json"),
+            loadJson("data/drowNames.json")
+        ]);
+        state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
+    } catch (error) {
+        showNotice("The name lists could not be loaded. Please refresh the page.");
+        reportError(error);
+        return;
+    }
+    wireControls();
+    updateFavorites(() => loadFavorites());
+    updateHistory(loadHistory());
+    generate();
+}
+
+start();
