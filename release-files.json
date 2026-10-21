@@ -1,0 +1,22 @@
+[
+    "index.html",
+    "style.css",
+    "favicon.ico",
+    "favicon.png",
+    "CNAME",
+    "LICENSE",
+    "js/app.js",
+    "js/analytics.js",
+    "js/ui.js",
+    "js/favorites.js",
+    "js/core/random.js",
+    "js/core/splitComponents.js",
+    "js/core/ElfNameGenerator.js",
+    "js/core/DrowNameGenerator.js",
+    "data/elfNames.json",
+    "data/drowNames.json",
+    "fonts/dalelands-uncial.otf",
+    "fonts/espruar.otf",
+    "fonts/high-drowic.otf",
+    "fonts/OFL.txt"
+]

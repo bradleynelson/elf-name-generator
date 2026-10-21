@@ -1,7 +1,7 @@
 name: CI/CD Pipeline
 
 permissions:
-    contents: write
+    contents: read
 
 on:
     push:
@@ -12,6 +12,13 @@ on:
         branches:
             - main
             - develop
+    workflow_dispatch:
+        inputs:
+            confirm_production:
+                description: "Publish the reviewed main commit to espruar.com"
+                required: true
+                type: boolean
+                default: false
 
 jobs:
     test:
@@ -21,6 +28,8 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  persist-credentials: false
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -43,6 +52,15 @@ jobs:
             - name: Run tests
               run: npm run test:run
 
+            - name: Test release safeguards
+              run: npm run test:release
+
+            - name: Build approved website assets
+              run: npm run build:site
+
+            - name: Verify release contents
+              run: npm run check:release
+
             - name: Run tests with coverage
               if: github.event_name == 'pull_request'
               run: npm run test:run -- --coverage
@@ -51,7 +69,12 @@ jobs:
         name: Deploy to Production
         runs-on: ubuntu-latest
         needs: test
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.repository == 'bradleynelson/elf-name-generator' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.confirm_production == true
+        permissions:
+            contents: write
+        concurrency:
+            group: production-release
+            cancel-in-progress: false
         environment:
             name: production
             url: https://espruar.com
@@ -59,33 +82,23 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  persist-credentials: false
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: Build approved website assets
+              run: node scripts/release-site.js build
+
+            - name: Verify release contents
+              run: node scripts/release-site.js check
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3
-              if: github.ref == 'refs/heads/main'
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./
+                  publish_dir: ./dist
                   cname: espruar.com
-
-    deploy-dev:
-        name: Deploy to Development
-        runs-on: ubuntu-latest
-        needs: test
-        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-        environment:
-            name: development
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            # Note: Development deployment would go to a separate branch or environment
-            # Uncomment and configure if you want a separate dev site
-            # - name: Deploy to Development Site
-            #   uses: peaceiris/actions-gh-pages@v3
-            #   with:
-            #     github_token: ${{ secrets.GITHUB_TOKEN }}
-            #     publish_dir: ./
-            #     publish_branch: gh-pages-dev
-            #     cname: dev.espruar.com  # If you have a dev subdomain
