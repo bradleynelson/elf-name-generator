@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.6] - 2026-10-22
 
+### Fixed
+
+- Version stamps (`?v=4.0.6`) are now in the site's own files, so they reach visitors. In 4.0.5 they were added only to a build folder the site isn't served from, so cached old files could still be mixed with new ones. The release check now fails if any stamp is missing or doesn't match the package version, and the version script writes them on each bump.
+- The version script no longer puts the new changelog entry above the changelog's intro text.
+
 ### Added
 
 - A notice when the browser is blocking site storage, so people know saved names, history and settings won't be kept.

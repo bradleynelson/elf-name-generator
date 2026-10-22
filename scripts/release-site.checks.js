@@ -8,6 +8,7 @@ import vm from "node:vm";
 import test from "node:test";
 import { parse } from "yaml";
 import { buildSite, verifySite } from "./release-site.js";
+import { stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const approvedFiles = JSON.parse(readFileSync(path.join(repositoryRoot, "release-files.json"), "utf8"));
@@ -42,27 +43,29 @@ test("packages the real site and leaves private notes and tooling out", (t) => {
     assert.equal(buildSite(root), approvedFiles.length + 1);
 });
 
-test("versions every local script, stylesheet and data reference, and nothing else", (t) => {
-    const root = fixture(t);
-    buildSite(root);
-    const read = (file) => readFileSync(path.join(root, "dist", file), "utf8");
-    const html = read("index.html");
-    const version = html.match(/href="style\.css\?v=([0-9a-f]{10})"/)?.[1];
-    assert.ok(version, "stylesheet link carries a version");
-    assert.match(html, new RegExp(`src="js/app\\.js\\?v=${version}"`));
-    assert.match(html, new RegExp(`href="data/elfNames\\.json\\?v=${version}"`));
-    assert.match(html, /href="favicon\.ico"/);
+test("the source files carry one version on every local script, stylesheet and data reference", () => {
+    const version = JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf8")).version;
+    const read = (file) => readFileSync(path.join(repositoryRoot, file), "utf8");
+    assert.equal(stampedVersion(repositoryRoot), version, "the page is stamped with the package version");
+    assert.match(read("index.html"), new RegExp(`src="js/app\\.js\\?v=${version}"`));
+    assert.match(read("index.html"), new RegExp(`href="data/elfNames\\.json\\?v=${version}"`));
+    assert.match(read("index.html"), /href="favicon\.ico"/, "files that never change are not stamped");
     assert.match(read("js/app.js"), new RegExp(`from "\\./core/ElfNameGenerator\\.js\\?v=${version}"`));
     assert.match(read("js/app.js"), new RegExp(`"data/drowNames\\.json\\?v=${version}"`));
     assert.match(read("js/core/DrowNameGenerator.js"), new RegExp(`from "\\./random\\.js\\?v=${version}"`));
-    // a changed script means a new version, so cached copies of the old release are never reused
-    writeFileSync(
-        path.join(root, "js", "ui.js"),
-        `${readFileSync(path.join(root, "js", "ui.js"), "utf8")}\n// changed`
-    );
-    rmSync(path.join(root, "dist"), { recursive: true });
-    buildSite(root);
-    assert.doesNotMatch(read("index.html"), new RegExp(`\\?v=${version}`));
+});
+
+test("refuses a release whose stamps are missing or disagree", (t) => {
+    const root = fixture(t);
+    const script = path.join(root, "js", "app.js");
+    const original = readFileSync(script, "utf8");
+    // an import without its stamp could be served from an older cache
+    writeFileSync(script, original.replace(/(from "\.\/[^"?]+\.js)\?v=[\w.-]+"/, '$1"'));
+    assert.throws(() => buildSite(root), /Version stamp missing or not/);
+    writeFileSync(script, original);
+    const html = path.join(root, "index.html");
+    writeFileSync(html, readFileSync(html, "utf8").replace(/\?v=[\w.-]+/, "?v=0.0.0"));
+    assert.throws(() => buildSite(root), /Version stamp missing or not 0\.0\.0/);
 });
 
 test("rejects missing required assets", (t) => {

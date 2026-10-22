@@ -8,6 +8,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { stampSources } from "./stamp-version.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -76,6 +77,10 @@ if (versionRegex.test(indexContent)) {
 } else {
     console.warn("⚠ Could not find version line in index.html");
 }
+
+// Stamp every script, stylesheet and data link with the new version (the site is served from these files)
+const stamped = stampSources(rootDir, newVersion);
+console.log(`✓ Stamped v${newVersion} on ${stamped.length} files`);
 
 // Update CHANGELOG.md
 const changelogPath = join(rootDir, "CHANGELOG.md");
