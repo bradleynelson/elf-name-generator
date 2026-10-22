@@ -11,7 +11,8 @@ import {
     removeFavorite,
     restoreFavorite,
     saveHistory,
-    saveSetting
+    saveSetting,
+    storageAvailable
 } from "./favorites.js";
 import {
     focusPart,
@@ -311,9 +312,9 @@ async function start() {
     window.addEventListener("error", (event) => reportError(event.error || event.message));
     window.addEventListener("unhandledrejection", (event) => reportError(event.reason));
     setUpConsent({
-        banner: $("privacyBar"),
-        accept: $("privacyAccept"),
-        decline: $("privacyDecline"),
+        banner: $("cookieBanner"),
+        accept: $("cookieAccept"),
+        decline: $("cookieDecline"),
         dialog: $("privacyDialog"),
         links: document.querySelectorAll(".privacy-link")
     });
@@ -336,6 +337,13 @@ async function start() {
     updateFavorites(() => loadFavorites());
     updateHistory(loadHistory());
     generate();
+    // the generator works without storage, but names, history and settings would be lost on leaving: say so
+    if (!storageAvailable()) {
+        showNotice("Your browser is blocking site storage, so saved names, history and settings won't be kept.", {
+            label: "OK",
+            onClick: () => {}
+        });
+    }
 }
 
 start();

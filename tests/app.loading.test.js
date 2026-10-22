@@ -32,6 +32,24 @@ describe("loading the name lists", () => {
         expect($("notice").hidden).toBe(true);
     });
 
+    it("still makes names, and says so, when the browser blocks storage", async () => {
+        const blocked = () => {
+            throw new DOMException("blocked", "SecurityError");
+        };
+        // clear is called by the shared test setup, which is not what is being blocked here
+        vi.stubGlobal("localStorage", { getItem: blocked, setItem: blocked, removeItem: blocked, clear: () => {} });
+        await startPage(async (path) => ({ ok: true, json: async () => fromDisk(path) }));
+        await vi.waitFor(() => expect($("nameText").textContent).not.toBe(""));
+        expect($("notice").hidden).toBe(false);
+        expect($("notice").textContent).toContain("blocking site storage");
+    });
+
+    it("stays quiet about storage when the browser allows it", async () => {
+        await startPage(async (path) => ({ ok: true, json: async () => fromDisk(path) }));
+        await vi.waitFor(() => expect($("nameText").textContent).not.toBe(""));
+        expect($("notice").hidden).toBe(true);
+    });
+
     it("tells the person how to refresh when the lists still cannot be loaded", async () => {
         await startPage(async () => ({ ok: false, status: 404 }));
         await vi.waitFor(() => expect($("notice").hidden).toBe(false));

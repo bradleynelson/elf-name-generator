@@ -1,5 +1,20 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [4.0.6] - 2026-10-22
+
+### Added
+
+- A notice when the browser is blocking site storage, so people know saved names, history and settings won't be kept.
+
+### Changed
+
+- The analytics banner goes back to its plain, descriptive names (cookie-banner), per the project's naming conventions. Brave and Firefox may still hide it with their own content blocking; nothing on the site depends on it.
+
 ## [4.0.5] - 2026-10-22
 
 ### Changed
@@ -9,11 +24,6 @@
 - If the name lists fail to load, the page retries once without the browser cache, and the error message now says to press Ctrl+F5 and has a Reload button.
 - The Lato font is now hosted with the site instead of loaded from Google Fonts, which removes a delay before the page draws (notably in Firefox) and a request to a third party.
 - The analytics banner is renamed so Brave and Firefox content blocking no longer hides it.
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [4.0.4] - 2026-10-22
 

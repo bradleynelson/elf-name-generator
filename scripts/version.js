@@ -91,8 +91,8 @@ try {
 
     const newEntry = `## [${newVersion}] - ${dateStringFull}\n\n### Changed\n- Version bump\n\n`;
 
-    // Insert after the "# Changelog" header
-    changelogContent = changelogContent.replace(/(# Changelog\n\n)/, `$1${newEntry}`);
+    // Insert above the newest existing entry, so the intro paragraph stays under the "# Changelog" header
+    changelogContent = changelogContent.replace(/^## \[/m, `${newEntry}## [`);
 
     writeFileSync(changelogPath, changelogContent, "utf-8");
     console.log(`✓ Updated CHANGELOG.md`);

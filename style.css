@@ -462,7 +462,7 @@ a:focus-visible {
 /* --- Bronze buttons (icon buttons, panel actions, cookie choices) fill with bronze on hover; :where keeps the
    delete and saved-bookmark fills below stronger --- */
 .icon-button:hover,
-:where(.panel-header, .privacy-bar) button:hover {
+:where(.panel-header, .cookie-banner) button:hover {
     color: var(--color-surface);
     background: var(--color-bronze);
     border-color: var(--color-bronze);
@@ -1057,7 +1057,7 @@ a:focus-visible {
     padding: 0.15rem 0.6rem;
     font-weight: 700;
 }
-.privacy-bar {
+.cookie-banner {
     position: fixed;
     inset: auto 0 0;
     display: flex;
@@ -1069,19 +1069,19 @@ a:focus-visible {
     background: var(--color-surface);
     border-top: 1px solid var(--color-border);
 }
-.privacy-bar p {
+.cookie-banner p {
     margin: 0;
 }
-:where(.privacy-bar) button {
+:where(.cookie-banner) button {
     color: var(--color-bronze);
 }
 /* Accept is the one filled button: solid bronze with the surface colour as its lettering */
-.privacy-bar .privacy-bar-accept {
+.cookie-banner .cookie-banner-accept {
     color: var(--color-surface);
     background: var(--color-bronze);
     border-color: var(--color-bronze);
 }
-.privacy-bar .privacy-bar-accept:hover {
+.cookie-banner .cookie-banner-accept:hover {
     color: var(--color-surface);
     background: color-mix(in srgb, var(--color-bronze), var(--color-text) 25%);
 }

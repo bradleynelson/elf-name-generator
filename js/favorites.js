@@ -4,6 +4,18 @@ const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";
 const SETTING_PREFIX = "faerunNameSetting.";
 
+/** False when the browser blocks storage (private window, strict privacy settings, "block all site data"). */
+export function storageAvailable() {
+    try {
+        const key = "faerunNameStorageCheck";
+        localStorage.setItem(key, "1");
+        localStorage.removeItem(key);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 /** A remembered choice (such as Expanded Variety); the fallback when none is stored or storage is unavailable. */
 export function loadSetting(name, fallback) {
     try {
