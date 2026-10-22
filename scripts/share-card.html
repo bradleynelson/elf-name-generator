@@ -1,0 +1,117 @@
+<!doctype html>
+<!--
+    The link-preview image (share-card.png, 1200x630) shown when the site is shared on Reddit, Discord, Facebook or X.
+    Not published. To regenerate, from the repository folder:
+    msedge --headless=new --hide-scrollbars --window-size=1200,630 --screenshot=share-card.png scripts/share-card.html
+-->
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <style>
+            @font-face {
+                font-family: "Dalelands Uncial";
+                src: url("../fonts/dalelands-uncial.otf");
+            }
+            @font-face {
+                font-family: "Espruar";
+                src: url("../fonts/espruar.otf");
+            }
+            body {
+                margin: 0;
+                width: 1200px;
+                height: 630px;
+                background: #1c1b1a;
+                color: #f1efe8;
+                font-family: "Segoe UI", system-ui, sans-serif;
+                display: grid;
+                place-items: center;
+            }
+            .card {
+                box-sizing: border-box;
+                width: 1120px;
+                height: 550px;
+                background: #262423;
+                border: 2px solid color-mix(in srgb, #b4926b 60%, #262423);
+                box-shadow:
+                    inset 0 0 0 10px #262423,
+                    inset 0 0 0 12px color-mix(in srgb, #b4926b 30%, transparent);
+                border-radius: 24px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 22px;
+                text-align: center;
+            }
+            h1 {
+                margin: 0;
+                font:
+                    400 68px "Dalelands Uncial",
+                    serif;
+                color: #b4926b;
+                text-shadow: 0 2px 0 rgb(0 0 0 / 0.35);
+            }
+            .tagline {
+                margin: 0;
+                font-size: 30px;
+                color: #b4b2a9;
+            }
+            .name {
+                display: flex;
+                gap: 36px;
+                margin-top: 18px;
+            }
+            .word {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+            }
+            .meaning {
+                font-size: 22px;
+                color: #b4b2a9;
+            }
+            .text {
+                font:
+                    400 68px "Dalelands Uncial",
+                    serif;
+                border-bottom: 3px solid color-mix(in srgb, #b4926b 60%, #262423);
+                padding: 0 6px;
+            }
+            .script {
+                margin: 0;
+                font:
+                    400 44px "Espruar",
+                    serif;
+                color: #b4926b;
+            }
+            .gem {
+                margin-top: 6px;
+                padding: 14px 52px;
+                border-radius: 12px;
+                border: 2px solid #5e0a1f;
+                outline: 6px solid #b4926b;
+                font-size: 28px;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                color: #fff6f2;
+                background: radial-gradient(ellipse at 50% 48%, #d42c4d 0%, #c2183c 46%, #5e0a1f 100%);
+                box-shadow: 0 0 30px rgb(255 77 109 / 0.35);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <h1>Faerûn Name Generator</h1>
+            <p class="tagline">Elf and drow names from the Forgotten Realms, with what each part means</p>
+            <div class="name">
+                <div class="word"><span class="meaning">Deep · Wing</span><span class="text">Nimethil</span></div>
+                <div class="word">
+                    <span class="meaning">Dragon · Summer · Walker</span><span class="text">Karori</span>
+                </div>
+            </div>
+            <p class="script">Nimethil Karori</p>
+            <div class="gem">Roll Name</div>
+        </div>
+    </body>
+</html>
