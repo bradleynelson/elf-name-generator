@@ -58,7 +58,8 @@ function listFiles(root, relative = "") {
 function checkReferences(root, files) {
     const approved = new Set(files);
     function checkReference(from, reference, documentRelative = false) {
-        if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(reference)) return;
+        // decoded first: inside an inline SVG data URI a fragment reference is written %23id
+        if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(decodeURIComponent(reference))) return;
         const clean = decodeURIComponent(reference.split(/[?#]/)[0]);
         const target = path.posix.normalize(
             clean.startsWith("/")
