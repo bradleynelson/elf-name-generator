@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - A clearer search description of what the generator does.
+- The Roll Name gem is now cut like a cushion stone: a flat face ringed by bevelled facets.
 
 ## [4.0.2] - 2026-10-22
 
