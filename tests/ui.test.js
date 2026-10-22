@@ -89,7 +89,12 @@ describe("renderResult", () => {
 
     it("says a name cut from published names has no known meaning, and shows the books its parts come from", () => {
         renderResult(elf, new Set(["t1"]), handlers);
-        expect(wordMeanings()).toEqual(["Meaning unknown", ""]);
+        // the published family name has no translation either, but it is not a split component, so it is not gold
+        expect(wordMeanings()).toEqual(["Meaning unknown", "Meaning unknown"]);
+        const gold = [...document.querySelectorAll(".name-word-unknown")].map(
+            (u) => u.closest(".name-word").textContent
+        );
+        expect(gold).toEqual([expect.stringContaining("Alra")]);
         expect(document.getElementById("nameSourcesSummary").textContent).toBe("Where this name comes from");
         expect(rows()).toEqual([
             ["Prefix", "al- from Alarra (Cormanthyr)"],
