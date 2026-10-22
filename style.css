@@ -486,8 +486,8 @@ a:focus-visible {
 /* --- The generate button: a selu'kiira, an elven lore gem. Sourced (Cormanthyr: Empire of the Elves, p. 152): a
    rainbow tourmaline that turns brilliant red at its fullest, after more than 3,000 years of stored knowledge. Chosen:
    a vivid crimson with its own colours, kept apart from the brick red of delete buttons. Facets and engraved lettering
-   at rest, a sheen of light sweeping across every few seconds, and on hover or keyboard focus a crimson glow that
-   pulses around the stone. --- */
+   at rest, a sheen of light sweeping across every few seconds while idle, and on hover or keyboard focus a steady
+   crimson glow with motes of light rising off the stone. --- */
 .generate {
     /* the same stone in both themes; the lettering is 6:1 on its face */
     --gem: #c2183c;
@@ -595,30 +595,30 @@ a:focus-visible {
     box-shadow:
         inset 0 0 22px color-mix(in srgb, var(--gem-light) 33%, transparent),
         inset 0 1px 0 var(--gem-highlight),
-        0 0 16px color-mix(in srgb, var(--gem-light) 35%, transparent),
-        0 0 32px color-mix(in srgb, var(--gem) 20%, transparent);
+        0 0 20px color-mix(in srgb, var(--gem-light) 45%, transparent),
+        0 0 40px color-mix(in srgb, var(--gem) 25%, transparent);
 }
 /* the motes: specks of light that rise off the stone and fade while it is lit, each on its own path and timing so
    no rows or waves form (decorative; hidden from assistive technology) */
-/* in front of the stone's halo, which would wash them out; they start at its edge and travel away from the lettering */
+/* behind the stone's halo, which softens them into a faint shimmer of energy */
 .generate-motes {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
 }
 .generate-motes > span {
     position: absolute;
     left: var(--x);
     top: var(--y, 0%);
-    width: calc(var(--s) * 1.5);
-    height: calc(var(--s) * 1.5);
+    width: var(--s);
+    height: var(--s);
     border-radius: 50%;
     background: var(--gem-light);
     box-shadow: 0 0 5px color-mix(in srgb, var(--gem-light) 70%, transparent);
     opacity: 0;
 }
-.generate-motes > span:nth-child(odd) {
+.generate-motes > span:nth-child(4n) {
     background: var(--gem-highlight);
 }
 .generate:has(.generate-button:is(:hover, :focus-visible)) .generate-motes > span {
@@ -630,8 +630,7 @@ a:focus-visible {
         translate: 0 0;
         scale: 1;
     }
-    15%,
-    55% {
+    15% {
         opacity: var(--a);
     }
     100% {
@@ -830,7 +829,7 @@ a:focus-visible {
         inset 0 2px 10px color-mix(in srgb, var(--gem-dark) 67%, transparent),
         inset 0 0 22px color-mix(in srgb, var(--gem-light) 19%, transparent);
 }
-/* the sheen: a band of light that sweeps across the stone every few seconds, and at once when the stone is lit */
+/* the sheen: a band of light that sweeps across the idle stone every few seconds */
 .generate-sheen {
     position: absolute;
     inset: 0 auto 0 -60%;
@@ -845,8 +844,9 @@ a:focus-visible {
     );
     animation: generate-sheen 6s ease-in-out 1.5s infinite;
 }
+/* only while idle: none while the stone is lit, and the cycle starts again after the pointer leaves */
 .generate-button:is(:hover, :focus-visible) .generate-sheen {
-    animation: generate-sheen-once 0.7s ease-out;
+    animation: none;
 }
 /* sweep across in the first 12%, then rest */
 @keyframes generate-sheen {
@@ -858,14 +858,7 @@ a:focus-visible {
         translate: 340%;
     }
 }
-@keyframes generate-sheen-once {
-    from {
-        translate: 0;
-    }
-    to {
-        translate: 340%;
-    }
-} /* white lettering cut into the stone: a fine dark edge, and the filter's shadow inside the letters */
+/* white lettering cut into the stone: a fine dark edge, and the filter's shadow inside the letters */
 .generate-button-text {
     position: relative;
     display: block;
