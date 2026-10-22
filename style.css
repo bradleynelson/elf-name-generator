@@ -487,7 +487,7 @@ a:focus-visible {
    rainbow tourmaline that turns brilliant red at its fullest, after more than 3,000 years of stored knowledge. Chosen:
    a vivid crimson with its own colours, kept apart from the brick red of delete buttons. Facets and engraved lettering
    at rest, a sheen of light sweeping across every few seconds, and on hover or keyboard focus a slow charge: the stone
-   lights in its setting and rays of power spread from behind it. --- */
+   lights in its setting and a crimson glow pulses around it. --- */
 @property --generate-charge {
     syntax: "<number>";
     inherits: true;
@@ -633,8 +633,19 @@ a:focus-visible {
     box-shadow:
         inset 0 0 22px color-mix(in srgb, var(--gem-light) 33%, transparent),
         inset 0 1px 0 var(--gem-highlight),
-        0 0 8px color-mix(in srgb, var(--gem-light) 20%, transparent),
-        0 0 18px color-mix(in srgb, var(--gem) 9%, transparent);
+        0 0 20px color-mix(in srgb, var(--gem-light) 50%, transparent),
+        0 0 40px color-mix(in srgb, var(--gem) 30%, transparent);
+    animation: generate-glow 3s ease-in-out infinite;
+}
+/* the glow breathes: wider and brighter at the middle of each cycle */
+@keyframes generate-glow {
+    50% {
+        box-shadow:
+            inset 0 0 22px color-mix(in srgb, var(--gem-light) 33%, transparent),
+            inset 0 1px 0 var(--gem-highlight),
+            0 0 30px color-mix(in srgb, var(--gem-light) 60%, transparent),
+            0 0 60px color-mix(in srgb, var(--gem) 40%, transparent);
+    }
 }
 .generate-button:is(:hover, :focus-visible)::after {
     opacity: 1;
@@ -690,45 +701,14 @@ a:focus-visible {
     paint-order: stroke fill;
     filter: url(#generate-engraving);
 }
-/* the power: rays of light that spread from behind the setting and turn slowly while the stone is lit */
-.generate-rays {
-    position: absolute;
-    inset: -3.5rem -4.5rem;
-    z-index: -3;
-    pointer-events: none;
-    background:
-        repeating-conic-gradient(
-            from 0deg,
-            color-mix(in srgb, var(--gem-light) 80%, transparent) 0deg 3deg,
-            transparent 3deg 17deg
-        ),
-        repeating-conic-gradient(
-            from 7deg,
-            color-mix(in srgb, var(--gem-highlight) 60%, transparent) 0deg 1.5deg,
-            transparent 1.5deg 23deg
-        );
-    mask: radial-gradient(closest-side, black 25%, transparent 100%);
-    filter: blur(1px);
-    opacity: var(--generate-charge);
-    scale: calc(0.75 + 0.25 * var(--generate-charge));
-}
-.generate:has(.generate-button:is(:hover, :focus-visible)) .generate-rays {
-    animation: generate-rays 24s linear infinite;
-}
-@keyframes generate-rays {
-    to {
-        rotate: 1turn;
-    }
-}
-/* without motion: no sheen, and the rays appear without turning */
+/* without motion: no sheen, and the glow holds steady instead of pulsing */
 @media (prefers-reduced-motion: reduce) {
     .generate,
     .generate-button,
     .generate-button::after {
         transition: none;
     }
-    .generate .generate-sheen,
-    .generate .generate-rays {
+    .generate .generate-button {
         animation: none;
     }
     .generate-sheen {
@@ -744,8 +724,7 @@ a:focus-visible {
     }
     .generate-button::before,
     .generate-button::after,
-    .generate-sheen,
-    .generate-rays {
+    .generate-sheen {
         display: none;
     }
     .generate-button-text {
