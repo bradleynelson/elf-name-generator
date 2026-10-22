@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2026-10-21
+
+### Changed
+
+- Roll Name is now a selu'kiira, the elven lore gem: a sheen of light passes over it while idle, and on hover it glows
+  with motes of light rising off the stone.
+- Elvish family names and drow houses with no published meaning now say "Meaning unknown".
+- The footer is set apart as its own band, and links are easier to read in both light and dark mode.
+
 ## [4.0.0] - 2026-10-21
 
 A ground-up rebuild of the generator, focused on elves and drow and grounded in the naming systems published for them.
