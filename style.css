@@ -595,19 +595,235 @@ a:focus-visible {
     box-shadow:
         inset 0 0 22px color-mix(in srgb, var(--gem-light) 33%, transparent),
         inset 0 1px 0 var(--gem-highlight),
-        0 0 20px color-mix(in srgb, var(--gem-light) 50%, transparent),
-        0 0 40px color-mix(in srgb, var(--gem) 30%, transparent);
-    animation: generate-glow 3s ease-in-out infinite;
+        0 0 16px color-mix(in srgb, var(--gem-light) 35%, transparent),
+        0 0 32px color-mix(in srgb, var(--gem) 20%, transparent);
 }
-/* the glow breathes: wider and brighter at the middle of each cycle */
-@keyframes generate-glow {
-    50% {
-        box-shadow:
-            inset 0 0 22px color-mix(in srgb, var(--gem-light) 33%, transparent),
-            inset 0 1px 0 var(--gem-highlight),
-            0 0 30px color-mix(in srgb, var(--gem-light) 60%, transparent),
-            0 0 60px color-mix(in srgb, var(--gem) 40%, transparent);
+/* the motes: specks of light that rise off the stone and fade while it is lit, each on its own path and timing so
+   no rows or waves form (decorative; hidden from assistive technology) */
+/* in front of the stone's halo, which would wash them out; they start at its edge and travel away from the lettering */
+.generate-motes {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+.generate-motes > span {
+    position: absolute;
+    left: var(--x);
+    top: var(--y, 0%);
+    width: calc(var(--s) * 1.5);
+    height: calc(var(--s) * 1.5);
+    border-radius: 50%;
+    background: var(--gem-light);
+    box-shadow: 0 0 5px color-mix(in srgb, var(--gem-light) 70%, transparent);
+    opacity: 0;
+}
+.generate-motes > span:nth-child(odd) {
+    background: var(--gem-highlight);
+}
+.generate:has(.generate-button:is(:hover, :focus-visible)) .generate-motes > span {
+    animation: generate-mote var(--d) cubic-bezier(0.2, 0.6, 0.4, 1) var(--delay) infinite;
+}
+@keyframes generate-mote {
+    0% {
+        opacity: 0;
+        translate: 0 0;
+        scale: 1;
     }
+    15%,
+    55% {
+        opacity: var(--a);
+    }
+    100% {
+        opacity: 0;
+        translate: var(--dx) var(--dy);
+        scale: 0.2;
+    }
+}
+/* x, y: where it starts on the stone; s: size; dx, dy: its drift; d: duration; delay: offset; a: brightness */
+.generate-motes > span:nth-child(1) {
+    --x: 8%;
+    --s: 3px;
+    --dx: -6px;
+    --dy: -34px;
+    --d: 2.2s;
+    --delay: -0.3s;
+    --a: 0.8;
+}
+.generate-motes > span:nth-child(2) {
+    --x: 18%;
+    --s: 2px;
+    --dx: 4px;
+    --dy: -42px;
+    --d: 2.8s;
+    --delay: -1.9s;
+    --a: 0.6;
+}
+.generate-motes > span:nth-child(3) {
+    --x: 27%;
+    --s: 4px;
+    --dx: -3px;
+    --dy: -28px;
+    --d: 1.8s;
+    --delay: -1.1s;
+    --a: 0.9;
+}
+.generate-motes > span:nth-child(4) {
+    --x: 35%;
+    --s: 2.5px;
+    --dx: 6px;
+    --dy: -40px;
+    --d: 2.6s;
+    --delay: -2.4s;
+    --a: 0.7;
+}
+.generate-motes > span:nth-child(5) {
+    --x: 44%;
+    --s: 3.5px;
+    --dx: -5px;
+    --dy: -36px;
+    --d: 2.1s;
+    --delay: -0.7s;
+    --a: 0.85;
+}
+.generate-motes > span:nth-child(6) {
+    --x: 52%;
+    --s: 2px;
+    --dx: 2px;
+    --dy: -30px;
+    --d: 1.6s;
+    --delay: -1.5s;
+    --a: 0.6;
+}
+.generate-motes > span:nth-child(7) {
+    --x: 60%;
+    --s: 3px;
+    --dx: -7px;
+    --dy: -40px;
+    --d: 2.9s;
+    --delay: -0.2s;
+    --a: 0.75;
+}
+.generate-motes > span:nth-child(8) {
+    --x: 68%;
+    --s: 4px;
+    --dx: 5px;
+    --dy: -32px;
+    --d: 2s;
+    --delay: -2.7s;
+    --a: 0.9;
+}
+.generate-motes > span:nth-child(9) {
+    --x: 76%;
+    --s: 2.5px;
+    --dx: -2px;
+    --dy: -38px;
+    --d: 2.4s;
+    --delay: -1.3s;
+    --a: 0.65;
+}
+.generate-motes > span:nth-child(10) {
+    --x: 84%;
+    --s: 3px;
+    --dx: 7px;
+    --dy: -36px;
+    --d: 1.9s;
+    --delay: -0.9s;
+    --a: 0.8;
+}
+.generate-motes > span:nth-child(11) {
+    --x: 92%;
+    --s: 2px;
+    --dx: 3px;
+    --dy: -26px;
+    --d: 1.7s;
+    --delay: -2.2s;
+    --a: 0.7;
+}
+.generate-motes > span:nth-child(12) {
+    --x: 13%;
+    --s: 2px;
+    --dx: -4px;
+    --dy: -22px;
+    --d: 1.5s;
+    --delay: -0.5s;
+    --a: 0.55;
+}
+.generate-motes > span:nth-child(13) {
+    --x: 48%;
+    --s: 2px;
+    --dx: -1px;
+    --dy: -42px;
+    --d: 3s;
+    --delay: -2.9s;
+    --a: 0.5;
+}
+.generate-motes > span:nth-child(14) {
+    --x: 72%;
+    --s: 3px;
+    --dx: -6px;
+    --dy: -24px;
+    --d: 1.6s;
+    --delay: -1.7s;
+    --a: 0.75;
+}
+.generate-motes > span:nth-child(15) {
+    --x: 31%;
+    --s: 3px;
+    --dx: 8px;
+    --dy: -35px;
+    --d: 2.3s;
+    --delay: -2s;
+    --a: 0.6;
+}
+.generate-motes > span:nth-child(16) {
+    --x: 0%;
+    --y: 35%;
+    --s: 2.5px;
+    --dx: -18px;
+    --dy: -16px;
+    --d: 2s;
+    --delay: -0.8s;
+    --a: 0.7;
+}
+.generate-motes > span:nth-child(17) {
+    --x: 0%;
+    --y: 65%;
+    --s: 2px;
+    --dx: -14px;
+    --dy: -8px;
+    --d: 1.7s;
+    --delay: -2.3s;
+    --a: 0.6;
+}
+.generate-motes > span:nth-child(18) {
+    --x: 100%;
+    --y: 40%;
+    --s: 3px;
+    --dx: 18px;
+    --dy: -14px;
+    --d: 2.2s;
+    --delay: -1.4s;
+    --a: 0.75;
+}
+.generate-motes > span:nth-child(19) {
+    --x: 100%;
+    --y: 70%;
+    --s: 2px;
+    --dx: 12px;
+    --dy: -6px;
+    --d: 1.6s;
+    --delay: -0.4s;
+    --a: 0.6;
+}
+.generate-motes > span:nth-child(20) {
+    --x: 56%;
+    --s: 3px;
+    --dx: 4px;
+    --dy: -20px;
+    --d: 1.4s;
+    --delay: -2.6s;
+    --a: 0.8;
 }
 .generate-button:active {
     box-shadow:
@@ -659,15 +875,13 @@ a:focus-visible {
     paint-order: stroke fill;
     filter: url(#generate-engraving);
 }
-/* without motion: no sheen, and the glow holds steady instead of pulsing */
+/* without motion: no sheen and no motes; the glow alone shows the stone is lit */
 @media (prefers-reduced-motion: reduce) {
     .generate-button {
         transition: none;
     }
-    .generate .generate-button {
-        animation: none;
-    }
-    .generate-sheen {
+    .generate-sheen,
+    .generate-motes {
         display: none;
     }
 }
@@ -679,7 +893,8 @@ a:focus-visible {
         box-shadow: none;
     }
     .generate-button::before,
-    .generate-sheen {
+    .generate-sheen,
+    .generate-motes {
         display: none;
     }
     .generate-button-text {
