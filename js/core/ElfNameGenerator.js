@@ -332,6 +332,8 @@ const publishedFamilyPart = (f) =>
         role: "family name",
         text: f.text,
         method: "published",
+        // "elvish" or "common" (already English, like Morninglight)
+        form: f.form,
         source: f.source,
         // Sourced: a translation published with the name (PHB: Galanodel = Moonwhisper); other names have none
         ...(f.translation ? { meaning: f.translation.text, meaningSource: f.translation.title } : {}),

@@ -103,6 +103,21 @@ describe("renderResult", () => {
         ]);
         const lock = document.querySelector('[data-key="t1"] .name-part-lock');
         expect(lock.getAttribute("aria-pressed")).toBe("true");
+        // a published family name already in English needs no meaning
+        const english = {
+            key: "family",
+            role: "family name",
+            text: "Morninglight",
+            method: "published",
+            form: "common",
+            source: { title: "Lost Empires of Faerun" }
+        };
+        renderResult(
+            { ...elf, name: "Alra Morninglight", parts: [...elf.parts.slice(0, 2), english] },
+            new Set(),
+            handlers
+        );
+        expect(wordMeanings()).toEqual(["Meaning unknown", ""]);
     });
 
     it("notes a published match in the breakdown, labelling names known only from Ed Greenwood", () => {

@@ -71,15 +71,17 @@ const firstGloss = (meaning) => meaning.split(", ")[0];
  * The meaning shown above one word, as segments ({ text, unknown?, split? }). Kinds stay distinct: a book's translation
  * ("Moonwhisper"), meanings built from published naming tables ("Age · Gift · Fair"; a drow house reads as one
  * phrase), split components (Expanded Variety), whose meaning is unknown: "Unknown" for one component, "Meaning
- * unknown" when every component is; and published family or house names without a translation, "Meaning unknown".
- * Common-form family names show none.
+ * unknown" when every component is; and published Elvish family names or drow houses without a translation, "Meaning
+ * unknown". Family names already in English (Morninglight, or built from Common words) show none.
  */
 function wordMeaning(parts) {
     const phrase = parts.find((p) => p.wordMeaning);
     if (phrase) return [{ text: phrase.wordMeaning }];
     const translated = parts.find((p) => p.meaningSource);
     if (translated) return [{ text: translated.meaning }];
-    if (parts.some((p) => p.method === "published")) return [{ text: "Meaning unknown", unknown: true }];
+    if (parts.some((p) => p.method === "published" && p.form !== "common")) {
+        return [{ text: "Meaning unknown", unknown: true }];
+    }
     const components = parts.filter((p) => TABLE_ROLES.has(p.role));
     if (components.length) {
         if (components.every((p) => p.method === "split"))
