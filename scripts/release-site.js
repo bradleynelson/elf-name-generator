@@ -1,7 +1,7 @@
-import { createHash } from "node:crypto";
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { stampText, stampedFiles, stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 
@@ -84,42 +84,36 @@ function checkReferences(root, files) {
                 checkReference(file, match[1]);
             }
             // The current loader resolves literal data paths relative to index.html.
-            for (const match of text.matchAll(/["'](data\/[^"']+\.json)["']/g)) checkReference(file, match[1], true);
+            for (const match of text.matchAll(/["'](data\/[^"'?]+\.json)(?:\?[^"']*)?["']/g)) {
+                checkReference(file, match[1], true);
+            }
         }
     }
 }
 
-// The released copy of a file. Every local script, stylesheet and data reference gets ?v=<hash of all site code and
-// data>, so a browser holding an older cached file never pairs it with newer ones: the URLs change with each release.
-function releaseVersion(root, files) {
-    const hash = createHash("sha256");
-    for (const file of files.filter((name) => /\.(?:html|css|js|json)$/.test(name))) {
-        hash.update(file).update(readFileSync(path.join(root, file)));
+// The site is served from the source files, so they must carry the version stamps (scripts/stamp-version.js, run by
+// scripts/version.js): every local script, stylesheet and data reference ends in the same ?v=<version>, which is the
+// package version. A release with a missing or mismatched stamp could let a browser mix old cached files with new ones.
+function checkVersionStamps(root) {
+    const version = stampedVersion(root);
+    if (!version) throw new Error("Version stamps are missing from index.html; run node scripts/stamp-version.js.");
+    for (const file of stampedFiles(root)) {
+        const text = readFileSync(path.join(root, file), "utf8");
+        if (stampText(file, text, version) !== text) {
+            throw new Error(`Version stamp missing or not ${version} in ${file}; run node scripts/stamp-version.js.`);
+        }
     }
-    return hash.digest("hex").slice(0, 10);
-}
-
-function releaseContent(root, file, version) {
-    const bytes = readFileSync(path.join(root, file));
-    // each pattern captures the opening text and the path; the version goes right after the path
-    const stamp = (text, pattern) => text.replace(pattern, `$1$2?v=${version}`);
-    if (file.endsWith(".html")) {
-        return stamp(
-            bytes.toString("utf8"),
-            /(\b(?:href|src)\s*=\s*["'])((?:[\w-]+\/)*[\w-]+\.(?:js|css|json))(?=["'])/gi
-        );
+    const packagePath = path.join(root, "package.json");
+    if (existsSync(packagePath) && JSON.parse(readFileSync(packagePath, "utf8")).version !== version) {
+        throw new Error(`Version stamps (${version}) do not match package.json; run node scripts/stamp-version.js.`);
     }
-    if (file.endsWith(".js")) {
-        const text = stamp(bytes.toString("utf8"), /(\bfrom\s*["'])(\.{1,2}\/[\w./-]+\.js)(?=["'])/g);
-        return stamp(text, /(["'])(data\/[\w-]+\.json)(?=["'])/g);
-    }
-    return bytes;
 }
 
 export function buildSite(root = repositoryRoot) {
     const files = readManifest(root);
     for (const file of files) assertRegularPath(root, file);
     checkReferences(root, files);
+    checkVersionStamps(root);
     const output = path.join(root, "dist");
     if (existsSync(output)) {
         if (lstatSync(output).isSymbolicLink() || !lstatSync(output).isDirectory()) {
@@ -130,10 +124,9 @@ export function buildSite(root = repositoryRoot) {
         if (extra.length)
             throw new Error(`Unexpected release files; inspect them before rebuilding: ${extra.join(", ")}`);
     } else mkdirSync(output);
-    const version = releaseVersion(root, files);
     for (const file of files) {
         mkdirSync(path.dirname(path.join(output, file)), { recursive: true });
-        writeFileSync(path.join(output, file), releaseContent(root, file, version));
+        copyFileSync(path.join(root, file), path.join(output, file));
     }
     writeFileSync(path.join(output, ".nojekyll"), "");
     verifySite(root);
@@ -150,11 +143,11 @@ export function verifySite(root = repositoryRoot) {
     if (JSON.stringify(listFiles(output)) !== JSON.stringify(expected)) {
         throw new Error("Release folder contains missing or unapproved files.");
     }
-    const version = releaseVersion(root, files);
+    checkVersionStamps(root);
     for (const file of files) {
         assertRegularPath(root, file);
         assertRegularPath(output, file);
-        if (!Buffer.from(releaseContent(root, file, version)).equals(readFileSync(path.join(output, file)))) {
+        if (!readFileSync(path.join(root, file)).equals(readFileSync(path.join(output, file)))) {
             throw new Error(`Release copy differs from source: ${file}`);
         }
         if (file.endsWith(".json")) JSON.parse(readFileSync(path.join(output, file), "utf8"));

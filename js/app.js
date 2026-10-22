@@ -1,7 +1,7 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.0.6";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.0.6";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.0.6";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -11,8 +11,9 @@ import {
     removeFavorite,
     restoreFavorite,
     saveHistory,
-    saveSetting
-} from "./favorites.js";
+    saveSetting,
+    storageAvailable
+} from "./favorites.js?v=4.0.6";
 import {
     focusPart,
     openPartPicker,
@@ -22,7 +23,7 @@ import {
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js";
+} from "./ui.js?v=4.0.6";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
@@ -311,16 +312,16 @@ async function start() {
     window.addEventListener("error", (event) => reportError(event.error || event.message));
     window.addEventListener("unhandledrejection", (event) => reportError(event.reason));
     setUpConsent({
-        banner: $("privacyBar"),
-        accept: $("privacyAccept"),
-        decline: $("privacyDecline"),
+        banner: $("cookieBanner"),
+        accept: $("cookieAccept"),
+        decline: $("cookieDecline"),
         dialog: $("privacyDialog"),
         links: document.querySelectorAll(".privacy-link")
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json"),
-            loadJson("data/drowNames.json")
+            loadJson("data/elfNames.json?v=4.0.6"),
+            loadJson("data/drowNames.json?v=4.0.6")
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {
@@ -336,6 +337,13 @@ async function start() {
     updateFavorites(() => loadFavorites());
     updateHistory(loadHistory());
     generate();
+    // the generator works without storage, but names, history and settings would be lost on leaving: say so
+    if (!storageAvailable()) {
+        showNotice("Your browser is blocking site storage, so saved names, history and settings won't be kept.", {
+            label: "OK",
+            onClick: () => {}
+        });
+    }
 }
 
 start();

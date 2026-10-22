@@ -9,8 +9,8 @@
 // tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
 // are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
 // the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js";
+import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.0.6";
+import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.0.6";
 
 const MAX_ATTEMPTS = 300;
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep

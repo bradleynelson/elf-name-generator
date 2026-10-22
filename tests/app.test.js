@@ -22,7 +22,8 @@ beforeEach(async () => {
     }));
     vi.stubGlobal("fetch", async (path) => ({
         ok: true,
-        json: async () => JSON.parse(readFileSync(join(process.cwd(), path), "utf-8"))
+        // like a server, ignore the ?v= version stamp on the URL
+        json: async () => JSON.parse(readFileSync(join(process.cwd(), path.split("?")[0]), "utf-8"))
     }));
     // jsdom does not implement modal dialogs or scrolling
     HTMLDialogElement.prototype.showModal ??= function showModal() {
