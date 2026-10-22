@@ -29,10 +29,17 @@ const LIST_SIZE = 10;
 const HISTORY_SIZE = 10;
 const state = { generator: null, result: null, locked: new Set(), favorites: [], history: [] };
 
+// A failed or unreadable copy (often a stale cached file) is retried once, bypassing the browser cache.
 async function loadJson(path) {
-    const response = await fetch(path);
-    if (!response.ok) throw new Error(`Could not load ${path} (${response.status})`);
-    return response.json();
+    for (const cache of ["default", "reload"]) {
+        try {
+            const response = await fetch(path, { cache });
+            if (response.ok) return await response.json();
+        } catch {
+            /* retried below, then reported */
+        }
+    }
+    throw new Error(`Could not load ${path}`);
 }
 
 function options() {
@@ -304,9 +311,9 @@ async function start() {
     window.addEventListener("error", (event) => reportError(event.error || event.message));
     window.addEventListener("unhandledrejection", (event) => reportError(event.reason));
     setUpConsent({
-        banner: $("cookieBanner"),
-        accept: $("cookieAccept"),
-        decline: $("cookieDecline"),
+        banner: $("privacyBar"),
+        accept: $("privacyAccept"),
+        decline: $("privacyDecline"),
         dialog: $("privacyDialog"),
         links: document.querySelectorAll(".privacy-link")
     });
@@ -317,7 +324,11 @@ async function start() {
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {
-        showNotice("The name lists could not be loaded. Please refresh the page.");
+        // a stale cached copy of the site is the usual cause; a hard refresh (Ctrl+F5) bypasses the cache, Reload does not
+        showNotice("The name lists could not be loaded. Please refresh with Ctrl+F5 (Cmd+Shift+R on a Mac).", {
+            label: "Reload",
+            onClick: () => location.reload()
+        });
         reportError(error);
         return;
     }

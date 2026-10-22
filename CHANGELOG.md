@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.0.5] - 2026-10-22
+
+### Changed
+
+- The page starts downloading its scripts and name lists straight away, so it loads faster on a first visit.
+- Release builds add a version to every script, stylesheet and data link, so a browser with an older cached copy no longer mixes old and new files.
+- If the name lists fail to load, the page retries once without the browser cache, and the error message now says to press Ctrl+F5 and has a Reload button.
+- The Lato font is now hosted with the site instead of loaded from Google Fonts, which removes a delay before the page draws (notably in Firefox) and a request to a third party.
+- The analytics banner is renamed so Brave and Firefox content blocking no longer hides it.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

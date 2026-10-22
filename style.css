@@ -1,4 +1,17 @@
 /* ===== Theme: colours, fonts and spacing, defined once ===== */
+/* Lato (Latin subset), self-hosted: no request to a third party before the page can draw */
+@font-face {
+    font-family: "Lato";
+    font-weight: 400;
+    src: url("fonts/lato-400.woff2") format("woff2");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Lato";
+    font-weight: 700;
+    src: url("fonts/lato-700.woff2") format("woff2");
+    font-display: swap;
+}
 @font-face {
     font-family: "Dalelands Uncial";
     src: url("fonts/dalelands-uncial.otf") format("opentype");
@@ -449,7 +462,7 @@ a:focus-visible {
 /* --- Bronze buttons (icon buttons, panel actions, cookie choices) fill with bronze on hover; :where keeps the
    delete and saved-bookmark fills below stronger --- */
 .icon-button:hover,
-:where(.panel-header, .cookie-banner) button:hover {
+:where(.panel-header, .privacy-bar) button:hover {
     color: var(--color-surface);
     background: var(--color-bronze);
     border-color: var(--color-bronze);
@@ -1044,7 +1057,7 @@ a:focus-visible {
     padding: 0.15rem 0.6rem;
     font-weight: 700;
 }
-.cookie-banner {
+.privacy-bar {
     position: fixed;
     inset: auto 0 0;
     display: flex;
@@ -1056,19 +1069,19 @@ a:focus-visible {
     background: var(--color-surface);
     border-top: 1px solid var(--color-border);
 }
-.cookie-banner p {
+.privacy-bar p {
     margin: 0;
 }
-:where(.cookie-banner) button {
+:where(.privacy-bar) button {
     color: var(--color-bronze);
 }
 /* Accept is the one filled button: solid bronze with the surface colour as its lettering */
-.cookie-banner .cookie-banner-accept {
+.privacy-bar .privacy-bar-accept {
     color: var(--color-surface);
     background: var(--color-bronze);
     border-color: var(--color-bronze);
 }
-.cookie-banner .cookie-banner-accept:hover {
+.privacy-bar .privacy-bar-accept:hover {
     color: var(--color-surface);
     background: color-mix(in srgb, var(--color-bronze), var(--color-text) 25%);
 }
