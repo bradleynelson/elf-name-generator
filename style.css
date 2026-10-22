@@ -18,8 +18,6 @@
 :root {
     --color-page: #1c1b1a;
     --color-footer: #141312;
-    /* links: 4.5:1 or more on the page, surfaces and footer */
-    --color-link: #eb6361;
     --color-surface: #262423;
     --color-raised: #312e2c;
     --color-text: #f1efe8;
@@ -47,7 +45,6 @@
     :root {
         --color-page: #f3e7cf;
         --color-footer: #e9dabb;
-        --color-link: #9b2226;
         --color-surface: #faf1de;
         --color-raised: #efe0c1;
         --color-text: #3a2a1a;
@@ -79,8 +76,10 @@ h2 {
     margin: 0;
 }
 
+/* links are bronze like the rest of the metalwork (red is for the gem and deleting, gold for what is kept); 4.5:1 or
+   more on the page, surfaces and footer in both themes */
 a {
-    color: var(--color-link);
+    color: var(--color-bronze);
 }
 a:hover {
     color: var(--color-text);
