@@ -486,13 +486,8 @@ a:focus-visible {
 /* --- The generate button: a selu'kiira, an elven lore gem. Sourced (Cormanthyr: Empire of the Elves, p. 152): a
    rainbow tourmaline that turns brilliant red at its fullest, after more than 3,000 years of stored knowledge. Chosen:
    a vivid crimson with its own colours, kept apart from the brick red of delete buttons. Facets and engraved lettering
-   at rest, a sheen of light sweeping across every few seconds, and on hover or keyboard focus a slow charge: the stone
-   lights in its setting and a crimson glow pulses around it. --- */
-@property --generate-charge {
-    syntax: "<number>";
-    inherits: true;
-    initial-value: 0;
-}
+   at rest, a sheen of light sweeping across every few seconds, and on hover or keyboard focus a crimson glow that
+   pulses around the stone. --- */
 .generate {
     /* the same stone in both themes; the lettering is 6:1 on its face */
     --gem: #c2183c;
@@ -500,12 +495,9 @@ a:focus-visible {
     --gem-dark: #5e0a1f;
     --gem-text: #fff6f2;
     --gem-highlight: color-mix(in srgb, var(--gem-light), white 80%);
-    --generate-charge: 0;
     grid-column: 2;
     position: relative;
     isolation: isolate;
-    /* the stone stays in its setting; only its light charges */
-    transition: --generate-charge 950ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 /* the setting: a thin aged-bronze rim around the stone with a small prong at each corner */
 .generate::before {
@@ -539,9 +531,6 @@ a:focus-visible {
             color-mix(in srgb, var(--color-bronze), black 35%)
         );
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
-}
-.generate:has(.generate-button:is(:hover, :focus-visible)) {
-    --generate-charge: 1;
 }
 .generate-filters {
     position: absolute;
@@ -601,33 +590,6 @@ a:focus-visible {
         );
     opacity: 0.85;
 }
-/* the charge: light inside the stone (only opacity and transform animate) */
-.generate-button::after {
-    content: "";
-    position: absolute;
-    inset: -30% -12%;
-    z-index: -1;
-    pointer-events: none;
-    background:
-        radial-gradient(
-            ellipse at 12% 50%,
-            color-mix(in srgb, var(--gem-highlight) 80%, transparent),
-            color-mix(in srgb, var(--gem-light) 53%, transparent) 12%,
-            transparent 40%
-        ),
-        radial-gradient(
-            ellipse at 88% 50%,
-            color-mix(in srgb, var(--gem-highlight) 80%, transparent),
-            color-mix(in srgb, var(--gem-light) 53%, transparent) 12%,
-            transparent 40%
-        ),
-        radial-gradient(ellipse at 50% 110%, color-mix(in srgb, var(--gem-light) 60%, transparent), transparent 60%);
-    opacity: 0;
-    transform: scale(0.96);
-    transition:
-        opacity 950ms cubic-bezier(0.4, 0, 0.2, 1),
-        transform 950ms cubic-bezier(0.4, 0, 0.2, 1);
-}
 .generate-button:is(:hover, :focus-visible) {
     border-color: var(--gem-light);
     box-shadow:
@@ -646,10 +608,6 @@ a:focus-visible {
             0 0 30px color-mix(in srgb, var(--gem-light) 60%, transparent),
             0 0 60px color-mix(in srgb, var(--gem) 40%, transparent);
     }
-}
-.generate-button:is(:hover, :focus-visible)::after {
-    opacity: 1;
-    transform: scale(1.08);
 }
 .generate-button:active {
     box-shadow:
@@ -703,9 +661,7 @@ a:focus-visible {
 }
 /* without motion: no sheen, and the glow holds steady instead of pulsing */
 @media (prefers-reduced-motion: reduce) {
-    .generate,
-    .generate-button,
-    .generate-button::after {
+    .generate-button {
         transition: none;
     }
     .generate .generate-button {
@@ -723,7 +679,6 @@ a:focus-visible {
         box-shadow: none;
     }
     .generate-button::before,
-    .generate-button::after,
     .generate-sheen {
         display: none;
     }
