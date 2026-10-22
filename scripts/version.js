@@ -51,7 +51,7 @@ const newVersion = `${newMajor}.${newMinor}.${newPatch}`;
 
 // Update package.json
 packageJson.version = newVersion;
-writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");
+writeFileSync(packagePath, JSON.stringify(packageJson, null, 4) + "\n");
 console.log(`✓ Updated package.json: ${currentVersion} → ${newVersion}`);
 
 // Update index.html
