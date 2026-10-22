@@ -166,7 +166,8 @@ a:focus-visible {
 .site-title {
     font-family: var(--font-name);
     font-weight: 400;
-    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    /* 36px on a 375px phone, growing to the desktop size; two lines on phones, without overflow down to 320px */
+    font-size: clamp(2rem, 9.6vw, 2.6rem);
     /* lettering cut into aged bronze, like the Espruar line */
     color: var(--color-bronze);
     text-shadow: 0 1px 0 rgb(0 0 0 / 0.35);

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Links are now antique bronze to match the rest of the page.
+- The site title is larger on phones.
 
 ## [4.0.1] - 2026-10-21
 
