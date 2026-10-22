@@ -1,5 +1,8 @@
 Copyright (c) 2013-2016, Neale Davidson (jaynz@pixelsagas.com)
 
+Lato (lato-400.woff2, lato-700.woff2, Latin subset as served by Google Fonts):
+Copyright (c) 2010-2014 by tyPoland Lukasz Dziedzic (team@latofonts.com) with Reserved Font Name "Lato".
+
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 https://openfontlicense.org

@@ -1,4 +1,17 @@
 /* ===== Theme: colours, fonts and spacing, defined once ===== */
+/* Lato (Latin subset), self-hosted: no request to a third party before the page can draw */
+@font-face {
+    font-family: "Lato";
+    font-weight: 400;
+    src: url("fonts/lato-400.woff2") format("woff2");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Lato";
+    font-weight: 700;
+    src: url("fonts/lato-700.woff2") format("woff2");
+    font-display: swap;
+}
 @font-face {
     font-family: "Dalelands Uncial";
     src: url("fonts/dalelands-uncial.otf") format("opentype");
