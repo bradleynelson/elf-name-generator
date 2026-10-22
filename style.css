@@ -17,6 +17,9 @@
 
 :root {
     --color-page: #1c1b1a;
+    --color-footer: #141312;
+    /* links: 4.5:1 or more on the page, surfaces and footer */
+    --color-link: #eb6361;
     --color-surface: #262423;
     --color-raised: #312e2c;
     --color-text: #f1efe8;
@@ -43,6 +46,8 @@
 @media (prefers-color-scheme: light) {
     :root {
         --color-page: #f3e7cf;
+        --color-footer: #e9dabb;
+        --color-link: #9b2226;
         --color-surface: #faf1de;
         --color-raised: #efe0c1;
         --color-text: #3a2a1a;
@@ -75,7 +80,7 @@ h2 {
 }
 
 a {
-    color: var(--color-ruby-light);
+    color: var(--color-link);
 }
 a:hover {
     color: var(--color-text);
@@ -911,17 +916,18 @@ a:focus-visible {
 }
 
 /* --- Footer --- */
+/* a full-width band a shade darker than the page, so the notices read as the page's end; the text keeps the page's
+   column */
 .site-footer {
-    max-width: 44rem;
-    margin: 0 auto;
-    padding: var(--space);
+    background: var(--color-footer);
+    border-top: 1px solid var(--color-border);
+    padding: calc(var(--space) * 1.5) max(var(--space), (100% - 44rem) / 2);
     font-size: 0.8rem;
     color: var(--color-text-muted);
     text-align: center;
 }
 .site-version {
     font-family: var(--font-ui);
-    opacity: 0.8;
 }
 
 /* --- Notice, cookie banner and privacy dialog --- */
