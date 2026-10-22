@@ -486,8 +486,8 @@ a:focus-visible {
 /* --- The generate button: a selu'kiira, an elven lore gem. Sourced (Cormanthyr: Empire of the Elves, p. 152): a
    rainbow tourmaline that turns brilliant red at its fullest, after more than 3,000 years of stored knowledge. Chosen:
    a vivid crimson with its own colours, kept apart from the brick red of delete buttons. Facets and engraved lettering
-   at rest, glints that catch the light now and then, and on hover or keyboard focus a slow charge: the stone lights in
-   its setting and sends echoes outward. --- */
+   at rest, a sheen of light sweeping across every few seconds, and on hover or keyboard focus a slow charge: the stone
+   lights in its setting and rays of power spread from behind it. --- */
 @property --generate-charge {
     syntax: "<number>";
     inherits: true;
@@ -499,7 +499,7 @@ a:focus-visible {
     --gem-light: #ff4d6d;
     --gem-dark: #5e0a1f;
     --gem-text: #fff6f2;
-    --generate-glint: color-mix(in srgb, var(--gem-light), white 80%);
+    --gem-highlight: color-mix(in srgb, var(--gem-light), white 80%);
     --generate-charge: 0;
     grid-column: 2;
     position: relative;
@@ -564,7 +564,7 @@ a:focus-visible {
     );
     border: 1px solid var(--gem-dark);
     box-shadow:
-        inset 0 1px 0 color-mix(in srgb, var(--generate-glint) 40%, transparent),
+        inset 0 1px 0 color-mix(in srgb, var(--gem-highlight) 40%, transparent),
         inset 0 -2px 0 color-mix(in srgb, var(--gem-dark) 75%, transparent),
         0 4px 12px rgb(0 0 0 / 0.27);
     transition:
@@ -581,21 +581,21 @@ a:focus-visible {
     background:
         conic-gradient(
             from 18deg at 3% 50%,
-            color-mix(in srgb, var(--generate-glint) 13%, transparent) 0deg 48deg,
+            color-mix(in srgb, var(--gem-highlight) 13%, transparent) 0deg 48deg,
             transparent 48deg 160deg,
             color-mix(in srgb, var(--gem-dark) 33%, transparent) 160deg 230deg,
             transparent 230deg
         ),
         conic-gradient(
             from 198deg at 97% 50%,
-            color-mix(in srgb, var(--generate-glint) 13%, transparent) 0deg 48deg,
+            color-mix(in srgb, var(--gem-highlight) 13%, transparent) 0deg 48deg,
             transparent 48deg 160deg,
             color-mix(in srgb, var(--gem-dark) 33%, transparent) 160deg 230deg,
             transparent 230deg
         ),
         linear-gradient(
             174deg,
-            color-mix(in srgb, var(--generate-glint) 13%, transparent),
+            color-mix(in srgb, var(--gem-highlight) 13%, transparent),
             transparent 42% 66%,
             color-mix(in srgb, var(--gem-light) 9%, transparent)
         );
@@ -611,13 +611,13 @@ a:focus-visible {
     background:
         radial-gradient(
             ellipse at 12% 50%,
-            color-mix(in srgb, var(--generate-glint) 80%, transparent),
+            color-mix(in srgb, var(--gem-highlight) 80%, transparent),
             color-mix(in srgb, var(--gem-light) 53%, transparent) 12%,
             transparent 40%
         ),
         radial-gradient(
             ellipse at 88% 50%,
-            color-mix(in srgb, var(--generate-glint) 80%, transparent),
+            color-mix(in srgb, var(--gem-highlight) 80%, transparent),
             color-mix(in srgb, var(--gem-light) 53%, transparent) 12%,
             transparent 40%
         ),
@@ -632,7 +632,7 @@ a:focus-visible {
     border-color: var(--gem-light);
     box-shadow:
         inset 0 0 22px color-mix(in srgb, var(--gem-light) 33%, transparent),
-        inset 0 1px 0 var(--generate-glint),
+        inset 0 1px 0 var(--gem-highlight),
         0 0 8px color-mix(in srgb, var(--gem-light) 20%, transparent),
         0 0 18px color-mix(in srgb, var(--gem) 9%, transparent);
 }
@@ -645,65 +645,42 @@ a:focus-visible {
         inset 0 2px 10px color-mix(in srgb, var(--gem-dark) 67%, transparent),
         inset 0 0 22px color-mix(in srgb, var(--gem-light) 19%, transparent);
 }
-/* the glints: three reflections that catch the light on their own slow cycles, resting while the stone is lit */
-.generate-reflection {
+/* the sheen: a band of light that sweeps across the stone every few seconds, and at once when the stone is lit */
+.generate-sheen {
     position: absolute;
-    inset: 0;
+    inset: 0 auto 0 -60%;
+    width: 50%;
     z-index: -1;
     pointer-events: none;
-}
-.generate-reflection::before,
-.generate-reflection::after,
-.generate-glint {
-    content: "";
-    position: absolute;
-    top: calc(50% - 10px);
-    height: 20px;
-    background: radial-gradient(
-        ellipse,
-        color-mix(in srgb, var(--generate-glint) 40%, transparent),
-        color-mix(in srgb, var(--gem-light) 14%, transparent) 30%,
-        transparent 72%
+    background: linear-gradient(
+        120deg,
+        transparent,
+        color-mix(in srgb, var(--gem-highlight) 60%, transparent),
+        transparent
     );
-    opacity: 0;
-    filter: blur(3px);
-    transform-origin: 0 50%;
+    animation: generate-sheen 6s ease-in-out 1.5s infinite;
 }
-.generate-reflection::before {
-    left: 88%;
-    width: 100px;
-    transform: rotate(156deg);
-    animation: generate-glint 10.7s ease-in-out -6s infinite;
+.generate-button:is(:hover, :focus-visible) .generate-sheen {
+    animation: generate-sheen-once 0.7s ease-out;
 }
-.generate-reflection::after {
-    left: 12%;
-    width: 60px;
-    transform: rotate(-72deg);
-    animation: generate-glint 12.1s ease-in-out -9s infinite;
-}
-.generate-glint {
-    left: 12%;
-    width: 110px;
-    transform: rotate(-24deg);
-    animation: generate-glint 8.3s ease-in-out -2s infinite;
-}
-.generate-button:is(:hover, :focus-visible) .generate-reflection::before,
-.generate-button:is(:hover, :focus-visible) .generate-reflection::after,
-.generate-button:is(:hover, :focus-visible) .generate-glint {
-    animation: none;
-    opacity: 0;
-}
-@keyframes generate-glint {
-    0%,
-    22%,
+/* sweep across in the first 12%, then rest */
+@keyframes generate-sheen {
+    0% {
+        translate: 0;
+    }
+    12%,
     100% {
-        opacity: 0;
-    }
-    9% {
-        opacity: 0.65;
+        translate: 340%;
     }
 }
-/* white lettering cut into the stone: a fine dark edge, and the filter's shadow inside the letters */
+@keyframes generate-sheen-once {
+    from {
+        translate: 0;
+    }
+    to {
+        translate: 340%;
+    }
+} /* white lettering cut into the stone: a fine dark edge, and the filter's shadow inside the letters */
 .generate-button-text {
     position: relative;
     display: block;
@@ -713,56 +690,49 @@ a:focus-visible {
     paint-order: stroke fill;
     filter: url(#generate-engraving);
 }
-/* the echoes: copies of the stone's outline that sink downward, fading as they go */
-.generate-echoes {
+/* the power: rays of light that spread from behind the setting and turn slowly while the stone is lit */
+.generate-rays {
     position: absolute;
-    inset: 0;
-    z-index: -1;
+    inset: -3.5rem -4.5rem;
+    z-index: -3;
     pointer-events: none;
+    background:
+        repeating-conic-gradient(
+            from 0deg,
+            color-mix(in srgb, var(--gem-light) 80%, transparent) 0deg 3deg,
+            transparent 3deg 17deg
+        ),
+        repeating-conic-gradient(
+            from 7deg,
+            color-mix(in srgb, var(--gem-highlight) 60%, transparent) 0deg 1.5deg,
+            transparent 1.5deg 23deg
+        );
+    mask: radial-gradient(closest-side, black 25%, transparent 100%);
+    filter: blur(1px);
     opacity: var(--generate-charge);
+    scale: calc(0.75 + 0.25 * var(--generate-charge));
 }
-.generate-echoes > span {
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius);
-    background: linear-gradient(135deg, var(--generate-glint), var(--gem-light));
-    opacity: 0;
+.generate:has(.generate-button:is(:hover, :focus-visible)) .generate-rays {
+    animation: generate-rays 24s linear infinite;
 }
-.generate:has(.generate-button:is(:hover, :focus-visible)) .generate-echoes > span {
-    animation: generate-echo 1.8s ease-out infinite;
-}
-.generate:has(.generate-button:is(:hover, :focus-visible)) .generate-echoes > span:nth-child(2) {
-    animation-delay: 0.6s;
-}
-.generate:has(.generate-button:is(:hover, :focus-visible)) .generate-echoes > span:nth-child(3) {
-    animation-delay: 1.2s;
-}
-/* each echo fades to nothing before it resets, so none is ever seen jumping back up */
-@keyframes generate-echo {
-    0% {
-        transform: translateY(0);
-        opacity: 0.38;
-    }
-    100% {
-        transform: translateY(calc(6px * var(--generate-charge)));
-        opacity: 0;
+@keyframes generate-rays {
+    to {
+        rotate: 1turn;
     }
 }
+/* without motion: no sheen, and the rays appear without turning */
 @media (prefers-reduced-motion: reduce) {
     .generate,
     .generate-button,
     .generate-button::after {
         transition: none;
     }
-    .generate-reflection::before,
-    .generate-reflection::after,
-    .generate-glint {
+    .generate .generate-sheen,
+    .generate .generate-rays {
         animation: none;
-        opacity: 0.15;
     }
-    .generate .generate-echoes > span {
-        animation: none;
-        opacity: 0;
+    .generate-sheen {
+        display: none;
     }
 }
 @media (forced-colors: active) {
@@ -774,8 +744,8 @@ a:focus-visible {
     }
     .generate-button::before,
     .generate-button::after,
-    .generate-reflection,
-    .generate-echoes {
+    .generate-sheen,
+    .generate-rays {
         display: none;
     }
     .generate-button-text {
