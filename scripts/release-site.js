@@ -104,7 +104,10 @@ function releaseContent(root, file, version) {
     // each pattern captures the opening text and the path; the version goes right after the path
     const stamp = (text, pattern) => text.replace(pattern, `$1$2?v=${version}`);
     if (file.endsWith(".html")) {
-        return stamp(bytes.toString("utf8"), /(\b(?:href|src)\s*=\s*["'])((?:[\w-]+\/)*[\w-]+\.(?:js|css|json))(?=["'])/gi);
+        return stamp(
+            bytes.toString("utf8"),
+            /(\b(?:href|src)\s*=\s*["'])((?:[\w-]+\/)*[\w-]+\.(?:js|css|json))(?=["'])/gi
+        );
     }
     if (file.endsWith(".js")) {
         const text = stamp(bytes.toString("utf8"), /(\bfrom\s*["'])(\.{1,2}\/[\w./-]+\.js)(?=["'])/g);

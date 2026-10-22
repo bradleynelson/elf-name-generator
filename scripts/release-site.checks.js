@@ -56,7 +56,10 @@ test("versions every local script, stylesheet and data reference, and nothing el
     assert.match(read("js/app.js"), new RegExp(`"data/drowNames\\.json\\?v=${version}"`));
     assert.match(read("js/core/DrowNameGenerator.js"), new RegExp(`from "\\./random\\.js\\?v=${version}"`));
     // a changed script means a new version, so cached copies of the old release are never reused
-    writeFileSync(path.join(root, "js", "ui.js"), `${readFileSync(path.join(root, "js", "ui.js"), "utf8")}\n// changed`);
+    writeFileSync(
+        path.join(root, "js", "ui.js"),
+        `${readFileSync(path.join(root, "js", "ui.js"), "utf8")}\n// changed`
+    );
     rmSync(path.join(root, "dist"), { recursive: true });
     buildSite(root);
     assert.doesNotMatch(read("index.html"), new RegExp(`\\?v=${version}`));
