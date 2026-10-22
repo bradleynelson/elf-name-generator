@@ -89,7 +89,12 @@ describe("renderResult", () => {
 
     it("says a name cut from published names has no known meaning, and shows the books its parts come from", () => {
         renderResult(elf, new Set(["t1"]), handlers);
-        expect(wordMeanings()).toEqual(["Meaning unknown", ""]);
+        // the published family name has no translation either, but it is not a split component, so it is not gold
+        expect(wordMeanings()).toEqual(["Meaning unknown", "Meaning unknown"]);
+        const gold = [...document.querySelectorAll(".name-word-unknown")].map(
+            (u) => u.closest(".name-word").textContent
+        );
+        expect(gold).toEqual([expect.stringContaining("Alra")]);
         expect(document.getElementById("nameSourcesSummary").textContent).toBe("Where this name comes from");
         expect(rows()).toEqual([
             ["Prefix", "al- from Alarra (Cormanthyr)"],
@@ -98,6 +103,21 @@ describe("renderResult", () => {
         ]);
         const lock = document.querySelector('[data-key="t1"] .name-part-lock');
         expect(lock.getAttribute("aria-pressed")).toBe("true");
+        // a published family name already in English needs no meaning
+        const english = {
+            key: "family",
+            role: "family name",
+            text: "Morninglight",
+            method: "published",
+            form: "common",
+            source: { title: "Lost Empires of Faerun" }
+        };
+        renderResult(
+            { ...elf, name: "Alra Morninglight", parts: [...elf.parts.slice(0, 2), english] },
+            new Set(),
+            handlers
+        );
+        expect(wordMeanings()).toEqual(["Meaning unknown", ""]);
     });
 
     it("notes a published match in the breakdown, labelling names known only from Ed Greenwood", () => {

@@ -1,6 +1,6 @@
 {
     "name": "elf-name-generator",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "description": "Faerûn Name Generator - Elven & Dwarven Names",
     "type": "module",
     "scripts": {

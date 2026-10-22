@@ -68,22 +68,26 @@ function displayTexts(parts) {
 const firstGloss = (meaning) => meaning.split(", ")[0];
 
 /**
- * The meaning shown above one word, as segments ({ text, unknown? }). Three kinds stay distinct: a book's translation
+ * The meaning shown above one word, as segments ({ text, unknown?, split? }). Kinds stay distinct: a book's translation
  * ("Moonwhisper"), meanings built from published naming tables ("Age · Gift · Fair"; a drow house reads as one
- * phrase), and components of published names, whose meaning is unknown: "Unknown" for one component, "Meaning unknown" when
- * every component is. Other names (published without a translation, Common-form) show none.
+ * phrase), split components (Expanded Variety), whose meaning is unknown: "Unknown" for one component, "Meaning
+ * unknown" when every component is; and published Elvish family names or drow houses without a translation, "Meaning
+ * unknown". Family names already in English (Morninglight, or built from Common words) show none.
  */
 function wordMeaning(parts) {
     const phrase = parts.find((p) => p.wordMeaning);
     if (phrase) return [{ text: phrase.wordMeaning }];
     const translated = parts.find((p) => p.meaningSource);
     if (translated) return [{ text: translated.meaning }];
+    if (parts.some((p) => p.method === "published" && p.form !== "common")) {
+        return [{ text: "Meaning unknown", unknown: true }];
+    }
     const components = parts.filter((p) => TABLE_ROLES.has(p.role));
-    const unknown = { text: "Meaning unknown", unknown: true };
     if (components.length) {
-        if (components.every((p) => p.method === "split")) return [unknown];
+        if (components.every((p) => p.method === "split"))
+            return [{ text: "Meaning unknown", unknown: true, split: true }];
         return components.map((p) =>
-            p.method === "split" ? { text: "Unknown", unknown: true } : { text: firstGloss(p.meaning) }
+            p.method === "split" ? { text: "Unknown", unknown: true, split: true } : { text: firstGloss(p.meaning) }
         );
     }
     return [];
@@ -116,7 +120,7 @@ export function renderResult(result, locked, handlers) {
             const caption = element("span", "name-word-meaning");
             segments.forEach((segment, n) => {
                 if (n) caption.append(" · ");
-                caption.append(element("span", segment.unknown ? "name-word-unknown" : null, segment.text));
+                caption.append(element("span", segment.split ? "name-word-unknown" : null, segment.text));
             });
             const word = element("span", "name-word");
             const row = element("span", "name-word-parts");

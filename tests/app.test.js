@@ -110,6 +110,9 @@ describe("usage events", () => {
     });
 
     it("describes components by position and kind, and locks as on or off", () => {
+        // the apostrophe shape (suffix'prefix…) starts with a suffix; roll until the name starts with a prefix
+        for (let i = 0; i < 50 && $("nameText").textContent.includes("'"); i++) roll();
+        events.length = 0;
         const lock = () => document.querySelector('[data-key="t0"] .name-part-lock').click();
         lock();
         lock();
