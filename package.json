@@ -27,8 +27,8 @@
         "version": "npm run version:patch"
     },
     "devDependencies": {
-        "@vitest/coverage-v8": "^4.0.15",
-        "@vitest/ui": "^4.0.15",
+        "@vitest/coverage-v8": "^4.1.12",
+        "@vitest/ui": "^4.1.12",
         "eslint": "^8.57.0",
         "eslint-plugin-markdown": "^3.0.1",
         "husky": "^9.1.6",
@@ -37,7 +37,7 @@
         "markdownlint-cli": "^0.46.0",
         "pa11y": "^9.0.1",
         "prettier": "^3.4.1",
-        "vitest": "^4.0.15"
+        "vitest": "^4.1.12"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": [
