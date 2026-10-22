@@ -61,6 +61,12 @@ describe("ElfNameGenerator with the published tables", () => {
         expect(share("suffix'prefixsuffixsuffix")).toBeLessThan(0.08);
     });
 
+    it("never makes a doubled y, which no published elf name has", () => {
+        expect(data.publishedNames.some((p) => /yy/i.test(p.text))).toBe(false);
+        const names = sample(new ElfNameGenerator(data), 3000, { expanded: true }).map((r) => r.name);
+        names.forEach((name) => expect(name).not.toMatch(/yy/i));
+    });
+
     it("joins awkward parts only with the letters Dragon #251 gives", () => {
         const letters = sample(new ElfNameGenerator(data), 2000)
             .flatMap((r) => r.parts)

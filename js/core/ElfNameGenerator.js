@@ -34,6 +34,9 @@ const SURNAME_SHAPES = NAME_SHAPES.slice(0, 2);
 const JOINING_LETTERS = ["a", "e", "i", "l", "r", "s", "sh"];
 // Chosen: more than three vowels in a row at a join reads as a typo.
 const VOWEL_PILE = new RegExp(`[${VOWELS}]{4}`);
+// Inferred: none of the 520 published elf names has "yy" (doubled a, e, i and o do occur), so a join such as -cy + yth
+// that would make one is rebuilt.
+const DOUBLED_Y = /yy/i;
 // Chosen: with Expanded Variety on, each prefix or suffix slot of a table name is filled with a
 // component of a published name (an opening or an ending) with this probability, so one name can mix both kinds.
 const SPLIT_COMPONENT_SHARE = 0.5;
@@ -235,7 +238,7 @@ export class ElfNameGenerator {
             out.push(part);
         }
         const text = out.map((p) => p.text).join("");
-        return VOWEL_PILE.test(text) || /(.)\1\1/.test(text) ? null : out;
+        return VOWEL_PILE.test(text) || DOUBLED_Y.test(text) || /(.)\1\1/.test(text) ? null : out;
     }
 
     /** A family name: { text, parts, shape? } (table-built surnames are several lockable components). */
