@@ -13,8 +13,9 @@ function readManifest(root) {
         // Only website assets can be approved; directory globs and private/tooling paths are forbidden.
         if (
             typeof file !== "string" ||
-            // fonts/: self-hosted OFL fonts plus their license, which the OFL requires to ship with them
-            !/^(?:index\.html|style\.css|favicon\.(?:ico|png)|CNAME|LICENSE|js\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.js|data\/[A-Za-z0-9_-]+\.json|fonts\/[a-z0-9-]+\.(?:otf|woff2)|fonts\/OFL\.txt)$/.test(
+            // fonts/: self-hosted OFL fonts plus their license, which the OFL requires to ship with them; the share and
+            // touch images, robots.txt and sitemap.xml are named exactly
+            !/^(?:index\.html|style\.css|favicon\.(?:ico|png)|apple-touch-icon\.png|share-card\.png|robots\.txt|sitemap\.xml|CNAME|LICENSE|js\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.js|data\/[A-Za-z0-9_-]+\.json|fonts\/[a-z0-9-]+\.(?:otf|woff2)|fonts\/OFL\.txt)$/.test(
                 file
             )
         ) {
