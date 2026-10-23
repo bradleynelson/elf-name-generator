@@ -9,8 +9,8 @@
 // tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
 // are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
 // the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.1";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.1";
+import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.2";
+import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.2";
 import {
     getAvailableControls,
     getChangedShape,
@@ -19,7 +19,7 @@ import {
     selectRollShape,
     sameShape,
     getSlotNumber
-} from "./nameStructure.js?v=4.1.1";
+} from "./nameStructure.js?v=4.1.2";
 
 const MAX_ATTEMPTS = 300;
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep

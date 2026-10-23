@@ -1,8 +1,8 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.1";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.1";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.1";
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.1";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.2";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.2";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.2";
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.2";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -15,7 +15,7 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.1.1";
+} from "./favorites.js?v=4.1.2";
 import {
     focusPart,
     focusStructure,
@@ -26,7 +26,7 @@ import {
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.1.1";
+} from "./ui.js?v=4.1.2";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
@@ -379,8 +379,8 @@ async function start() {
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.1.1"),
-            loadJson("data/drowNames.json?v=4.1.1")
+            loadJson("data/elfNames.json?v=4.1.2"),
+            loadJson("data/drowNames.json?v=4.1.2")
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {
