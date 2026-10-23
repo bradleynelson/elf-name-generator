@@ -19,7 +19,6 @@ const testProcess = spawn("npx", ["vitest", "run", "--reporter=verbose"], {
 });
 
 let output = "";
-let errorOutput = "";
 
 testProcess.stdout.on("data", (data) => {
     const text = data.toString();
@@ -29,7 +28,6 @@ testProcess.stdout.on("data", (data) => {
 
 testProcess.stderr.on("data", (data) => {
     const text = data.toString();
-    errorOutput += text;
     process.stderr.write(text);
 });
 

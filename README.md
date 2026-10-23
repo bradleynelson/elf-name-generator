@@ -72,10 +72,11 @@ Needs Node.js 24 and npm. The page loads ES modules and JSON, so preview it over
 
 ```bash
 npm ci
-npm run test:run
-npm run lint
-npm run build:site
+npm run check
 ```
+
+`npm run check` is the same local quality gate CI uses: lint and formatting, duplication and unused-code checks,
+coverage-gated tests, release safeguards, and a verified release build.
 
 Releases publish only the files listed in `release-files.json` (built into `dist/` and checked by
 `npm run check:release`). Merging a release into `main` publishes it once the tests pass; see

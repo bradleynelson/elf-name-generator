@@ -51,6 +51,19 @@ describe("saved names", () => {
         expect(loadFavorites().map((f) => f.name)).toEqual(["A", "B", "C"]);
     });
 
+    it("preserves legacy records when saving another name", () => {
+        const older = { name: "Thorin Ironfist", generatorType: "dwarven", savedAt: 1 };
+        const otherRace = { name: "Bimpnottin", result: { ...result("Bimpnottin"), subrace: "rock-gnome" } };
+        localStorage.setItem("faerunNameFavorites", JSON.stringify([older, otherRace]));
+
+        addFavorite(loadFavorites(), result("Ilsevel"));
+
+        const stored = JSON.parse(localStorage.getItem("faerunNameFavorites"));
+        expect(stored.slice(0, 2)).toEqual([older, otherRace]);
+        expect(stored[2].result).toEqual(result("Ilsevel"));
+        expect(loadFavorites()).toEqual(stored);
+    });
+
     it("explains when the browser will not store a name", () => {
         const setItem = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
             throw new Error("QuotaExceededError");

@@ -1,6 +1,6 @@
 // Saved names, history and remembered settings, kept in this browser only. The saved-names key and record shape match the previous
 // version of the site, so names saved there (including other races) are kept and still shown.
-import { ELF_SUBRACES } from "./core/ElfNameGenerator.js?v=4.1.1";
+import { ELF_SUBRACES } from "./core/ElfNameGenerator.js?v=4.1.2";
 
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";
@@ -44,7 +44,7 @@ const isText = (value) => typeof value === "string" && value !== "";
  * True if a stored result can be shown and built on again: a name, a lineage this version offers, and parts that each
  * have a key, a role and text. Records from older versions or edited by hand may fail this.
  */
-export function validateResult(result) {
+function validateResult(result) {
     return (
         isText(result?.name) &&
         SUBRACES.includes(result.subrace) &&

@@ -1,4 +1,6 @@
 // Rendering only: turns results and lists into page content. Text is always set with textContent.
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.2";
+
 const $ = (id) => document.getElementById(id);
 const STRUCTURAL = new Set(["joining letter", "apostrophe", "space"]);
 const LABELS = {
@@ -136,10 +138,16 @@ export function renderResult(result, locked, handlers) {
             // a control sits at the end of the word it changes (given name, compound name, surname); a compound name
             // that is not there yet is a dashed empty slot between the first name and the surname
             const isSurname = isSurnamePart(result.parts[indexes[0]]);
-            const kind = isSurname ? "surname" : firstNameWords++ === 0 ? "given" : "compound";
+            const kind = isSurname
+                ? NAME_STRUCTURE_CONTROL.SURNAME
+                : firstNameWords++ === 0
+                  ? NAME_STRUCTURE_CONTROL.FIRST_NAME
+                  : NAME_STRUCTURE_CONTROL.COMPOUND_NAME;
             const slot =
-                isSurname && stepState.get("compound") === false ? [renderStep("compound", false, onStep)] : [];
-            if (stepState.has(kind) && (kind !== "compound" || stepState.get(kind))) {
+                isSurname && stepState.get(NAME_STRUCTURE_CONTROL.COMPOUND_NAME) === false
+                    ? [renderStep(NAME_STRUCTURE_CONTROL.COMPOUND_NAME, false, onStep)]
+                    : [];
+            if (stepState.has(kind) && (kind !== NAME_STRUCTURE_CONTROL.COMPOUND_NAME || stepState.get(kind))) {
                 row.append(renderStep(kind, stepState.get(kind), onStep));
             }
             word.append(caption, row);
@@ -181,15 +189,15 @@ function renderPart(part, text, isLocked, { onToggleLock, onChoose }) {
 
 // What each + / - button does, for screen readers: [when the control is off, when it is on]
 const STEP_LABELS = {
-    given: ["Add a suffix to the first name", "Remove the last suffix of the first name"],
-    compound: ["Add a compound name", "Remove the compound name"],
-    surname: ["Add a suffix to the surname", "Remove the last suffix of the surname"]
+    [NAME_STRUCTURE_CONTROL.FIRST_NAME]: ["Add a suffix to the first name", "Remove the last suffix of the first name"],
+    [NAME_STRUCTURE_CONTROL.COMPOUND_NAME]: ["Add a compound name", "Remove the compound name"],
+    [NAME_STRUCTURE_CONTROL.SURNAME]: ["Add a suffix to the surname", "Remove the last suffix of the surname"]
 };
 
 /** A + (the change is off now) or - (it is on) button for a structure control. */
 function renderStep(control, isOn, onChange) {
     const step = iconButton(
-        `name-structure-step${control === "compound" && !isOn ? " is-slot" : ""}`,
+        `name-structure-step${control === NAME_STRUCTURE_CONTROL.COMPOUND_NAME && !isOn ? " is-slot" : ""}`,
         isOn ? "minus" : "plus",
         STEP_LABELS[control][isOn ? 1 : 0],
         () => onChange(control)

@@ -29,6 +29,10 @@ jobs:
     test:
         name: Run Tests
         runs-on: ubuntu-latest
+        timeout-minutes: 15
+        concurrency:
+            group: tests-${{ github.workflow }}-${{ github.ref }}
+            cancel-in-progress: true
 
         steps:
             - name: Checkout code
@@ -53,36 +57,15 @@ jobs:
                   npm audit || true
                   npm audit --audit-level=high
 
-            - name: Lint code
-              run: npm run lint
-
-            - name: Check code duplication
-              run: npm run check:duplication
-
-            - name: Check formatting
-              run: npm run format:check
-
-            - name: Run tests
-              run: npm run test:run
-
-            - name: Test release safeguards
-              run: npm run test:release
-
-            - name: Build approved website assets
-              run: npm run build:site
-
-            - name: Verify release contents
-              run: npm run check:release
-
-            - name: Run tests with coverage
-              if: github.event_name == 'pull_request'
-              run: npm run test:run -- --coverage
+            - name: Run project checks
+              run: npm run check
 
     # Publishes only dist/ (the files in release-files.json) through GitHub Pages' own deployment, so nothing else in
     # the repository is served. Needs Settings > Pages > Source: "GitHub Actions"; the custom domain is set there too.
     deploy-prod:
         name: Deploy to Production
         runs-on: ubuntu-latest
+        timeout-minutes: 20
         needs: test
         if: github.repository == 'bradleynelson/elf-name-generator' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.confirm_production == true))
         permissions:

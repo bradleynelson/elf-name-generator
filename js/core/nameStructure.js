@@ -1,12 +1,19 @@
 // Structure changes shared by the elf and drow generators: the visitor lengthens or shortens a first name, adds or
 // removes a compound name, and a roll may change shape under locks. Each species supplies its own shapes and slot keys;
 // the rules here are the same. They add no naming pattern: every target is one of the species' published shapes.
-import { selectWeighted } from "./random.js?v=4.1.1";
+import { selectWeighted } from "./random.js?v=4.1.2";
 
 // Slots of a first name's shapes (a slot's key is its key prefix plus its position in the shape):
 const FIRST_WORD_SLOTS = 2; // prefix and suffix, which every change keeps
 const EXTRA_SUFFIX_SLOT = 2; // the third slot of the long shape, and the space of the two-word shape
 const SECOND_WORD_FIRST_SLOT = 3; // the two-word shape's second word starts after its space
+
+// Stable ids shared by generators, the app and the renderer. The values also appear in controlled analytics data.
+export const NAME_STRUCTURE_CONTROL = Object.freeze({
+    FIRST_NAME: "given",
+    COMPOUND_NAME: "compound",
+    SURNAME: "surname"
+});
 
 export const sameShape = (shapeA, shapeB) => shapeA?.join() === shapeB.join();
 
@@ -43,7 +50,7 @@ export function selectRollShape(shapes, locks, keyPrefix, random) {
 export function getChangedShape(control, shape, locked, keyPrefix, { short, long, compound }) {
     const isLocked = (slot) => locked.has(`${keyPrefix}${slot}`);
     const is = (target) => sameShape(shape, target);
-    if (control === "compound") {
+    if (control === NAME_STRUCTURE_CONTROL.COMPOUND_NAME) {
         const secondWordSlots = Array.from(
             { length: compound.length - SECOND_WORD_FIRST_SLOT },
             (_, offset) => SECOND_WORD_FIRST_SLOT + offset
