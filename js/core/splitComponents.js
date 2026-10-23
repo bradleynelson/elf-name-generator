@@ -14,11 +14,17 @@ export function joinsCleanly(left, right, clusters) {
 }
 
 export class SplitComponents {
-    /** @param {{ openings?: Object[], endings?: Object[], joinClusters?: string[] }} data - cut from published names */
-    constructor({ openings = [], endings = [], joinClusters = [] } = {}) {
+    /**
+     * @param {{ openings?: Object[], endings?: Object[], joinClusters?: string[] }} data - cut from published names
+     * @param {{ prefix?: Set<string>, suffix?: Set<string> }} [tableTexts] - texts the name tables already offer, in
+     *   lower case; a component with the same text is left out, because the table's entry has the same letters and a
+     *   meaning
+     */
+    constructor({ openings = [], endings = [], joinClusters = [] } = {}, tableTexts = {}) {
         this.openings = openings;
         this.endings = endings;
         this.clusters = new Set(joinClusters);
+        this.tableTexts = tableTexts;
         this.cache = new Map();
     }
 
@@ -34,7 +40,10 @@ export class SplitComponents {
     componentsFor(slot, sex) {
         const cacheKey = `${slot}|${sex}`;
         if (!this.cache.has(cacheKey)) {
-            const source = slot === "prefix" ? this.openings : this._endingsFor(sex);
+            const inTable = this.tableTexts[slot];
+            const source = (slot === "prefix" ? this.openings : this._endingsFor(sex)).filter(
+                (p) => !inTable?.has(p.text.toLowerCase())
+            );
             if (!source.length) throw new Error(`No published name components for a ${slot}${sex ? ` (${sex})` : ""}`);
             this.cache.set(
                 cacheKey,

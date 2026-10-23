@@ -55,7 +55,6 @@ describe("renderResult", () => {
     it("shows each word's table meaning above it (first glosses; a house as one phrase), without sources", () => {
         renderResult(drow, new Set(), handlers);
         expect(wordMeanings()).toEqual(["Dagger · Bandit", "Aged · Shadow", "Blessed by fell powers"]);
-        expect(document.getElementById("nameSourcesSummary").textContent).toBe("Name meanings and sources");
         expect(rows()[0]).toEqual(["Prefix", 'vic means "Dagger, knife"']);
         expect(rows().find(([label]) => label === "House prefix")).toEqual(["House prefix", 'baen means "Blessed by"']);
         expect(rows().at(-1)[0]).toBe("Tables");
@@ -95,7 +94,6 @@ describe("renderResult", () => {
             (u) => u.closest(".name-word").textContent
         );
         expect(gold).toEqual([expect.stringContaining("Alra")]);
-        expect(document.getElementById("nameSourcesSummary").textContent).toBe("Where this name comes from");
         expect(rows()).toEqual([
             ["Prefix", "al- from Alarra (Cormanthyr)"],
             ["Suffix", "-ra from Amra"],

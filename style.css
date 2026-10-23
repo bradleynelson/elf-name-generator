@@ -162,7 +162,7 @@ a:focus-visible {
 }
 
 .page {
-    max-width: 44rem;
+    max-width: 52rem;
     margin: 0 auto;
     padding: 0 var(--space) calc(var(--space) * 2);
     display: grid;
@@ -213,6 +213,8 @@ a:focus-visible {
     border-radius: calc(var(--radius) * 2);
     padding: calc(var(--space) * 1.5) var(--space);
     text-align: center;
+    /* lets the name size itself to the card (cqw) */
+    container-type: inline-size;
 }
 .name-picker {
     display: flex;
@@ -314,7 +316,10 @@ a:focus-visible {
     justify-content: center;
     align-items: flex-start;
     font-family: var(--font-name);
-    font-size: clamp(1.8rem, 7vw, 2.8rem);
+    /* scales with the card, not the screen. Measured over 4,000 rolls: the widest name is about 21.4em, so 4.1cqw (a
+       24em name) keeps every name on one line until the card is under 36rem; narrower than that the words stack (see
+       the container query at the end) at the 1.8rem floor */
+    font-size: clamp(1.8rem, 4.1cqw, 2.8rem);
     line-height: 1.2;
     column-gap: 0.35em;
 }
@@ -363,7 +368,7 @@ a:focus-visible {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 0.75rem;
-    margin-top: var(--space);
+    margin-top: calc(var(--space) * 1.75);
 }
 .name-card-tools {
     display: flex;
@@ -1016,12 +1021,27 @@ a:focus-visible {
 }
 
 /* --- Lore --- */
+/* prose keeps a comfortable line length; its left edge lines up with the text inside the panels above (their border
+   plus padding) */
+.lore {
+    width: 100%;
+    max-width: 44rem;
+    justify-self: start;
+    padding: 0 calc(var(--space) + 1px);
+}
 .lore details {
     border-top: 1px solid var(--color-border);
     padding: 0.5rem 0;
 }
 .lore summary {
     font-weight: 700;
+}
+/* a section inside a section: indented under its parent, with a lighter summary */
+.lore details details {
+    margin-left: var(--space);
+}
+.lore details details > summary {
+    font-weight: 400;
 }
 
 /* --- Footer --- */
@@ -1030,7 +1050,7 @@ a:focus-visible {
 .site-footer {
     background: var(--color-footer);
     border-top: 1px solid var(--color-border);
-    padding: calc(var(--space) * 1.5) max(var(--space), (100% - 44rem) / 2);
+    padding: calc(var(--space) * 1.5) max(var(--space), (100% - 52rem) / 2);
     font-size: 0.8rem;
     color: var(--color-text-muted);
     text-align: center;
@@ -1107,6 +1127,13 @@ a:focus-visible {
         width: auto;
         min-width: 2rem;
         height: 2.75rem;
+    }
+}
+/* A narrow card always puts the last name on its own line, so the layout does not jump between short and long names */
+@container (max-width: 36rem) {
+    .name-card-dials {
+        flex-direction: column;
+        align-items: center;
     }
 }
 /* Small screens stack each source label over its text */
