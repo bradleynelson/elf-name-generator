@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI now uses the same complete check command available locally, enforces coverage floors, lints release tooling, and
   cancels superseded test runs instead of letting them hang or consume runner time.
 - Page-flow tests now use repeatable random input, so the same behavior is exercised on every run.
+- Standardized the generator's internal method names and structure-control identifiers ahead of static type checking.
 
 ## [4.1.1] - 2026-10-23
 

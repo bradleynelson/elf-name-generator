@@ -8,6 +8,13 @@ const FIRST_WORD_SLOTS = 2; // prefix and suffix, which every change keeps
 const EXTRA_SUFFIX_SLOT = 2; // the third slot of the long shape, and the space of the two-word shape
 const SECOND_WORD_FIRST_SLOT = 3; // the two-word shape's second word starts after its space
 
+// Stable ids shared by generators, the app and the renderer. The values also appear in controlled analytics data.
+export const NAME_STRUCTURE_CONTROL = Object.freeze({
+    FIRST_NAME: "given",
+    COMPOUND_NAME: "compound",
+    SURNAME: "surname"
+});
+
 export const sameShape = (shapeA, shapeB) => shapeA?.join() === shapeB.join();
 
 /** The position in the shape of a slot's key ("t2" with prefix "t" is 2), or undefined if the key is not a slot. */
@@ -43,7 +50,7 @@ export function selectRollShape(shapes, locks, keyPrefix, random) {
 export function getChangedShape(control, shape, locked, keyPrefix, { short, long, compound }) {
     const isLocked = (slot) => locked.has(`${keyPrefix}${slot}`);
     const is = (target) => sameShape(shape, target);
-    if (control === "compound") {
+    if (control === NAME_STRUCTURE_CONTROL.COMPOUND_NAME) {
         const secondWordSlots = Array.from(
             { length: compound.length - SECOND_WORD_FIRST_SLOT },
             (_, offset) => SECOND_WORD_FIRST_SLOT + offset

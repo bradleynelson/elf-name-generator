@@ -9,8 +9,9 @@ import { SplitComponents } from "./splitComponents.js?v=4.1.1";
 import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.1";
 import {
     getAvailableControls,
-    getKeptParts,
     getChangedShape,
+    getKeptParts,
+    NAME_STRUCTURE_CONTROL,
     selectRollShape,
     sameShape
 } from "./nameStructure.js?v=4.1.1";
@@ -39,8 +40,8 @@ const SPLIT_COMPONENT_SHARE = 0.5;
 // The structure controls reuse the shapes above (see ElfNameGenerator); the compound name is the two-word shape's second word.
 const DROW_NAMES = { short: NAME_SHAPES[0].shape, long: NAME_SHAPES[1].shape, compound: NAME_SHAPES[3].shape };
 const STRUCTURE_CONTROLS = {
-    given: { isOn: (r) => sameShape(r.shape, DROW_NAMES.long) },
-    compound: { isOn: (r) => sameShape(r.shape, DROW_NAMES.compound) }
+    [NAME_STRUCTURE_CONTROL.FIRST_NAME]: { isOn: (r) => sameShape(r.shape, DROW_NAMES.long) },
+    [NAME_STRUCTURE_CONTROL.COMPOUND_NAME]: { isOn: (r) => sameShape(r.shape, DROW_NAMES.compound) }
 };
 const VOWEL_GROUP = /[aeiouy]+/g;
 const TABLES_TITLE = "By Any Other Name: The Drow (Dragon #267)";
@@ -122,9 +123,9 @@ export class DrowNameGenerator {
      * "compound" (the second given name). A house is always a prefix and a suffix, so it has no length control. A control
      * is listed only if the changed name builds with every part kept.
      */
-    structureControls(result, locked = new Set(), options = {}) {
+    getStructureControls(result, locked = new Set(), options = {}) {
         return getAvailableControls(STRUCTURE_CONTROLS, result, (control) =>
-            this.changeStructure(result, control, { ...options, locked })
+            this.generateStructureChange(result, control, { ...options, locked })
         );
     }
 
@@ -133,7 +134,7 @@ export class DrowNameGenerator {
      * and a change that would delete a locked slot is unavailable. Does not count as a roll.
      * @returns {Object|null} the new name, or null if the change is unavailable
      */
-    changeStructure(result, control, { locked = new Set(), expanded = false, random = Math.random } = {}) {
+    generateStructureChange(result, control, { locked = new Set(), expanded = false, random = Math.random } = {}) {
         if (!(control in STRUCTURE_CONTROLS)) return null;
         const shape = getChangedShape(control, result.shape, locked, "f", DROW_NAMES);
         if (!shape) return null;
@@ -150,7 +151,7 @@ export class DrowNameGenerator {
      * For the house picker: the other kind of house to switch to, as { kind, options } ("published" houses, or
      * "constructed" from a chosen prefix). No options if the switch would drop a locked part.
      */
-    surnameSwitchOptions(result, locked = new Set()) {
+    getSurnameSwitchOptions(result, locked = new Set()) {
         if (result.parts.some((p) => p.key === "house")) {
             const prefixes = this._housePrefixes().map((entry) => houseComponent("n0", "house prefix", entry));
             return { kind: "constructed", options: locked.has("house") ? [] : prefixes };
@@ -162,9 +163,9 @@ export class DrowNameGenerator {
     /**
      * Replaces the house with a published one, or builds one from a chosen prefix (its suffix is random). The first
      * name is kept. Does not count as a roll.
-     * @param {Object} choice - a part from surnameSwitchOptions
+     * @param {Object} choice - a part from getSurnameSwitchOptions
      */
-    changeSurname(result, choice, { random = Math.random } = {}) {
+    generateSurnameChange(result, choice, { random = Math.random } = {}) {
         const { personal } = sectionsOf(result);
         const house =
             choice.key === "house" ? { text: choice.text, parts: [choice] } : this._buildHouse({ n0: choice }, random);
