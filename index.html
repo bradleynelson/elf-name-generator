@@ -33,18 +33,18 @@
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.0.7" />
+        <link rel="stylesheet" href="style.css?v=4.1.0" />
         <!-- Start the script and data downloads now instead of after each import is discovered in turn -->
-        <link rel="modulepreload" href="js/app.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/ui.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.0.7" />
-        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.0.7" />
-        <link rel="preload" href="data/elfNames.json?v=4.0.7" as="fetch" crossorigin />
-        <link rel="preload" href="data/drowNames.json?v=4.0.7" as="fetch" crossorigin />
+        <link rel="modulepreload" href="js/app.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/ui.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.1.0" />
+        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.1.0" />
+        <link rel="preload" href="data/elfNames.json?v=4.1.0" as="fetch" crossorigin />
+        <link rel="preload" href="data/drowNames.json?v=4.1.0" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
@@ -77,6 +77,12 @@
                     stroke-linecap="round"
                     d="M6 11h12v9H6zM8 11V8a4 4 0 0 1 7.5-2"
                 />
+            </symbol>
+            <symbol id="icon-plus" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 6v12M6 12h12" />
+            </symbol>
+            <symbol id="icon-minus" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 12h12" />
             </symbol>
             <symbol id="icon-bookmark" viewBox="0 0 24 24">
                 <path
@@ -201,7 +207,8 @@
                 </p>
                 <hr class="name-card-divider" />
                 <p class="name-card-instructions">
-                    Tap any component of a name to see compatible options. Lock it to keep it.
+                    Tap any name component to see compatible options. Lock it to keep it. Use + and − to add or remove
+                    components.
                 </p>
                 <p class="name-card-text visually-hidden" id="nameText" aria-live="polite"></p>
                 <div class="name-card-dials" id="nameDials"></div>
@@ -431,7 +438,7 @@
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
                 <a href="#" class="privacy-link">Privacy</a>
             </p>
-            <p class="site-version">v4.0.7 - Last Updated 10-22-26</p>
+            <p class="site-version">v4.1.0 - Last Updated 10-22-26</p>
         </footer>
 
         <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
@@ -462,10 +469,17 @@
 
         <dialog class="part-picker" id="partPicker" aria-labelledby="partPickerTitle">
             <h2 id="partPickerTitle"></h2>
+            <div
+                class="part-picker-tabs"
+                id="partPickerTabs"
+                role="tablist"
+                aria-label="Kind of family name"
+                hidden
+            ></div>
             <ul class="part-picker-list" id="partPickerList"></ul>
             <form method="dialog"><button>Close</button></form>
         </dialog>
 
-        <script type="module" src="js/app.js?v=4.0.7"></script>
+        <script type="module" src="js/app.js?v=4.1.0"></script>
     </body>
 </html>

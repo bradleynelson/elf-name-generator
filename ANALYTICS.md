@@ -27,6 +27,8 @@ The automatic `page_view` from `gtag("config")` is the only page view; no others
 | `component_picker_opened`  | The visitor opens the options list for a component                                                                                               | `component_position`, `component_type`                     |
 | `component_selected`       | The visitor picks an option and the new name is shown                                                                                            | `component_position`, `component_type`, `component_origin` |
 | `component_lock_changed`   | The visitor locks or unlocks a component                                                                                                         | `component_position`, `component_type`, `locked`           |
+| `name_structure_changed`   | The visitor presses a + or - beside the first name, the compound name or the surname                                                             | `structure_control`, `structure_value`                     |
+| `surname_kind_changed`     | The visitor switches a surname (or drow house) to the other kind in its picker: Published or Constructed                                         | `surname_kind`                                             |
 | `expanded_variety_changed` | The visitor turns Expanded Variety on or off                                                                                                     | `setting_value`                                            |
 | `name_sources_opened`      | The visitor opens "Name meanings and sources" (not on close)                                                                                     | —                                                          |
 | `name_setting_changed`     | The visitor changes gender or lineage                                                                                                            | `setting_name`, `setting_value`                            |
@@ -48,24 +50,29 @@ Settings are read when the event is sent, so a setting change carries the new va
 
 ### Event parameters
 
-| Parameter            | Values                                                            | Meaning                                                |
-| -------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ |
-| `roll_type`          | `single`, `list`                                                  | One name, or the Roll 10 More list                     |
-| `name_count`         | number                                                            | Names produced by the roll (1, or up to 10 for a list) |
-| `trigger`            | `button`, `spacebar`                                              | How the roll was asked for                             |
-| `copy_source`        | `current`, `saved`                                                | The name card, or a saved name                         |
-| `component_position` | `first_name`, `family_name`                                       | Drow houses count as `family_name`                     |
-| `component_type`     | `prefix`, `suffix`, `whole`                                       | `whole` is a family name chosen as one piece           |
-| `component_origin`   | `table`, `split`, `published`, `common_words`                     | Where the chosen option comes from                     |
-| `locked`             | `on`, `off`                                                       | The lock's new state                                   |
-| `setting_name`       | `gender`, `lineage`                                               | Which setting changed                                  |
-| `setting_value`      | gender or lineage values above; `on` / `off` for Expanded Variety | The new value                                          |
+| Parameter            | Values                                                            | Meaning                                                                    |
+| -------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `roll_type`          | `single`, `list`                                                  | One name, or the Roll 10 More list                                         |
+| `name_count`         | number                                                            | Names produced by the roll (1, or up to 10 for a list)                     |
+| `trigger`            | `button`, `spacebar`                                              | How the roll was asked for                                                 |
+| `copy_source`        | `current`, `saved`                                                | The name card, or a saved name                                             |
+| `component_position` | `first_name`, `family_name`                                       | Drow houses count as `family_name`                                         |
+| `component_type`     | `prefix`, `suffix`, `whole`                                       | `whole` is a family name chosen as one piece                               |
+| `component_origin`   | `table`, `split`, `published`, `common_words`                     | Where the chosen option comes from                                         |
+| `structure_control`  | `first_name_length`, `surname_length`, `compound_name`            | Which button was pressed                                                   |
+| `structure_value`    | `on`, `off`                                                       | The change made: a suffix or compound name added is `on`, removed is `off` |
+| `surname_kind`       | `published`, `constructed`                                        | The kind of surname the visitor switched to                                |
+| `locked`             | `on`, `off`                                                       | The lock's new state                                                       |
+| `setting_name`       | `gender`, `lineage`                                               | Which setting changed                                                      |
+| `setting_value`      | gender or lineage values above; `on` / `off` for Expanded Variety | The new value                                                              |
 
 ## GA4 setup still needed (manual, in the GA4 admin)
 
 1. **Custom dimensions** (Admin → Custom definitions → Create custom dimension, scope **Event**), one per parameter:
    `species`, `generation_mode`, `character_gender`, `lineage`, `roll_type`, `trigger`, `copy_source`,
-   `component_position`, `component_type`, `component_origin`, `locked`, `setting_name`, `setting_value`.
+   `component_position`, `component_type`, `component_origin`, `locked`, `setting_name`, `setting_value`,
+   `structure_control`, `structure_value`, `surname_kind` (the last three arrived with version 4.1.0; register them after
+   that release).
    Data appears only from the day each one is registered.
 2. **Custom metric:** `name_count` (scope Event, unit Standard), for names per user.
 3. **Key event (optional):** mark `name_copied` as a key event; copying is the clearest sign a name was useful.

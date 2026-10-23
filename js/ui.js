@@ -96,7 +96,9 @@ function wordMeaning(parts) {
 /**
  * @param {Object} result - generator result
  * @param {Set<string>} locked - keys of locked parts
- * @param {{ onToggleLock: Function, onChoose: Function }} handlers - onChoose opens the picker for a part
+ * @param {{ onToggleLock: Function, onChoose: Function, structure?: { controls: Object[], onChange: Function } }} handlers
+ *   - onChoose opens the picker for a part; `structure` gives the controls the generator offers now ({ control, on })
+ *   and the function called with the one pressed, shown as + / - beside the words they change
  */
 export function renderResult(result, locked, handlers) {
     const fromCreator = result.published?.source.creator;
@@ -112,8 +114,11 @@ export function renderResult(result, locked, handlers) {
         if (!words.length || startsSurname) words.push([]);
         words.at(-1).push(index);
     });
+    const { controls = [], onChange: onStep } = handlers.structure || {};
+    const stepState = new Map(controls.map(({ control, on }) => [control, on]));
+    let firstNameWords = 0;
     $("nameDials").replaceChildren(
-        ...words.map((indexes) => {
+        ...words.flatMap((indexes) => {
             const segments = wordMeaning(indexes.map((i) => result.parts[i]));
             const caption = element("span", "name-word-meaning");
             segments.forEach((segment, n) => {
@@ -125,8 +130,17 @@ export function renderResult(result, locked, handlers) {
             indexes.forEach((i) =>
                 row.append(renderPart(result.parts[i], texts[i], locked.has(result.parts[i].key), handlers))
             );
+            // a control sits at the end of the word it changes (given name, compound name, surname); a compound name
+            // that is not there yet is a dashed empty slot between the first name and the surname
+            const isSurname = isSurnamePart(result.parts[indexes[0]]);
+            const kind = isSurname ? "surname" : firstNameWords++ === 0 ? "given" : "compound";
+            const slot =
+                isSurname && stepState.get("compound") === false ? [renderStep("compound", false, onStep)] : [];
+            if (stepState.has(kind) && (kind !== "compound" || stepState.get(kind))) {
+                row.append(renderStep(kind, stepState.get(kind), onStep));
+            }
             word.append(caption, row);
-            return word;
+            return [...slot, word];
         })
     );
     const script = $("nameScript");
@@ -160,6 +174,30 @@ function renderPart(part, text, isLocked, { onToggleLock, onChoose }) {
     lock.setAttribute("aria-pressed", String(isLocked));
     wrapper.append(choose, lock);
     return wrapper;
+}
+
+// What each + / - button does, for screen readers: [when the control is off, when it is on]
+const STEP_LABELS = {
+    given: ["Add a suffix to the first name", "Remove the last suffix of the first name"],
+    compound: ["Add a compound name", "Remove the compound name"],
+    surname: ["Add a suffix to the surname", "Remove the last suffix of the surname"]
+};
+
+/** A + (the change is off now) or - (it is on) button for a structure control. */
+function renderStep(control, isOn, onChange) {
+    const step = iconButton(
+        `name-structure-step${control === "compound" && !isOn ? " is-slot" : ""}`,
+        isOn ? "minus" : "plus",
+        STEP_LABELS[control][isOn ? 1 : 0],
+        () => onChange(control)
+    );
+    step.dataset.control = control;
+    return step;
+}
+
+/** Puts keyboard focus back on a structure button after the name is redrawn. */
+export function focusStructure(control) {
+    $("nameDials").querySelector(`[data-control="${control}"]`)?.focus();
 }
 
 /** Puts keyboard focus back on a part after the name is redrawn (its buttons are replaced). */
@@ -271,37 +309,56 @@ export function renderFavorites(favorites, { onLoad, onCopy, onRemove, max }) {
 }
 
 /**
- * Opens the full list of options for one part, sorted alphabetically, with the current one marked and in view.
+ * Opens the full list of options for one part, sorted alphabetically, with the current one marked and in view. A
+ * surname offers two tabs (published and constructed); every other part has a single list.
  * @param {string} title
- * @param {Object[]} options - parts from the generator's optionsFor
+ * @param {{ kind?: string, label?: string, options: Object[], onPick: Function, selected?: boolean }[]} tabs - parts
+ *   from the generator; the tab marked `selected` is the kind the part is now and is shown first
  * @param {string} currentText
- * @param {Function} onPick - called with the chosen option
  */
-export function openPartPicker(title, options, currentText, onPick) {
+export function openPartPicker(title, tabs, currentText) {
     const dialog = $("partPicker");
     $("partPickerTitle").textContent = title;
     const describe = (option) => option.meaning || (option.from && `from ${option.from.slice(0, 3).join(", ")}`) || "";
-    const items = [...options]
-        .sort((a, b) => a.text.localeCompare(b.text))
-        .map((option) => {
-            const item = element("li");
-            const pick = button("part-picker-option", undefined, undefined, () => {
-                dialog.close();
-                onPick(option);
+    const showTab = (tab) => {
+        $("partPickerTabs")
+            .querySelectorAll("[role=tab]")
+            .forEach((node) => node.setAttribute("aria-selected", String(node.dataset.kind === tab.kind)));
+        const items = [...tab.options]
+            .sort((a, b) => a.text.localeCompare(b.text))
+            .map((option) => {
+                const item = element("li");
+                const pick = button("part-picker-option", undefined, undefined, () => {
+                    dialog.close();
+                    tab.onPick(option);
+                });
+                pick.append(
+                    element("span", "part-picker-text", option.text),
+                    element("span", "part-picker-detail", describe(option))
+                );
+                if (tab.selected && option.text === currentText) pick.setAttribute("aria-current", "true");
+                item.append(pick);
+                return item;
             });
-            pick.append(
-                element("span", "part-picker-text", option.text),
-                element("span", "part-picker-detail", describe(option))
-            );
-            if (option.text === currentText) pick.setAttribute("aria-current", "true");
-            item.append(pick);
-            return item;
-        });
-    $("partPickerList").replaceChildren(...items);
+        $("partPickerList").replaceChildren(...items);
+        dialog.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "center" });
+    };
+    const tabBar = $("partPickerTabs");
+    tabBar.hidden = tabs.length < 2;
+    tabBar.replaceChildren(
+        ...(tabs.length < 2
+            ? []
+            : tabs.map((tab) => {
+                  const node = button("part-picker-tab", tab.label, undefined, () => showTab(tab));
+                  node.setAttribute("role", "tab");
+                  node.dataset.kind = tab.kind;
+                  return node;
+              }))
+    );
+    showTab(tabs.find((tab) => tab.selected) || tabs[0]);
     dialog.showModal();
     dialog.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "center" });
 }
-
 let noticeTimer;
 /**
  * Shows a short message. With an action (such as Undo) it also shows a button and stays longer; it never disappears

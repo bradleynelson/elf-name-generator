@@ -4,9 +4,16 @@
 // components different meanings. Published FR houses are used alongside generated ones. Same result shape as
 // ElfNameGenerator; a result also carries its `shape` so locked components keep their places. Expanded Variety lets a
 // slot take a component of a published drow name instead (meaning unknown).
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.0.7";
-import { SplitComponents } from "./splitComponents.js?v=4.0.7";
-import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.0.7";
+import { RecentNames, selectRandom } from "./random.js?v=4.1.0";
+import { SplitComponents } from "./splitComponents.js?v=4.1.0";
+import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.0";
+import {
+    getAvailableControls,
+    getKeptParts,
+    getChangedShape,
+    selectRollShape,
+    sameShape
+} from "./nameStructure.js?v=4.1.0";
 
 const MAX_ATTEMPTS = 300;
 // Sourced: Dragon #267 Table 1 name shapes (weights 30/20/20/20/10). Chosen: apostrophe shapes halved to
@@ -29,6 +36,12 @@ const PUBLISHED_HOUSE_SHARE = 0.5;
 // Chosen (Expanded Variety): with the option on, each prefix or suffix slot is filled with a component of a
 // published drow name with this probability, so one name can mix table entries and published components.
 const SPLIT_COMPONENT_SHARE = 0.5;
+// The structure controls reuse the shapes above (see ElfNameGenerator); the compound name is the two-word shape's second word.
+const DROW_NAMES = { short: NAME_SHAPES[0].shape, long: NAME_SHAPES[1].shape, compound: NAME_SHAPES[3].shape };
+const STRUCTURE_CONTROLS = {
+    given: { isOn: (r) => sameShape(r.shape, DROW_NAMES.long) },
+    compound: { isOn: (r) => sameShape(r.shape, DROW_NAMES.compound) }
+};
 const VOWEL_GROUP = /[aeiouy]+/g;
 const TABLES_TITLE = "By Any Other Name: The Drow (Dragon #267)";
 const STRUCTURE = { "'": "apostrophe", " ": "space" };
@@ -51,31 +64,23 @@ export class DrowNameGenerator {
 
     /**
      * @param {Object} [options] - style ("neutral", "feminine", "masculine"); expanded: Expanded Variety (slots may
-     *   take components of published drow names); locks: parts to keep by key (first-name components "f0".."f4" with `shape` and `sex`;
-     *   house components "n0", "n1", or a whole "house"); random: number source
+     *   take components of published drow names); reshape: a roll, so locked slots keep their place but the shape may
+     *   change to any (weighted) shape in which they are still valid; locks: parts to keep by key (first-name
+     *   components "f0".."f4" with `shape` and `sex`; house components "n0", "n1", or a whole "house"); random: number
+     *   source
      */
-    generate({ style = "neutral", expanded = false, locks = {}, random = Math.random } = {}) {
+    generate({ style = "neutral", expanded = false, reshape = false, locks = {}, random = Math.random } = {}) {
         const keepsComponents = Object.keys(locks).some((key) => /^f\d/.test(key));
         let repeat = null;
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const sex = SEX_BY_STYLE[style] || (keepsComponents && locks.sex) || (random() < 0.5 ? "female" : "male");
-            const shape = keepsComponents ? locks.shape : selectWeighted(NAME_SHAPES, (s) => s.weight, random).shape;
+            const shape = keepsComponents && !reshape ? locks.shape : selectRollShape(NAME_SHAPES, locks, "f", random);
             const personal = this._buildPersonal(shape, sex, locks, !keepsComponents, random, expanded);
             const house = locks.house
                 ? { text: locks.house.text, parts: [locks.house] }
                 : this._buildHouse(locks, random);
             if (!personal || !house) continue;
-            const published = this.publishedByName.get(plain(personal.text));
-            const usesTables = [...personal.parts, ...house.parts].some((p) => p.meaning);
-            const result = {
-                name: `${personal.text} ${house.text}`,
-                sex,
-                subrace: "drow",
-                shape,
-                parts: [...personal.parts, ...house.parts],
-                ...(usesTables ? { tables: TABLES_TITLE } : {}),
-                ...(published ? { published: { source: published.source } } : {})
-            };
+            const result = this._assemble(personal, house, sex, shape);
             if (!this.recent.has(result.name)) return this._remember(result);
             repeat = repeat || result;
         }
@@ -106,6 +111,75 @@ export class DrowNameGenerator {
         const fits = (option) =>
             this._buildPersonal(result.shape, result.sex, { ...kept, [key]: option }, false, () => 0);
         return options.filter(fits);
+    }
+
+    /**
+     * The structure controls that can be pressed on a result, as { control, on }: "given" (short or long first name) and
+     * "compound" (the second given name). A house is always a prefix and a suffix, so it has no length control. A control
+     * is listed only if the changed name builds with every part kept.
+     */
+    structureControls(result, locked = new Set(), options = {}) {
+        return getAvailableControls(STRUCTURE_CONTROLS, result, (control) =>
+            this.changeStructure(result, control, { ...options, locked })
+        );
+    }
+
+    /**
+     * Presses a structure control; as for elves, every current part stays in its slot (only the new slots are random)
+     * and a change that would delete a locked slot is unavailable. Does not count as a roll.
+     * @returns {Object|null} the new name, or null if the change is unavailable
+     */
+    changeStructure(result, control, { locked = new Set(), expanded = false, random = Math.random } = {}) {
+        if (!(control in STRUCTURE_CONTROLS)) return null;
+        const shape = getChangedShape(control, result.shape, locked, "f", DROW_NAMES);
+        if (!shape) return null;
+        const kept = getKeptParts(result.parts, "f");
+        const { house } = sectionsOf(result);
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+            const personal = this._buildPersonal(shape, result.sex, kept, false, random, expanded);
+            if (personal) return this._assemble(personal, house, result.sex, shape);
+        }
+        return null;
+    }
+
+    /**
+     * For the house picker: the other kind of house to switch to, as { kind, options } ("published" houses, or
+     * "constructed" from a chosen prefix). No options if the switch would drop a locked part.
+     */
+    surnameSwitchOptions(result, locked = new Set()) {
+        if (result.parts.some((p) => p.key === "house")) {
+            const prefixes = this._housePrefixes().map((entry) => houseComponent("n0", "house prefix", entry));
+            return { kind: "constructed", options: locked.has("house") ? [] : prefixes };
+        }
+        const published = (this.data.publishedHouses || []).map((h) => publishedHouse(h));
+        return { kind: "published", options: locked.has("n0") || locked.has("n1") ? [] : published };
+    }
+
+    /**
+     * Replaces the house with a published one, or builds one from a chosen prefix (its suffix is random). The first
+     * name is kept. Does not count as a roll.
+     * @param {Object} choice - a part from surnameSwitchOptions
+     */
+    changeSurname(result, choice, { random = Math.random } = {}) {
+        const { personal } = sectionsOf(result);
+        const house =
+            choice.key === "house" ? { text: choice.text, parts: [choice] } : this._buildHouse({ n0: choice }, random);
+        return this._assemble(personal, house, result.sex, result.shape);
+    }
+
+    /** The result for a first name and a house. */
+    _assemble(personal, house, sex, shape) {
+        const published = this.publishedByName.get(plain(personal.text));
+        const parts = [...personal.parts, ...house.parts];
+        return {
+            name: `${personal.text} ${house.text}`,
+            sex,
+            subrace: "drow",
+            shape,
+            parts,
+            ...(parts.some((p) => p.meaning) ? { tables: TABLES_TITLE } : {}),
+            ...(published ? { published: { source: published.source } } : {})
+        };
     }
 
     /** Chosen: a neutral name uses only table entries whose female and male forms are the same. */
@@ -177,6 +251,18 @@ export class DrowNameGenerator {
             ]
         };
     }
+}
+
+/** The first name and house of a result as sections ({ text, parts }), for rebuilding one of them. */
+function sectionsOf(result) {
+    const parts = (pattern) => result.parts.filter((p) => pattern.test(p.key));
+    const houseParts = parts(/^(n|house)/);
+    const houseText =
+        houseParts[0].key === "house" ? houseParts[0].text : capitalize(houseParts.map((p) => p.text).join(""));
+    return {
+        personal: { text: result.name.slice(0, result.name.length - houseText.length - 1), parts: parts(/^[fs]/) },
+        house: { text: houseText, parts: houseParts }
+    };
 }
 
 const houseComponent = (key, role, entry) => ({ key, role, text: entry.text, meaning: entry.meaning });
