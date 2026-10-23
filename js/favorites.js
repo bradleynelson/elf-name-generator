@@ -1,5 +1,7 @@
 // Saved names, history and remembered settings, kept in this browser only. The saved-names key and record shape match the previous
 // version of the site, so names saved there (including other races) are kept and still shown.
+import { ELF_SUBRACES } from "./core/ElfNameGenerator.js?v=4.1.1";
+
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";
 const SETTING_PREFIX = "faerunNameSetting.";
@@ -35,14 +37,36 @@ export function saveSetting(name, value) {
 }
 export const MAX_FAVORITES = 100;
 
-/** Recent results (newest first); empty when storage is unavailable or the record is unreadable. */
-export function loadHistory() {
+const SUBRACES = [...ELF_SUBRACES, "drow"];
+const isText = (value) => typeof value === "string" && value !== "";
+
+/**
+ * True if a stored result can be shown and built on again: a name, a lineage this version offers, and parts that each
+ * have a key, a role and text. Records from older versions or edited by hand may fail this.
+ */
+export function validateResult(result) {
+    return (
+        isText(result?.name) &&
+        SUBRACES.includes(result.subrace) &&
+        Array.isArray(result.parts) &&
+        result.parts.length > 0 &&
+        result.parts.every((part) => isText(part?.key) && isText(part.role) && typeof part.text === "string")
+    );
+}
+
+/** Reads a stored list; anything that is not a list (missing, unreadable, blocked storage) reads as empty. */
+function loadList(key) {
     try {
-        const saved = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
-        return Array.isArray(saved) ? saved.filter((r) => r?.name && Array.isArray(r.parts)) : [];
+        const saved = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(saved) ? saved : [];
     } catch {
         return [];
     }
+}
+
+/** Recent results (newest first); entries that cannot be shown are skipped. */
+export function loadHistory() {
+    return loadList(HISTORY_KEY).filter(validateResult);
 }
 
 /** History is a convenience: if the browser will not store it, it still works for this visit. */
@@ -54,14 +78,16 @@ export function saveHistory(history) {
     }
 }
 
+/**
+ * Saved names; a record without a name is skipped. Records are kept as stored: one whose result cannot be shown (saved
+ * by an older version, or for another race) is still listed and can be copied (see canLoadFavorite).
+ */
 export function loadFavorites() {
-    try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-        return Array.isArray(saved) ? saved : [];
-    } catch {
-        return [];
-    }
+    return loadList(STORAGE_KEY).filter((record) => isText(record?.name));
 }
+
+/** True if a saved name can be shown again with its components, rather than only listed. */
+export const canLoadFavorite = (record) => validateResult(record.result);
 
 /** Adds a name; returns the updated list. Throws an Error with a user-facing message when it cannot be saved. */
 export function addFavorite(favorites, result) {

@@ -1,6 +1,6 @@
 {
     "name": "elf-name-generator",
-    "version": "4.1.0",
+    "version": "4.1.1",
     "description": "Faerûn Name Generator - Elven & Dwarven Names",
     "type": "module",
     "scripts": {
@@ -14,37 +14,24 @@
         "test:coverage": "vitest --coverage",
         "test:watch": "vitest --watch",
         "test:log-update": "node scripts/log-test-update.js",
-        "lint": "eslint js/ tests/ --ext .js --cache --cache-location .eslintcache --max-warnings 0",
-        "lint:fix": "eslint js/ tests/ --ext .js --fix --cache --cache-location .eslintcache",
-        "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
-        "a11y": "pa11y http://localhost:4173",
+        "lint": "eslint js/ tests/ --cache --cache-location .eslintcache --max-warnings 0",
+        "lint:fix": "eslint js/ tests/ --fix --cache --cache-location .eslintcache",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "prepare": "husky install",
         "version:major": "node scripts/version.js major",
         "version:minor": "node scripts/version.js minor",
         "version:patch": "node scripts/version.js patch",
         "version": "npm run version:patch"
     },
     "devDependencies": {
-        "@vitest/coverage-v8": "^4.0.15",
-        "@vitest/ui": "^4.0.15",
-        "eslint": "^8.57.0",
-        "eslint-plugin-markdown": "^3.0.1",
-        "husky": "^9.1.6",
-        "jsdom": "^23.0.0",
-        "lint-staged": "^15.2.10",
-        "markdownlint-cli": "^0.46.0",
-        "pa11y": "^9.0.1",
-        "prettier": "^3.4.1",
-        "vitest": "^4.0.15"
-    },
-    "lint-staged": {
-        "*.{js,jsx,ts,tsx}": [
-            "eslint --fix"
-        ],
-        "*.{js,jsx,ts,tsx,json,css,md,html}": [
-            "prettier --write"
-        ]
+        "@eslint/js": "^10.0.1",
+        "@vitest/coverage-v8": "^5.0.5",
+        "@vitest/ui": "^5.0.5",
+        "eslint": "^10.13.0",
+        "globals": "^17.13.0",
+        "jsdom": "^30.1.3",
+        "prettier": "^3.9.10",
+        "vitest": "^5.0.5",
+        "yaml": "^2.9.1"
     }
 }

@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1] - 2026-10-23
+
+### Fixed
+
+- A surname built with a joining letter (such as Kerelar) now shows as one word. It was drawn as two, with two + buttons.
+- Showing a name again from the history or your saved names no longer carries over the locks from the name on screen.
+- The Privacy link works even when your browser blocks site storage.
+- Saved names and history from older versions, or damaged in storage, no longer break the lists; anything that cannot be shown again is still listed.
+- Drow components taken from published names (Expanded Variety) now show the books those names come from, as elf ones do.
+- The Published and Constructed switch in the surname picker is now a pair of toggle buttons, so screen readers announce which list is shown and the keyboard works as expected.
+
+### Changed
+
+- Error reports sent to Google Analytics (only with your consent) now say only where an error happened and its type, never its message.
+
+### Maintenance
+
+- Development tools updated (ESLint 10, Vitest 5, jsdom 30, Prettier 3.9) and unused ones removed (pa11y, markdownlint, husky, lint-staged); `npm audit` now reports no vulnerabilities. None of these ship to visitors.
+- The test pipeline runs on Node 24, fails on high or critical dependency advisories instead of ignoring them, and pins each GitHub Action to an exact commit.
+- Dependabot opens one grouped update a week for npm packages and one for GitHub Actions, skipping releases less than a week old.
+- A weekly Lighthouse check of espruar.com fails if the accessibility score drops below 90.
+- The version script also updates `package-lock.json` and turns the changelog's [Unreleased] entry into the release; one current release guide (`.github/RELEASING.md`) replaces three outdated setup guides.
+- The site is published from the approved website files only, through GitHub Pages' own deployment, and each deploy checks that every other repository file (package.json, tests, scripts) returns 404 on espruar.com.
+
 ## [4.1.0] - 2026-10-22
 
 ### Added

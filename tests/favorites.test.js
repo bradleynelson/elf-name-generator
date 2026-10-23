@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
     MAX_FAVORITES,
     addFavorite,
+    canLoadFavorite,
     loadFavorites,
     loadHistory,
     loadSetting,
@@ -12,7 +13,12 @@ import {
 } from "../js/favorites.js";
 
 // Saved names and history live only in this browser; saving must never lose existing names or break the page.
-const result = (name) => ({ name, sex: "neutral", subrace: "moon-elf", parts: [{ key: "t0", text: name }] });
+const result = (name) => ({
+    name,
+    sex: "neutral",
+    subrace: "moon-elf",
+    parts: [{ key: "t0", role: "prefix", text: name }]
+});
 
 describe("saved names", () => {
     it("keeps a saved name across page loads, with its full result", () => {
@@ -57,6 +63,18 @@ describe("saved names", () => {
         localStorage.setItem("faerunNameFavorites", "{not json");
         expect(loadFavorites()).toEqual([]);
     });
+
+    it("skips records without a name and keeps older ones as stored, loadable only if their result is usable", () => {
+        const older = { name: "Thorin Ironfist", generatorType: "dwarven", savedAt: 1 }; // saved by v3, text only
+        const damaged = { name: "Ilsevel", result: { name: "Ilsevel", subrace: "moon-elf", parts: [null] } };
+        const otherRace = { name: "Bimpnottin", result: { ...result("Bimpnottin"), subrace: "rock-gnome" } };
+        const good = { name: "Aerith", result: result("Aerith") };
+        const stored = [null, { savedAt: 2 }, older, damaged, otherRace, good];
+        localStorage.setItem("faerunNameFavorites", JSON.stringify(stored));
+        const loaded = loadFavorites();
+        expect(loaded).toEqual([older, damaged, otherRace, good]);
+        expect(loaded.map(canLoadFavorite)).toEqual([false, false, false, true]);
+    });
 });
 
 describe("remembered settings", () => {
@@ -69,7 +87,9 @@ describe("remembered settings", () => {
 
 describe("history", () => {
     it("keeps history across page loads and skips entries it cannot show", () => {
-        saveHistory([result("Ilsevel"), { name: "Broken" }, null]);
+        const brokenPart = { ...result("Aerith"), parts: [{ key: "t0" }] };
+        const unknownLineage = { ...result("Bimpnottin"), subrace: "rock-gnome" };
+        saveHistory([result("Ilsevel"), { name: "Broken" }, null, brokenPart, unknownLineage]);
         expect(loadHistory().map((r) => r.name)).toEqual(["Ilsevel"]);
         localStorage.setItem("faerunNameHistory", "{not json");
         expect(loadHistory()).toEqual([]);

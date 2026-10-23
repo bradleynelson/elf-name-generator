@@ -4,16 +4,16 @@
 // components different meanings. Published FR houses are used alongside generated ones. Same result shape as
 // ElfNameGenerator; a result also carries its `shape` so locked components keep their places. Expanded Variety lets a
 // slot take a component of a published drow name instead (meaning unknown).
-import { RecentNames, selectRandom } from "./random.js?v=4.1.0";
-import { SplitComponents } from "./splitComponents.js?v=4.1.0";
-import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.0";
+import { RecentNames, selectRandom } from "./random.js?v=4.1.1";
+import { SplitComponents } from "./splitComponents.js?v=4.1.1";
+import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.1";
 import {
     getAvailableControls,
     getKeptParts,
     getChangedShape,
     selectRollShape,
     sameShape
-} from "./nameStructure.js?v=4.1.0";
+} from "./nameStructure.js?v=4.1.1";
 
 const MAX_ATTEMPTS = 300;
 // Sourced: Dragon #267 Table 1 name shapes (weights 30/20/20/20/10). Chosen: apostrophe shapes halved to
@@ -58,7 +58,11 @@ export class DrowNameGenerator {
         this.commonWords = new Set(data.commonWords || []);
         this.publishedByName = new Map((data.publishedNames || []).map((p) => [plain(p.text), p]));
         const forms = (entries) => new Set(entries.flatMap((e) => [e.female, e.male]).map((t) => t.toLowerCase()));
-        this.split = new SplitComponents(data, { prefix: forms(data.prefixes), suffix: forms(data.suffixes) });
+        this.split = new SplitComponents(
+            data,
+            { prefix: forms(data.prefixes), suffix: forms(data.suffixes) },
+            data.publishedNames
+        );
         this.recent = new RecentNames();
     }
 

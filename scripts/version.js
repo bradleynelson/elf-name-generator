@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Version management script
- * Updates version in package.json and index.html
+ * Updates the version in package.json, package-lock.json, the index.html footer and every ?v= stamp, and turns the
+ * CHANGELOG's [Unreleased] entry into the new version.
  * Usage: node scripts/version.js [major|minor|patch]
  */
 
@@ -55,6 +56,15 @@ packageJson.version = newVersion;
 writeFileSync(packagePath, JSON.stringify(packageJson, null, 4) + "\n");
 console.log(`✓ Updated package.json: ${currentVersion} → ${newVersion}`);
 
+// package-lock.json repeats the version at its top and for the root package; keep its indentation, as npm does
+const lockPath = join(rootDir, "package-lock.json");
+const lockText = readFileSync(lockPath, "utf-8");
+const lock = JSON.parse(lockText);
+lock.version = newVersion;
+lock.packages[""].version = newVersion;
+writeFileSync(lockPath, JSON.stringify(lock, null, lockText.match(/^\{\r?\n([ \t]+)/)?.[1] ?? 2) + "\n");
+console.log(`✓ Updated package-lock.json`);
+
 // Update index.html
 const indexPath = join(rootDir, "index.html");
 let indexContent = readFileSync(indexPath, "utf-8");
@@ -94,10 +104,15 @@ try {
     const day = String(now.getDate()).padStart(2, "0");
     const dateStringFull = `${year}-${month}-${day}`;
 
-    const newEntry = `## [${newVersion}] - ${dateStringFull}\n\n### Changed\n- Version bump\n\n`;
+    const heading = `## [${newVersion}] - ${dateStringFull}`;
 
-    // Insert above the newest existing entry, so the intro paragraph stays under the "# Changelog" header
-    changelogContent = changelogContent.replace(/^## \[/m, `${newEntry}## [`);
+    if (/^## \[Unreleased\]/m.test(changelogContent)) {
+        // the changes were written up as they were made: they become this version
+        changelogContent = changelogContent.replace(/^## \[Unreleased\]/m, heading);
+    } else {
+        // Insert above the newest existing entry, so the intro paragraph stays under the "# Changelog" header
+        changelogContent = changelogContent.replace(/^## \[/m, `${heading}\n\n### Changed\n- Version bump\n\n## [`);
+    }
 
     writeFileSync(changelogPath, changelogContent, "utf-8");
     console.log(`✓ Updated CHANGELOG.md`);
@@ -107,4 +122,4 @@ try {
 
 console.log(`\n✅ Version bumped: ${currentVersion} → ${newVersion} (${versionType})`);
 console.log(`📅 Date updated: ${dateString}`);
-console.log(`\n💡 Remember to update CHANGELOG.md with actual changes!`);
+console.log(`\n💡 Check that CHANGELOG.md describes the changes for visitors.`);

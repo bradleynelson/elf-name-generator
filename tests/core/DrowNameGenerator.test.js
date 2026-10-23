@@ -65,6 +65,16 @@ describe("DrowNameGenerator with the published tables", () => {
         expect(new Set(next.map((r) => r.parts.find((p) => p.key === "n1").text)).size).toBeGreaterThan(1);
     });
 
+    it("names the books a split component's source names come from (Expanded Variety)", () => {
+        const bookOf = new Map(data.publishedNames.map((p) => [p.text, p.source.title]));
+        const splits = sample(new DrowNameGenerator(data), 300, { expanded: true }).flatMap((r) =>
+            r.parts.filter((p) => p.method === "split")
+        );
+        expect(splits.length).toBeGreaterThan(0);
+        splits.forEach((p) => expect(p.books).toEqual([...new Set(p.from.map((name) => bookOf.get(name)))]));
+        expect(splits.every((p) => p.books.length > 0)).toBe(true);
+    });
+
     it("keeps locked components in their places", () => {
         const gen = new DrowNameGenerator(data);
         const first = gen.generate({ style: "feminine", random: seededRandom(3) });

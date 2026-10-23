@@ -9,8 +9,8 @@
 // tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
 // are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
 // the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.0";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.0";
+import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.1";
+import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.1";
 import {
     getAvailableControls,
     getKeptParts,
@@ -18,7 +18,7 @@ import {
     selectRollShape,
     sameShape,
     getSlotNumber
-} from "./nameStructure.js?v=4.1.0";
+} from "./nameStructure.js?v=4.1.1";
 
 const MAX_ATTEMPTS = 300;
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep
@@ -79,21 +79,18 @@ export class ElfNameGenerator {
             prefix: new Set(data.tables.prefixes.map((p) => p.text.toLowerCase())),
             suffix: new Set(data.tables.suffixes.flatMap((s) => [...s.male, ...s.female]).map((t) => t.toLowerCase()))
         };
-        this.split = new SplitComponents(data, tableTexts);
+        this.split = new SplitComponents(data, tableTexts, data.publishedNames);
         this.familySplit = new SplitComponents(
             {
                 openings: data.familyOpenings,
                 endings: data.familyEndings,
                 joinClusters: data.familyJoinClusters
             },
-            tableTexts
+            tableTexts,
+            data.familyNames
         );
         this.publishedByName = new Map((data.publishedNames || []).map((p) => [p.text.toLowerCase(), p]));
         this.houseNames = new Set((data.familyNames || []).map((f) => f.text.toLowerCase()));
-        // book each published name comes from, to show the sources of the parts cut from it
-        this.bookOf = new Map(
-            [...(data.publishedNames || []), ...(data.familyNames || [])].map((p) => [p.text, p.source.title])
-        );
         this.recent = new RecentNames();
     }
 
@@ -401,11 +398,7 @@ export class ElfNameGenerator {
             subrace,
             ...(personal.shape ? { shape: personal.shape } : {}),
             ...(family.shape ? { familyShape: family.shape } : {}),
-            parts: [...personal.parts, ...family.parts].map((part) =>
-                part.from && part.method !== "composed"
-                    ? { ...part, books: [...new Set(part.from.map((n) => this.bookOf.get(n)).filter(Boolean))] }
-                    : part
-            ),
+            parts: [...personal.parts, ...family.parts],
             ...(usesTables ? { tables: `${this.tables.title}, first published in ${this.tables.origin}` } : {}),
             ...(published ? { published: { source: published.source } } : {})
         };
