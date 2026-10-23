@@ -9,8 +9,8 @@
 // tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
 // are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
 // the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.0.6";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.0.6";
+import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.0.7";
+import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.0.7";
 
 const MAX_ATTEMPTS = 300;
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep
@@ -67,12 +67,19 @@ export class ElfNameGenerator {
         this.tables = data.tables;
         this.data = data;
         this.drowGenerator = drowGenerator;
-        this.split = new SplitComponents(data);
-        this.familySplit = new SplitComponents({
-            openings: data.familyOpenings,
-            endings: data.familyEndings,
-            joinClusters: data.familyJoinClusters
-        });
+        const tableTexts = {
+            prefix: new Set(data.tables.prefixes.map((p) => p.text.toLowerCase())),
+            suffix: new Set(data.tables.suffixes.flatMap((s) => [...s.male, ...s.female]).map((t) => t.toLowerCase()))
+        };
+        this.split = new SplitComponents(data, tableTexts);
+        this.familySplit = new SplitComponents(
+            {
+                openings: data.familyOpenings,
+                endings: data.familyEndings,
+                joinClusters: data.familyJoinClusters
+            },
+            tableTexts
+        );
         this.publishedByName = new Map((data.publishedNames || []).map((p) => [p.text.toLowerCase(), p]));
         this.houseNames = new Set((data.familyNames || []).map((f) => f.text.toLowerCase()));
         // book each published name comes from, to show the sources of the parts cut from it

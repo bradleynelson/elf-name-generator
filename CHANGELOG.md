@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.7] - 2026-10-22
+
+### Fixed
+
+- With Expanded Variety on, a name could use letters that a name table already has, but without that entry's meaning, and the part picker listed the same letters twice (for example "nis", once as "Dawn" and once with no meaning). Those entries are now left out of the published-name components, for elves and drow.
+- The "Name meanings and sources" heading no longer flickers to a different wording while rolling; it always reads the same.
+
+### Changed
+
+- On desktop the page is wider, and the name shrinks to fit its card, so a long last name no longer wraps and shifts the page. On narrow screens, such as phones, the last name always goes on its own line.
+- More space between Roll Name and the "Written in" line.
+- The lore section is now "Etymology & Lore". Elves of the Realms holds the notes that apply to all elves, with Surface elves, Drow, Espruar and a new "The Lore Gem (Selu’kiira)" note nested under it.
+
 ## [4.0.6] - 2026-10-22
 
 ### Fixed

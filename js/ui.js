@@ -112,11 +112,9 @@ export function renderResult(result, locked, handlers) {
         if (!words.length || startsSurname) words.push([]);
         words.at(-1).push(index);
     });
-    let hasMeaning = false;
     $("nameDials").replaceChildren(
         ...words.map((indexes) => {
             const segments = wordMeaning(indexes.map((i) => result.parts[i]));
-            hasMeaning ||= segments.some((s) => !s.unknown);
             const caption = element("span", "name-word-meaning");
             segments.forEach((segment, n) => {
                 if (n) caption.append(" · ");
@@ -137,7 +135,6 @@ export function renderResult(result, locked, handlers) {
     script.dataset.script = result.subrace === "drow" ? "high-drowic" : "espruar";
     $("nameScriptLabel").textContent =
         result.subrace === "drow" ? "Written in the High Drowic font" : "Written in Espruar, the elven alphabet";
-    $("nameSourcesSummary").textContent = hasMeaning ? "Name meanings and sources" : "Where this name comes from";
     $("nameSources").replaceChildren(
         ...describeSources(result).map(([label, value]) => {
             const row = element("div", "name-sources-row");

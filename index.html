@@ -33,18 +33,18 @@
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.0.6" />
+        <link rel="stylesheet" href="style.css?v=4.0.7" />
         <!-- Start the script and data downloads now instead of after each import is discovered in turn -->
-        <link rel="modulepreload" href="js/app.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/ui.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.0.6" />
-        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.0.6" />
-        <link rel="preload" href="data/elfNames.json?v=4.0.6" as="fetch" crossorigin />
-        <link rel="preload" href="data/drowNames.json?v=4.0.6" as="fetch" crossorigin />
+        <link rel="modulepreload" href="js/app.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/ui.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.0.7" />
+        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.0.7" />
+        <link rel="preload" href="data/elfNames.json?v=4.0.7" as="fetch" crossorigin />
+        <link rel="preload" href="data/drowNames.json?v=4.0.7" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
@@ -261,7 +261,7 @@
                 </div>
 
                 <details class="name-card-sources">
-                    <summary id="nameSourcesSummary">Where this name comes from</summary>
+                    <summary id="nameSourcesSummary">Name meanings and sources</summary>
                     <div class="name-sources" id="nameSources"></div>
                 </details>
             </section>
@@ -294,14 +294,13 @@
             </section>
 
             <section class="lore" aria-labelledby="loreTitle">
-                <h2 id="loreTitle">How the names work</h2>
+                <h2 id="loreTitle">Etymology &amp; Lore</h2>
                 <details>
                     <summary>Elves of the Realms</summary>
                     <p>
-                        In the world of Faerûn, surface elves have several lineages, the most common being high elves
-                        (sun and moon elves) and wood elves. While no distinct naming conventions are explicitly
-                        documented for these lineages, patterns can be observed in published material, and this
-                        generator reflects those patterns.
+                        The elves of Faerûn include the surface elves and the drow, who share a common ancestry. The
+                        notes here apply to both; the naming of each is described in its own section below, including
+                        related lore.
                     </p>
                     <p>
                         Elves are given childhood names at birth and choose their adult names some time after their
@@ -310,19 +309,11 @@
                         to carry over into adulthood, the prefixes generated here could often serve as childhood names.
                     </p>
                     <p>
-                        First names are built from the elven name tables in <cite>Races of the Wild</cite> (3.5e), first
-                        published as "By Any Other Name" (<cite>Dragon</cite> #251): a prefix and one or more suffixes,
-                        each with its own meaning. When two components don't join smoothly, a letter is added, as that
-                        article suggests. Together with the family names, that allows over a quadrillion theoretically
-                        possible combinations. With Expanded Variety on, some prefixes and suffixes are instead the
-                        start or end of a documented Elven name; their meanings are unknown.
+                        Every elf has a family name, often translated into Common (<cite>Player's Handbook</cite>, 5e).
                     </p>
                     <p>
-                        Every elf has a family name, often translated into Common (<cite>Player's Handbook</cite>, 5e).
-                        This generator uses published family names (with their translation when a book gives one, such
-                        as Galanodel, "Moonwhisper"), builds new ones from the same tables, or combines Common words
-                        found in published family names. In published sources, moon elves use Common family names more
-                        frequently than sun elves, and the generator reflects that distinction.
+                        With Expanded Variety on, some prefixes and suffixes are instead the start or end of a
+                        documented name; their meanings are unknown.
                     </p>
                     <p>
                         No two elves share a name except by choice (<cite>The Complete Book of Elves</cite>, 2e). If a
@@ -333,44 +324,77 @@
                         than from official books. He created the Forgotten Realms, but his answers are not official
                         publications, so names that come only from them are labelled.
                     </p>
-                </details>
-                <details>
-                    <summary>Drow</summary>
-                    <p>
-                        Drow are dark elves whose ancestral homeland is the Underdark. While they share a common
-                        ancestry with surface elves, they have developed their own distinct culture and traditions.
-                    </p>
-                    <p>
-                        Drow names are constructed using the tables in "By Any Other Name: The Drow" (<cite
-                            >Dragon</cite
-                        >
-                        #267), combining a prefix with one or more suffixes, each carrying its own meaning. Traditional
-                        drow naming conventions distinguish between masculine and feminine name elements, reflecting the
-                        rigid gender hierarchy of Lolthite society. Feminine elements carry associations of status and
-                        authority: a drow man who used one would be considered "a rogue or troublemaker."
-                    </p>
-                    <p>
-                        While noble families proudly bear their house surnames, commoners generally cannot use a noble
-                        house name unless they hold a titled position within that house (<cite
-                            >The Drow of the Underdark</cite
-                        >, 2e). This generator uses published house names or constructs new ones from the tables in
-                        <cite>Dragon</cite> #267. By tradition, no house name begins with the same "L" sound as Lolth,
-                        and no drow bears her name or its variants, except a revealed avatar of the goddess (<cite
-                            >The Drow of the Underdark</cite
-                        >, 2e).
-                    </p>
-                </details>
-                <details>
-                    <summary>Espruar</summary>
-                    <p>
-                        Espruar is the elven alphabet of Faerûn, the script elves use to write their languages (<cite
-                            >Forgotten Realms Campaign Setting</cite
-                        >, 3e). It is an alphabet, not a language.
-                    </p>
-                    <p>
-                        Under each name, the same letters are shown in an Espruar font. This is a letter-for-letter
-                        transcription, not a translation. Drow names are shown in the High Drowic font instead.
-                    </p>
+                    <details>
+                        <summary>Surface elves</summary>
+                        <p>
+                            Surface elves have several lineages, the most common being high elves (sun and moon elves)
+                            and wood elves. While no distinct naming conventions are explicitly documented for these
+                            lineages, patterns can be observed in published material, and this generator reflects those
+                            patterns.
+                        </p>
+                        <p>
+                            First names are built from the elven name tables in <cite>Races of the Wild</cite> (3.5e),
+                            first published as "By Any Other Name" (<cite>Dragon</cite> #251): a prefix and one or more
+                            suffixes, each with its own meaning. When two components don't join smoothly, a letter is
+                            added, as that article suggests. Together with the family names, that allows over a
+                            quadrillion theoretically possible combinations.
+                        </p>
+                        <p>
+                            This generator uses published family names (with their translation when a book gives one,
+                            such as Galanodel, "Moonwhisper"), builds new ones from the same tables, or combines Common
+                            words found in published family names. In published sources, moon elves use Common family
+                            names more frequently than sun elves, and the generator reflects that distinction.
+                        </p>
+                    </details>
+                    <details>
+                        <summary>Drow</summary>
+                        <p>
+                            Drow are dark elves whose ancestral homeland is the Underdark. While they share a common
+                            ancestry with surface elves, they have developed their own distinct culture and traditions.
+                        </p>
+                        <p>
+                            Drow names are constructed using the tables in "By Any Other Name: The Drow" (<cite
+                                >Dragon</cite
+                            >
+                            #267), combining a prefix with one or more suffixes, each carrying its own meaning.
+                            Traditional drow naming conventions distinguish between masculine and feminine name
+                            elements, reflecting the rigid gender hierarchy of Lolthite society. Feminine elements carry
+                            associations of status and authority: a drow man who used one would be considered "a rogue
+                            or troublemaker."
+                        </p>
+                        <p>
+                            While noble families proudly bear their house surnames, commoners generally cannot use a
+                            noble house name unless they hold a titled position within that house (<cite
+                                >The Drow of the Underdark</cite
+                            >, 2e). This generator uses published house names or constructs new ones from the tables in
+                            <cite>Dragon</cite> #267. By tradition, no house name begins with the same "L" sound as
+                            Lolth, and no drow bears her name or its variants, except a revealed avatar of the goddess
+                            (<cite>The Drow of the Underdark</cite>, 2e).
+                        </p>
+                    </details>
+                    <details>
+                        <summary>Espruar</summary>
+                        <p>
+                            Espruar is the elven alphabet of Faerûn, the script elves use to write their languages
+                            (<cite>Forgotten Realms Campaign Setting</cite>, 3e). It is an alphabet, not a language.
+                        </p>
+                        <p>
+                            Under each name, the same letters are shown in an Espruar font. This is a letter-for-letter
+                            transcription, not a translation. Drow names are shown in the High Drowic font instead.
+                        </p>
+                    </details>
+                    <details>
+                        <summary>The Lore Gem (Selu’kiira)</summary>
+                        <p>
+                            The "Roll Name" button is inspired by the <i>selu’kiira</i>, an elven High Lore Gem. Made
+                            from rainbow tourmaline, these magical crystals preserve centuries of knowledge and
+                            memories, changing colors as they absorb more knowledge until they finally turn brilliant
+                            red after accumulating more than 3,000 years' worth (<cite
+                                >Cormanthyr: Empire of the Elves</cite
+                            >
+                            (1998), p. 152).
+                        </p>
+                    </details>
                 </details>
             </section>
         </main>
@@ -407,7 +431,7 @@
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
                 <a href="#" class="privacy-link">Privacy</a>
             </p>
-            <p class="site-version">v4.0.6 - Last Updated 10-22-26</p>
+            <p class="site-version">v4.0.7 - Last Updated 10-22-26</p>
         </footer>
 
         <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
@@ -442,6 +466,6 @@
             <form method="dialog"><button>Close</button></form>
         </dialog>
 
-        <script type="module" src="js/app.js?v=4.0.6"></script>
+        <script type="module" src="js/app.js?v=4.0.7"></script>
     </body>
 </html>

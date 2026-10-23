@@ -95,6 +95,24 @@ describe("ElfNameGenerator with the published tables", () => {
             });
     });
 
+    it("never offers a split component that has the same letters as a table entry, which already has a meaning", () => {
+        const tablePrefixes = new Set(prefixes.map((p) => p.text.toLowerCase()));
+        const tableSuffixes = new Set(suffixes.flatMap((s) => [...s.male, ...s.female]).map((t) => t.toLowerCase()));
+        const gen = new ElfNameGenerator(data);
+        const results = sample(gen, 1500, { expanded: true });
+        const splits = results.flatMap((r) => r.parts.filter((p) => p.method === "split" && /^t\d/.test(p.key)));
+        expect(splits.length).toBeGreaterThan(0);
+        splits.forEach((p) => expect((p.role === "prefix" ? tablePrefixes : tableSuffixes).has(p.text)).toBe(false));
+        // the part picker lists each spelling of a table entry once, so "nis" is not offered both as Dawn and unknown
+        const withSplit = results.find((r) => r.parts.some((p) => p.method === "split" && p.key === "t0"));
+        const options = gen.optionsFor(withSplit, "t0");
+        const asPrefix = (o) => o.role === "prefix";
+        options
+            .filter(asPrefix)
+            .filter((o) => o.method === "split")
+            .forEach((o) => expect(tablePrefixes.has(o.text.toLowerCase())).toBe(false));
+    });
+
     it("carries a family name's published translation, and invents none", () => {
         const translated = new Map(data.familyNames.filter((f) => f.translation).map((f) => [f.text, f.translation]));
         const families = sample(new ElfNameGenerator(data), 2000)
