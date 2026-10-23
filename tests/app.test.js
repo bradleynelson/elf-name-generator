@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const page = readFileSync(join(process.cwd(), "index.html"), "utf-8");
 const $ = (id) => document.getElementById(id);
 const textOf = (key) => document.querySelector(`[data-key="${key}"] .name-part-text`)?.textContent;
+const textButton = (key) => document.querySelector(`[data-key="${key}"] .name-part-text`);
 const roll = () => $("generateButton").click();
 // usage events are recorded here instead of being sent
 const events = [];
@@ -70,6 +71,111 @@ describe("page flows", () => {
         expect(document.activeElement).toBe(document.querySelector('[data-key="t0"] .name-part-text'));
     });
 
+    it("adds and removes a suffix with the + and - beside the name, keeping focus and the history", () => {
+        // a plain first name with a table surname offers all three controls
+        const addGiven = '[data-control="given"][aria-label^="Add"]';
+        for (let i = 0; i < 80 && !document.querySelector(addGiven); i++) roll();
+        const history = () => document.querySelectorAll("#historyList li").length;
+        const before = {
+            name: $("nameText").textContent,
+            history: history(),
+            parts: document.querySelectorAll(".name-part")
+        };
+        const plus = document.querySelector(addGiven);
+        plus.focus();
+        plus.click();
+        expect(document.querySelector('[data-control="given"]').getAttribute("aria-label")).toMatch(/^Remove/);
+        expect(document.querySelectorAll(".name-part").length).toBe(before.parts.length + 1);
+        expect(document.activeElement.dataset.control).toBe("given");
+        expect(history()).toBe(before.history);
+        document.querySelector('[data-control="given"]').click();
+        expect($("nameText").textContent.split(" ").at(-1)).toBe(before.name.split(" ").at(-1));
+        // a part chosen in the picker is a manual edit too
+        document.querySelector('[data-key="t0"] .name-part-text').click();
+        document.querySelector(".part-picker-option").click();
+        expect(history()).toBe(before.history);
+    });
+
+    it("shows a compound name's + as an empty slot between the names, and its - on the compound word", () => {
+        const words = () => document.querySelectorAll(".name-word").length;
+        const slot = '.name-structure-step.is-slot[data-control="compound"]';
+        for (let i = 0; i < 80 && !document.querySelector(slot); i++) roll();
+        expect(words()).toBe(2);
+        // the slot comes before the surname word
+        expect(document.querySelector(slot).nextElementSibling.classList.contains("name-word")).toBe(true);
+        document.querySelector(slot).click();
+        expect(words()).toBe(3);
+        expect(document.querySelector(slot)).toBeNull();
+        const remove = document.querySelectorAll(".name-word")[1].querySelector('[data-control="compound"]');
+        expect(remove.getAttribute("aria-label")).toBe("Remove the compound name");
+        remove.click();
+        expect(words()).toBe(2);
+    });
+    it("switches the surname between published and constructed in its picker, without rolling", () => {
+        const surnamePart = () => textButton("family") || textButton("n0");
+        const tabs = () => [...document.querySelectorAll("#partPickerTabs [role=tab]")];
+        const history = () => document.querySelectorAll("#historyList li").length;
+        for (let i = 0; i < 80 && !surnamePart(); i++) roll();
+        const historyBefore = history();
+        surnamePart().click();
+        expect(tabs().map((t) => t.textContent)).toEqual(["Published", "Constructed"]);
+        expect(tabs().filter((t) => t.getAttribute("aria-selected") === "true")).toHaveLength(1);
+        const startedPublished = surnamePart().closest("[data-key]").dataset.key === "family";
+        // choose from the other tab
+        tabs()[startedPublished ? 1 : 0].click();
+        document.querySelector(".part-picker-option").click();
+        const nowPublished = Boolean(document.querySelector('[data-key="family"]'));
+        expect(nowPublished).toBe(!startedPublished);
+        expect(history()).toBe(historyBefore);
+        // a first-name part has a single list and no tabs
+        document.querySelector('[data-key="t0"] .name-part-text').click();
+        expect($("partPickerTabs").hidden).toBe(true);
+    });
+
+    it("offers the same structure buttons and surname tabs for drow", () => {
+        $("pickerLineage").value = "drow";
+        $("pickerLineage").dispatchEvent(new Event("change"));
+        for (let i = 0; i < 80 && !document.querySelector('[data-control="given"]'); i++) roll();
+        const control = document.querySelector('[data-control="given"]');
+        expect(control).not.toBeNull();
+        const parts = document.querySelectorAll(".name-part").length;
+        control.click();
+        expect(document.querySelectorAll(".name-part").length).not.toBe(parts);
+        const house = textButton("house") || textButton("n0");
+        house.click();
+        expect([...document.querySelectorAll("#partPickerTabs [role=tab]")].map((t) => t.textContent)).toEqual([
+            "Published",
+            "Constructed"
+        ]);
+        const startedBuilt = !textButton("house");
+        document.querySelector(`#partPickerTabs [data-kind="${startedBuilt ? "published" : "constructed"}"]`).click();
+        document.querySelector(".part-picker-option").click();
+        expect(Boolean(textButton("house"))).toBe(startedBuilt);
+    });
+
+    it("lets a roll change a name's shape around a locked component, which stays", () => {
+        for (let i = 0; i < 80 && !textButton("t0"); i++) roll();
+        const kept = textOf("t0");
+        document.querySelector('[data-key="t0"] .name-part-lock').click();
+        const firstNameParts = () => document.querySelectorAll('.name-part[data-key^="t"]').length;
+        const shapes = new Set();
+        for (let i = 0; i < 40; i++) {
+            roll();
+            expect(textOf("t0")).toBe(kept);
+            shapes.add(firstNameParts());
+        }
+        expect(shapes.size).toBeGreaterThan(1);
+    });
+
+    it("offers no Published tab while a part of a constructed surname is locked", () => {
+        for (let i = 0; i < 80 && !textButton("n0"); i++) roll();
+        document.querySelector('[data-key="n0"] .name-part-lock').click();
+        textButton("n0").click();
+        expect($("partPicker").open).toBe(true);
+        expect($("partPickerTabs").hidden).toBe(true);
+        expect(document.querySelectorAll(".part-picker-option").length).toBeGreaterThan(0);
+    });
+
     it("brings back a removed saved name with Undo", () => {
         $("saveButton").click();
         const saved = () => [...document.querySelectorAll("#favoritesList .name-list-name")].map((n) => n.textContent);
@@ -129,6 +235,34 @@ describe("usage events", () => {
         expect(sent("component_selected")).toEqual([
             { ...context, component_position: "first_name", component_type: "suffix", component_origin: "table" }
         ]);
+    });
+
+    it("records the structure buttons with their new state, and a surname switch with the kind chosen", () => {
+        for (let i = 0; i < 80 && !document.querySelector('[data-control="given"][aria-label^="Add"]'); i++) roll();
+        events.length = 0;
+        const press = () => document.querySelector('[data-control="given"]').click();
+        press();
+        press();
+        expect(sent("name_structure_changed")).toEqual([
+            { ...context, structure_control: "first_name_length", structure_value: "on" },
+            { ...context, structure_control: "first_name_length", structure_value: "off" }
+        ]);
+        document.querySelector('[data-control="compound"]').click();
+        expect(sent("name_structure_changed").at(-1)).toEqual({
+            ...context,
+            structure_control: "compound_name",
+            structure_value: "on"
+        });
+        // the other kind of surname, chosen in the picker's other tab
+        const surname = textButton("family") || textButton("n0");
+        const kindNow = textButton("family") ? "published" : "constructed";
+        surname.click();
+        document.querySelector(`#partPickerTabs [data-kind]:not([data-kind="${kindNow}"])`).click();
+        document.querySelector(".part-picker-option").click();
+        expect(sent("surname_kind_changed")).toEqual([
+            { ...context, surname_kind: kindNow === "published" ? "constructed" : "published" }
+        ]);
+        expect(sent("component_selected")).toEqual([]);
     });
 
     it("records settings, Expanded Variety and the sources section without counting their new names as rolls", async () => {

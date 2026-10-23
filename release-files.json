@@ -15,6 +15,7 @@
     "js/favorites.js",
     "js/core/random.js",
     "js/core/splitComponents.js",
+    "js/core/nameStructure.js",
     "js/core/ElfNameGenerator.js",
     "js/core/DrowNameGenerator.js",
     "data/elfNames.json",

@@ -116,3 +116,106 @@ describe("DrowNameGenerator rules", () => {
         expect(house.wordMeaning).toBe("Blood of the forgotten ways");
     });
 });
+
+describe("DrowNameGenerator structure controls, switching and rolls under locks", () => {
+    const gen = new DrowNameGenerator(data);
+    const SHORT = "prefix,suffix";
+    const LONG = "prefix,suffix,suffix";
+    const COMPOUND = "prefix,suffix, ,prefix,suffix";
+    const random = () => seededRandom(9);
+    const pick = (test) => sample(gen, 800).find(test);
+    const shaped = (shape) => (r) => r.shape.join() === shape;
+    const part = (r, key) => r.parts.find((p) => p.key === key);
+    const built = (r) => r.parts.some((p) => p.key === "n0");
+    const houseOf = (r) => r.name.slice(r.name.lastIndexOf(" ") + 1);
+    const controlNames = (r, locked) => gen.structureControls(r, locked, { random: random() }).map((c) => c.control);
+
+    it("lengthens and shortens a first name, keeping the first two components and the house", () => {
+        const before = pick(shaped(SHORT));
+        const longer = gen.changeStructure(before, "given", { random: random() });
+        expect(longer.shape.join()).toBe(LONG);
+        expect(["f0", "f1"].map((k) => part(longer, k).text)).toEqual(["f0", "f1"].map((k) => part(before, k).text));
+        expect(houseOf(longer)).toBe(houseOf(before));
+        const shorter = gen.changeStructure(longer, "given", { random: random() });
+        expect(shorter.name).toBe(before.name);
+        // the last slot locked: it cannot be removed
+        expect(gen.changeStructure(longer, "given", { locked: new Set(["f2"]) })).toBeNull();
+    });
+
+    it("adds a compound name (a prefix and suffix) and removes it again, unless one of its slots is locked", () => {
+        const before = pick(shaped(SHORT));
+        const added = gen.changeStructure(before, "compound", { random: random() });
+        expect(added.shape.join()).toBe(COMPOUND);
+        expect(added.name.split(" ")).toHaveLength(3);
+        expect(houseOf(added)).toBe(houseOf(before));
+        expect(gen.changeStructure(added, "compound", { random: random() }).name).toBe(before.name);
+        expect(gen.changeStructure(added, "compound", { locked: new Set(["f4"]) })).toBeNull();
+        const long = pick(shaped(LONG));
+        expect(gen.changeStructure(long, "compound", { random: random() }).shape.join()).toBe(COMPOUND);
+        expect(gen.changeStructure(long, "compound", { locked: new Set(["f2"]) })).toBeNull();
+    });
+
+    it("lists no controls for the apostrophe shapes, and builds every change it offers into a valid name", () => {
+        expect(controlNames(pick((r) => r.shape.includes("'")))).toEqual([]);
+        sample(gen, 150).forEach((r) =>
+            gen.structureControls(r, new Set(), { random: random() }).forEach(({ control }) => {
+                const changed = gen.changeStructure(r, control, { random: random() });
+                expect(
+                    changed.parts
+                        .map((p) => p.text)
+                        .join("")
+                        .replace(/[ ']/g, "")
+                        .toLowerCase()
+                ).toBe(changed.name.replace(/[ ']/g, "").toLowerCase());
+            })
+        );
+    });
+
+    it("switches a built house to a published one and back to a built one from a chosen prefix", () => {
+        const before = pick(built);
+        const { kind, options } = gen.surnameSwitchOptions(before);
+        expect(kind).toBe("published");
+        const choice = options[2];
+        const published = gen.changeSurname(before, choice);
+        expect(personal(published)).toBe(personal(before));
+        expect(part(published, "house").text).toBe(choice.text);
+        expect(published.parts.some((p) => p.key === "n0")).toBe(false);
+        const other = gen.surnameSwitchOptions(published);
+        expect(other.kind).toBe("constructed");
+        const prefix = other.options[4];
+        const rebuilt = gen.changeSurname(published, prefix);
+        expect(personal(rebuilt)).toBe(personal(before));
+        expect(part(rebuilt, "n0").text).toBe(prefix.text);
+        expect(part(rebuilt, "n1")).toBeDefined();
+    });
+
+    it("ignores a structure control it does not have (drow have no surname length)", () => {
+        expect(gen.changeStructure(pick(shaped(SHORT)), "surname", { random: random() })).toBeNull();
+    });
+
+    it("offers no house switch when it would drop a locked part", () => {
+        expect(gen.surnameSwitchOptions(pick(built), new Set(["n1"])).options).toEqual([]);
+        expect(
+            gen.surnameSwitchOptions(
+                pick((r) => !built(r)),
+                new Set(["house"])
+            ).options
+        ).toEqual([]);
+    });
+
+    it("keeps a locked prefix but lets a roll change the shape, never to one that starts with a suffix", () => {
+        const before = pick(shaped(LONG));
+        const locks = { f0: part(before, "f0"), shape: before.shape, sex: before.sex };
+        const rolled = Array.from({ length: 300 }, (_, i) =>
+            gen.generate({ locks, reshape: true, random: seededRandom(i) })
+        );
+        rolled.forEach((r) => expect(part(r, "f0").text).toBe(part(before, "f0").text));
+        const shapes = new Set(rolled.map((r) => r.shape.join()));
+        expect(shapes.size).toBeGreaterThan(2);
+        rolled.forEach((r) => expect(r.shape[0]).toBe("prefix"));
+        // without a roll request the shape stays as it was
+        for (let i = 0; i < 30; i++) {
+            expect(gen.generate({ locks, random: seededRandom(i) }).shape.join()).toBe(LONG);
+        }
+    });
+});

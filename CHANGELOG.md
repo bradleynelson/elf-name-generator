@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-10-22
+
+### Added
+
+- Change a name's structure without rolling, for elves and drow. A small **+** or **-** beside the first name adds or removes its last suffix, another beside the surname does the same for a surname built from the tables (elves), and a dashed **+** between the names adds a compound name (a second given name), with a **-** to remove it. A button shows only when the changed name can be built with every part you have kept, and a locked part is never moved or removed.
+- Surnames (and drow houses) now open with **Published** and **Constructed** tabs. Choose a published family name or house by name, or build one from a prefix you choose, without rolling and hoping.
+- Two usage events, `name_structure_changed` and `surname_kind_changed` (see ANALYTICS.md).
+
+### Changed
+
+- Rolling with a locked component can now change the shape of the name (for example from a two-part to a three-part given name) as long as the locked component still fits. Before, a lock kept the shape fixed.
+- Choosing a component in the part picker no longer adds an entry to the history; only rolling does.
+- On desktop the site title is larger and as wide as the card, with the Beta badge beside it in capitals, and the intro text is wider.
+
 ## [4.0.7] - 2026-10-22
 
 ### Fixed

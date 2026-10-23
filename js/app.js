@@ -1,7 +1,7 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.0.7";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.0.7";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.0.7";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.0";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.0";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.0";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -13,9 +13,10 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.0.7";
+} from "./favorites.js?v=4.1.0";
 import {
     focusPart,
+    focusStructure,
     openPartPicker,
     partLabel,
     renderFavorites,
@@ -23,12 +24,12 @@ import {
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.0.7";
+} from "./ui.js?v=4.1.0";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
 const HISTORY_SIZE = 10;
-const state = { generator: null, result: null, locked: new Set(), favorites: [], history: [] };
+const state = { generator: null, result: null, controls: [], locked: new Set(), favorites: [], history: [] };
 
 // A failed or unreadable copy (often a stale cached file) is retried once, bypassing the browser cache.
 async function loadJson(path) {
@@ -82,6 +83,8 @@ function describeComponent(part) {
     };
 }
 
+const SURNAME_KINDS = ["published", "constructed"]; // the order of the picker's tabs
+const STRUCTURE_VALUES = { given: "first_name_length", surname: "surname_length", compound: "compound_name" };
 const ORIGINS = { split: "split", published: "published", composed: "common_words" };
 const originOf = (part) => ORIGINS[part.method] || "table";
 
@@ -107,7 +110,12 @@ function show(result, { remember = true, focus = null } = {}) {
     if (remember) {
         updateHistory([result, ...state.history.filter((r) => r.name !== result.name)].slice(0, HISTORY_SIZE));
     }
-    renderResult(result, state.locked, { onToggleLock: toggleLock, onChoose: choosePart });
+    state.controls = state.generator.structureControls(result, state.locked, options());
+    renderResult(result, state.locked, {
+        onToggleLock: toggleLock,
+        onChoose: choosePart,
+        structure: { controls: state.controls, onChange: changeStructure }
+    });
     renderSaved(isSaved(result));
     if (focus) focusPart(focus.key, focus.control);
 }
@@ -141,7 +149,7 @@ function attempt(action) {
 
 function generate() {
     const result = attempt(() =>
-        state.generator.generate({ ...options(), locks: locksFor(state.result, state.locked) })
+        state.generator.generate({ ...options(), reshape: true, locks: locksFor(state.result, state.locked) })
     );
     if (result) show(result);
     return result;
@@ -166,22 +174,59 @@ function choosePart(key) {
     const current = state.result;
     const part = current.parts.find((p) => p.key === key);
     const choices = attempt(() => state.generator.optionsFor(current, key));
-    if (!choices?.length) return;
+    // a surname can also be switched to the other kind (published or constructed) without rolling
+    const isWholeSurname = key === "family" || key === "house"; // a published family name or drow house
+    const isSurname = isWholeSurname || /^n\d/.test(key);
+    const other = isSurname ? state.generator.surnameSwitchOptions(current, state.locked, options()) : null;
+    const own = {
+        kind: isWholeSurname ? "published" : "constructed",
+        options: choices || [],
+        selected: true,
+        onPick: (choice) => {
+            const locks = { ...locksFor(current, new Set(current.parts.map((p) => p.key))), [key]: choice };
+            const result = attempt(() => state.generator.generate({ ...options(), locks }));
+            if (!result) return;
+            track("component_selected", usage({ ...describeComponent(part), component_origin: originOf(choice) }));
+            show(result, { remember: false, focus: { key, control: "text" } });
+        }
+    };
+    const switchTo = other && {
+        kind: other.kind,
+        options: other.options,
+        onPick: (choice) => {
+            const result = attempt(() => state.generator.changeSurname(current, choice, options()));
+            if (!result) return showNotice("That surname is not available for this name.");
+            track("surname_kind_changed", usage({ surname_kind: other.kind }));
+            show(result, { remember: false, focus: { key: choice.key, control: "text" } });
+        }
+    };
+    const tabs = [own, switchTo]
+        .filter((tab) => tab?.options.length)
+        .sort((a, b) => SURNAME_KINDS.indexOf(a.kind) - SURNAME_KINDS.indexOf(b.kind))
+        .map((tab) => ({ ...tab, label: tab.kind === "published" ? "Published" : "Constructed" }));
+    if (!tabs.length) return;
     track("component_picker_opened", usage(describeComponent(part)));
-    openPartPicker(`Choose the ${partLabel(part)}`, choices, part.text, (choice) => {
-        const locks = { ...locksFor(current, new Set(current.parts.map((p) => p.key))), [key]: choice };
-        const result = attempt(() => state.generator.generate({ ...options(), locks }));
-        if (!result) return;
-        track("component_selected", usage({ ...describeComponent(part), component_origin: originOf(choice) }));
-        show(result, { focus: { key, control: "text" } });
-    });
+    openPartPicker(`Choose the ${partLabel(part)}`, tabs, part.text);
+}
+
+/** Presses a + or - beside the name (longer or shorter first name or surname, compound name); only a roll joins the history. */
+function changeStructure(control) {
+    const changed = state.generator.changeStructure(state.result, control, { ...options(), locked: state.locked });
+    if (!changed) return showNotice("That change is not available for this name.");
+    const wasOn = state.controls.find((c) => c.control === control)?.on;
+    track(
+        "name_structure_changed",
+        usage({ structure_control: STRUCTURE_VALUES[control], structure_value: wasOn ? "off" : "on" })
+    );
+    show(changed, { remember: false });
+    focusStructure(control);
 }
 
 function showList() {
     const locks = locksFor(state.result, state.locked);
     const results = [];
     for (let i = 0; i < LIST_SIZE; i++) {
-        const result = attempt(() => state.generator.generate({ ...options(), locks }));
+        const result = attempt(() => state.generator.generate({ ...options(), reshape: true, locks }));
         if (!result) break;
         results.push(result);
     }
@@ -320,8 +365,8 @@ async function start() {
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.0.7"),
-            loadJson("data/drowNames.json?v=4.0.7")
+            loadJson("data/elfNames.json?v=4.1.0"),
+            loadJson("data/drowNames.json?v=4.1.0")
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {
