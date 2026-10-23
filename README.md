@@ -61,10 +61,14 @@ js/favorites.js          saved names, history and remembered settings (browser s
 js/analytics.js          consent and Google Analytics events (see ANALYTICS.md)
 js/core/                 name generators (elf, drow) and shared helpers
 data/                    name tables and published names (JSON)
-fonts/                   Dalelands Uncial, Espruar, High Drowic (SIL Open Font License)
+fonts/                   Dalelands Uncial, Espruar, High Drowic, Lato (SIL Open Font License)
 tests/                   Vitest tests (generators, storage, rendering, page flows)
 scripts/release-site.js  builds dist/ from the approved file list in release-files.json
+scripts/version.js       bumps the version, cache stamps and changelog
 ```
+
+Needs Node.js 24 and npm. The page loads ES modules and JSON, so preview it over HTTP (for example
+`python -m http.server 8000`), not by opening the file.
 
 ```bash
 npm ci
@@ -74,7 +78,8 @@ npm run build:site
 ```
 
 Releases publish only the files listed in `release-files.json` (built into `dist/` and checked by
-`npm run check:release`). Production deploys are started manually from GitHub Actions.
+`npm run check:release`). Merging a release into `main` publishes it once the tests pass; see
+[.github/RELEASING.md](.github/RELEASING.md).
 
 ## License and credits
 

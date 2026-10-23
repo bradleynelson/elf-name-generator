@@ -52,6 +52,25 @@ describe("renderResult", () => {
         expect(words).toEqual(["Vic'ril", "Quarlin", "Baenre"]);
     });
 
+    it("keeps a built surname with a joining letter as one word", () => {
+        const surname = {
+            name: "Lamath Kerelar",
+            sex: "neutral",
+            subrace: "high-elf",
+            parts: [
+                meaning("t0", "prefix", "lam", "Song"),
+                meaning("t1", "suffix", "ath", "Star"),
+                meaning("n0", "family prefix", "ker", "Wolf"),
+                { key: "nj1", role: "joining letter", text: "e" },
+                meaning("n1", "family suffix", "lar", "Storm")
+            ]
+        };
+        renderResult(surname, new Set(), handlers);
+        const words = [...document.querySelectorAll(".name-word-parts")].map((w) => w.textContent);
+        expect(words).toEqual(["Lamath", "Kerelar"]);
+        expect(wordMeanings()).toEqual(["Song · Star", "Wolf · Storm"]);
+    });
+
     it("shows each word's table meaning above it (first glosses; a house as one phrase), without sources", () => {
         renderResult(drow, new Set(), handlers);
         expect(wordMeanings()).toEqual(["Dagger · Bandit", "Aged · Shadow", "Blessed by fell powers"]);

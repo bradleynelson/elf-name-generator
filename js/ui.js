@@ -13,6 +13,8 @@ const LABELS = {
 };
 // family names and houses: whole (published or Common-form) or in table components
 const isSurnamePart = (part) => /^(family|house)/.test(part.role);
+// the surname starts a word at its first component; a joining letter inside it does not start another
+const surnameStart = (parts) => parts.findIndex(isSurnamePart);
 const TABLE_ROLES = new Set(["prefix", "suffix", "family prefix", "family suffix", "house prefix", "house suffix"]);
 
 function element(tag, className, text) {
@@ -52,12 +54,13 @@ export const partLabel = (part) => LABELS[part.role] || part.role;
 /** Display text of each part: the first part of each word starts with a capital. */
 function displayTexts(parts) {
     let wordStart = true;
+    const start = surnameStart(parts);
     return parts.map((part, index) => {
         if (part.role === "space") {
             wordStart = true;
             return " ";
         }
-        if (isSurnamePart(part) && !isSurnamePart(parts[index - 1] || {})) wordStart = true;
+        if (index === start) wordStart = true;
         const text = wordStart ? part.text.charAt(0).toUpperCase() + part.text.slice(1) : part.text;
         wordStart = false;
         return text;
@@ -108,10 +111,10 @@ export function renderResult(result, locked, handlers) {
     // parts are grouped into words, so a narrow screen wraps between words, never inside one, and each word carries
     // its own meaning above it
     const words = [];
+    const start = surnameStart(result.parts);
     result.parts.forEach((part, index) => {
-        const startsSurname = isSurnamePart(part) && !isSurnamePart(result.parts[index - 1] || {});
         if (part.role === "space") return words.push([]);
-        if (!words.length || startsSurname) words.push([]);
+        if (!words.length || index === start) words.push([]);
         words.at(-1).push(index);
     });
     const { controls = [], onChange: onStep } = handlers.structure || {};
@@ -284,15 +287,16 @@ export function renderNameList(listId, results, onPick) {
 }
 
 /**
- * Saved names: click one to load it (names saved before this version only have their text), copy or remove it.
- * @param {{ onLoad: Function, onCopy: Function, onRemove: Function, max: number }} handlers
+ * Saved names: click one to load it (names saved by older versions may only have their text), copy or remove it.
+ * @param {{ canLoad: Function, onLoad: Function, onCopy: Function, onRemove: Function, max: number }} handlers -
+ *   canLoad(record) says whether a saved name can be shown again
  */
-export function renderFavorites(favorites, { onLoad, onCopy, onRemove, max }) {
+export function renderFavorites(favorites, { canLoad, onLoad, onCopy, onRemove, max }) {
     $("favoritesCount").textContent = `(${favorites.length} of ${max})`;
     $("favoritesList").replaceChildren(
         ...favorites.map((favorite) => {
             const item = element("li", null);
-            const name = favorite.result
+            const name = canLoad(favorite)
                 ? button("name-list-name", favorite.name, `Show ${favorite.name}`, () => onLoad(favorite.result))
                 : element("span", "name-list-name", favorite.name);
             const tools = element("span", "favorites-tools");
@@ -310,7 +314,8 @@ export function renderFavorites(favorites, { onLoad, onCopy, onRemove, max }) {
 
 /**
  * Opens the full list of options for one part, sorted alphabetically, with the current one marked and in view. A
- * surname offers two tabs (published and constructed); every other part has a single list.
+ * surname offers two lists (published and constructed), switched by a pair of toggle buttons (`aria-pressed`, plain
+ * buttons rather than an ARIA tab widget, so no arrow-key handling is needed); every other part has a single list.
  * @param {string} title
  * @param {{ kind?: string, label?: string, options: Object[], onPick: Function, selected?: boolean }[]} tabs - parts
  *   from the generator; the tab marked `selected` is the kind the part is now and is shown first
@@ -322,8 +327,8 @@ export function openPartPicker(title, tabs, currentText) {
     const describe = (option) => option.meaning || (option.from && `from ${option.from.slice(0, 3).join(", ")}`) || "";
     const showTab = (tab) => {
         $("partPickerTabs")
-            .querySelectorAll("[role=tab]")
-            .forEach((node) => node.setAttribute("aria-selected", String(node.dataset.kind === tab.kind)));
+            .querySelectorAll(".part-picker-tab")
+            .forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.kind === tab.kind)));
         const items = [...tab.options]
             .sort((a, b) => a.text.localeCompare(b.text))
             .map((option) => {
@@ -350,7 +355,6 @@ export function openPartPicker(title, tabs, currentText) {
             ? []
             : tabs.map((tab) => {
                   const node = button("part-picker-tab", tab.label, undefined, () => showTab(tab));
-                  node.setAttribute("role", "tab");
                   node.dataset.kind = tab.kind;
                   return node;
               }))

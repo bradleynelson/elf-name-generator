@@ -950,7 +950,7 @@ a:focus-visible {
     color: var(--color-text);
     background: none;
 }
-.part-picker-tab[aria-selected="true"] {
+.part-picker-tab[aria-pressed="true"] {
     color: var(--color-locked);
     border-color: var(--color-locked);
 }

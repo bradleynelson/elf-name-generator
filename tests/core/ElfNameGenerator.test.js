@@ -113,6 +113,18 @@ describe("ElfNameGenerator with the published tables", () => {
             .forEach((o) => expect(tablePrefixes.has(o.text.toLowerCase())).toBe(false));
     });
 
+    it("names the books a split component's source names come from (Expanded Variety)", () => {
+        const bookOf = new Map([...data.publishedNames, ...data.familyNames].map((p) => [p.text, p.source.title]));
+        const splits = sample(new ElfNameGenerator(data), 300, { expanded: true }).flatMap((r) =>
+            r.parts.filter((p) => p.method === "split")
+        );
+        expect(splits.length).toBeGreaterThan(0);
+        splits.forEach((p) =>
+            expect(p.books).toEqual([...new Set(p.from.map((name) => bookOf.get(name)).filter(Boolean))])
+        );
+        expect(splits.some((p) => p.books.length > 0)).toBe(true);
+    });
+
     it("carries a family name's published translation, and invents none", () => {
         const translated = new Map(data.familyNames.filter((f) => f.translation).map((f) => [f.text, f.translation]));
         const families = sample(new ElfNameGenerator(data), 2000)

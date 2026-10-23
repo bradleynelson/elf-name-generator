@@ -8,6 +8,7 @@ import vm from "node:vm";
 import test from "node:test";
 import { parse } from "yaml";
 import { buildSite, verifySite } from "./release-site.js";
+import { getLiveExpectations } from "./check-live-site.js";
 import { stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -128,41 +129,38 @@ test("rejects a linked source directory and an unexpected production domain", (t
     assert.throws(() => buildSite(other), /Unexpected production domain/);
 });
 
-test("deployment requires production repository, main, manual dispatch and explicit confirmation", () => {
+test("deployment runs only for main in the production repository: on a push (merge) or a confirmed manual run", () => {
     const workflow = parse(readFileSync(path.join(repositoryRoot, ".github", "workflows", "ci-cd.yml"), "utf8"));
     const deployment = workflow.jobs["deploy-prod"];
-    const allowed = {
-        github: {
-            repository: "bradleynelson/elf-name-generator",
-            ref: "refs/heads/main",
-            event_name: "workflow_dispatch"
-        },
-        inputs: { confirm_production: true }
-    };
-    assert.equal(vm.runInNewContext(deployment.if, allowed), true);
+    const production = { repository: "bradleynelson/elf-name-generator", ref: "refs/heads/main" };
+    const runs = (github, inputs = {}) =>
+        vm.runInNewContext(deployment.if, { github: { ...production, ...github }, inputs });
+    assert.equal(runs({ event_name: "push" }), true);
+    assert.equal(runs({ event_name: "workflow_dispatch" }, { confirm_production: true }), true);
+    assert.equal(runs({ event_name: "workflow_dispatch" }, { confirm_production: false }), false);
     for (const github of [
         { repository: "bradleynelson/elf-name-generator-dev" },
         { repository: "someone/elf-name-generator" },
         { ref: "refs/heads/develop" },
-        { event_name: "push" },
-        { event_name: "pull_request" }
+        { ref: "refs/heads/feature/redesign-elves" },
+        { event_name: "pull_request" },
+        { event_name: "schedule" }
     ]) {
-        assert.equal(
-            vm.runInNewContext(deployment.if, { ...allowed, github: { ...allowed.github, ...github } }),
-            false
-        );
+        assert.equal(runs({ event_name: "push", ...github }), false);
     }
-    assert.equal(vm.runInNewContext(deployment.if, { ...allowed, inputs: { confirm_production: false } }), false);
     assert.equal(workflow.on.workflow_dispatch.inputs.confirm_production.default, false);
     assert.deepEqual(workflow.permissions, { contents: "read" });
-    assert.deepEqual(deployment.permissions, { contents: "write" });
-    assert.equal(deployment.environment.name, "production");
+    // Pages' own deployment: no write access to the repository's contents
+    assert.deepEqual(deployment.permissions, { contents: "read", pages: "write", "id-token": "write" });
+    assert.equal(deployment.environment.name, "github-pages");
     assert.equal(deployment.needs, "test");
     assert.equal(deployment.concurrency["cancel-in-progress"], false);
     assert.equal(workflow.jobs["deploy-dev"], undefined);
-    const publish = deployment.steps.find((step) => step.uses?.startsWith("peaceiris/actions-gh-pages@"));
-    assert.equal(publish.with.publish_dir, "./dist");
-    assert.equal(publish.with.cname, "espruar.com");
+    const upload = deployment.steps.find((step) => step.uses?.startsWith("actions/upload-pages-artifact@"));
+    assert.equal(upload.with.path, "./dist");
+    const order = (pattern) => deployment.steps.findIndex((step) => pattern.test(step.uses || step.run || ""));
+    assert.ok(order(/release-site\.js check/) < order(/upload-pages-artifact/), "only checked files are packaged");
+    assert.ok(order(/deploy-pages/) < order(/check-live-site\.js/), "the live site is checked after deploying");
     for (const job of [workflow.jobs.test, deployment]) {
         const checkout = job.steps.find((step) => step.uses?.startsWith("actions/checkout@"));
         assert.equal(checkout.with["persist-credentials"], false);
@@ -170,4 +168,19 @@ test("deployment requires production repository, main, manual dispatch and expli
         assert.match(commands, /(?:build:site|release-site\.js build)/);
         assert.match(commands, /(?:check:release|release-site\.js check)/);
     }
+    // every action is pinned to a full commit SHA
+    for (const file of ["ci-cd.yml", "lighthouse.yml"]) {
+        const jobs = parse(readFileSync(path.join(repositoryRoot, ".github", "workflows", file), "utf8")).jobs;
+        for (const step of Object.values(jobs).flatMap((job) => job.steps)) {
+            if (step.uses) assert.match(step.uses, /@[0-9a-f]{40}$/, `${file}: ${step.uses}`);
+        }
+    }
+});
+
+test("the live check expects every approved file served and every other tracked file hidden", () => {
+    const tracked = ["index.html", "CNAME", "js/app.js", "package.json", "README.md", "tests/app.test.js"];
+    const { served, hidden } = getLiveExpectations(["index.html", "CNAME", "js/app.js"], tracked);
+    // CNAME is read by GitHub Pages for the domain, not served
+    assert.deepEqual(served, ["index.html", "js/app.js"]);
+    assert.deepEqual(hidden, ["README.md", "package.json", "tests/app.test.js"]);
 });

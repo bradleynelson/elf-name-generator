@@ -19,12 +19,15 @@ export class SplitComponents {
      * @param {{ prefix?: Set<string>, suffix?: Set<string> }} [tableTexts] - texts the name tables already offer, in
      *   lower case; a component with the same text is left out, because the table's entry has the same letters and a
      *   meaning
+     * @param {{ source: { title: string }, text: string }[]} [publishedNames] - the published names the components are
+     *   cut from, so each component can name the books they appear in
      */
-    constructor({ openings = [], endings = [], joinClusters = [] } = {}, tableTexts = {}) {
+    constructor({ openings = [], endings = [], joinClusters = [] } = {}, tableTexts = {}, publishedNames = []) {
         this.openings = openings;
         this.endings = endings;
         this.clusters = new Set(joinClusters);
         this.tableTexts = tableTexts;
+        this.bookOf = new Map(publishedNames.map((p) => [p.text, p.source?.title]));
         this.cache = new Map();
     }
 
@@ -33,8 +36,8 @@ export class SplitComponents {
     }
 
     /**
-     * Components for a slot, each a part with the published names it was cut from: openings for a prefix slot, endings for
-     * a suffix slot. Endings follow gender (those published with it); Chosen: a neutral name uses only endings found on
+     * Components for a slot, each a part with the published names it was cut from (`from`) and the books those names
+     * appear in (`books`): openings for a prefix slot, endings for a suffix slot. Endings follow gender (those published with it); Chosen: a neutral name uses only endings found on
      * both female and male names, so it reads as neither; without a gender, every ending.
      */
     componentsFor(slot, sex) {
@@ -45,9 +48,10 @@ export class SplitComponents {
                 (p) => !inTable?.has(p.text.toLowerCase())
             );
             if (!source.length) throw new Error(`No published name components for a ${slot}${sex ? ` (${sex})` : ""}`);
+            const booksOf = (names) => [...new Set(names.map((name) => this.bookOf.get(name)).filter(Boolean))];
             this.cache.set(
                 cacheKey,
-                source.map((p) => ({ text: p.text, from: p.from, method: "split" }))
+                source.map((p) => ({ text: p.text, from: p.from, books: booksOf(p.from), method: "split" }))
             );
         }
         return this.cache.get(cacheKey);

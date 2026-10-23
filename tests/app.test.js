@@ -113,16 +113,20 @@ describe("page flows", () => {
     });
     it("switches the surname between published and constructed in its picker, without rolling", () => {
         const surnamePart = () => textButton("family") || textButton("n0");
-        const tabs = () => [...document.querySelectorAll("#partPickerTabs [role=tab]")];
+        const tabs = () => [...document.querySelectorAll("#partPickerTabs button")];
         const history = () => document.querySelectorAll("#historyList li").length;
         for (let i = 0; i < 80 && !surnamePart(); i++) roll();
         const historyBefore = history();
         surnamePart().click();
         expect(tabs().map((t) => t.textContent)).toEqual(["Published", "Constructed"]);
-        expect(tabs().filter((t) => t.getAttribute("aria-selected") === "true")).toHaveLength(1);
+        // a pair of toggle buttons: the kind shown now is pressed
+        const pressed = () => tabs().filter((t) => t.getAttribute("aria-pressed") === "true");
+        expect(pressed()).toHaveLength(1);
         const startedPublished = surnamePart().closest("[data-key]").dataset.key === "family";
-        // choose from the other tab
+        expect(pressed()[0].textContent).toBe(startedPublished ? "Published" : "Constructed");
+        // choose from the other list
         tabs()[startedPublished ? 1 : 0].click();
+        expect(pressed()[0].textContent).toBe(startedPublished ? "Constructed" : "Published");
         document.querySelector(".part-picker-option").click();
         const nowPublished = Boolean(document.querySelector('[data-key="family"]'));
         expect(nowPublished).toBe(!startedPublished);
@@ -143,7 +147,7 @@ describe("page flows", () => {
         expect(document.querySelectorAll(".name-part").length).not.toBe(parts);
         const house = textButton("house") || textButton("n0");
         house.click();
-        expect([...document.querySelectorAll("#partPickerTabs [role=tab]")].map((t) => t.textContent)).toEqual([
+        expect([...document.querySelectorAll("#partPickerTabs button")].map((t) => t.textContent)).toEqual([
             "Published",
             "Constructed"
         ]);
@@ -186,6 +190,15 @@ describe("page flows", () => {
         expect($("notice").textContent).toMatch(/Removed/);
         document.querySelector("#notice .notice-action").click();
         expect(saved()).toEqual([name]);
+    });
+
+    it("clears the locks when an earlier name is shown again from the history", () => {
+        roll();
+        document.querySelector('[data-key="t0"] .name-part-lock').click();
+        expect(document.querySelectorAll(".name-part.is-locked")).toHaveLength(1);
+        // the history is newest first: the second entry is the name shown before this one
+        document.querySelectorAll("#historyList .name-list-name")[1].click();
+        expect(document.querySelectorAll(".name-part.is-locked")).toHaveLength(0);
     });
 
     it("brings back cleared history with Undo", () => {

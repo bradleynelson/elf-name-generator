@@ -33,10 +33,15 @@ export function track(event, params = {}) {
     }
 }
 
-/** Errors go to the console, and to Google Analytics as anonymous exceptions only with consent. */
-export function reportError(error) {
+/**
+ * Errors go to the console in full. Google Analytics (only with consent) gets where it happened and the error's type,
+ * such as "generator_typeerror", never its message, which could contain a name, a URL or other page content.
+ * @param {string} where - a fixed area: "generator", "data_load", "page" or "promise"
+ */
+export function reportError(error, where = "page") {
     console.error(error);
-    track("exception", { description: String(error?.message || error).slice(0, 150), fatal: false });
+    const type = error instanceof Error && /^\w+$/.test(error.name) ? error.name : "other";
+    track("exception", { description: `${where}_${type}`.toLowerCase(), fatal: false });
 }
 
 /**
@@ -44,10 +49,18 @@ export function reportError(error) {
  * @param {{ banner: Element, accept: Element, decline: Element, dialog: HTMLDialogElement, links: NodeList }} page
  */
 export function setUpConsent({ banner, accept, decline, dialog, links }) {
-    let consent = null;
+    // the privacy explanation is always available, whatever happens to consent below
+    links.forEach((link) =>
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+            dialog.showModal();
+        })
+    );
+    let consent;
     try {
         consent = localStorage.getItem(CONSENT_KEY);
     } catch {
+        // storage is blocked: no choice could be kept, so the banner stays hidden and analytics stays off
         return;
     }
     if (consent === "true") loadAnalytics();
@@ -63,10 +76,4 @@ export function setUpConsent({ banner, accept, decline, dialog, links }) {
     };
     accept.addEventListener("click", () => choose(true));
     decline.addEventListener("click", () => choose(false));
-    links.forEach((link) =>
-        link.addEventListener("click", (event) => {
-            event.preventDefault();
-            dialog.showModal();
-        })
-    );
 }

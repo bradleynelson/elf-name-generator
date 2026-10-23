@@ -1,0 +1,35 @@
+# Weekly version updates, grouped so each ecosystem opens at most one pull request a week. Security updates
+# (switched on in the repository settings) still open as soon as an alert appears. Only the development tools are
+# npm packages; nothing here ships to visitors. Chosen: a release must be a week old before it is proposed, so a
+# compromised version is usually caught and pulled first. Runs only where this file is on the default branch
+# (production `main`; dev's default branch is the old `develop`).
+version: 2
+updates:
+    - package-ecosystem: "npm"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+      cooldown:
+          default-days: 7
+      open-pull-requests-limit: 5
+      groups:
+          dev-dependencies:
+              patterns:
+                  - "*"
+      commit-message:
+          prefix: "deps"
+
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+      cooldown:
+          default-days: 7
+      groups:
+          actions:
+              patterns:
+                  - "*"
+      commit-message:
+          prefix: "ci"

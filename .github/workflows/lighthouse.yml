@@ -1,0 +1,32 @@
+name: Weekly Lighthouse check
+
+# Audits the live site once a week (and on demand). Accessibility below the threshold in .github/lighthouserc.json
+# fails the run, so GitHub emails the owner; performance, best practices and SEO are reported as warnings. The full
+# reports are kept as a run artifact. Scheduled runs only start from the default branch, so in practice this runs in
+# the production repository.
+on:
+    schedule:
+        - cron: "0 6 * * 1" # Mondays 06:00 UTC
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    lighthouse:
+        name: Lighthouse (espruar.com)
+        if: github.repository == 'bradleynelson/elf-name-generator'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+
+            - name: Audit the live site
+              uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # v12.6.2
+              with:
+                  urls: https://espruar.com/
+                  configPath: ./.github/lighthouserc.json
+                  uploadArtifacts: true
+                  temporaryPublicStorage: false

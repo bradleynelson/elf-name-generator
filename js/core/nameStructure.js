@@ -1,7 +1,7 @@
 // Structure changes shared by the elf and drow generators: the visitor lengthens or shortens a first name, adds or
 // removes a compound name, and a roll may change shape under locks. Each species supplies its own shapes and slot keys;
 // the rules here are the same. They add no naming pattern: every target is one of the species' published shapes.
-import { selectWeighted } from "./random.js?v=4.1.0";
+import { selectWeighted } from "./random.js?v=4.1.1";
 
 // Slots of a first name's shapes (a slot's key is its key prefix plus its position in the shape):
 const FIRST_WORD_SLOTS = 2; // prefix and suffix, which every change keeps

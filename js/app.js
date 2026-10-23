@@ -1,10 +1,11 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.0";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.0";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.0";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.1";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.1";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.1";
 import {
     MAX_FAVORITES,
     addFavorite,
+    canLoadFavorite,
     loadFavorites,
     loadHistory,
     loadSetting,
@@ -13,7 +14,7 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.1.0";
+} from "./favorites.js?v=4.1.1";
 import {
     focusPart,
     focusStructure,
@@ -24,7 +25,7 @@ import {
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.1.0";
+} from "./ui.js?v=4.1.1";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
@@ -129,8 +130,12 @@ function updateHistory(history) {
     $("historyClear").hidden = !history.length;
 }
 
-/** Shows an earlier name and matches the controls to it, so the next name follows the same settings. */
+/**
+ * Shows an earlier name and matches the controls to it, so the next name follows the same settings. Locks are
+ * cleared: they belonged to the components of the name on screen, not to whatever fills the same slots in this one.
+ */
 function restore(result, { remember = true } = {}) {
+    state.locked.clear();
     $("pickerLineage").value = result.subrace;
     $("pickerSex").value = { female: "feminine", male: "masculine" }[result.sex] || "neutral";
     show(result, { remember });
@@ -142,7 +147,7 @@ function attempt(action) {
         return action();
     } catch (error) {
         showNotice(error.message);
-        reportError(error);
+        reportError(error, "generator");
         return null;
     }
 }
@@ -241,6 +246,7 @@ function updateFavorites(change) {
         state.favorites = change(state.favorites);
         renderSaved(isSaved(state.result));
         renderFavorites(state.favorites, {
+            canLoad: canLoadFavorite,
             onLoad: (result) => restore(result),
             onCopy: (name) => copyName(name, "saved"),
             onRemove: (name) => {
@@ -354,8 +360,8 @@ function wireControls() {
 }
 
 async function start() {
-    window.addEventListener("error", (event) => reportError(event.error || event.message));
-    window.addEventListener("unhandledrejection", (event) => reportError(event.reason));
+    window.addEventListener("error", (event) => reportError(event.error || event.message, "page"));
+    window.addEventListener("unhandledrejection", (event) => reportError(event.reason, "promise"));
     setUpConsent({
         banner: $("cookieBanner"),
         accept: $("cookieAccept"),
@@ -365,8 +371,8 @@ async function start() {
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.1.0"),
-            loadJson("data/drowNames.json?v=4.1.0")
+            loadJson("data/elfNames.json?v=4.1.1"),
+            loadJson("data/drowNames.json?v=4.1.1")
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {
@@ -375,7 +381,7 @@ async function start() {
             label: "Reload",
             onClick: () => location.reload()
         });
-        reportError(error);
+        reportError(error, "data_load");
         return;
     }
     wireControls();

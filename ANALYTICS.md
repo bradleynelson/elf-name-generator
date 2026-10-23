@@ -19,20 +19,20 @@ The automatic `page_view` from `gtag("config")` is the only page view; no others
 
 ## Events
 
-| Event                      | Sent when                                                                                                                                        | Parameters (besides the common ones)                       |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| `name_generated`           | The visitor rolls: Roll Name, the spacebar, or Roll 10 More. Not sent for the name shown on page load, or when a setting change shows a new name | `roll_type`, `name_count`, `trigger`                       |
-| `name_copied`              | A copy to the clipboard succeeds (not just the click)                                                                                            | `copy_source`                                              |
-| `name_saved`               | The bookmark adds the current name to saved names                                                                                                | —                                                          |
-| `component_picker_opened`  | The visitor opens the options list for a component                                                                                               | `component_position`, `component_type`                     |
-| `component_selected`       | The visitor picks an option and the new name is shown                                                                                            | `component_position`, `component_type`, `component_origin` |
-| `component_lock_changed`   | The visitor locks or unlocks a component                                                                                                         | `component_position`, `component_type`, `locked`           |
-| `name_structure_changed`   | The visitor presses a + or - beside the first name, the compound name or the surname                                                             | `structure_control`, `structure_value`                     |
-| `surname_kind_changed`     | The visitor switches a surname (or drow house) to the other kind in its picker: Published or Constructed                                         | `surname_kind`                                             |
-| `expanded_variety_changed` | The visitor turns Expanded Variety on or off                                                                                                     | `setting_value`                                            |
-| `name_sources_opened`      | The visitor opens "Name meanings and sources" (not on close)                                                                                     | —                                                          |
-| `name_setting_changed`     | The visitor changes gender or lineage                                                                                                            | `setting_name`, `setting_value`                            |
-| `exception`                | An error reaches the page (GA4's standard event)                                                                                                 | `description` (error message, 150 characters), `fatal`     |
+| Event                      | Sent when                                                                                                                                        | Parameters (besides the common ones)                                                           |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `name_generated`           | The visitor rolls: Roll Name, the spacebar, or Roll 10 More. Not sent for the name shown on page load, or when a setting change shows a new name | `roll_type`, `name_count`, `trigger`                                                           |
+| `name_copied`              | A copy to the clipboard succeeds (not just the click)                                                                                            | `copy_source`                                                                                  |
+| `name_saved`               | The bookmark adds the current name to saved names                                                                                                | —                                                                                              |
+| `component_picker_opened`  | The visitor opens the options list for a component                                                                                               | `component_position`, `component_type`                                                         |
+| `component_selected`       | The visitor picks an option and the new name is shown                                                                                            | `component_position`, `component_type`, `component_origin`                                     |
+| `component_lock_changed`   | The visitor locks or unlocks a component                                                                                                         | `component_position`, `component_type`, `locked`                                               |
+| `name_structure_changed`   | The visitor presses a + or - beside the first name, the compound name or the surname                                                             | `structure_control`, `structure_value`                                                         |
+| `surname_kind_changed`     | The visitor switches a surname (or drow house) to the other kind in its picker: Published or Constructed                                         | `surname_kind`                                                                                 |
+| `expanded_variety_changed` | The visitor turns Expanded Variety on or off                                                                                                     | `setting_value`                                                                                |
+| `name_sources_opened`      | The visitor opens "Name meanings and sources" (not on close)                                                                                     | —                                                                                              |
+| `name_setting_changed`     | The visitor changes gender or lineage                                                                                                            | `setting_name`, `setting_value`                                                                |
+| `exception`                | An error reaches the page (GA4's standard event)                                                                                                 | `description` (area and error type, such as `generator_typeerror`; never the message), `fatal` |
 
 `species_changed` is not sent yet: elf is the only species that can be chosen. Add it when a second species is
 selectable.
@@ -75,7 +75,8 @@ Settings are read when the event is sent, so a setting change carries the new va
    that release).
    Data appears only from the day each one is registered.
 2. **Custom metric:** `name_count` (scope Event, unit Standard), for names per user.
-3. **Key event (optional):** mark `name_copied` as a key event; copying is the clearest sign a name was useful.
+3. **Key event:** `name_copied` is marked as a key event (done 2026-10-23); copying is the clearest sign a name was
+   useful.
 4. **Verify:** open the production site with `?analytics_debug`, accept the cookie banner, and watch Admin →
    DebugView while rolling, copying, locking and picking. Each action should show exactly one event.
 
