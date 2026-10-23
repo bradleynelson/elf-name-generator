@@ -44,7 +44,7 @@ const isText = (value) => typeof value === "string" && value !== "";
  * True if a stored result can be shown and built on again: a name, a lineage this version offers, and parts that each
  * have a key, a role and text. Records from older versions or edited by hand may fail this.
  */
-export function validateResult(result) {
+function validateResult(result) {
     return (
         isText(result?.name) &&
         SUBRACES.includes(result.subrace) &&

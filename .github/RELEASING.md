@@ -4,8 +4,8 @@
 
 - **CI/CD Pipeline** (`workflows/ci-cd.yml`), on pull requests to `main`, pushes to `main`, `develop` and
   `feature/**`, and by hand:
-    - **Run Tests:** `npm ci`, `npm audit` (high or critical advisories fail the run), lint, Prettier, the tests, the
-      release-safeguard tests, then `npm run build:site` and `npm run check:release`.
+    - **Run Tests:** `npm ci`, `npm audit` (high or critical advisories fail the run), then `npm run check`—lint,
+      Prettier, duplication and unused-code checks, coverage-gated tests, release safeguards, and a verified build.
     - **Deploy to Production:** only in `bradleynelson/elf-name-generator`, only for `main`, after Run Tests passes, on
       a push (a merged pull request) or a manual run with the confirm box ticked. It publishes `dist/` through GitHub
       Pages, then `scripts/check-live-site.js` checks espruar.com: the page shows the new version, every approved file
@@ -27,8 +27,8 @@ symbolic links, unapproved or missing files, unexpected domains, and references 
 
 - **Pages:** Source "GitHub Actions"; custom domain `espruar.com` with HTTPS enforced.
 - **Environment `github-pages`:** deployments limited to `main`.
-- **Branch `main`:** pull request required, the **Run Tests** check required, no force pushes or deletion. A solo
-  owner cannot approve their own pull request, so do not require approving reviews.
+- **Branch `main`:** pull request required with zero approvals, the up-to-date **Run Tests** check required for the
+  owner too, no force pushes or deletion. A solo owner cannot approve their own pull request.
 - Dependabot alerts and security updates, secret scanning and push protection on.
 
 ## Release steps
