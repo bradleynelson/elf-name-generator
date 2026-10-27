@@ -183,6 +183,9 @@ test("deployment runs only for main in the production repository: on a push (mer
     ]) {
         assert.match(checkRunner, new RegExp(`"${required.replace(":", "\\:")}"`));
     }
+    // in a terminal, plain `vitest` waits for file changes, so the gate would never finish when run locally
+    const scripts = JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf8")).scripts;
+    assert.match(scripts["test:coverage"], /^vitest run /);
     const deployCommands = deployment.steps.map((step) => step.run || "").join("\n");
     assert.match(deployCommands, /release-site\.js build/);
     assert.match(deployCommands, /release-site\.js check/);

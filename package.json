@@ -11,7 +11,7 @@
         "test:run": "vitest run",
         "test:run:log": "node scripts/run-tests-with-log.js",
         "test:ui": "vitest --ui",
-        "test:coverage": "vitest --coverage",
+        "test:coverage": "vitest run --coverage",
         "test:watch": "vitest --watch",
         "test:log-update": "node scripts/log-test-update.js",
         "lint": "eslint js/ tests/ scripts/ *.config.js --cache --cache-location .eslintcache --max-warnings 0",
