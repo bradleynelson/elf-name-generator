@@ -155,6 +155,9 @@ test("deployment runs only for main in the production repository: on a push (mer
     assert.equal(deployment.environment.name, "github-pages");
     assert.equal(deployment.needs, "test");
     assert.equal(deployment.concurrency["cancel-in-progress"], false);
+    assert.equal(workflow.jobs.test["timeout-minutes"], 15);
+    assert.equal(workflow.jobs.test.concurrency["cancel-in-progress"], true);
+    assert.equal(deployment["timeout-minutes"], 20);
     assert.equal(workflow.jobs["deploy-dev"], undefined);
     const upload = deployment.steps.find((step) => step.uses?.startsWith("actions/upload-pages-artifact@"));
     assert.equal(upload.with.path, "./dist");
@@ -164,10 +167,28 @@ test("deployment runs only for main in the production repository: on a push (mer
     for (const job of [workflow.jobs.test, deployment]) {
         const checkout = job.steps.find((step) => step.uses?.startsWith("actions/checkout@"));
         assert.equal(checkout.with["persist-credentials"], false);
-        const commands = job.steps.map((step) => step.run || "").join("\n");
-        assert.match(commands, /(?:build:site|release-site\.js build)/);
-        assert.match(commands, /(?:check:release|release-site\.js check)/);
     }
+    const testCommands = workflow.jobs.test.steps.map((step) => step.run || "").join("\n");
+    assert.match(testCommands, /npm run check/);
+    const checkRunner = readFileSync(path.join(repositoryRoot, "scripts", "check.js"), "utf8");
+    for (const required of [
+        "lint",
+        "format:check",
+        "check:duplication",
+        "check:unused",
+        "test:coverage",
+        "test:release",
+        "build:site",
+        "check:release"
+    ]) {
+        assert.match(checkRunner, new RegExp(`"${required.replace(":", "\\:")}"`));
+    }
+    // in a terminal, plain `vitest` waits for file changes, so the gate would never finish when run locally
+    const scripts = JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf8")).scripts;
+    assert.match(scripts["test:coverage"], /^vitest run /);
+    const deployCommands = deployment.steps.map((step) => step.run || "").join("\n");
+    assert.match(deployCommands, /release-site\.js build/);
+    assert.match(deployCommands, /release-site\.js check/);
     // every action is pinned to a full commit SHA
     for (const file of ["ci-cd.yml", "lighthouse.yml"]) {
         const jobs = parse(readFileSync(path.join(repositoryRoot, ".github", "workflows", file), "utf8")).jobs;

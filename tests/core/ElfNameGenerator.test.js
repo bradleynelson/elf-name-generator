@@ -257,11 +257,11 @@ describe("ElfNameGenerator structure controls", () => {
     const pick = (test) => sample(gen, 600).find(test);
     const random = () => seededRandom(7);
     const textsOf = (r, prefix) => r.parts.filter((p) => new RegExp(`^${prefix}\\d`).test(p.key)).map((p) => p.text);
-    const controls = (r, locked = new Set()) => gen.structureControls(r, locked, { random: random() });
+    const controls = (r, locked = new Set()) => gen.getStructureControls(r, locked, { random: random() });
 
     it("makes a short first name long by adding a suffix and keeping the rest", () => {
         const before = pick(shaped(SHORT));
-        const result = gen.changeStructure(before, "given", { random: random() });
+        const result = gen.generateStructureChange(before, "given", { random: random() });
         expect(result.shape.join()).toBe(LONG);
         expect(textsOf(result, "t").slice(0, 2)).toEqual(textsOf(before, "t"));
         expect(result.name.endsWith(before.name.split(" ").at(-1))).toBe(true);
@@ -269,7 +269,7 @@ describe("ElfNameGenerator structure controls", () => {
 
     it("keeps a locked last suffix in its slot and adds the new suffix after it", () => {
         const before = pick(shaped(SHORT));
-        const result = gen.changeStructure(before, "given", { locked: new Set(["t1"]), random: random() });
+        const result = gen.generateStructureChange(before, "given", { locked: new Set(["t1"]), random: random() });
         expect(part(result, "t0").text).toBe(part(before, "t0").text);
         expect(part(result, "t1").text).toBe(part(before, "t1").text);
         expect(part(result, "t2")).toBeDefined();
@@ -277,39 +277,39 @@ describe("ElfNameGenerator structure controls", () => {
 
     it("shortens a long first name from the end unless that last suffix is locked", () => {
         const before = pick(shaped(LONG));
-        const shorter = gen.changeStructure(before, "given", { locked: new Set(["t1"]), random: random() });
+        const shorter = gen.generateStructureChange(before, "given", { locked: new Set(["t1"]), random: random() });
         expect(shorter.shape.join()).toBe(SHORT);
         expect(textsOf(shorter, "t")).toEqual(textsOf(before, "t").slice(0, 2));
-        expect(gen.changeStructure(before, "given", { locked: new Set(["t2"]) })).toBeNull();
+        expect(gen.generateStructureChange(before, "given", { locked: new Set(["t2"]) })).toBeNull();
     });
 
     it("adds and removes a compound name, keeping the first name and surname", () => {
         const before = pick(shaped(SHORT));
-        const added = gen.changeStructure(before, "compound", { random: random() });
+        const added = gen.generateStructureChange(before, "compound", { random: random() });
         expect(added.shape.join()).toBe("prefix,suffix, ,prefix,suffix,suffix");
         expect(added.name.split(" ")).toHaveLength(3);
         expect(added.name.startsWith(before.name.split(" ")[0])).toBe(true);
         expect(added.name.endsWith(before.name.split(" ").at(-1))).toBe(true);
-        const removed = gen.changeStructure(added, "compound", { random: random() });
+        const removed = gen.generateStructureChange(added, "compound", { random: random() });
         expect(removed.name).toBe(before.name);
     });
 
     it("offers the compound name on a long first name only when its extra suffix is not locked", () => {
         const long = pick(shaped(LONG));
-        const compound = gen.changeStructure(long, "compound", { random: random() });
+        const compound = gen.generateStructureChange(long, "compound", { random: random() });
         expect(textsOf(compound, "t").slice(0, 2)).toEqual(textsOf(long, "t").slice(0, 2));
-        expect(gen.changeStructure(long, "compound", { locked: new Set(["t2"]) })).toBeNull();
+        expect(gen.generateStructureChange(long, "compound", { locked: new Set(["t2"]) })).toBeNull();
         // a locked slot of the compound name keeps it from being removed
-        expect(gen.changeStructure(compound, "compound", { locked: new Set(["t4"]) })).toBeNull();
+        expect(gen.generateStructureChange(compound, "compound", { locked: new Set(["t4"]) })).toBeNull();
     });
 
     it("lengthens and shortens a table-built surname without touching the first name", () => {
         const before = pick(shaped(SHORT, SHORT));
-        const longer = gen.changeStructure(before, "surname", { random: random() });
+        const longer = gen.generateStructureChange(before, "surname", { random: random() });
         expect(longer.familyShape.join()).toBe(LONG);
         expect(longer.name.split(" ")[0]).toBe(before.name.split(" ")[0]);
         expect(textsOf(longer, "n").slice(0, 2)).toEqual(textsOf(before, "n"));
-        const shorter = gen.changeStructure(longer, "surname", { random: random() });
+        const shorter = gen.generateStructureChange(longer, "surname", { random: random() });
         expect(shorter.name).toBe(before.name);
     });
 
@@ -326,13 +326,13 @@ describe("ElfNameGenerator structure controls", () => {
     });
 
     it("ignores a structure control it does not have", () => {
-        expect(gen.changeStructure(pick(shaped(SHORT)), "height", { random: random() })).toBeNull();
+        expect(gen.generateStructureChange(pick(shaped(SHORT)), "height", { random: random() })).toBeNull();
     });
 
     it("keeps every change it offers within the length rules (11 letters a word, apart from published surnames)", () => {
         sample(gen, 150).forEach((r) => {
             controls(r).forEach(({ control }) => {
-                const changed = gen.changeStructure(r, control, { random: random() });
+                const changed = gen.generateStructureChange(r, control, { random: random() });
                 changed.name
                     .split(" ")
                     .slice(0, changed.familyShape ? undefined : -1) // a published surname has no length rule
@@ -410,11 +410,11 @@ describe("ElfNameGenerator surname switch", () => {
 
     it("switches a constructed surname to a chosen published one, keeping the first name", () => {
         const before = constructed();
-        const { kind, options } = gen.surnameSwitchOptions(before);
+        const { kind, options } = gen.getSurnameSwitchOptions(before);
         expect(kind).toBe("published");
         expect(options.length).toBeGreaterThan(20);
         const choice = options[3];
-        const after = gen.changeSurname(before, choice);
+        const after = gen.generateSurnameChange(before, choice);
         expect(firstName(after)).toBe(firstName(before));
         expect(after.name.endsWith(choice.text.charAt(0).toUpperCase() + choice.text.slice(1))).toBe(true);
         expect(after.familyShape).toBeUndefined();
@@ -423,11 +423,11 @@ describe("ElfNameGenerator surname switch", () => {
 
     it("builds a constructed surname from a chosen prefix, keeping the first name, so its parts can be picked and locked", () => {
         const before = published();
-        const { kind, options } = gen.surnameSwitchOptions(before);
+        const { kind, options } = gen.getSurnameSwitchOptions(before);
         expect(kind).toBe("constructed");
         expect(options.length).toBeGreaterThan(20);
         const choice = options[5];
-        const after = gen.changeSurname(before, choice);
+        const after = gen.generateSurnameChange(before, choice);
         expect(firstName(after)).toBe(firstName(before));
         expect(part(after, "n0").text).toBe(choice.text);
         expect(after.familyShape).toBeDefined();
@@ -435,12 +435,14 @@ describe("ElfNameGenerator surname switch", () => {
     });
 
     it("offers no switch when it would drop a locked part", () => {
-        expect(gen.surnameSwitchOptions(constructed(), new Set(["n1"])).options).toEqual([]);
-        expect(gen.surnameSwitchOptions(published(), new Set(["family"])).options).toEqual([]);
+        expect(gen.getSurnameSwitchOptions(constructed(), new Set(["n1"])).options).toEqual([]);
+        expect(gen.getSurnameSwitchOptions(published(), new Set(["family"])).options).toEqual([]);
     });
 
     it("lists only prefixes that can build a surname", () => {
         const before = published();
-        gen.surnameSwitchOptions(before).options.forEach((o) => expect(gen.changeSurname(before, o)).not.toBeNull());
+        gen.getSurnameSwitchOptions(before).options.forEach((o) =>
+            expect(gen.generateSurnameChange(before, o)).not.toBeNull()
+        );
     });
 });

@@ -1,7 +1,8 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.1";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.1";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.1";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.2";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.2";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.2";
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.2";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -14,7 +15,7 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.1.1";
+} from "./favorites.js?v=4.1.2";
 import {
     focusPart,
     focusStructure,
@@ -25,7 +26,7 @@ import {
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.1.1";
+} from "./ui.js?v=4.1.2";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
@@ -85,7 +86,11 @@ function describeComponent(part) {
 }
 
 const SURNAME_KINDS = ["published", "constructed"]; // the order of the picker's tabs
-const STRUCTURE_VALUES = { given: "first_name_length", surname: "surname_length", compound: "compound_name" };
+const STRUCTURE_VALUES = {
+    [NAME_STRUCTURE_CONTROL.FIRST_NAME]: "first_name_length",
+    [NAME_STRUCTURE_CONTROL.SURNAME]: "surname_length",
+    [NAME_STRUCTURE_CONTROL.COMPOUND_NAME]: "compound_name"
+};
 const ORIGINS = { split: "split", published: "published", composed: "common_words" };
 const originOf = (part) => ORIGINS[part.method] || "table";
 
@@ -111,11 +116,11 @@ function show(result, { remember = true, focus = null } = {}) {
     if (remember) {
         updateHistory([result, ...state.history.filter((r) => r.name !== result.name)].slice(0, HISTORY_SIZE));
     }
-    state.controls = state.generator.structureControls(result, state.locked, options());
+    state.controls = state.generator.getStructureControls(result, state.locked, options());
     renderResult(result, state.locked, {
         onToggleLock: toggleLock,
         onChoose: choosePart,
-        structure: { controls: state.controls, onChange: changeStructure }
+        structure: { controls: state.controls, onChange: handleStructureChange }
     });
     renderSaved(isSaved(result));
     if (focus) focusPart(focus.key, focus.control);
@@ -182,7 +187,7 @@ function choosePart(key) {
     // a surname can also be switched to the other kind (published or constructed) without rolling
     const isWholeSurname = key === "family" || key === "house"; // a published family name or drow house
     const isSurname = isWholeSurname || /^n\d/.test(key);
-    const other = isSurname ? state.generator.surnameSwitchOptions(current, state.locked, options()) : null;
+    const other = isSurname ? state.generator.getSurnameSwitchOptions(current, state.locked, options()) : null;
     const own = {
         kind: isWholeSurname ? "published" : "constructed",
         options: choices || [],
@@ -199,7 +204,7 @@ function choosePart(key) {
         kind: other.kind,
         options: other.options,
         onPick: (choice) => {
-            const result = attempt(() => state.generator.changeSurname(current, choice, options()));
+            const result = attempt(() => state.generator.generateSurnameChange(current, choice, options()));
             if (!result) return showNotice("That surname is not available for this name.");
             track("surname_kind_changed", usage({ surname_kind: other.kind }));
             show(result, { remember: false, focus: { key: choice.key, control: "text" } });
@@ -215,8 +220,11 @@ function choosePart(key) {
 }
 
 /** Presses a + or - beside the name (longer or shorter first name or surname, compound name); only a roll joins the history. */
-function changeStructure(control) {
-    const changed = state.generator.changeStructure(state.result, control, { ...options(), locked: state.locked });
+function handleStructureChange(control) {
+    const changed = state.generator.generateStructureChange(state.result, control, {
+        ...options(),
+        locked: state.locked
+    });
     if (!changed) return showNotice("That change is not available for this name.");
     const wasOn = state.controls.find((c) => c.control === control)?.on;
     track(
@@ -371,8 +379,8 @@ async function start() {
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.1.1"),
-            loadJson("data/drowNames.json?v=4.1.1")
+            loadJson("data/elfNames.json?v=4.1.2"),
+            loadJson("data/drowNames.json?v=4.1.2")
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {

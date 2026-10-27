@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { seededRandom } from "./helpers/random.js";
 
 // Page flows with the real page, the real app script and the real name data: what a person does with the controls,
 // checked by what they would see. The data files are served from disk in place of the network.
@@ -14,6 +15,8 @@ const events = [];
 const sent = (name) => events.filter(([event]) => event === name).map(([, params]) => params);
 
 beforeEach(async () => {
+    vi.restoreAllMocks();
+    vi.spyOn(Math, "random").mockImplementation(seededRandom(20261023));
     document.documentElement.innerHTML = page;
     events.length = 0;
     vi.doMock("../js/analytics.js", () => ({
