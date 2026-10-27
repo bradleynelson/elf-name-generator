@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rolling with a locked part no longer makes long (four-syllable) names more common than a roll with nothing locked, for elves and drow.
 - The surname picker's title now matches the list shown: "Choose the family name" (or "house") on the Published tab, and "Choose the family name prefix" (or "house prefix") on the Constructed tab, instead of staying on the prefix wording.
+- The Lore Gem (Selu’kiira) note now cites the correct page of Cormanthyr: Empire of the Elves (p. 153; it said p. 152).
 
 ### Maintenance
 
