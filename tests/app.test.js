@@ -180,7 +180,8 @@ describe("page flows", () => {
         }
         // the checks above covered given names, suffixes, and both surname kinds
         expect(titles.size).toBeGreaterThan(3);
-    });
+        // opens every picker of every lineage, which took 6.6 s on a CI runner against the default 5 s limit
+    }, 20000);
 
     it("offers the same structure buttons and surname tabs for drow", () => {
         $("pickerLineage").value = "drow";
