@@ -1,6 +1,6 @@
 // Saved names, history and remembered settings, kept in this browser only. The saved-names key and record shape match the previous
 // version of the site, so names saved there (including other races) are kept and still shown.
-import { ELF_SUBRACES } from "./core/ElfNameGenerator.js?v=4.1.2";
+import { ELF_SUBRACES } from "./core/ElfNameGenerator.js?v=4.1.3";
 
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";

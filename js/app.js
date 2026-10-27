@@ -1,8 +1,8 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.2";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.2";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.2";
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.2";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.3";
+import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.3";
+import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.3";
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.3";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -15,18 +15,17 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.1.2";
+} from "./favorites.js?v=4.1.3";
 import {
     focusPart,
     focusStructure,
     openPartPicker,
-    partLabel,
     renderFavorites,
     renderNameList,
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.1.2";
+} from "./ui.js?v=4.1.3";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
@@ -216,7 +215,7 @@ function choosePart(key) {
         .map((tab) => ({ ...tab, label: tab.kind === "published" ? "Published" : "Constructed" }));
     if (!tabs.length) return;
     track("component_picker_opened", usage(describeComponent(part)));
-    openPartPicker(`Choose the ${partLabel(part)}`, tabs, part.text);
+    openPartPicker(tabs, part.text);
 }
 
 /** Presses a + or - beside the name (longer or shorter first name or surname, compound name); only a roll joins the history. */
@@ -379,8 +378,8 @@ async function start() {
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.1.2"),
-            loadJson("data/drowNames.json?v=4.1.2")
+            loadJson("data/elfNames.json?v=4.1.3"),
+            loadJson("data/drowNames.json?v=4.1.3")
         ]);
         state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
     } catch (error) {

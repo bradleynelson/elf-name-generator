@@ -10,6 +10,12 @@ const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 // Chosen: Pages can take a few minutes to serve a new deployment everywhere; wait up to 10 minutes for the version.
 const VERSION_ATTEMPTS = 20;
 const VERSION_WAIT_MS = 30_000;
+// Chosen: the version can already match while Pages still serves the previous deployment (same-version deploys and
+// re-runs), so the files are re-checked for up to 5 minutes before they count as wrong.
+const PROBLEM_ATTEMPTS = 10;
+const PROBLEM_WAIT_MS = 30_000;
+
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 // approved, but read by GitHub Pages for its settings rather than served
 const HOST_FILES = new Set(["CNAME"]);
@@ -35,18 +41,26 @@ async function waitForVersion(base, version, token) {
     for (let attempt = 1; attempt <= VERSION_ATTEMPTS; attempt++) {
         const { code, text } = await status(`${base}/?live-check=${token}-${attempt}`);
         if (code === 200 && text.includes(`?v=${version}"`)) return;
-        if (attempt < VERSION_ATTEMPTS) await new Promise((resolve) => setTimeout(resolve, VERSION_WAIT_MS));
+        if (attempt < VERSION_ATTEMPTS) await sleep(VERSION_WAIT_MS);
     }
     throw new Error(`${base}/ does not show version ${version}.`);
 }
 
-export async function checkLiveSite(base = "https://espruar.com", root = repositoryRoot) {
-    const version = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")).version;
-    const approved = JSON.parse(readFileSync(path.join(root, "release-files.json"), "utf8"));
-    const tracked = execFileSync("git", ["ls-files"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
-    const { served, hidden } = getLiveExpectations(approved, tracked);
-    const token = Date.now().toString(36);
-    await waitForVersion(base, version, token);
+/**
+ * Runs findProblems(attempt) until it returns none, waiting between attempts; returns the problems still present
+ * after the last attempt (an empty list means the site is right).
+ */
+export async function retryWhileProblems(findProblems, { attempts = PROBLEM_ATTEMPTS, waitMs = PROBLEM_WAIT_MS } = {}) {
+    let problems = [];
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+        problems = await findProblems(attempt);
+        if (!problems.length) return [];
+        if (attempt < attempts) await sleep(waitMs);
+    }
+    return problems;
+}
+
+async function findProblems(base, served, hidden, token) {
     const problems = [];
     for (const file of served) {
         const { code } = await status(fresh(base, file, token));
@@ -56,6 +70,18 @@ export async function checkLiveSite(base = "https://espruar.com", root = reposit
         const { code } = await status(fresh(base, file, token));
         if (code !== 404) problems.push(`file outside the release is reachable (${code}): ${file}`);
     }
+    return problems;
+}
+
+export async function checkLiveSite(base = "https://espruar.com", root = repositoryRoot) {
+    const version = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")).version;
+    const approved = JSON.parse(readFileSync(path.join(root, "release-files.json"), "utf8"));
+    const tracked = execFileSync("git", ["ls-files"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
+    const { served, hidden } = getLiveExpectations(approved, tracked);
+    const token = Date.now().toString(36);
+    await waitForVersion(base, version, token);
+    // a new token each attempt, so a cached answer from an earlier attempt is not read again
+    const problems = await retryWhileProblems((attempt) => findProblems(base, served, hidden, `${token}-${attempt}`));
     if (problems.length) throw new Error(problems.join("\n"));
     return { version, served: served.length, hidden: hidden.length };
 }

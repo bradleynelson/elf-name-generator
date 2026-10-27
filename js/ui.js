@@ -1,5 +1,5 @@
 // Rendering only: turns results and lists into page content. Text is always set with textContent.
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.2";
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.3";
 
 const $ = (id) => document.getElementById(id);
 const STRUCTURAL = new Set(["joining letter", "apostrophe", "space"]);
@@ -51,7 +51,7 @@ function iconButton(className, iconName, label, onClick) {
 }
 
 /** What a part is called in labels and the picker title. */
-export const partLabel = (part) => LABELS[part.role] || part.role;
+const partLabel = (part) => LABELS[part.role] || part.role;
 
 /** Display text of each part: the first part of each word starts with a capital. */
 function displayTexts(parts) {
@@ -324,16 +324,17 @@ export function renderFavorites(favorites, { canLoad, onLoad, onCopy, onRemove, 
  * Opens the full list of options for one part, sorted alphabetically, with the current one marked and in view. A
  * surname offers two lists (published and constructed), switched by a pair of toggle buttons (`aria-pressed`, plain
  * buttons rather than an ARIA tab widget, so no arrow-key handling is needed); every other part has a single list.
- * @param {string} title
+ * The title ("Choose the family name prefix") is taken from the role of the options in the list shown.
  * @param {{ kind?: string, label?: string, options: Object[], onPick: Function, selected?: boolean }[]} tabs - parts
  *   from the generator; the tab marked `selected` is the kind the part is now and is shown first
  * @param {string} currentText
  */
-export function openPartPicker(title, tabs, currentText) {
+export function openPartPicker(tabs, currentText) {
     const dialog = $("partPicker");
-    $("partPickerTitle").textContent = title;
     const describe = (option) => option.meaning || (option.from && `from ${option.from.slice(0, 3).join(", ")}`) || "";
     const showTab = (tab) => {
+        // the title names what the list holds (a whole family name, or a prefix), so it follows the tab
+        $("partPickerTitle").textContent = `Choose the ${partLabel(tab.options[0])}`;
         $("partPickerTabs")
             .querySelectorAll(".part-picker-tab")
             .forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.kind === tab.kind)));

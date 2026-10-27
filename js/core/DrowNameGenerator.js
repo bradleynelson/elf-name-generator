@@ -4,9 +4,9 @@
 // components different meanings. Published FR houses are used alongside generated ones. Same result shape as
 // ElfNameGenerator; a result also carries its `shape` so locked components keep their places. Expanded Variety lets a
 // slot take a component of a published drow name instead (meaning unknown).
-import { RecentNames, selectRandom } from "./random.js?v=4.1.2";
-import { SplitComponents } from "./splitComponents.js?v=4.1.2";
-import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.2";
+import { RecentNames, selectRandom } from "./random.js?v=4.1.3";
+import { SplitComponents } from "./splitComponents.js?v=4.1.3";
+import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.3";
 import {
     getAvailableControls,
     getChangedShape,
@@ -14,7 +14,7 @@ import {
     NAME_STRUCTURE_CONTROL,
     selectRollShape,
     sameShape
-} from "./nameStructure.js?v=4.1.2";
+} from "./nameStructure.js?v=4.1.3";
 
 const MAX_ATTEMPTS = 300;
 // Sourced: Dragon #267 Table 1 name shapes (weights 30/20/20/20/10). Chosen: apostrophe shapes halved to
@@ -27,7 +27,7 @@ const NAME_SHAPES = [
     { shape: ["suffix", "'", "prefix", "suffix"], weight: 5 }
 ];
 // Inferred: published male names are shorter (4+ syllables: 4% male, 14% female). Chosen: keep long results with
-// these probabilities, a preference that applies only when nothing was chosen by the user.
+// these probabilities, a preference that applies to every roll, with or without locks (BMN-56).
 const LONG_NAME_KEEP = { male: 0.15, female: 0.2, neutral: 0.2 };
 // Sourced: "Rarely, a female drow might take part of a purely masculine name"; a male with a feminine component
 // would be a rogue (Dragon #267). Chosen: rate of the female exception.
@@ -80,7 +80,7 @@ export class DrowNameGenerator {
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const sex = SEX_BY_STYLE[style] || (keepsComponents && locks.sex) || (random() < 0.5 ? "female" : "male");
             const shape = keepsComponents && !reshape ? locks.shape : selectRollShape(NAME_SHAPES, locks, "f", random);
-            const personal = this._buildPersonal(shape, sex, locks, !keepsComponents, random, expanded);
+            const personal = this._buildPersonal(shape, sex, locks, true, random, expanded);
             const house = locks.house
                 ? { text: locks.house.text, parts: [locks.house] }
                 : this._buildHouse(locks, random);

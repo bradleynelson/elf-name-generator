@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.3] - 2026-10-27
+
+### Added
+
+- Every component picker now says that only components that follow the naming rules and work with your locked components are shown, so a short list no longer looks like missing data.
+
+### Fixed
+
+- Rolling with a locked part no longer makes long (four-syllable) names more common than a roll with nothing locked, for elves and drow.
+- The surname picker's title now matches the list shown: "Choose the family name" (or "house") on the Published tab, and "Choose the family name prefix" (or "house prefix") on the Constructed tab, instead of staying on the prefix wording.
+- The Lore Gem (Selu’kiira) note now cites the correct page of Cormanthyr: Empire of the Elves (p. 153; it said p. 152).
+
+### Maintenance
+
+- The weekly Lighthouse check of espruar.com now fails on any drop in the accessibility score, which is 100 today; it allowed a drop to 90 before.
+- Added automated checks over many repeatable rolls that every elf and drow name matches its parts, that locks hold, and that a + / − button is shown exactly when it works.
+- The live-site check after a deploy now retries while the previous deployment is still being served, and a re-run of the deploy no longer fails on a duplicate artifact name.
+
 ## [4.1.2] - 2026-10-23
 
 ### Maintenance

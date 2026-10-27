@@ -139,6 +139,54 @@ describe("page flows", () => {
         expect($("partPickerTabs").hidden).toBe(true);
     });
 
+    it("titles the surname picker after the list shown, whichever tab is open", () => {
+        const surnamePart = () => textButton("family") || textButton("n0");
+        const tabs = () => [...document.querySelectorAll("#partPickerTabs button")];
+        const title = () => $("partPickerTitle").textContent;
+        for (let i = 0; i < 80 && !surnamePart(); i++) roll();
+        surnamePart().click();
+        const byLabel = (label) => tabs().find((t) => t.textContent === label);
+        byLabel("Published").click();
+        expect(title()).toBe("Choose the family name");
+        byLabel("Constructed").click();
+        expect(title()).toBe("Choose the family name prefix");
+        byLabel("Published").click();
+        expect(title()).toBe("Choose the family name");
+    });
+
+    it("explains in every picker, for every lineage, that the options are filtered", () => {
+        const note = () => $("partPicker").querySelector(".part-picker-note");
+        // A lineage has five pickers: a given name's prefix and suffix, and a surname's whole name, prefix and suffix
+        // (the whole name and the prefix are the two tabs of one surname; the suffix is its second component).
+        const PICKERS_PER_LINEAGE = 5;
+        for (const lineage of [...$("pickerLineage").options].map((o) => o.value)) {
+            $("pickerLineage").value = lineage;
+            $("pickerLineage").dispatchEvent(new Event("change"));
+            // Roll until each picker has been opened and checked once; opening a picker builds its whole list, so
+            // repeating the same one adds time and no coverage
+            const checked = new Set();
+            for (let i = 0; i < 60 && checked.size < PICKERS_PER_LINEAGE; i++) {
+                roll();
+                for (const part of document.querySelectorAll(".name-part-text")) {
+                    part.click();
+                    // a surname's picker is checked on both of its tabs
+                    const tabs = [...document.querySelectorAll("#partPickerTabs button")];
+                    for (const tab of tabs.length ? tabs : [null]) {
+                        tab?.click();
+                        const title = $("partPickerTitle").textContent;
+                        if (checked.has(title)) continue;
+                        checked.add(title);
+                        expect(note().textContent).toMatch(/naming rules.*locked components.*limited/s);
+                        expect(note().closest("dialog")).toBe($("partPicker"));
+                        expect(note().hidden).toBe(false);
+                    }
+                    $("partPicker").close();
+                }
+            }
+            expect(checked.size, `pickers reached for ${lineage}`).toBe(PICKERS_PER_LINEAGE);
+        }
+    });
+
     it("offers the same structure buttons and surname tabs for drow", () => {
         $("pickerLineage").value = "drow";
         $("pickerLineage").dispatchEvent(new Event("change"));
