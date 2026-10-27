@@ -156,12 +156,16 @@ describe("page flows", () => {
 
     it("explains in every picker, for every lineage, that the options are filtered", () => {
         const note = () => $("partPicker").querySelector(".part-picker-note");
-        const titles = new Set();
+        // A lineage has five pickers: a given name's prefix and suffix, and a surname's whole name, prefix and suffix
+        // (the whole name and the prefix are the two tabs of one surname; the suffix is its second component).
+        const PICKERS_PER_LINEAGE = 5;
         for (const lineage of [...$("pickerLineage").options].map((o) => o.value)) {
             $("pickerLineage").value = lineage;
             $("pickerLineage").dispatchEvent(new Event("change"));
-            // rolls reach given names, compounds and both surname kinds; open the picker of each part shown
-            for (let i = 0; i < 12; i++) {
+            // Roll until each picker has been opened and checked once; opening a picker builds its whole list, so
+            // repeating the same one adds time and no coverage
+            const checked = new Set();
+            for (let i = 0; i < 60 && checked.size < PICKERS_PER_LINEAGE; i++) {
                 roll();
                 for (const part of document.querySelectorAll(".name-part-text")) {
                     part.click();
@@ -169,7 +173,9 @@ describe("page flows", () => {
                     const tabs = [...document.querySelectorAll("#partPickerTabs button")];
                     for (const tab of tabs.length ? tabs : [null]) {
                         tab?.click();
-                        titles.add($("partPickerTitle").textContent);
+                        const title = $("partPickerTitle").textContent;
+                        if (checked.has(title)) continue;
+                        checked.add(title);
                         expect(note().textContent).toMatch(/naming rules.*locked components.*limited/s);
                         expect(note().closest("dialog")).toBe($("partPicker"));
                         expect(note().hidden).toBe(false);
@@ -177,11 +183,9 @@ describe("page flows", () => {
                     $("partPicker").close();
                 }
             }
+            expect(checked.size, `pickers reached for ${lineage}`).toBe(PICKERS_PER_LINEAGE);
         }
-        // the checks above covered given names, suffixes, and both surname kinds
-        expect(titles.size).toBeGreaterThan(3);
-        // opens every picker of every lineage, which took 6.6 s on a CI runner against the default 5 s limit
-    }, 20000);
+    });
 
     it("offers the same structure buttons and surname tabs for drow", () => {
         $("pickerLineage").value = "drow";
