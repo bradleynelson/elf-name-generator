@@ -229,3 +229,30 @@ describe("DrowNameGenerator structure controls, switching and rolls under locks"
         }
     });
 });
+
+describe("DrowNameGenerator long names", () => {
+    // Sampling: 6,000 unlocked feminine rolls (seed 1), keeping those in the three-component shape, against 30 rolls
+    // (seeds 100+) for each of 60 different locked first components in that same shape. Comparing within one shape
+    // keeps shape weights out of it; the locked components are drawn uniformly, as an unlocked roll draws them.
+    const SHAPE = "prefix,suffix,suffix";
+    const gen = new DrowNameGenerator(data);
+    const roll = (count, seed, locks = {}) => {
+        const random = seededRandom(seed);
+        return Array.from({ length: count }, () => gen.generate({ style: "feminine", locks, random }));
+    };
+    const longShare = (results) =>
+        results.filter((r) => (r.name.split(" ")[0].match(/[aeiouy]+/gi) || []).length >= 4).length / results.length;
+
+    it("keeps four-syllable names as uncommon with a locked component as without", () => {
+        const unlocked = roll(6000, 1).filter((r) => r.shape.join() === SHAPE);
+        const kept = new Map(unlocked.map((r) => [r.parts.find((p) => p.key === "f0").text, r]));
+        const locked = [...kept.values()].slice(0, 60).flatMap((r, i) => {
+            const f0 = r.parts.find((p) => p.key === "f0");
+            return roll(30, 100 + i, { shape: r.shape, sex: r.sex, f0 });
+        });
+        expect(locked.length).toBe(1800);
+        expect(longShare(unlocked)).toBeGreaterThan(0.05);
+        expect(longShare(locked) / longShare(unlocked)).toBeGreaterThan(0.7);
+        expect(longShare(locked) / longShare(unlocked)).toBeLessThan(1.3);
+    });
+});

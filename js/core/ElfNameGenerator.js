@@ -9,8 +9,8 @@
 // tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
 // are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
 // the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.2";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.2";
+import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.3";
+import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.3";
 import {
     getAvailableControls,
     getChangedShape,
@@ -19,7 +19,7 @@ import {
     selectRollShape,
     sameShape,
     getSlotNumber
-} from "./nameStructure.js?v=4.1.2";
+} from "./nameStructure.js?v=4.1.3";
 
 const MAX_ATTEMPTS = 300;
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep
@@ -203,8 +203,8 @@ export class ElfNameGenerator {
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const built =
                 prefix === "t"
-                    ? this._buildTable(result.sex, kept, random, { shape, expanded })
-                    : this._buildTableFamily(random, { ...kept, familyShape: shape }, expanded);
+                    ? this._buildTable(result.sex, kept, random, { shape, expanded, applyPreferences: false })
+                    : this._buildTableFamily(random, { ...kept, familyShape: shape }, expanded, false, false);
             if (!built) continue;
             const changedName = { text: built.text, parts: built.parts, shape };
             const { personal, family } = sections;
@@ -276,7 +276,7 @@ export class ElfNameGenerator {
 
     /**
      * A name from the tables in one of the published shapes (or the given one); locked parts keep their places. The
-     * four-syllable preference applies only when nothing was chosen and `applyPreferences` is not false. A surname
+     * four-syllable preference applies unless `applyPreferences` is false, locks or not. A surname
      * uses keys "n0".. and roles "family prefix" / "family suffix", so its components can be locked like a first name's.
      */
     _buildTable(
@@ -309,10 +309,9 @@ export class ElfNameGenerator {
             .map((p) => p.text)
             .join("")
             .split(" ");
-        const prefer = applyPreferences && !choseAny;
         // Chosen: in the apostrophe shape the length rules apply to the part after the apostrophe (the part before is
         // a single suffix), so the shape keeps the share chosen for it
-        if (!words.every((word) => this._acceptable(word.split("'").at(-1), prefer, random))) return null;
+        if (!words.every((word) => this._acceptable(word.split("'").at(-1), applyPreferences, random))) return null;
         return { text: words.map(capitalize).join(" "), parts, shape };
     }
 
@@ -361,10 +360,10 @@ export class ElfNameGenerator {
      * A surname from the tables, in components that can be locked. Chosen: it uses the suffix forms shared by both
      * genders, as the whole family bears it.
      */
-    _buildTableFamily(random, locks = {}, expanded = false, reshape = false) {
+    _buildTableFamily(random, locks = {}, expanded = false, reshape = false, applyPreferences = true) {
         const keepsShape = locksTableParts(locks, "n") && !reshape;
         const shape = keepsShape ? locks.familyShape : selectRollShape(SURNAME_SHAPES, locks, "n", random);
-        const built = this._buildTable("neutral", locks, random, { shape, surname: true, expanded });
+        const built = this._buildTable("neutral", locks, random, { shape, applyPreferences, surname: true, expanded });
         if (!built || this.houseNames.has(built.text.toLowerCase())) return null;
         return { text: built.text, parts: built.parts, shape };
     }
@@ -382,7 +381,7 @@ export class ElfNameGenerator {
         return { key: "family", role: "family name", text, method: "composed", words: [a.text, b.text] };
     }
 
-    /** Length rules; the four-syllable preference applies only when nothing was chosen by the user. */
+    /** Length rules; the four-syllable preference applies to a roll, with or without locks (BMN-56). */
     _acceptable(text, applyPreferences, random) {
         if (/(.)\1\1/.test(text) || text.length < MIN_LETTERS || text.length > MAX_LETTERS) return false;
         const syllables = (text.match(VOWEL_GROUP) || []).length;

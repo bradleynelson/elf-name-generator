@@ -446,3 +446,29 @@ describe("ElfNameGenerator surname switch", () => {
         );
     });
 });
+
+describe("ElfNameGenerator long names", () => {
+    // Sampling: 4,000 unlocked rolls (seed 1), keeping those that came out in the three-component shape, against 30
+    // rolls (seeds 100+) for each of 60 different locked first components in that same shape. Comparing within one
+    // shape keeps shape weights out of it; the locked components are drawn uniformly, as an unlocked roll draws them.
+    const SHAPE = "prefix,suffix,suffix";
+    const gen = new ElfNameGenerator(data);
+    const roll = (count, seed, locks = {}) => {
+        const random = seededRandom(seed);
+        return Array.from({ length: count }, () => gen.generate({ style: "neutral", locks, random }));
+    };
+    const longShare = (results) =>
+        results.filter((r) => (firstWord(r).match(/[aeiouy]+/gi) || []).length >= 4).length / results.length;
+
+    it("keeps four-syllable names as uncommon with a locked component as without", () => {
+        const unlocked = roll(4000, 1).filter((r) => r.shape.join() === SHAPE);
+        const kept = new Map(unlocked.map((r) => [part(r, "t0").text, part(r, "t0")]));
+        const locked = [...kept.values()]
+            .slice(0, 60)
+            .flatMap((t0, i) => roll(30, 100 + i, { shape: unlocked[0].shape, t0 }));
+        expect(locked.length).toBe(1800);
+        expect(longShare(unlocked)).toBeGreaterThan(0.05);
+        expect(longShare(locked) / longShare(unlocked)).toBeGreaterThan(0.7);
+        expect(longShare(locked) / longShare(unlocked)).toBeLessThan(1.3);
+    });
+});

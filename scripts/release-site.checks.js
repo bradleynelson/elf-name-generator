@@ -8,7 +8,7 @@ import vm from "node:vm";
 import test from "node:test";
 import { parse } from "yaml";
 import { buildSite, verifySite } from "./release-site.js";
-import { getLiveExpectations } from "./check-live-site.js";
+import { getLiveExpectations, retryWhileProblems } from "./check-live-site.js";
 import { stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -161,6 +161,11 @@ test("deployment runs only for main in the production repository: on a push (mer
     assert.equal(workflow.jobs["deploy-dev"], undefined);
     const upload = deployment.steps.find((step) => step.uses?.startsWith("actions/upload-pages-artifact@"));
     assert.equal(upload.with.path, "./dist");
+    // a re-run of the job uploads a second artifact into the same run, so each attempt names its own
+    const attemptName = "github-pages-${{ github.run_attempt }}";
+    assert.equal(upload.with.name, attemptName);
+    const deploy = deployment.steps.find((step) => step.uses?.startsWith("actions/deploy-pages@"));
+    assert.equal(deploy.with.artifact_name, attemptName);
     const order = (pattern) => deployment.steps.findIndex((step) => pattern.test(step.uses || step.run || ""));
     assert.ok(order(/release-site\.js check/) < order(/upload-pages-artifact/), "only checked files are packaged");
     assert.ok(order(/deploy-pages/) < order(/check-live-site\.js/), "the live site is checked after deploying");
@@ -204,4 +209,36 @@ test("the live check expects every approved file served and every other tracked 
     // CNAME is read by GitHub Pages for the domain, not served
     assert.deepEqual(served, ["index.html", "js/app.js"]);
     assert.deepEqual(hidden, ["README.md", "package.json", "tests/app.test.js"]);
+});
+
+test("the live check passes at once when the site is right from the start", async () => {
+    let attempts = 0;
+    const problems = await retryWhileProblems(async () => (attempts++, []), { attempts: 5, waitMs: 0 });
+    assert.deepEqual(problems, []);
+    assert.equal(attempts, 1);
+});
+
+test("the live check passes when the previous deployment's answers clear within the time allowed", async () => {
+    // the old deployment still answers the first two attempts
+    const answers = [["file outside the release is reachable (200): package.json"], ["same again"], []];
+    const seen = [];
+    const problems = await retryWhileProblems(async (attempt) => (seen.push(attempt), answers[attempt - 1]), {
+        attempts: 5,
+        waitMs: 0
+    });
+    assert.deepEqual(problems, []);
+    assert.deepEqual(seen, [1, 2, 3]);
+});
+
+test("the live check reports the last problems, after the attempts allowed, when they never clear", async () => {
+    let attempts = 0;
+    const problems = await retryWhileProblems(
+        async (attempt) => (attempts++, [`still reachable on attempt ${attempt}`]),
+        {
+            attempts: 4,
+            waitMs: 0
+        }
+    );
+    assert.equal(attempts, 4);
+    assert.deepEqual(problems, ["still reachable on attempt 4"]);
 });

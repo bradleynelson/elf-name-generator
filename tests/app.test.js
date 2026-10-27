@@ -139,6 +139,49 @@ describe("page flows", () => {
         expect($("partPickerTabs").hidden).toBe(true);
     });
 
+    it("titles the surname picker after the list shown, whichever tab is open", () => {
+        const surnamePart = () => textButton("family") || textButton("n0");
+        const tabs = () => [...document.querySelectorAll("#partPickerTabs button")];
+        const title = () => $("partPickerTitle").textContent;
+        for (let i = 0; i < 80 && !surnamePart(); i++) roll();
+        surnamePart().click();
+        const byLabel = (label) => tabs().find((t) => t.textContent === label);
+        byLabel("Published").click();
+        expect(title()).toBe("Choose the family name");
+        byLabel("Constructed").click();
+        expect(title()).toBe("Choose the family name prefix");
+        byLabel("Published").click();
+        expect(title()).toBe("Choose the family name");
+    });
+
+    it("explains in every picker, for every lineage, that the options are filtered", () => {
+        const note = () => $("partPicker").querySelector(".part-picker-note");
+        const titles = new Set();
+        for (const lineage of [...$("pickerLineage").options].map((o) => o.value)) {
+            $("pickerLineage").value = lineage;
+            $("pickerLineage").dispatchEvent(new Event("change"));
+            // rolls reach given names, compounds and both surname kinds; open the picker of each part shown
+            for (let i = 0; i < 12; i++) {
+                roll();
+                for (const part of document.querySelectorAll(".name-part-text")) {
+                    part.click();
+                    // a surname's picker is checked on both of its tabs
+                    const tabs = [...document.querySelectorAll("#partPickerTabs button")];
+                    for (const tab of tabs.length ? tabs : [null]) {
+                        tab?.click();
+                        titles.add($("partPickerTitle").textContent);
+                        expect(note().textContent).toMatch(/naming rules.*locked components.*limited/s);
+                        expect(note().closest("dialog")).toBe($("partPicker"));
+                        expect(note().hidden).toBe(false);
+                    }
+                    $("partPicker").close();
+                }
+            }
+        }
+        // the checks above covered given names, suffixes, and both surname kinds
+        expect(titles.size).toBeGreaterThan(3);
+    });
+
     it("offers the same structure buttons and surname tabs for drow", () => {
         $("pickerLineage").value = "drow";
         $("pickerLineage").dispatchEvent(new Event("change"));
