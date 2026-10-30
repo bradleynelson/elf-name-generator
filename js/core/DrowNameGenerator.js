@@ -4,9 +4,9 @@
 // components different meanings. Published FR houses are used alongside generated ones. Same result shape as
 // ElfNameGenerator; a result also carries its `shape` so locked components keep their places. Expanded Variety lets a
 // slot take a component of a published drow name instead (meaning unknown).
-import { RecentNames, selectRandom } from "./random.js?v=4.1.3";
-import { SplitComponents } from "./splitComponents.js?v=4.1.3";
-import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.3";
+import { RecentNames, selectRandom } from "./random.js?v=4.1.4";
+import { SplitComponents } from "./splitComponents.js?v=4.1.4";
+import { SEX_BY_STYLE } from "./ElfNameGenerator.js?v=4.1.4";
 import {
     getAvailableControls,
     getChangedShape,
@@ -14,7 +14,7 @@ import {
     NAME_STRUCTURE_CONTROL,
     selectRollShape,
     sameShape
-} from "./nameStructure.js?v=4.1.3";
+} from "./nameStructure.js?v=4.1.4";
 
 const MAX_ATTEMPTS = 300;
 // Sourced: Dragon #267 Table 1 name shapes (weights 30/20/20/20/10). Chosen: apostrophe shapes halved to
@@ -50,12 +50,14 @@ const STRUCTURE = { "'": "apostrophe", " ": "space" };
 export class DrowNameGenerator {
     /** @param {Object} data - contents of data/drowNames.json */
     constructor(data) {
-        if (!data?.prefixes?.length || !data?.suffixes?.length) {
+        if (!data?.prefixes?.length || !data.suffixes?.length) {
             throw new Error("Drow name data is missing prefixes or suffixes");
         }
         this.data = data;
         // Sourced (FOR2 p97-98): no name resembling a drow deity; no noble first name that is a common drow word
+        // Stryker disable next-line ArrayDeclaration: the stand-in entry holds spaces, and a checked word never does
         this.forbidden = data.forbiddenNames || [];
+        // Stryker disable next-line ArrayDeclaration: the stand-in entry holds spaces, and a checked word never does
         this.commonWords = new Set(data.commonWords || []);
         this.publishedByName = new Map((data.publishedNames || []).map((p) => [plain(p.text), p]));
         const forms = (entries) => new Set(entries.flatMap((e) => [e.female, e.male]).map((t) => t.toLowerCase()));
@@ -75,8 +77,10 @@ export class DrowNameGenerator {
      *   source
      */
     generate({ style = "neutral", expanded = false, reshape = false, locks = {}, random = Math.random } = {}) {
-        const keepsComponents = Object.keys(locks).some((key) => /^f\d/.test(key));
+        // Lock keys are "f0".., "s…", "n0", "n1", "house", "shape" and "sex"; only a first-name slot starts with "f"
+        const keepsComponents = Object.keys(locks).some((key) => key.startsWith("f"));
         let repeat = null;
+        // Stryker disable next-line EqualityOperator: "<=" adds one retry to 300, seen only if all 300 fail
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const sex = SEX_BY_STYLE[style] || (keepsComponents && locks.sex) || (random() < 0.5 ? "female" : "male");
             const shape = keepsComponents && !reshape ? locks.shape : selectRollShape(NAME_SHAPES, locks, "f", random);
@@ -114,6 +118,8 @@ export class DrowNameGenerator {
         }
         const kept = Object.fromEntries(result.parts.map((p) => [p.key, p]));
         const fits = (option) =>
+            // `kept` locks every slot, so neither the preferences flag nor the random source is ever read
+            // Stryker disable next-line BooleanLiteral,ArrowFunction: every slot is locked; neither is read
             this._buildPersonal(result.shape, result.sex, { ...kept, [key]: option }, false, () => 0);
         return options.filter(fits);
     }
@@ -140,6 +146,7 @@ export class DrowNameGenerator {
         if (!shape) return null;
         const kept = getKeptParts(result.parts, "f");
         const { house } = sectionsOf(result);
+        // Stryker disable next-line EqualityOperator: "<=" adds one retry to 300, seen only if all 300 fail
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const personal = this._buildPersonal(shape, result.sex, kept, false, random, expanded);
             if (personal) return this._assemble(personal, house, result.sex, shape);
@@ -198,16 +205,22 @@ export class DrowNameGenerator {
         return result;
     }
 
+    // Stryker disable next-line BooleanLiteral: only the picker omits `expanded`, and it locks every slot
     _buildPersonal(shape, sex, locks, applyPreferences, random, expanded = false) {
         const mixes = expanded && this.split.isAvailable;
         const parts = shape.map((role, index) => {
             const key = `${role in STRUCTURE ? "s" : "f"}${index}`;
             if (role in STRUCTURE) return { key, role: STRUCTURE[role], text: role };
             if (locks[key]) return locks[key];
+            // a test catches ">="; "<=" cannot be caught, since the rule is a probability
+            // Stryker disable next-line EqualityOperator: "<=" differs only on a draw equal to the share
             if (mixes && random() < SPLIT_COMPONENT_SHARE) {
                 return { ...selectRandom(this.split.componentsFor(role, sex), random), key, role };
             }
-            const useForm = sex === "female" && random() >= FEMALE_USES_MALE_FORM ? "female" : "male";
+            const isFemale = sex === "female";
+            // a test catches "<"; ">" cannot be caught, since the rule is a probability
+            // Stryker disable next-line EqualityOperator: ">" differs only on a draw equal to the share
+            const useForm = isFemale && random() >= FEMALE_USES_MALE_FORM ? "female" : "male";
             return tableComponent(key, role, selectRandom(this._entriesFor(role, sex), random), useForm);
         });
         const words = parts
@@ -215,8 +228,12 @@ export class DrowNameGenerator {
             .join("")
             .split(" ");
         if (!words.every((word) => this._allowed(word))) return null;
+        // Stryker disable next-line ArrayDeclaration: a vowelless word counts 1 syllable, not 0; both are under 4
         const syllables = Math.max(...words.map((w) => (w.match(VOWEL_GROUP) || []).length));
-        if (applyPreferences && syllables >= 4 && random() >= LONG_NAME_KEEP[sex]) return null;
+        const isLong = syllables >= 4;
+        // a test catches "<"; ">" cannot be caught, since the rule is a probability
+        // Stryker disable next-line EqualityOperator: ">" differs only on a draw equal to the keep share
+        if (applyPreferences && isLong && random() >= LONG_NAME_KEEP[sex]) return null;
         return { text: words.map(capitalize).join(" "), parts };
     }
 
@@ -224,7 +241,7 @@ export class DrowNameGenerator {
     _allowed(word) {
         const bare = plain(word);
         return (
-            (word.match(/'/g) || []).length <= 1 &&
+            word.indexOf("'") === word.lastIndexOf("'") && // one apostrophe at most (none, or the first is the last)
             !/(.)\1\1/.test(word) &&
             !this.commonWords.has(bare) &&
             !this.forbidden.some((deity) => bare.includes(deity))
@@ -261,6 +278,7 @@ export class DrowNameGenerator {
 /** The first name and house of a result as sections ({ text, parts }), for rebuilding one of them. */
 function sectionsOf(result) {
     const parts = (pattern) => result.parts.filter((p) => pattern.test(p.key));
+    // Stryker disable next-line Regex: part keys are f#, s#, n0, n1 and house; no other key contains an "n"
     const houseParts = parts(/^(n|house)/);
     const houseText =
         houseParts[0].key === "house" ? houseParts[0].text : capitalize(houseParts.map((p) => p.text).join(""));

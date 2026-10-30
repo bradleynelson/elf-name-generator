@@ -1,7 +1,7 @@
 // Structure changes shared by the elf and drow generators: the visitor lengthens or shortens a first name, adds or
 // removes a compound name, and a roll may change shape under locks. Each species supplies its own shapes and slot keys;
 // the rules here are the same. They add no naming pattern: every target is one of the species' published shapes.
-import { selectWeighted } from "./random.js?v=4.1.3";
+import { selectWeighted } from "./random.js?v=4.1.4";
 
 // Slots of a first name's shapes (a slot's key is its key prefix plus its position in the shape):
 const FIRST_WORD_SLOTS = 2; // prefix and suffix, which every change keeps
@@ -51,11 +51,8 @@ export function getChangedShape(control, shape, locked, keyPrefix, { short, long
     const isLocked = (slot) => locked.has(`${keyPrefix}${slot}`);
     const is = (target) => sameShape(shape, target);
     if (control === NAME_STRUCTURE_CONTROL.COMPOUND_NAME) {
-        const secondWordSlots = Array.from(
-            { length: compound.length - SECOND_WORD_FIRST_SLOT },
-            (_, offset) => SECOND_WORD_FIRST_SLOT + offset
-        );
-        if (is(compound)) return secondWordSlots.some(isLocked) ? null : short;
+        const isSecondWordLocked = compound.some((_, slot) => slot >= SECOND_WORD_FIRST_SLOT && isLocked(slot));
+        if (is(compound)) return isSecondWordLocked ? null : short;
         // a long first name gives up its extra suffix, unless that is locked
         return is(short) || (is(long) && !isLocked(EXTRA_SUFFIX_SLOT)) ? compound : null;
     }
@@ -68,8 +65,8 @@ export const getKeptParts = (parts, keyPrefix) =>
     Object.fromEntries(
         parts
             .filter((part) => {
-                const slot = getSlotNumber(part.key, keyPrefix);
-                return part.key.startsWith(`${keyPrefix}j`) || (slot !== undefined && slot < FIRST_WORD_SLOTS);
+                // a key that is not a slot has no number, and `undefined < FIRST_WORD_SLOTS` is false
+                return part.key.startsWith(`${keyPrefix}j`) || getSlotNumber(part.key, keyPrefix) < FIRST_WORD_SLOTS;
             })
             .map((part) => [part.key, part])
     );

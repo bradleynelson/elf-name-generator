@@ -1,0 +1,53 @@
+name: Monthly mutation testing
+
+# Checks that the tests notice when core logic changes (BMN-78): Stryker makes small deliberate breaks in js/core/,
+# reruns the tests after each and reports every break no test caught. A score below the floor in stryker.config.json
+# ("break") fails the run, so GitHub emails the owner; the summary and the full HTML report are kept with the run.
+# Monthly, plus Run workflow by hand before a release (owner's choice, 2026-10-29); too slow for every push. Scheduled
+# runs only start from the default branch, so in practice this runs in the production repository. GitHub turns off
+# scheduled workflows after 60 days without repository activity; re-enable it on the Actions tab if that happens.
+on:
+    schedule:
+        - cron: "0 7 1 * *" # the 1st of each month, 07:00 UTC
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    mutation:
+        name: Mutation testing (js/core)
+        if: github.repository == 'bradleynelson/elf-name-generator'
+        runs-on: ubuntu-latest
+        timeout-minutes: 90
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+
+            - name: Setup Node.js
+              uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+              with:
+                  node-version: "24"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run Stryker
+              run: npm run test:mutation
+
+            # the summary and report are wanted most when the score fell below the floor
+            - name: Summarize the score
+              if: ${{ !cancelled() }}
+              run: node scripts/mutation-summary.js
+
+            - name: Keep the full report
+              if: ${{ !cancelled() }}
+              uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+              with:
+                  name: mutation-report
+                  path: reports/mutation/
+                  retention-days: 90
