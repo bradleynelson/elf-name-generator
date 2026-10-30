@@ -1,0 +1,22 @@
+{
+    "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+    "testRunner": "vitest",
+    "vitest": {
+        "configFile": "vitest.config.js"
+    },
+    "mutate": ["js/core/**/*.js"],
+    "thresholds": {
+        "high": 100,
+        "low": 90,
+        "break": 100
+    },
+    "timeoutMS": 30000,
+    "reporters": ["clear-text", "progress", "html", "json"],
+    "htmlReporter": {
+        "fileName": "reports/mutation/mutation.html"
+    },
+    "jsonReporter": {
+        "fileName": "reports/mutation/mutation.json"
+    },
+    "tempDirName": ".stryker-tmp"
+}

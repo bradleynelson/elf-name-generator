@@ -1,6 +1,15 @@
 // Run separately with Node's test runner; these filesystem checks do not use Vitest/jsdom.
 import assert from "node:assert/strict";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+    copyFileSync,
+    mkdirSync,
+    mkdtempSync,
+    readdirSync,
+    readFileSync,
+    rmSync,
+    symlinkSync,
+    writeFileSync
+} from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +19,7 @@ import { parse } from "yaml";
 import { buildSite, verifySite } from "./release-site.js";
 import { getLiveExpectations, retryWhileProblems } from "./check-live-site.js";
 import { stampedVersion } from "./stamp-version.js";
+import { summarizeMutationReport } from "./mutation-summary.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const approvedFiles = JSON.parse(readFileSync(path.join(repositoryRoot, "release-files.json"), "utf8"));
@@ -194,9 +204,10 @@ test("deployment runs only for main in the production repository: on a push (mer
     const deployCommands = deployment.steps.map((step) => step.run || "").join("\n");
     assert.match(deployCommands, /release-site\.js build/);
     assert.match(deployCommands, /release-site\.js check/);
-    // every action is pinned to a full commit SHA
-    for (const file of ["ci-cd.yml", "lighthouse.yml"]) {
-        const jobs = parse(readFileSync(path.join(repositoryRoot, ".github", "workflows", file), "utf8")).jobs;
+    // every action in every workflow is pinned to a full commit SHA
+    const workflowsDir = path.join(repositoryRoot, ".github", "workflows");
+    for (const file of readdirSync(workflowsDir).filter((name) => name.endsWith(".yml"))) {
+        const jobs = parse(readFileSync(path.join(workflowsDir, file), "utf8")).jobs;
         for (const step of Object.values(jobs).flatMap((job) => job.steps)) {
             if (step.uses) assert.match(step.uses, /@[0-9a-f]{40}$/, `${file}: ${step.uses}`);
         }
@@ -241,4 +252,41 @@ test("the live check reports the last problems, after the attempts allowed, when
     );
     assert.equal(attempts, 4);
     assert.deepEqual(problems, ["still reachable on attempt 4"]);
+});
+
+test("mutation testing runs monthly or by hand in production only, read-only, and fails below the floor", () => {
+    const workflow = parse(readFileSync(path.join(repositoryRoot, ".github", "workflows", "mutation.yml"), "utf8"));
+    // not on pushes or pull requests: a run takes about 15 minutes or more
+    assert.deepEqual(Object.keys(workflow.on).sort(), ["schedule", "workflow_dispatch"]);
+    assert.deepEqual(workflow.permissions, { contents: "read" });
+    const job = workflow.jobs.mutation;
+    assert.equal(job.if, "github.repository == 'bradleynelson/elf-name-generator'");
+    assert.equal(job.permissions, undefined, "no job widens the read-only permissions");
+    const checkout = job.steps.find((step) => step.uses?.startsWith("actions/checkout@"));
+    assert.equal(checkout.with["persist-credentials"], false);
+    const order = (pattern) => job.steps.findIndex((step) => pattern.test(step.uses || step.run || ""));
+    assert.ok(order(/test:mutation/) < order(/mutation-summary\.js/));
+    // a score below the floor fails the Stryker step; the summary and report must still be kept
+    for (const step of job.steps.slice(order(/test:mutation/) + 1)) assert.equal(step.if, "${{ !cancelled() }}");
+    const scripts = JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf8")).scripts;
+    assert.equal(scripts["test:mutation"], "stryker run");
+    const config = JSON.parse(readFileSync(path.join(repositoryRoot, "stryker.config.json"), "utf8"));
+    assert.deepEqual(config.mutate, ["js/core/**/*.js"]);
+    // the no-backsliding floor (owner, 2026-10-29): raised as the gaps close, never lowered; 100 since BMN-84 (owner)
+    assert.ok(config.thresholds.break >= 100, `floor ${config.thresholds.break}%`);
+});
+
+test("the mutation summary scores timeouts as caught, leaves excused mutants out, and lists the weakest file first", () => {
+    const mutants = (...statuses) => ({ mutants: statuses.map((status) => ({ status })) });
+    const report = {
+        files: {
+            "js/core/strong.js": mutants("Killed", "Killed", "Timeout", "Survived"),
+            "js/core/weak.js": mutants("Killed", "Survived", "NoCoverage", "Ignored", "CompileError")
+        }
+    };
+    const summary = summarizeMutationReport(report, 60);
+    // 4 caught of 7 counted; Ignored (excused with a reason) and CompileError are not counted
+    assert.match(summary, /\*\*Score: 57\.1%\*\* \(below the 60% floor\): 3 changes no test noticed, 1 excused/);
+    assert.ok(summary.indexOf("weak.js | 33.3%") < summary.indexOf("strong.js | 75.0%"), "weakest file first");
+    assert.match(summarizeMutationReport(report, 50), /\*\*Score: 57\.1%\*\* \(floor 50%\)/);
 });

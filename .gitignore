@@ -5,6 +5,10 @@ dist/
 # Test coverage
 coverage/
 
+# Mutation testing (Stryker)
+reports/
+.stryker-tmp/
+
 # IDE
 .vscode/
 .idea/

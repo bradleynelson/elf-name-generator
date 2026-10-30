@@ -9,8 +9,8 @@
 // tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
 // are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
 // the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.3";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.3";
+import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.4";
+import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.4";
 import {
     getAvailableControls,
     getChangedShape,
@@ -19,7 +19,7 @@ import {
     selectRollShape,
     sameShape,
     getSlotNumber
-} from "./nameStructure.js?v=4.1.3";
+} from "./nameStructure.js?v=4.1.4";
 
 const MAX_ATTEMPTS = 300;
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep
@@ -118,6 +118,7 @@ export class ElfNameGenerator {
         if (!ELF_SUBRACES.includes(subrace)) throw new Error(`Unknown elf subrace: ${subrace}`);
         const sex = SEX_BY_STYLE[style] || null;
         let repeat = null;
+        // Stryker disable next-line EqualityOperator: "<=" adds one retry to 300, seen only if all 300 fail
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const personal = this._buildTable(sex, locks, random, { expanded, reshape });
             const family = locks.family
@@ -200,6 +201,7 @@ export class ElfNameGenerator {
         if (!shape) return null;
         const kept = getKeptParts(result.parts, prefix);
         const sections = sectionsOf(result);
+        // Stryker disable next-line EqualityOperator: "<=" adds one retry to 300, seen only if all 300 fail
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const built =
                 prefix === "t"
@@ -244,6 +246,8 @@ export class ElfNameGenerator {
         const { expanded = false, random = Math.random } = options;
         const { personal } = sectionsOf(result);
         if (choice.key === "family") return this._assemble(personal, whole(choice), result.sex, result.subrace);
+        // ">=" would skip the loop, so every surname change would return null: the surname-switch tests catch that
+        // Stryker disable next-line EqualityOperator: "<=" adds one retry to 300, seen only if all 300 fail
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             const family = this._buildTableFamily(random, { [choice.key]: choice }, expanded, true);
             if (family) return this._assemble(personal, family, result.sex, result.subrace);
@@ -283,7 +287,17 @@ export class ElfNameGenerator {
         sex,
         locks,
         random,
-        { shape: given = null, applyPreferences = true, surname = false, expanded = false, reshape = false } = {}
+        {
+            shape: given = null,
+            applyPreferences = true,
+            surname = false,
+            // Stryker disable next-line BooleanLiteral: only the picker omits it, and it locks every slot
+            expanded = false,
+            // the callers that omit it give the shape, except the picker: it locks every slot and draws 0, so a rolled
+            // shape is the shortest that keeps every slot, which is the name's own
+            // Stryker disable next-line BooleanLiteral: the picker's reroll lands on its own shape
+            reshape = false
+        } = {}
     ) {
         const keyPrefix = surname ? "n" : "t";
         const choseAny = locksTableParts(locks, keyPrefix);
@@ -296,6 +310,8 @@ export class ElfNameGenerator {
             if (role in STRUCTURE) return { key, role: STRUCTURE[role], text: role };
             if (locks[key]) return locks[key];
             const componentRole = surname ? `family ${role}` : role;
+            // a test catches ">="; "<=" cannot be caught, since the rule is a probability
+            // Stryker disable next-line EqualityOperator: "<=" differs only on a draw equal to the share
             if (mixes && random() < SPLIT_COMPONENT_SHARE) {
                 const component = selectRandom(source.componentsFor(role, surname ? null : sex), random);
                 return { ...component, key, role: componentRole };
@@ -349,6 +365,7 @@ export class ElfNameGenerator {
             return whole(this._buildCommonFamily(subrace, random));
         }
         if (random() < PUBLISHED_HOUSE_SHARE) {
+            // Stryker disable next-line ArrayDeclaration: the stand-in has no `form`, so the filter drops it
             const houses = (this.data.familyNames || []).filter((f) => f.form === "elvish");
             const weight = (f) => (f.subraces?.includes(subrace) ? SUBRACE_WEIGHT : 1);
             return whole(publishedFamilyPart(selectWeighted(houses, weight, random)));
@@ -360,7 +377,16 @@ export class ElfNameGenerator {
      * A surname from the tables, in components that can be locked. Chosen: it uses the suffix forms shared by both
      * genders, as the whole family bears it.
      */
-    _buildTableFamily(random, locks = {}, expanded = false, reshape = false, applyPreferences = true) {
+    _buildTableFamily(
+        random,
+        locks = {},
+        // Stryker disable next-line BooleanLiteral: only the picker omits it, and it locks every slot
+        expanded = false,
+        // as at _buildTable; the other caller that omits it locks nothing, so it rolls a shape either way
+        // Stryker disable next-line BooleanLiteral: the picker's reroll lands on its own shape
+        reshape = false,
+        applyPreferences = true
+    ) {
         const keepsShape = locksTableParts(locks, "n") && !reshape;
         const shape = keepsShape ? locks.familyShape : selectRollShape(SURNAME_SHAPES, locks, "n", random);
         const built = this._buildTable("neutral", locks, random, { shape, applyPreferences, surname: true, expanded });
@@ -381,9 +407,13 @@ export class ElfNameGenerator {
         return { key: "family", role: "family name", text, method: "composed", words: [a.text, b.text] };
     }
 
-    /** Length rules; the four-syllable preference applies to a roll, with or without locks (BMN-56). */
+    /**
+     * Length rules; the four-syllable preference applies to a roll, with or without locks (BMN-56). Triple letters
+     * are already refused when the parts are joined (_join).
+     */
     _acceptable(text, applyPreferences, random) {
-        if (/(.)\1\1/.test(text) || text.length < MIN_LETTERS || text.length > MAX_LETTERS) return false;
+        if (text.length < MIN_LETTERS || text.length > MAX_LETTERS) return false;
+        // Stryker disable next-line ArrayDeclaration: a vowelless word counts 1 syllable, not 0; both are under 2
         const syllables = (text.match(VOWEL_GROUP) || []).length;
         if (syllables < 2 || syllables > 4) return false;
         return !(applyPreferences && syllables === 4 && random() >= FOUR_SYLLABLE_KEEP);
@@ -391,14 +421,17 @@ export class ElfNameGenerator {
 
     _assemble(personal, family, sex, subrace) {
         const published = this.publishedByName.get(personal.text.toLowerCase());
-        const usesTables = Boolean(personal.shape || family.shape);
+        // the tables are cited only when a slot was filled from them: with Expanded Variety every slot can be a split
+        // component, whose meaning is unknown
+        const parts = [...personal.parts, ...family.parts];
+        const usesTables = parts.some((p) => TABLE_KEY.test(p.key) && p.method !== "split");
         return {
             name: `${personal.text} ${family.text}`,
             sex,
             subrace,
             ...(personal.shape ? { shape: personal.shape } : {}),
             ...(family.shape ? { familyShape: family.shape } : {}),
-            parts: [...personal.parts, ...family.parts],
+            parts,
             ...(usesTables ? { tables: `${this.tables.title}, first published in ${this.tables.origin}` } : {}),
             ...(published ? { published: { source: published.source } } : {})
         };
@@ -436,20 +469,24 @@ function sectionsOf(result) {
     return {
         personal: {
             text: result.name.slice(0, cut),
+            // part keys are t#, tj#, s#, n#, nj# and "family"
+            // Stryker disable next-line Regex: no key has a t, s or n after its first letter
             parts: result.parts.filter((p) => /^[ts]/.test(p.key)),
             shape: result.shape
         },
         family: {
             text: result.name.slice(cut + 1),
+            // Stryker disable next-line Regex: as above
             parts: result.parts.filter((p) => /^(n|family)/.test(p.key)),
             shape: result.familyShape
         }
     };
 }
 
+// Stryker disable next-line BooleanLiteral: only the keys are read (`in`), never the values
 const REVERSE_STRUCTURE = { apostrophe: true, space: true };
 const TABLE_KEY = /^[tn]\d/;
-const locksTableParts = (locks, keyPrefix = "t") =>
+const locksTableParts = (locks, keyPrefix) =>
     Object.keys(locks).some((key) => new RegExp(`^${keyPrefix}\\d`).test(key));
 // a family name made of one part (published or Common-form)
 const whole = (part) => part && { text: part.text, parts: [part] };

@@ -1,5 +1,5 @@
 // Rendering only: turns results and lists into page content. Text is always set with textContent.
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.3";
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.4";
 
 const $ = (id) => document.getElementById(id);
 const STRUCTURAL = new Set(["joining letter", "apostrophe", "space"]);
