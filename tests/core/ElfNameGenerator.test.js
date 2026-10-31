@@ -1,29 +1,23 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { describe, expect, it } from "vitest";
 import { ElfNameGenerator } from "../../js/core/ElfNameGenerator.js";
-import { seededRandom } from "../helpers/random.js";
+import { expectGivesUpAfter300Attempts, seededRandom, sample } from "../helpers/random.js";
+import { readJson } from "../helpers/files.js";
 
 // Design decisions (2026-10-21): personal names come from the Races of the Wild / Dragon #251
 // tables (Table 1-1 shapes, apostrophe shape lowered to 5%); suffix forms follow the requested gender, neutral uses
 // suffixes shared by both; awkward joins take one of Dragon #251's letters; Expanded Variety mixes split components
 // (cut from published names, endings following gender) into table names; published translations are carried, never invented; generated names
 // matching a published one are labeled; locked components are kept and everything else is re-rolled.
-const data = JSON.parse(readFileSync(join(process.cwd(), "data/elfNames.json"), "utf-8"));
-const sample = (gen, count, options) => {
-    const random = seededRandom(20261020);
-    return Array.from({ length: count }, () => gen.generate({ random, ...options }));
-};
+const data = readJson("data/elfNames.json");
 const part = (result, key) => result.parts.find((p) => p.key === key);
 const tableParts = (result, role) => result.parts.filter((p) => p.role === role && /^t\d/.test(p.key));
 // a one-row table: "al" (Sea) + "ra" (Woman), joined directly only when "lr" occurs inside a published name
-const fixture = ({ prefixes: rows = [{ text: "al", meaning: "Sea" }], joinClusters = ["lr"] } = {}) => ({
-    tables: {
-        title: "Test tables",
-        origin: "Test",
-        prefixes: rows,
-        suffixes: [{ male: ["ra"], female: ["ra"], meaning: "Woman" }]
-    },
+const fixture = ({
+    prefixes: rows = [{ text: "al", meaning: "Sea" }],
+    suffixes = [{ male: ["ra"], female: ["ra"], meaning: "Woman" }],
+    joinClusters = ["lr"]
+} = {}) => ({
+    tables: { title: "Test tables", origin: "Test", prefixes: rows, suffixes },
     joinClusters,
     familyNames: [{ text: "Starym", form: "elvish", subraces: ["sun-elf"], source: { title: "Cormanthyr" } }]
 });
@@ -59,6 +53,10 @@ describe("ElfNameGenerator with the published tables", () => {
         expect(share("prefixsuffix")).toBeGreaterThan(share("prefixsuffixsuffix"));
         expect(share("suffix'prefixsuffixsuffix")).toBeGreaterThan(0.02);
         expect(share("suffix'prefixsuffixsuffix")).toBeLessThan(0.08);
+        // all the apostrophe shapes together are about 4.5% of names; without the apostrophe as a joint they fell to 1.8%
+        const apostrophes = shapes.filter((s) => s.includes("'")).length / shapes.length;
+        expect(apostrophes).toBeGreaterThan(0.03);
+        expect(apostrophes).toBeLessThan(0.06);
     });
 
     it("never makes a doubled y, which no published elf name has", () => {
@@ -244,12 +242,10 @@ describe("ElfNameGenerator rules", () => {
         names.forEach((name, i) => expect(names.slice(Math.max(0, i - 5), i)).not.toContain(name));
     });
 
-    it("hands drow requests to the drow generator and rejects unknown subraces", () => {
-        const drow = { generate: () => ({ name: "Viconia DeVir" }), getStructureControls: () => ["drow controls"] };
-        const gen = new ElfNameGenerator(fixture(), drow);
-        expect(gen.generate({ subrace: "drow" }).name).toBe("Viconia DeVir");
-        expect(gen.getStructureControls({ subrace: "drow" })).toEqual(["drow controls"]);
+    it("rejects a subrace that is not an elf subrace, drow included", () => {
+        const gen = new ElfNameGenerator(fixture());
         expect(() => gen.generate({ subrace: "half-elf" })).toThrow(/Unknown elf subrace/);
+        expect(() => gen.generate({ subrace: "drow" })).toThrow(/Unknown elf subrace: drow/);
     });
 });
 
@@ -655,12 +651,6 @@ describe("ElfNameGenerator rule guards", () => {
             twoPart(sample(new ElfNameGenerator(tiny()), 20)).forEach((r) => expect(r).not.toHaveProperty("published"));
         });
 
-        it("need a configured drow generator for drow requests", () => {
-            expect(() => new ElfNameGenerator(fixture()).generate({ subrace: "drow" })).toThrow(
-                "No drow generator configured"
-            );
-        });
-
         // Inferred (see _acceptable): published names have 2-4 syllables (vowel groups).
         it.each([
             ["no vowel", "bld", "nr", "bldnr"],
@@ -885,5 +875,35 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
         expect(() => new ElfNameGenerator()).toThrow(message);
         expect(() => new ElfNameGenerator({ tables: {} })).toThrow(message);
         expect(() => new ElfNameGenerator({ tables: { prefixes: rowsOfPrefixes } })).toThrow(message);
+    });
+});
+
+describe("ElfNameGenerator gives up after exactly 300 attempts", () => {
+    // tables whose every component repeats a letter three times, so no name built from them is allowed
+    const never = new ElfNameGenerator(
+        fixture({
+            prefixes: [{ text: "aaa", meaning: "Never" }],
+            suffixes: [{ male: ["aaa"], female: ["aaa"], meaning: "Never" }]
+        })
+    );
+    const real = new ElfNameGenerator(data);
+    const names = sample(real, 300);
+    const before = names.find((r) => !r.familyShape && r.parts.at(-1).key === "family");
+    const choice = real.getSurnameSwitchOptions(before).options[0];
+    const changeable = names.find((r) => real.getStructureControls(r).some((c) => c.control === "given"));
+    it("when no name can be built", () => {
+        expectGivesUpAfter300Attempts((random) => expect(() => never.generate({ random })).toThrow(/unlocking/));
+    });
+
+    it("when a structure change cannot be built", () => {
+        expectGivesUpAfter300Attempts((random) =>
+            expect(never.generateStructureChange(changeable, "given", { random })).toBeNull()
+        );
+    });
+
+    it("when a surname cannot be built", () => {
+        expectGivesUpAfter300Attempts((random) =>
+            expect(never.generateSurnameChange(before, choice, { random })).toBeNull()
+        );
     });
 });

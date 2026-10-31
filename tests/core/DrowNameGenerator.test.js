@@ -1,16 +1,11 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { beforeEach, describe, expect, it } from "vitest";
 import { DrowNameGenerator } from "../../js/core/DrowNameGenerator.js";
-import { fixedRandom, seededRandom } from "../helpers/random.js";
+import { expectGivesUpAfter300Attempts, fixedRandom, seededRandom, sample } from "../helpers/random.js";
+import { readJson } from "../helpers/files.js";
 
 // Design decisions (2026-10-20): Dragon #267 tables with their own meanings; about 15%
 // apostrophes; males never take feminine components; FOR2 taboos; published matches labeled; locks keep components.
-const data = JSON.parse(readFileSync(join(process.cwd(), "data/drowNames.json"), "utf-8"));
-const sample = (gen, count, options) => {
-    const random = seededRandom(20261020);
-    return Array.from({ length: count }, () => gen.generate({ random, ...options }));
-};
+const data = readJson("data/drowNames.json");
 const personal = (result) => result.name.slice(0, result.name.lastIndexOf(" "));
 const components = (result) => result.parts.filter((p) => p.role === "prefix" || p.role === "suffix");
 const fixture = (overrides = {}) => ({
@@ -91,7 +86,8 @@ describe("DrowNameGenerator rules", () => {
             fixture({
                 prefixes: [{ female: "lol", male: "lol", meaning: "" }],
                 suffixes: [{ female: "th", male: "th", meaning: "" }],
-                forbiddenNames: ["lolth"]
+                // the name holds only the second of two: one match is enough to refuse it
+                forbiddenNames: ["vhaeraun", "lolth"]
             })
         );
         expect(() => gen.generate({ style: "feminine", random: seededRandom(1) })).toThrow(/unlocking/);
@@ -422,6 +418,17 @@ describe("DrowNameGenerator rule guards", () => {
             );
         });
 
+        it("counts an accented vowel as a syllable (BMN-97)", () => {
+            // "balarené" has four syllables, the last of them accented (as in -rené, from Chilrené)
+            const accented = fixture({
+                prefixes: [{ female: "bala", male: "bala", meaning: "Graceful" }],
+                suffixes: [{ female: "rené", male: "rené", meaning: "Lover" }]
+            });
+            expect(() => new DrowNameGenerator(accented).generate({ style: "feminine", random: () => 0.9 })).toThrow(
+                /unlocking/
+            );
+        });
+
         it("counts no syllables in a word without a vowel", () => {
             const vowelless = fixture({
                 prefixes: [{ female: "st", male: "st", meaning: "Graceful" }],
@@ -712,5 +719,29 @@ describe("DrowNameGenerator input guards", () => {
         const gen = new DrowNameGenerator(fixture());
         expect(gen.generate({ style: "unlisted", random: fixedRandom(0.49, 0.1) }).sex).toBe("female");
         expect(gen.generate({ style: "unlisted", random: fixedRandom(0.5, 0.1) }).sex).toBe("male");
+    });
+});
+
+describe("DrowNameGenerator gives up after exactly 300 attempts", () => {
+    // tables whose every component repeats a letter three times, so no name built from them is allowed
+    const never = new DrowNameGenerator(
+        fixture({
+            prefixes: [{ female: "aaa", male: "aaa", meaning: "Never" }],
+            suffixes: [{ female: "aaa", male: "aaa", meaning: "Never" }]
+        })
+    );
+
+    it("when no name can be built", () => {
+        expectGivesUpAfter300Attempts((random) => expect(() => never.generate({ random })).toThrow(/unlocking/));
+    });
+
+    it("when a structure change cannot be built", () => {
+        const real = new DrowNameGenerator(data);
+        const changeable = sample(real, 300).find((r) =>
+            real.getStructureControls(r).some((c) => c.control === "given")
+        );
+        expectGivesUpAfter300Attempts((random) =>
+            expect(never.generateStructureChange(changeable, "given", { random })).toBeNull()
+        );
     });
 });

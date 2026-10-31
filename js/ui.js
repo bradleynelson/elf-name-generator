@@ -1,5 +1,5 @@
 // Rendering only: turns results and lists into page content. Text is always set with textContent.
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.4";
+import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.5";
 
 const $ = (id) => document.getElementById(id);
 const STRUCTURAL = new Set(["joining letter", "apostrophe", "space"]);
@@ -372,6 +372,7 @@ export function openPartPicker(tabs, currentText) {
     dialog.showModal();
     dialog.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "center" });
 }
+
 let noticeTimer;
 /**
  * Shows a short message. With an action (such as Undo) it also shows a button and stays longer; it never disappears

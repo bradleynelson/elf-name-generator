@@ -1,7 +1,7 @@
 // Structure changes shared by the elf and drow generators: the visitor lengthens or shortens a first name, adds or
 // removes a compound name, and a roll may change shape under locks. Each species supplies its own shapes and slot keys;
 // the rules here are the same. They add no naming pattern: every target is one of the species' published shapes.
-import { selectWeighted } from "./random.js?v=4.1.4";
+import { selectWeighted } from "./random.js?v=4.1.5";
 
 // Slots of a first name's shapes (a slot's key is its key prefix plus its position in the shape):
 const FIRST_WORD_SLOTS = 2; // prefix and suffix, which every change keeps
@@ -72,10 +72,26 @@ export const getKeptParts = (parts, keyPrefix) =>
     );
 
 /**
- * The controls to offer on a result, as { control, on }: those whose change is available. `controls` maps each control
- * to `{ isOn(result) }`.
+ * The locks for generating from a result: the parts the visitor locked, by key, and the shapes (and sex) they came in,
+ * which keep table parts in their places (a first name, and a table-built surname, apart).
+ * @param {Set<string>} keys - keys of the locked parts
  */
-export const getAvailableControls = (controls, result, isAvailable) =>
+export function getLocks(result, keys) {
+    if (!result || !keys.size) return {};
+    const locks = Object.fromEntries(result.parts.filter((p) => keys.has(p.key)).map((p) => [p.key, p]));
+    return {
+        ...locks,
+        ...(result.shape ? { shape: result.shape, sex: result.sex } : {}),
+        ...(result.familyShape ? { familyShape: result.familyShape } : {})
+    };
+}
+
+/**
+ * The controls to offer on a result, as { control, on }: those whose change builds with every part kept, found by trying
+ * `generator.generateStructureChange`. `controls` maps each control to `{ isOn(result) }`.
+ * @param {Set<string>} locked - keys of the parts the visitor locked
+ */
+export const getAvailableControls = (controls, result, generator, locked, options) =>
     Object.entries(controls)
-        .filter(([control]) => isAvailable(control))
+        .filter(([control]) => generator.generateStructureChange(result, control, { ...options, locked }))
         .map(([control, { isOn }]) => ({ control, on: isOn(result) }));

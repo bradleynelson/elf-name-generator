@@ -1,10 +1,9 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { focusPart, renderResult } from "../js/ui.js";
+import { readPage } from "./helpers/files.js";
 
 // Rendering uses the real page markup, so a renamed or removed element fails here rather than on the live site.
-const page = readFileSync(join(process.cwd(), "index.html"), "utf-8");
+const page = readPage();
 const handlers = { onToggleLock: vi.fn(), onChoose: vi.fn() };
 const rows = () =>
     [...document.querySelectorAll(".name-sources-row")].map((row) => [

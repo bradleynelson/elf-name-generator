@@ -1,8 +1,7 @@
 // Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.4";
-import { ElfNameGenerator } from "./core/ElfNameGenerator.js?v=4.1.4";
-import { DrowNameGenerator } from "./core/DrowNameGenerator.js?v=4.1.4";
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.4";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.5";
+import { createGeneratorFor } from "./core/generators.js?v=4.1.5";
+import { getLocks, NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.5";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -15,7 +14,7 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.1.4";
+} from "./favorites.js?v=4.1.5";
 import {
     focusPart,
     focusStructure,
@@ -25,12 +24,12 @@ import {
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.1.4";
+} from "./ui.js?v=4.1.5";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
 const HISTORY_SIZE = 10;
-const state = { generator: null, result: null, controls: [], locked: new Set(), favorites: [], history: [] };
+const state = { generatorFor: null, result: null, controls: [], locked: new Set(), favorites: [], history: [] };
 
 // A failed or unreadable copy (often a stale cached file) is retried once, bypassing the browser cache.
 async function loadJson(path) {
@@ -51,6 +50,11 @@ function options() {
         style: $("pickerSex").value,
         expanded: $("expandedToggle").getAttribute("aria-pressed") === "true"
     };
+}
+
+/** The generator that serves the lineage picked on the page; a result already made goes back to its own (`generatorFor`). */
+function pickedGenerator() {
+    return state.generatorFor(options().subrace);
 }
 
 // Usage analytics (event plan in ANALYTICS.md): controlled lowercase values, never names or their components
@@ -93,18 +97,6 @@ const STRUCTURE_VALUES = {
 const ORIGINS = { split: "split", published: "published", composed: "common_words" };
 const originOf = (part) => ORIGINS[part.method] || "table";
 
-/** Locked parts of the current result, in the form the generators accept. */
-function locksFor(result, keys) {
-    if (!result || !keys.size) return {};
-    const locks = Object.fromEntries(result.parts.filter((p) => keys.has(p.key)).map((p) => [p.key, p]));
-    // table parts keep their places through the shape they came in (first name and table-built surname apart)
-    return {
-        ...locks,
-        ...(result.shape ? { shape: result.shape, sex: result.sex } : {}),
-        ...(result.familyShape ? { familyShape: result.familyShape } : {})
-    };
-}
-
 /**
  * Shows a result; new results also go to the top of the history (restoring from a list does not).
  * `focus` ({ key, control: "text" | "lock" }) returns keyboard focus to the part that was used, since redrawing
@@ -115,7 +107,7 @@ function show(result, { remember = true, focus = null } = {}) {
     if (remember) {
         updateHistory([result, ...state.history.filter((r) => r.name !== result.name)].slice(0, HISTORY_SIZE));
     }
-    state.controls = state.generator.getStructureControls(result, state.locked, options());
+    state.controls = state.generatorFor(result.subrace).getStructureControls(result, state.locked, options());
     renderResult(result, state.locked, {
         onToggleLock: toggleLock,
         onChoose: choosePart,
@@ -158,7 +150,7 @@ function attempt(action) {
 
 function generate() {
     const result = attempt(() =>
-        state.generator.generate({ ...options(), reshape: true, locks: locksFor(state.result, state.locked) })
+        pickedGenerator().generate({ ...options(), reshape: true, locks: getLocks(state.result, state.locked) })
     );
     if (result) show(result);
     return result;
@@ -182,18 +174,19 @@ function toggleLock(key) {
 function choosePart(key) {
     const current = state.result;
     const part = current.parts.find((p) => p.key === key);
-    const choices = attempt(() => state.generator.optionsFor(current, key));
+    const generator = state.generatorFor(current.subrace);
+    const choices = attempt(() => generator.optionsFor(current, key));
     // a surname can also be switched to the other kind (published or constructed) without rolling
     const isWholeSurname = key === "family" || key === "house"; // a published family name or drow house
     const isSurname = isWholeSurname || /^n\d/.test(key);
-    const other = isSurname ? state.generator.getSurnameSwitchOptions(current, state.locked, options()) : null;
+    const other = isSurname ? generator.getSurnameSwitchOptions(current, state.locked, options()) : null;
     const own = {
         kind: isWholeSurname ? "published" : "constructed",
         options: choices || [],
         selected: true,
         onPick: (choice) => {
-            const locks = { ...locksFor(current, new Set(current.parts.map((p) => p.key))), [key]: choice };
-            const result = attempt(() => state.generator.generate({ ...options(), locks }));
+            const locks = { ...getLocks(current, new Set(current.parts.map((p) => p.key))), [key]: choice };
+            const result = attempt(() => generator.generate({ ...options(), subrace: current.subrace, locks }));
             if (!result) return;
             track("component_selected", usage({ ...describeComponent(part), component_origin: originOf(choice) }));
             show(result, { remember: false, focus: { key, control: "text" } });
@@ -203,7 +196,7 @@ function choosePart(key) {
         kind: other.kind,
         options: other.options,
         onPick: (choice) => {
-            const result = attempt(() => state.generator.generateSurnameChange(current, choice, options()));
+            const result = attempt(() => generator.generateSurnameChange(current, choice, options()));
             if (!result) return showNotice("That surname is not available for this name.");
             track("surname_kind_changed", usage({ surname_kind: other.kind }));
             show(result, { remember: false, focus: { key: choice.key, control: "text" } });
@@ -220,7 +213,7 @@ function choosePart(key) {
 
 /** Presses a + or - beside the name (longer or shorter first name or surname, compound name); only a roll joins the history. */
 function handleStructureChange(control) {
-    const changed = state.generator.generateStructureChange(state.result, control, {
+    const changed = state.generatorFor(state.result.subrace).generateStructureChange(state.result, control, {
         ...options(),
         locked: state.locked
     });
@@ -235,10 +228,10 @@ function handleStructureChange(control) {
 }
 
 function showList() {
-    const locks = locksFor(state.result, state.locked);
+    const locks = getLocks(state.result, state.locked);
     const results = [];
     for (let i = 0; i < LIST_SIZE; i++) {
-        const result = attempt(() => state.generator.generate({ ...options(), reshape: true, locks }));
+        const result = attempt(() => pickedGenerator().generate({ ...options(), reshape: true, locks }));
         if (!result) break;
         results.push(result);
     }
@@ -378,10 +371,10 @@ async function start() {
     });
     try {
         const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.1.4"),
-            loadJson("data/drowNames.json?v=4.1.4")
+            loadJson("data/elfNames.json?v=4.1.5"),
+            loadJson("data/drowNames.json?v=4.1.5")
         ]);
-        state.generator = new ElfNameGenerator(elfNames, new DrowNameGenerator(drowNames));
+        state.generatorFor = createGeneratorFor(elfNames, drowNames);
     } catch (error) {
         // a stale cached copy of the site is the usual cause; a hard refresh (Ctrl+F5) bypasses the cache, Reload does not
         showNotice("The name lists could not be loaded. Please refresh with Ctrl+F5 (Cmd+Shift+R on a Mac).", {

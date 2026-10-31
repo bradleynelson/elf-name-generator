@@ -33,18 +33,21 @@
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.1.4" />
+        <link rel="stylesheet" href="style.css?v=4.1.5" />
         <!-- Start the script and data downloads now instead of after each import is discovered in turn -->
-        <link rel="modulepreload" href="js/app.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/ui.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.1.4" />
-        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.1.4" />
-        <link rel="preload" href="data/elfNames.json?v=4.1.4" as="fetch" crossorigin />
-        <link rel="preload" href="data/drowNames.json?v=4.1.4" as="fetch" crossorigin />
+        <link rel="modulepreload" href="js/app.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/ui.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/species.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.1.5" />
+        <link rel="modulepreload" href="js/core/generators.js?v=4.1.5" />
+        <link rel="preload" href="data/elfNames.json?v=4.1.5" as="fetch" crossorigin />
+        <link rel="preload" href="data/drowNames.json?v=4.1.5" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
@@ -128,15 +131,6 @@
                     d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"
                 />
             </symbol>
-            <symbol id="icon-remove" viewBox="0 0 24 24">
-                <path
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    d="M6 6l12 12M18 6 6 18"
-                />
-            </symbol>
         </svg>
 
         <a href="#main" class="skip-link">Skip to the name generator</a>
@@ -215,8 +209,8 @@
                 <p class="name-card-script" id="nameScript" aria-hidden="true"></p>
                 <p class="name-card-script-label" id="nameScriptLabel"></p>
                 <div class="name-card-actions">
-                    <!-- a carved ruby: echoes spread behind it while it charges; decoration stays out of the way of
-                         pointers and screen readers -->
+                    <!-- a carved ruby that glows with motes of light rising off it while lit; decoration stays out of the
+                         way of pointers and screen readers -->
                     <div class="generate">
                         <svg class="generate-filters" width="0" height="0" aria-hidden="true" focusable="false">
                             <filter
@@ -436,9 +430,9 @@
             <p>
                 <a href="mailto:contact@espruar.com">contact@espruar.com</a> ·
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
-                <a href="#" class="privacy-link">Privacy</a>
+                <button type="button" class="privacy-link">Privacy</button>
             </p>
-            <p class="site-version">v4.1.4 - Last Updated 10-30-26</p>
+            <p class="site-version">v4.1.5 - Last Updated 10-31-26</p>
         </footer>
 
         <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
@@ -446,7 +440,7 @@
         <div class="cookie-banner" id="cookieBanner" role="region" aria-label="Analytics cookies" hidden>
             <p>
                 This site uses cookies via Google Analytics to improve your experience.
-                <a href="#" class="privacy-link">Learn more</a>
+                <button type="button" class="privacy-link">Learn more</button>
             </p>
             <button type="button" class="cookie-banner-accept" id="cookieAccept">Accept</button>
             <button type="button" id="cookieDecline">Decline</button>
@@ -484,6 +478,6 @@
             <form method="dialog"><button>Close</button></form>
         </dialog>
 
-        <script type="module" src="js/app.js?v=4.1.4"></script>
+        <script type="module" src="js/app.js?v=4.1.5"></script>
     </body>
 </html>

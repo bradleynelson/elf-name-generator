@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.5] - 2026-10-31
+
+### Fixed
+
+- With Expanded Variety on, a drow name ending in an accented vowel (such as -rené or -lué) is now counted with the right number of syllables, so long female names are no more common than the long-name rule intends.
+
+### Changed
+
+- The page now asks for all of its scripts up front, so it can finish loading sooner.
+- The "Privacy" and "Learn more" links are now buttons (they open the privacy notice). They look the same, and assistive technology announces them as buttons.
+
+### Maintenance
+
+- The code checks now enforce which parts of the code may depend on which, and validate the name data files on every run.
+- Elf and drow name generators are now chosen in one place, which keeps adding another species simpler.
+- Fewer parts of the code are excluded from mutation testing, and a check stops new exclusions creeping in.
+- The stylesheet, release tooling and tests were tidied: repeated rules shared, unused code removed, and tests no longer reach into private code.
+
 ## [4.1.4] - 2026-10-30
 
 ### Fixed

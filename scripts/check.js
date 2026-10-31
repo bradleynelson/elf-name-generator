@@ -6,6 +6,8 @@ const checks = [
     "format:check",
     "check:duplication",
     "check:unused",
+    "check:stryker-disables",
+    "check:data",
     "test:coverage",
     "test:release",
     "build:site",
