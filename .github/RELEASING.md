@@ -10,6 +10,9 @@
       a push (a merged pull request) or a manual run with the confirm box ticked. It publishes `dist/` through GitHub
       Pages, then `scripts/check-live-site.js` checks espruar.com: the page shows the new version, every approved file
       loads, and every other repository file returns 404. Wrong answers are re-checked for up to 5 minutes, because Pages may still be serving the previous deployment.
+- **Monthly mutation testing** (`workflows/mutation.yml`): the 1st of each month and by hand (run it before a release),
+  in the production repository only. Stryker makes small deliberate breaks in `js/core/` and reruns the tests; a score
+  below the floor in `stryker.config.json` fails the run. The summary and HTML report are kept with the run.
 - **Weekly Lighthouse check** (`workflows/lighthouse.yml`): Mondays and by hand, against espruar.com. Accessibility
   below the threshold in `lighthouserc.json` fails the run; the reports are kept as a run artifact.
 - **Dependabot** (`dependabot.yml`): one grouped pull request a week for npm packages and one for GitHub Actions,

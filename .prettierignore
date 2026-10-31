@@ -3,7 +3,6 @@ coverage/
 reports/
 .stryker-tmp/
 dist/
-*.config.js
 package-lock.json
 # local tool settings and notes, not part of the site
 .claude/

@@ -1,21 +1,21 @@
-import { readFileSync } from "fs";
-import { join } from "path";
-import { describe, expect, it } from "vitest";
-import { DrowNameGenerator } from "../../js/core/DrowNameGenerator.js";
-import { ELF_SUBRACES, ElfNameGenerator } from "../../js/core/ElfNameGenerator.js";
+import { beforeEach, describe, expect, it } from "vitest";
+import { createGeneratorFor } from "../../js/core/generators.js";
+import { SUBRACES } from "../../js/core/species.js";
 import { seededRandom } from "../helpers/random.js";
+import { getLocks } from "../../js/core/nameStructure.js";
+import { readJson } from "../helpers/files.js";
 
 // BMN-61 (split from BMN-13): rules every generated name must follow, checked over many seeded rolls instead of a few
 // hand-picked examples. They catch mistakes that no single example test would notice. Behaviour that is already pinned
 // by an example lives in ElfNameGenerator.test.js, DrowNameGenerator.test.js and structureControlsAgree.test.js; this
-// file only adds the "always" checks. A new species or lineage must be added to the generator list below.
+// file only adds the "always" checks. A new species or lineage is covered once it is in SUBRACES and generators.js.
 //
 // Sampling: for each lineage, SAMPLE rolls with seeds SEED_BASE + 0..SAMPLE-1, cycling through the three styles. Each
 // roll is then re-rolled under locks of increasing share (LOCK_SHARES, cycled), pressed through every structure control
 // that is offered, and re-built with one part swapped for another picker option.
-const load = (file) => JSON.parse(readFileSync(join(process.cwd(), "data", file), "utf-8"));
-const gen = new ElfNameGenerator(load("elfNames.json"), new DrowNameGenerator(load("drowNames.json")));
-const LINEAGES = [...ELF_SUBRACES, "drow"];
+const load = (file) => readJson(`data/${file}`);
+const elfNames = load("elfNames.json");
+const drowNames = load("drowNames.json");
 const STYLES = ["neutral", "feminine", "masculine"];
 const LOCK_SHARES = [0.3, 0.6, 1]; // share of the lockable parts kept; 1 is the "everything locked" extreme
 const SEED_BASE = 61000;
@@ -26,16 +26,6 @@ const PICKER_SAMPLE = 40; // rolls that also get the (slower) part-picker swap
 const isLockable = (part) => /^([tnf]\d+|family|house)$/.test(part.key);
 const letters = (text) => text.toLowerCase().replace(/\s/g, "");
 const joined = (result) => result.parts.map((p) => p.text).join("");
-
-/** The locks the app builds from a result and the keys the visitor locked (js/app.js locksFor, which is not exported). */
-function locksFor(result, keys) {
-    const locks = Object.fromEntries(result.parts.filter((p) => keys.has(p.key)).map((p) => [p.key, p]));
-    return {
-        ...locks,
-        ...(result.shape ? { shape: result.shape, sex: result.sex } : {}),
-        ...(result.familyShape ? { familyShape: result.familyShape } : {})
-    };
-}
 
 /** Rule 1 and 3: the name is its parts, and every part carries what the UI reads. */
 function expectWellFormed(result, label) {
@@ -70,8 +60,14 @@ function expectLocksKept(result, expected, label) {
 
 const lockedTexts = (result, keys) => new Map(result.parts.filter((p) => keys.has(p.key)).map((p) => [p.key, p.text]));
 
-describe.each(LINEAGES)("%s generator invariants", (subrace) => {
-    // rolls and locks stay in step with this lineage's seeds; the generator is shared, its repeat memory only avoids repeats
+describe.each(SUBRACES)("%s generator invariants", (subrace) => {
+    // A new generator for every test (BMN-94): generators remember recent names, and one elf generator serves all four
+    // elf lineages, so a shared one would let a test's sample depend on which tests ran before it.
+    let gen;
+    beforeEach(() => {
+        gen = createGeneratorFor(elfNames, drowNames)(subrace);
+    });
+    // rolls and locks stay in step with this lineage's seeds
     const options = (i, random) => ({ subrace, style: STYLES[i % STYLES.length], random });
 
     it("builds well-formed names from plain rolls", () => {
@@ -90,7 +86,7 @@ describe.each(LINEAGES)("%s generator invariants", (subrace) => {
             if (share === 1) start.parts.filter(isLockable).forEach((p) => keys.add(p.key));
             const label = `${subrace} seed ${SEED_BASE + i}, locked ${[...keys]}`;
             const expected = lockedTexts(start, keys);
-            const locks = locksFor(start, keys);
+            const locks = getLocks(start, keys);
             // a roll may reshape the name; an edit through the picker keeps the shape. Neither may throw (rule 4: the
             // retry limit is not exhausted) or lose a locked part.
             for (const reshape of [true, false]) {
@@ -138,7 +134,7 @@ describe.each(LINEAGES)("%s generator invariants", (subrace) => {
             if (!choice) continue;
             const label = `${subrace} seed ${SEED_BASE + i}, swap ${key} to ${choice.text}`;
             const keep = new Set([...all].filter((k) => k !== key));
-            const locks = { ...locksFor(start, all), [key]: choice };
+            const locks = { ...getLocks(start, all), [key]: choice };
             const result = gen.generate({ ...options(i, random), locks });
             expectWellFormed(result, label);
             expectLocksKept(result, lockedTexts(start, keep), label);

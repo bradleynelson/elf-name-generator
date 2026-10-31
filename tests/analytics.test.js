@@ -4,7 +4,7 @@ import { reportError, setUpConsent, track } from "../js/analytics.js";
 // Analytics loads only with consent and only on the production site, and a failure in it never reaches the page.
 const page = () => {
     document.body.innerHTML = `<div id="banner"></div><button id="accept"></button><button id="decline"></button>
-        <dialog id="dialog"></dialog><a class="privacy-link" href="#"></a>`;
+        <dialog id="dialog"></dialog><button type="button" class="privacy-link"></button>`;
     const $ = (id) => document.getElementById(id);
     return {
         banner: $("banner"),

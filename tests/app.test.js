@@ -1,11 +1,10 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { seededRandom } from "./helpers/random.js";
+import { readJson, readPage } from "./helpers/files.js";
 
 // Page flows with the real page, the real app script and the real name data: what a person does with the controls,
 // checked by what they would see. The data files are served from disk in place of the network.
-const page = readFileSync(join(process.cwd(), "index.html"), "utf-8");
+const page = readPage();
 const $ = (id) => document.getElementById(id);
 const textOf = (key) => document.querySelector(`[data-key="${key}"] .name-part-text`)?.textContent;
 const textButton = (key) => document.querySelector(`[data-key="${key}"] .name-part-text`);
@@ -27,7 +26,7 @@ beforeEach(async () => {
     vi.stubGlobal("fetch", async (path) => ({
         ok: true,
         // like a server, ignore the ?v= version stamp on the URL
-        json: async () => JSON.parse(readFileSync(join(process.cwd(), path.split("?")[0]), "utf-8"))
+        json: async () => readJson(path.split("?")[0])
     }));
     // jsdom does not implement modal dialogs or scrolling
     HTMLDialogElement.prototype.showModal ??= function showModal() {
@@ -262,6 +261,15 @@ describe("page flows", () => {
         expect(history()).toBe(0);
         document.querySelector("#notice .notice-action").click();
         expect(history()).toBe(before);
+    });
+
+    it("offers the privacy notice from buttons, in the footer and in the cookie banner, since they go nowhere", () => {
+        const links = [...document.querySelectorAll(".privacy-link")];
+        expect(links.map((link) => link.closest("footer, #cookieBanner").localName)).toEqual(["footer", "div"]);
+        for (const link of links) {
+            expect(link.tagName).toBe("BUTTON");
+            expect(link.type).toBe("button");
+        }
     });
 });
 

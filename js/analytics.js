@@ -50,12 +50,7 @@ export function reportError(error, where = "page") {
  */
 export function setUpConsent({ banner, accept, decline, dialog, links }) {
     // the privacy explanation is always available, whatever happens to consent below
-    links.forEach((link) =>
-        link.addEventListener("click", (event) => {
-            event.preventDefault();
-            dialog.showModal();
-        })
-    );
+    links.forEach((link) => link.addEventListener("click", () => dialog.showModal()));
     let consent;
     try {
         consent = localStorage.getItem(CONSENT_KEY);

@@ -22,18 +22,12 @@ export class SplitComponents {
      * @param {{ source: { title: string }, text: string }[]} [publishedNames] - the published names the components are
      *   cut from, so each component can name the books they appear in
      */
-    constructor(
-        { openings = [], endings = [], joinClusters = [] } = {},
-        tableTexts = {},
-        // a made-up name in the default is never looked up, since the components' sources are real published names
-        // Stryker disable next-line ArrayDeclaration: a made-up default name is never looked up
-        publishedNames = []
-    ) {
+    constructor({ openings = [], endings = [], joinClusters = [] } = {}, tableTexts = {}, publishedNames) {
         this.openings = openings;
         this.endings = endings;
         this.clusters = new Set(joinClusters);
         this.tableTexts = tableTexts;
-        this.bookOf = new Map(publishedNames.map((p) => [p.text, p.source?.title]));
+        this.bookOf = new Map(publishedNames?.map((p) => [p.text, p.source?.title]));
         this.cache = new Map();
     }
 

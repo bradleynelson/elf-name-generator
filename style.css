@@ -171,6 +171,39 @@ a:focus-visible {
 
 /* ===== Components ===== */
 
+/* --- Shared by several components: set before them, so each only adds what is its own --- */
+/* the framed surface: the card, the panels and the dialogs */
+.name-card,
+.panel,
+.part-picker,
+.privacy-dialog {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: calc(var(--radius) * 2);
+}
+/* lettering cut into aged bronze */
+.site-title,
+.name-card-script {
+    color: var(--color-bronze);
+    text-shadow: 0 1px 0 rgb(0 0 0 / 0.35);
+}
+/* buttons that are only their content: no fill and no frame until they are hovered or pressed */
+.expanded-info,
+.name-part-text,
+.name-part-lock,
+.part-picker-option,
+.name-list-name,
+.privacy-link {
+    background: none;
+    border: none;
+}
+/* the icon inside a button is as large as the button's --icon-size */
+:is(.expanded-info, .expanded-toggle, .name-structure-step, .name-part-lock, .icon-button) svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
 /* --- Site header --- */
 .site-header {
     text-align: center;
@@ -181,9 +214,6 @@ a:focus-visible {
     font-weight: 400;
     /* 36px on a 375px phone, growing to the desktop size; two lines on phones, without overflow down to 320px */
     font-size: clamp(2rem, 9.6vw, 2.6rem);
-    /* lettering cut into aged bronze, like the Espruar line */
-    color: var(--color-bronze);
-    text-shadow: 0 1px 0 rgb(0 0 0 / 0.35);
     margin: 0;
 }
 .site-beta {
@@ -207,13 +237,10 @@ a:focus-visible {
 /* --- Name card: choose (sentence), name, act (generate), learn (sources) --- */
 .name-card {
     position: relative;
-    background: var(--color-surface);
-    /* the one framed panel: an outer rule and a fine inner rule */
-    border: 1px solid var(--color-border);
+    /* the one panel with two rules: the shared outer one, and a fine inner one */
     box-shadow:
         inset 0 0 0 4px var(--color-surface),
         inset 0 0 0 5px color-mix(in srgb, var(--color-bronze) 30%, transparent);
-    border-radius: calc(var(--radius) * 2);
     padding: calc(var(--space) * 1.5) var(--space);
     text-align: center;
     /* lets the name size itself to the card (cqw) */
@@ -226,9 +253,6 @@ a:focus-visible {
     align-items: center;
     gap: 0.5rem;
     font-size: 1.2rem;
-}
-.name-card .name-picker {
-    margin: 0;
 }
 .name-picker-group {
     display: inline-flex;
@@ -253,34 +277,21 @@ a:focus-visible {
     margin-top: 0.75rem;
 }
 .expanded-info {
+    --icon-size: 1rem;
     width: 2rem;
     height: 2rem;
-    background: none;
-    border: none;
     color: var(--color-bronze);
-}
-.expanded-info svg {
-    width: 1rem;
-    height: 1rem;
 }
 .expanded-info[aria-expanded="true"] {
     color: var(--color-text);
 }
 .expanded-toggle {
+    --icon-size: 1.1rem;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     font-size: 0.9rem;
-    color: var(--color-text);
     background: none;
-}
-.expanded-toggle svg {
-    width: 1.1rem;
-    height: 1.1rem;
-}
-.expanded-toggle[aria-pressed="true"] {
-    color: var(--color-locked);
-    border-color: var(--color-locked);
 }
 .expanded-hint {
     margin: 0.25rem 0 0;
@@ -352,6 +363,7 @@ a:focus-visible {
 /* Structure buttons: a small + / - at the end of the word it changes, quiet like the locks; a compound name that is not
    there yet is a dashed empty slot between the names */
 .name-structure-step {
+    --icon-size: 0.9rem;
     display: grid;
     place-items: center;
     align-self: flex-start;
@@ -364,15 +376,6 @@ a:focus-visible {
     border-radius: 50%;
     color: var(--color-text-muted);
 }
-.name-structure-step svg {
-    width: 0.9rem;
-    height: 0.9rem;
-}
-.name-structure-step:hover {
-    color: var(--color-surface);
-    background: var(--color-bronze);
-    border-color: var(--color-bronze);
-}
 .name-structure-step.is-slot {
     align-self: flex-end;
     margin: 0 0.1em 0.2em;
@@ -381,9 +384,6 @@ a:focus-visible {
 .name-card-script {
     font-family: "Espruar", var(--font-name);
     font-size: 1.4rem;
-    /* lettering cut into aged bronze */
-    color: var(--color-bronze);
-    text-shadow: 0 1px 0 rgb(0 0 0 / 0.35);
     margin: 0.5rem 0 0;
 }
 .name-card-script[data-script="high-drowic"] {
@@ -449,27 +449,19 @@ a:focus-visible {
     border-radius: var(--radius);
 }
 .name-part-text {
-    font: inherit;
-    background: none;
-    border: none;
     border-radius: 0;
     padding: 0 0.04em;
     margin: 0 0.04em;
     border-bottom: 2px solid var(--color-border);
 }
 .name-part-lock {
+    --icon-size: 1rem;
     display: grid;
     place-items: center;
     width: 2rem;
     height: 2rem;
     padding: 0;
-    background: none;
-    border: none;
     color: var(--color-text-muted);
-}
-.name-part-lock svg {
-    width: 1rem;
-    height: 1rem;
 }
 .name-part-joint {
     align-self: flex-start;
@@ -496,9 +488,10 @@ a:focus-visible {
     color: var(--color-text);
 }
 
-/* --- Bronze buttons (icon buttons, panel actions, cookie choices) fill with bronze on hover; :where keeps the
-   delete and saved-bookmark fills below stronger --- */
+/* --- Bronze buttons (icon buttons, structure steps, panel actions, cookie choices) fill with bronze on hover; :where
+   keeps the delete and saved-bookmark fills below stronger --- */
 .icon-button:hover,
+.name-structure-step:hover,
 :where(.panel-header, .cookie-banner) button:hover {
     color: var(--color-surface);
     background: var(--color-bronze);
@@ -510,6 +503,7 @@ a:focus-visible {
     display: none;
 }
 .icon-button {
+    --icon-size: 1.25rem;
     display: grid;
     place-items: center;
     width: 2rem;
@@ -517,14 +511,15 @@ a:focus-visible {
     padding: 0;
     color: var(--color-bronze);
 }
-.icon-button svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-/* a saved name keeps the bookmark filled, in the same colour as locked parts: both mean "kept" */
+/* a toggle that is on is gold, the colour of what is kept (after the hover fill above, which it overrides); a saved
+   name also keeps its bookmark filled, like locked parts */
+.expanded-toggle[aria-pressed="true"],
+.part-picker-tab[aria-pressed="true"],
 .name-card-save[aria-pressed="true"] {
     color: var(--color-locked);
     border-color: var(--color-locked);
+}
+.name-card-save[aria-pressed="true"] {
     --icon-fill: currentColor;
 }
 .name-card-save[aria-pressed="true"]:hover {
@@ -557,23 +552,12 @@ a:focus-visible {
     z-index: -2;
     pointer-events: none;
     border-radius: calc(var(--radius) + 4px);
+    --prong: color-mix(in srgb, var(--color-bronze), white 35%);
     background:
-        radial-gradient(circle at 3px 3px, color-mix(in srgb, var(--color-bronze), white 35%) 2.5px, transparent 3px),
-        radial-gradient(
-            circle at calc(100% - 3px) 3px,
-            color-mix(in srgb, var(--color-bronze), white 35%) 2.5px,
-            transparent 3px
-        ),
-        radial-gradient(
-            circle at 3px calc(100% - 3px),
-            color-mix(in srgb, var(--color-bronze), white 35%) 2.5px,
-            transparent 3px
-        ),
-        radial-gradient(
-            circle at calc(100% - 3px) calc(100% - 3px),
-            color-mix(in srgb, var(--color-bronze), white 35%) 2.5px,
-            transparent 3px
-        ),
+        radial-gradient(circle at 3px 3px, var(--prong) 2.5px, transparent 3px),
+        radial-gradient(circle at calc(100% - 3px) 3px, var(--prong) 2.5px, transparent 3px),
+        radial-gradient(circle at 3px calc(100% - 3px), var(--prong) 2.5px, transparent 3px),
+        radial-gradient(circle at calc(100% - 3px) calc(100% - 3px), var(--prong) 2.5px, transparent 3px),
         linear-gradient(
             180deg,
             color-mix(in srgb, var(--color-bronze), white 25%),
@@ -610,11 +594,12 @@ a:focus-visible {
         border-color 950ms ease,
         box-shadow 950ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* the facets: a cushion cut laid on its side. A flat table sits behind the lettering, its corners rounded to the button's own radius
-   (8px: 16 by 17 units in this 300 by 100 drawing, which stretches to the button), and a continuous ring of twelve
-   flat bevel facets rounds down from it to the edge: straight cuts along the top, bottom and sides, two across each
-   corner. Each facet is one tone for the way it faces a light from the upper left (brightest there, darkest at the lower
-   right), softened slightly so no edge reads as a drawn line, with one sparkle on the upper-left facets. */
+/* the facets: a cushion cut laid on its side. A flat table sits behind the lettering, its corners rounded to the
+   button's own radius (8px: 16 by 17 units in this 300 by 100 drawing, which stretches to the button), and a
+   continuous ring of twelve flat bevel facets rounds down from it to the edge: straight cuts along the top, bottom and
+   sides, two across each corner. Each facet is one tone for the way it faces a light from the upper left (brightest
+   there, darkest at the lower right), softened slightly so no edge reads as a drawn line, with one sparkle on the
+   upper-left facets. */
 .generate-button::before {
     content: "";
     position: absolute;
@@ -933,10 +918,6 @@ a:focus-visible {
 .part-picker {
     width: min(26rem, 92vw);
     max-height: 80vh;
-    background: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: calc(var(--radius) * 2);
 }
 /* Published | Constructed, shown only when a surname can be switched between the two kinds */
 .part-picker-tabs {
@@ -947,12 +928,7 @@ a:focus-visible {
 .part-picker-tab {
     flex: 1;
     font-size: 0.9rem;
-    color: var(--color-text);
     background: none;
-}
-.part-picker-tab[aria-pressed="true"] {
-    color: var(--color-locked);
-    border-color: var(--color-locked);
 }
 .part-picker-note {
     margin: 0.2rem 0 0;
@@ -972,8 +948,6 @@ a:focus-visible {
     gap: 1rem;
     width: 100%;
     text-align: left;
-    background: none;
-    border: none;
     border-radius: var(--radius);
     padding: 0.5rem 0.6rem;
 }
@@ -996,9 +970,6 @@ a:focus-visible {
 
 /* --- Panels: more names, history and saved names --- */
 .panel {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: calc(var(--radius) * 2);
     padding: var(--space);
 }
 .panel-header {
@@ -1054,15 +1025,12 @@ a:focus-visible {
 }
 /* smaller than other icon buttons (after .icon-button, which it overrides) */
 .favorites-tool {
+    --icon-size: 1rem;
     width: 2rem;
     height: 2rem;
 }
-.favorites-tool svg {
-    width: 1rem;
-    height: 1rem;
-}
-/* panel actions (Roll 10 More, Clear) are bronze like the icon buttons */
-:where(.panel-header) button {
+/* panel actions (Roll 10 More, Clear) and cookie choices are bronze like the icon buttons */
+:where(.panel-header, .cookie-banner) button {
     color: var(--color-bronze);
 }
 /* filling red on hover marks actions that delete */
@@ -1108,9 +1076,6 @@ a:focus-visible {
     color: var(--color-text-muted);
     text-align: center;
 }
-.site-version {
-    font-family: var(--font-ui);
-}
 
 /* --- Notice, cookie banner and privacy dialog --- */
 .notice {
@@ -1145,9 +1110,6 @@ a:focus-visible {
 .cookie-banner p {
     margin: 0;
 }
-:where(.cookie-banner) button {
-    color: var(--color-bronze);
-}
 /* Accept is the one filled button: solid bronze with the surface colour as its lettering */
 .cookie-banner .cookie-banner-accept {
     color: var(--color-surface);
@@ -1155,15 +1117,20 @@ a:focus-visible {
     border-color: var(--color-bronze);
 }
 .cookie-banner .cookie-banner-accept:hover {
-    color: var(--color-surface);
     background: color-mix(in srgb, var(--color-bronze), var(--color-text) 25%);
+}
+/* a button that looks like the link it replaced, so it matches the links around it */
+.privacy-link {
+    padding: 0;
+    color: var(--color-bronze);
+    text-decoration: underline;
+}
+.privacy-link:hover {
+    color: var(--color-text);
+    background: none;
 }
 .privacy-dialog {
     max-width: 32rem;
-    background: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: calc(var(--radius) * 2);
 }
 
 /* ===== Screen size and input ===== */
@@ -1191,7 +1158,8 @@ a:focus-visible {
         position: relative;
         width: fit-content;
         margin: 0 auto;
-        /* measured: the name is about 14em wide, which fills the 50rem inside of the card (52rem page less its padding) */
+        /* measured: the name is about 14em wide, which fills the 50rem inside of the card (52rem page less its
+           padding) */
         font-size: 3.55rem;
     }
     .site-beta {

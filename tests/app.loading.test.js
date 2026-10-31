@@ -1,12 +1,11 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { readJson, readPage } from "./helpers/files.js";
 
 // Loading the name lists when the first copy cannot be used, as with a stale cached file.
-const page = readFileSync(join(process.cwd(), "index.html"), "utf-8");
+const page = readPage();
 const $ = (id) => document.getElementById(id);
 // like a server, ignore the ?v= version stamp on the URL
-const fromDisk = (path) => JSON.parse(readFileSync(join(process.cwd(), path.split("?")[0]), "utf-8"));
+const fromDisk = (path) => readJson(path.split("?")[0]);
 
 async function startPage(fetchFile) {
     document.documentElement.innerHTML = page;

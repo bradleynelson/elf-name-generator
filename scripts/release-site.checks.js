@@ -19,7 +19,9 @@ import { parse } from "yaml";
 import { buildSite, verifySite } from "./release-site.js";
 import { getLiveExpectations, retryWhileProblems } from "./check-live-site.js";
 import { stampedVersion } from "./stamp-version.js";
+import { bumpVersion, nextVersion } from "./version.js";
 import { summarizeMutationReport } from "./mutation-summary.js";
+import { countStrykerDisables, strykerDisableProblems } from "./check-stryker-disables.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const approvedFiles = JSON.parse(readFileSync(path.join(repositoryRoot, "release-files.json"), "utf8"));
@@ -61,9 +63,61 @@ test("the source files carry one version on every local script, stylesheet and d
     assert.match(read("index.html"), new RegExp(`src="js/app\\.js\\?v=${version}"`));
     assert.match(read("index.html"), new RegExp(`href="data/elfNames\\.json\\?v=${version}"`));
     assert.match(read("index.html"), /href="favicon\.ico"/, "files that never change are not stamped");
-    assert.match(read("js/app.js"), new RegExp(`from "\\./core/ElfNameGenerator\\.js\\?v=${version}"`));
+    assert.match(read("js/app.js"), new RegExp(`from "\\./core/generators\\.js\\?v=${version}"`));
+    assert.match(read("js/core/generators.js"), new RegExp(`from "\\./ElfNameGenerator\\.js\\?v=${version}"`));
     assert.match(read("js/app.js"), new RegExp(`"data/drowNames\\.json\\?v=${version}"`));
     assert.match(read("js/core/DrowNameGenerator.js"), new RegExp(`from "\\./random\\.js\\?v=${version}"`));
+});
+
+test("the page preloads every script it publishes, so none is found late during loading", () => {
+    const html = readFileSync(path.join(repositoryRoot, "index.html"), "utf8");
+    const preloaded = [...html.matchAll(/<link rel="modulepreload" href="([^"?]+)/g)].map((match) => match[1]);
+    const scripts = approvedFiles.filter((file) => file.startsWith("js/"));
+    assert.deepEqual([...preloaded].sort(), [...scripts].sort());
+});
+
+const UNRELEASED = "## [Unreleased]\n\n### Fixed\n\n- A fix.\n\n## [4.1.4] - 2026-10-30\n";
+
+// the files a version bump rewrites, with written-up changes waiting in the changelog
+function bumpFixture(t, changelog = UNRELEASED) {
+    const root = fixture(t);
+    for (const file of ["package.json", "package-lock.json"]) {
+        copyFileSync(path.join(repositoryRoot, file), path.join(root, file));
+    }
+    writeFileSync(path.join(root, "CHANGELOG.md"), changelog);
+    return root;
+}
+
+test("a version bump moves the version, footer, stamps and changelog together", (t) => {
+    const root = bumpFixture(t);
+    const read = (file) => readFileSync(path.join(root, file), "utf8");
+    const next = nextVersion(JSON.parse(read("package.json")).version, "patch");
+    assert.equal(bumpVersion(root, "patch", new Date(2027, 2, 4)), next);
+    assert.equal(JSON.parse(read("package.json")).version, next);
+    assert.equal(JSON.parse(read("package-lock.json")).packages[""].version, next);
+    assert.ok(read("index.html").includes(`v${next} - Last Updated 03-04-27`));
+    assert.equal(stampedVersion(root), next);
+    assert.ok(read("CHANGELOG.md").startsWith(`## [${next}] - 2027-03-04\n\n### Fixed`));
+});
+
+test("a version bump can be major, minor or patch, and nothing else", () => {
+    assert.equal(nextVersion("4.1.4", "major"), "5.0.0");
+    assert.equal(nextVersion("4.1.4", "minor"), "4.2.0");
+    assert.equal(nextVersion("4.1.4", "patch"), "4.1.5");
+    assert.throws(() => nextVersion("4.1.4", "huge"), /Invalid version type: huge/);
+});
+
+test("a version bump that cannot update every file changes none of them", (t) => {
+    const versionOf = (root) => JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")).version;
+    const noChanges = bumpFixture(t, "## [4.1.4] - 2026-10-30\n");
+    const was = versionOf(noChanges);
+    assert.throws(() => bumpVersion(noChanges, "patch"), /\[Unreleased\]/);
+    assert.equal(versionOf(noChanges), was);
+    const noFooter = bumpFixture(t);
+    const page = path.join(noFooter, "index.html");
+    writeFileSync(page, readFileSync(page, "utf8").replace("Last Updated", "Updated"));
+    assert.throws(() => bumpVersion(noFooter, "patch"), /footer/);
+    assert.equal(versionOf(noFooter), was);
 });
 
 test("refuses a release whose stamps are missing or disagree", (t) => {
@@ -289,4 +343,20 @@ test("the mutation summary scores timeouts as caught, leaves excused mutants out
     assert.match(summary, /\*\*Score: 57\.1%\*\* \(below the 60% floor\): 3 changes no test noticed, 1 excused/);
     assert.ok(summary.indexOf("weak.js | 33.3%") < summary.indexOf("strong.js | 75.0%"), "weakest file first");
     assert.match(summarizeMutationReport(report, 50), /\*\*Score: 57\.1%\*\* \(floor 50%\)/);
+});
+
+test("the Stryker disable ceiling fails when a file gains or loses a directive, naming the file", () => {
+    assert.deepEqual(strykerDisableProblems({ "js/a.js": 2 }, { "js/a.js": 2 }), []);
+    const more = strykerDisableProblems({ "js/a.js": 3, "js/new.js": 1 }, { "js/a.js": 2 });
+    assert.equal(more.length, 2);
+    assert.match(more[0], /^js\/a\.js: 3 Stryker disable directives, ceiling 2\./);
+    assert.match(more[1], /^js\/new\.js: 1 Stryker disable directives, ceiling 0\./);
+    const fewer = strykerDisableProblems({ "js/a.js": 1 }, { "js/a.js": 2, "js/gone.js": 1 });
+    assert.match(fewer[0], /^js\/a\.js: .*Lower the ceiling to 1 /);
+    assert.match(fewer[1], /^js\/gone\.js: .*Lower the ceiling to 0 /);
+});
+
+test("the recorded Stryker disable ceiling matches the directives in js/", () => {
+    const ceiling = JSON.parse(readFileSync(path.join(repositoryRoot, "stryker-disable-ceiling.json"), "utf8"));
+    assert.deepEqual(strykerDisableProblems(countStrykerDisables(), ceiling), []);
 });

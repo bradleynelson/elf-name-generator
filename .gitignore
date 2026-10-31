@@ -22,7 +22,6 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
-test-log.txt
 
 # Cursor AI files (not for repository)
 .cursorrules

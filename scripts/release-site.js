@@ -5,21 +5,25 @@ import { stampText, stampedFiles, stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 
+// Only website assets can be approved; directory globs and private/tooling paths are forbidden. The page's own files,
+// the share and touch images, robots.txt and sitemap.xml are named exactly; fonts/ holds the self-hosted OFL fonts and
+// their license, which the OFL requires to ship with them.
+const APPROVED_PATHS = [
+    /^(?:index\.html|style\.css|CNAME|LICENSE|robots\.txt|sitemap\.xml)$/,
+    /^(?:favicon\.(?:ico|png)|apple-touch-icon\.png|share-card\.png)$/,
+    /^js\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.js$/,
+    /^data\/[A-Za-z0-9_-]+\.json$/,
+    /^fonts\/[a-z0-9-]+\.(?:otf|woff2)$/,
+    /^fonts\/OFL\.txt$/
+];
+
 function readManifest(root) {
     const files = JSON.parse(readFileSync(path.join(root, "release-files.json"), "utf8"));
     if (!Array.isArray(files) || files.length === 0 || new Set(files).size !== files.length) {
         throw new Error("Release list must contain unique file paths.");
     }
     for (const file of files) {
-        // Only website assets can be approved; directory globs and private/tooling paths are forbidden.
-        if (
-            typeof file !== "string" ||
-            // fonts/: self-hosted OFL fonts plus their license, which the OFL requires to ship with them; the share and
-            // touch images, robots.txt and sitemap.xml are named exactly
-            !/^(?:index\.html|style\.css|favicon\.(?:ico|png)|apple-touch-icon\.png|share-card\.png|robots\.txt|sitemap\.xml|CNAME|LICENSE|js\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.js|data\/[A-Za-z0-9_-]+\.json|fonts\/[a-z0-9-]+\.(?:otf|woff2)|fonts\/OFL\.txt)$/.test(
-                file
-            )
-        ) {
+        if (typeof file !== "string" || !APPROVED_PATHS.some((pattern) => pattern.test(file))) {
             throw new Error(`Unsafe release path: ${file}`);
         }
     }
@@ -27,6 +31,11 @@ function readManifest(root) {
         if (!files.includes(required)) throw new Error(`Required release asset is not approved: ${required}`);
     }
     return files;
+}
+
+function assertRealDirectory(directory) {
+    const stat = lstatSync(directory);
+    if (stat.isSymbolicLink() || !stat.isDirectory()) throw new Error("dist must be a real directory.");
 }
 
 function assertRegularPath(root, file) {
@@ -116,9 +125,7 @@ export function buildSite(root = repositoryRoot) {
     checkVersionStamps(root);
     const output = path.join(root, "dist");
     if (existsSync(output)) {
-        if (lstatSync(output).isSymbolicLink() || !lstatSync(output).isDirectory()) {
-            throw new Error("dist must be a real directory.");
-        }
+        assertRealDirectory(output);
         const expected = new Set([...files, ".nojekyll"]);
         const extra = listFiles(output).filter((file) => !expected.has(file));
         if (extra.length)
@@ -136,9 +143,7 @@ export function buildSite(root = repositoryRoot) {
 export function verifySite(root = repositoryRoot) {
     const files = readManifest(root);
     const output = path.join(root, "dist");
-    if (lstatSync(output).isSymbolicLink() || !lstatSync(output).isDirectory()) {
-        throw new Error("dist must be a real directory.");
-    }
+    assertRealDirectory(output);
     const expected = [...files, ".nojekyll"].sort();
     if (JSON.stringify(listFiles(output)) !== JSON.stringify(expected)) {
         throw new Error("Release folder contains missing or unapproved files.");

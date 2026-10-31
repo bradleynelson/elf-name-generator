@@ -3,6 +3,7 @@ import {
     getAvailableControls,
     getChangedShape,
     getKeptParts,
+    getLocks,
     getSlotNumber,
     sameShape,
     selectRollShape
@@ -118,17 +119,67 @@ describe("getKeptParts", () => {
     });
 });
 
+describe("getLocks", () => {
+    const parts = [{ key: "t0" }, { key: "t1" }, { key: "family" }];
+    const result = { parts, shape: ["prefix", "suffix"], sex: "female" };
+
+    it("is empty when nothing is locked or there is no result", () => {
+        expect(getLocks(result, new Set())).toEqual({});
+        expect(getLocks(null, new Set(["t0"]))).toEqual({});
+    });
+
+    it("keeps the locked parts by key, with the shape and sex that let them keep their places", () => {
+        expect(getLocks(result, new Set(["t1", "family"]))).toEqual({
+            t1: parts[1],
+            family: parts[2],
+            shape: result.shape,
+            sex: "female"
+        });
+    });
+
+    it("keeps a table-built surname's shape too, and leaves out a shape the result does not have", () => {
+        const surnamed = { parts, familyShape: ["prefix", "suffix"] };
+        expect(getLocks(surnamed, new Set(["t0"]))).toEqual({ t0: parts[0], familyShape: surnamed.familyShape });
+    });
+});
+
 describe("getAvailableControls", () => {
     const controls = { given: { isOn: (r) => r.long }, compound: { isOn: () => false } };
 
-    it("lists the controls that can be pressed with their current state, in order", () => {
-        expect(getAvailableControls(controls, { long: true }, () => true)).toEqual([
+    const generatorWhere = (isAvailable) => ({
+        generateStructureChange: (result, control, options) =>
+            isAvailable(control, options) ? { changed: true } : null
+    });
+
+    it("lists the controls whose change builds, with their current state, in order", () => {
+        const all = generatorWhere(() => true);
+        expect(getAvailableControls(controls, { long: true }, all, new Set(), {})).toEqual([
             { control: "given", on: true },
             { control: "compound", on: false }
         ]);
-        expect(getAvailableControls(controls, { long: true }, (control) => control === "compound")).toEqual([
+        const onlyCompound = generatorWhere((control) => control === "compound");
+        expect(getAvailableControls(controls, { long: true }, onlyCompound, new Set(), {})).toEqual([
             { control: "compound", on: false }
         ]);
-        expect(getAvailableControls(controls, {}, () => false)).toEqual([]);
+        expect(
+            getAvailableControls(
+                controls,
+                {},
+                generatorWhere(() => false),
+                new Set(),
+                {}
+            )
+        ).toEqual([]);
+    });
+
+    it("tries each change with the locked keys and the caller's options", () => {
+        const seen = [];
+        const generator = generatorWhere((control, options) => seen.push([control, options]));
+        const locked = new Set(["t0"]);
+        getAvailableControls(controls, {}, generator, locked, { expanded: true });
+        expect(seen).toEqual([
+            ["given", { expanded: true, locked }],
+            ["compound", { expanded: true, locked }]
+        ]);
     });
 });
