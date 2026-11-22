@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-// Bumps the version in package.json, package-lock.json, the index.html footer and every ?v= stamp, and turns the
-// CHANGELOG's [Unreleased] entry into the new version. Nothing is written unless every file can be updated.
-// Usage: node scripts/version.js [major|minor|patch]
+// Bumps package.json, package-lock.json, the page footer and every ?v= stamp, and dates the CHANGELOG's [Unreleased]
+// entry. Nothing is written unless every file can be updated.
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

@@ -1,9 +1,8 @@
-// ESLint flat config (replaces .eslintrc.json and .eslintignore, which ESLint 9+ no longer reads).
 import js from "@eslint/js";
 import globals from "globals";
 
-// Module boundaries (AGENTS.md, Code conventions: Boundaries). Imports carry a "?v=X.Y.Z" stamp that scripts/version.js
-// rewrites, so each pattern allows an optional query string after the file name.
+// Module boundaries: the core never reaches the page, storage or app, and each generator stands alone. Imports carry a
+// "?v=X.Y.Z" stamp that scripts/version.js rewrites, so each pattern allows an optional query string after the file name.
 const importOf = (names, message) => ({ regex: `(^|/)(${names})\\.js(\\?.*)?$`, message });
 const CORE_IMPORT_PATTERNS = [
     importOf("app|ui|favorites|analytics", "Core code never imports the app, UI, storage or analytics modules.")

@@ -2,20 +2,12 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createGeneratorFor } from "../../js/core/generators.js";
 import { SUBRACES } from "../../js/core/species.js";
 import { seededRandom } from "../helpers/random.js";
-import { getLocks } from "../../js/core/nameStructure.js";
-import { readJson } from "../helpers/files.js";
+import { getLocks, KIND, SECTION } from "../../js/core/nameStructure.js";
+import { readSpeciesData } from "../helpers/nameData.js";
 
-// BMN-61 (split from BMN-13): rules every generated name must follow, checked over many seeded rolls instead of a few
-// hand-picked examples. They catch mistakes that no single example test would notice. Behaviour that is already pinned
-// by an example lives in ElfNameGenerator.test.js, DrowNameGenerator.test.js and structureControlsAgree.test.js; this
-// file only adds the "always" checks. A new species or lineage is covered once it is in SUBRACES and generators.js.
-//
-// Sampling: for each lineage, SAMPLE rolls with seeds SEED_BASE + 0..SAMPLE-1, cycling through the three styles. Each
-// roll is then re-rolled under locks of increasing share (LOCK_SHARES, cycled), pressed through every structure control
-// that is offered, and re-built with one part swapped for another picker option.
-const load = (file) => readJson(`data/${file}`);
-const elfNames = load("elfNames.json");
-const drowNames = load("drowNames.json");
+// Sampling: per lineage, SAMPLE rolls (seeds from SEED_BASE, styles cycled), each re-rolled under LOCK_SHARES, pressed
+// through every offered structure control, and rebuilt with one part swapped for another picker option.
+const data = readSpeciesData();
 const STYLES = ["neutral", "feminine", "masculine"];
 const LOCK_SHARES = [0.3, 0.6, 1]; // share of the lockable parts kept; 1 is the "everything locked" extreme
 const SEED_BASE = 61000;
@@ -39,13 +31,21 @@ function expectWellFormed(result, label) {
         expect(typeof part.key === "string" && part.key !== "", where).toBe(true);
         expect(typeof part.role === "string" && part.role !== "", where).toBe(true);
         expect(typeof part.text === "string" && part.text !== "", where).toBe(true);
+        // where it sits and what it is: the app and the page read these, never the key or role
+        expect(Object.values(SECTION), where).toContain(part.section);
+        expect(Object.values(KIND), where).toContain(part.kind);
+        expect(part.kind === KIND.JOINT, `${where}: a joint is not lockable and nothing else is a joint`).toBe(
+            !isLockable(part)
+        );
         if (!isLockable(part)) continue; // joins and structure carry no source
-        // provenance: a published or split part names its source, a composed one its words, a table part its meaning
+        // provenance: a published or table part names its sources, a split one its names and their books, a composed
+        // one its words; a table part also its meaning
+        const hasSources = part.sources?.length > 0 && part.sources.every((s) => typeof s.title === "string");
         const hasProvenance =
-            (part.method === "published" && Boolean(part.source)) ||
-            (part.method === "split" && Boolean(part.from)) ||
+            (part.method === "published" && hasSources) ||
+            (part.method === "split" && part.from?.length > 0 && hasSources) ||
             (part.method === "composed" && part.words?.length === 2) ||
-            (part.method === undefined && typeof part.meaning === "string" && part.meaning !== "");
+            (part.method === undefined && hasSources && typeof part.meaning === "string" && part.meaning !== "");
         expect(hasProvenance, `${where}: no provenance ${JSON.stringify(part)}`).toBe(true);
     }
 }
@@ -61,11 +61,11 @@ function expectLocksKept(result, expected, label) {
 const lockedTexts = (result, keys) => new Map(result.parts.filter((p) => keys.has(p.key)).map((p) => [p.key, p.text]));
 
 describe.each(SUBRACES)("%s generator invariants", (subrace) => {
-    // A new generator for every test (BMN-94): generators remember recent names, and one elf generator serves all four
+    // A new generator for every test: generators remember recent names, and one elf generator serves all four
     // elf lineages, so a shared one would let a test's sample depend on which tests ran before it.
     let gen;
     beforeEach(() => {
-        gen = createGeneratorFor(elfNames, drowNames)(subrace);
+        gen = createGeneratorFor(data)(subrace);
     });
     // rolls and locks stay in step with this lineage's seeds
     const options = (i, random) => ({ subrace, style: STYLES[i % STYLES.length], random });

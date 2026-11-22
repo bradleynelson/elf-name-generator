@@ -1,6 +1,7 @@
-// Saved names, history and remembered settings, kept in this browser only. The saved-names key and record shape match the previous
-// version of the site, so names saved there (including other races) are kept and still shown.
-import { SUBRACES } from "./core/species.js?v=4.1.5";
+// Saved names, history and settings in browser storage. The saved-names key and record shape are unchanged from the
+// previous site, so older names (including other races) still show.
+import { getStoredPlace, getStoredTableSources } from "./core/nameStructure.js?v=4.2.0";
+import { getLineage } from "./core/species.js?v=4.2.0";
 
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";
@@ -40,18 +41,35 @@ export const MAX_FAVORITES = 100;
 
 const isText = (value) => typeof value === "string" && value !== "";
 
-/**
- * True if a stored result can be shown and built on again: a name, a lineage this version offers, and parts that each
- * have a key, a role and text. Records from older versions or edited by hand may fail this.
- */
+// A stored result this version can show and build on, or null; one saved by 4.1.5 or earlier is filled in.
 function validateResult(result) {
-    return (
+    const isUsable =
         isText(result?.name) &&
-        SUBRACES.includes(result.subrace) &&
+        Boolean(getLineage(result.subrace)) &&
         Array.isArray(result.parts) &&
         result.parts.length > 0 &&
-        result.parts.every((part) => isText(part?.key) && isText(part.role) && typeof part.text === "string")
-    );
+        result.parts.every((part) => isText(part?.key) && isText(part.role) && typeof part.text === "string");
+    if (!isUsable) return null;
+    return result.parts.every((part) => part.section && part.kind) ? result : fillStoredResult(result);
+}
+
+// What 4.1.5 and earlier did not store: parts' section and kind, and `sources` in place of `source`, `books` or one
+// `tables` line. Their only creator sources were Ed Greenwood's forum answers, which take today's credit line.
+const FORUM_ANSWER = "Forum answer by Ed Greenwood (Realms creator)";
+function fillStoredResult(result) {
+    const sourceOf = ({ title, creator }) =>
+        creator ? { title: FORUM_ANSWER, authority: "creator" } : { title, authority: "official" };
+    const sourcesOf = ({ source, books, meaning, method }) => {
+        if (source) return [sourceOf(source)];
+        if (books) return books.map((title) => ({ title }));
+        if (meaning && !method) return getStoredTableSources(result.tables);
+    };
+    const parts = result.parts.map(({ source, books, ...part }) => {
+        const sources = sourcesOf({ source, books, ...part });
+        return { ...part, ...(sources ? { sources } : {}), ...getStoredPlace(part) };
+    });
+    const published = result.published?.source ? { published: { sources: [sourceOf(result.published.source)] } } : {};
+    return { ...result, ...published, parts };
 }
 
 /** Reads a stored list; anything that is not a list (missing, unreadable, blocked storage) reads as empty. */
@@ -66,7 +84,7 @@ function loadList(key) {
 
 /** Recent results (newest first); entries that cannot be shown are skipped. */
 export function loadHistory() {
-    return loadList(HISTORY_KEY).filter(validateResult);
+    return loadList(HISTORY_KEY).map(validateResult).filter(Boolean);
 }
 
 /** History is a convenience: if the browser will not store it, it still works for this visit. */
@@ -79,15 +97,20 @@ export function saveHistory(history) {
 }
 
 /**
- * Saved names; a record without a name is skipped. Records are kept as stored: one whose result cannot be shown (saved
- * by an older version, or for another race) is still listed and can be copied (see canLoadFavorite).
+ * Saved names; records without a name are skipped. The rest are kept as stored: one that cannot be shown is still
+ * listed and can be copied (canLoadFavorite), and an older result is filled in when read.
  */
 export function loadFavorites() {
-    return loadList(STORAGE_KEY).filter((record) => isText(record?.name));
+    return loadList(STORAGE_KEY)
+        .filter((record) => isText(record?.name))
+        .map((record) => {
+            const result = validateResult(record.result);
+            return result && result !== record.result ? { ...record, result } : record;
+        });
 }
 
 /** True if a saved name can be shown again with its components, rather than only listed. */
-export const canLoadFavorite = (record) => validateResult(record.result);
+export const canLoadFavorite = (record) => Boolean(validateResult(record.result));
 
 /** Adds a name; returns the updated list. Throws an Error with a user-facing message when it cannot be saved. */
 export function addFavorite(favorites, result) {

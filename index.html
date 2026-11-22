@@ -6,23 +6,23 @@
         <title>Faerûn Name Generator | Elf and Drow Names from the Forgotten Realms</title>
         <meta
             name="description"
-            content="Free D&D elf and drow name generator for the Forgotten Realms. Names built from official naming tables, with the meaning and source of every part."
+            content="Free D&D elf and drow name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part."
         />
         <link rel="canonical" href="https://espruar.com/" />
         <meta name="theme-color" content="#1c1b1a" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#f3e7cf" media="(prefers-color-scheme: light)" />
-        <!-- blank d20 from dPoly Gamedings (Pixel Sagas), rendered in the site's ruby red -->
+        <!-- d20 icon: dPoly Gamedings (Pixel Sagas) -->
         <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-        <!-- link previews on Reddit, Discord, Facebook and X; the image is made from scripts/share-card.html -->
+        <!-- link previews; image built from scripts/share-card.html -->
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Faerûn Name Generator" />
         <meta property="og:url" content="https://espruar.com/" />
         <meta property="og:title" content="Faerûn Name Generator: Elf and Drow Names" />
         <meta
             property="og:description"
-            content="Free D&D elf and drow name generator for the Forgotten Realms. Names built from official naming tables, with the meaning and source of every part."
+            content="Free D&D elf and drow name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part."
         />
         <meta property="og:image" content="https://espruar.com/share-card.png" />
         <meta property="og:image:width" content="1200" />
@@ -33,27 +33,27 @@
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.1.5" />
-        <!-- Start the script and data downloads now instead of after each import is discovered in turn -->
-        <link rel="modulepreload" href="js/app.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/ui.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/species.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.1.5" />
-        <link rel="modulepreload" href="js/core/generators.js?v=4.1.5" />
-        <link rel="preload" href="data/elfNames.json?v=4.1.5" as="fetch" crossorigin />
-        <link rel="preload" href="data/drowNames.json?v=4.1.5" as="fetch" crossorigin />
+        <link rel="stylesheet" href="style.css?v=4.2.0" />
+        <!-- fetch modules in parallel rather than one import at a time -->
+        <link rel="modulepreload" href="js/app.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/ui.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/species.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/speciesData.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.2.0" />
+        <link rel="modulepreload" href="js/core/generators.js?v=4.2.0" />
+        <link rel="preload" href="data/elfNames.json?v=4.2.0" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
                 "@type": "WebApplication",
                 "name": "Faerûn Name Generator",
-                "description": "Free D&D elf and drow name generator for the Forgotten Realms. Names built from official naming tables, with the meaning and source of every part.",
+                "description": "Free D&D elf and drow name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part.",
                 "url": "https://espruar.com/",
                 "applicationCategory": "GameApplication",
                 "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -137,17 +137,14 @@
 
         <header class="site-header">
             <h1 class="site-title">Faerûn Name Generator <span class="site-beta">Beta</span></h1>
-            <p class="site-intro">
-                Names built from official Forgotten Realms lore and published naming patterns, plus names used by the
-                Realms' creator, Ed Greenwood.
-            </p>
+            <p class="site-intro">Names built from official and licensed Forgotten Realms material.</p>
         </header>
 
         <main id="main" class="page">
             <section class="name-card" aria-labelledby="nameText">
                 <form class="name-picker" id="namePicker">
                     <span>I want to make a</span>
-                    <!-- groups keep phrases together when the sentence wraps on a phone -->
+                    <!-- each group wraps as a unit on narrow screens -->
                     <span class="name-picker-group">
                         <label class="visually-hidden" for="pickerSex">Gender</label>
                         <select id="pickerSex" class="name-picker-sex">
@@ -164,13 +161,8 @@
                     <span class="name-picker-group">
                         <span>of</span>
                         <label class="visually-hidden" for="pickerLineage">Lineage</label>
-                        <select id="pickerLineage" class="name-picker-lineage">
-                            <option value="high-elf">any lineage</option>
-                            <option value="sun-elf">sun elf</option>
-                            <option value="moon-elf">moon elf</option>
-                            <option value="wood-elf">wood elf</option>
-                            <option value="drow">drow</option>
-                        </select>
+                        <!-- options filled from js/core/species.js -->
+                        <select id="pickerLineage" class="name-picker-lineage"></select>
                     </span>
                 </form>
                 <div class="expanded">
@@ -209,8 +201,6 @@
                 <p class="name-card-script" id="nameScript" aria-hidden="true"></p>
                 <p class="name-card-script-label" id="nameScriptLabel"></p>
                 <div class="name-card-actions">
-                    <!-- a carved ruby that glows with motes of light rising off it while lit; decoration stays out of the
-                         way of pointers and screen readers -->
                     <div class="generate">
                         <svg class="generate-filters" width="0" height="0" aria-hidden="true" focusable="false">
                             <filter
@@ -221,7 +211,7 @@
                                 height="140%"
                                 color-interpolation-filters="sRGB"
                             >
-                                <!-- a shadow inside the white lettering, so it reads as cut into the stone -->
+                                <!-- inner shadow for engraved lettering -->
                                 <feComponentTransfer in="SourceAlpha" result="inverse">
                                     <feFuncA type="table" tableValues="1 0" />
                                 </feComponentTransfer>
@@ -262,7 +252,7 @@
                 </div>
 
                 <details class="name-card-sources">
-                    <summary id="nameSourcesSummary">Name meanings and sources</summary>
+                    <summary id="nameSourcesSummary">Name Meanings and Sources</summary>
                     <div class="name-sources" id="nameSources"></div>
                 </details>
             </section>
@@ -295,9 +285,38 @@
             </section>
 
             <section class="lore" aria-labelledby="loreTitle">
-                <h2 id="loreTitle">Etymology &amp; Lore</h2>
+                <h2 id="loreTitle">Etymology &amp; Realmslore</h2>
                 <details>
-                    <summary>Elves of the Realms</summary>
+                    <summary>Sources and Canon</summary>
+                    <p>
+                        Realmslore is everything published about the Forgotten Realms, official or licensed. The
+                        <a
+                            href="https://forgottenrealms.fandom.com/wiki/Forgotten_Realms_Wiki:Canon"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >Forgotten Realms Wiki</a
+                        >
+                        ranks its sources, most trusted first: TSR and Wizards of the Coast books, novels and magazines
+                        about the Realms; Ed Greenwood's own writing and answers; general D&amp;D books; books from
+                        other D&amp;D settings; licensed games and comics; and online posts by other Realms authors.
+                    </p>
+                    <p>
+                        Ed Greenwood created the Realms, and what he writes or says about them
+                        <a
+                            href="https://x.com/TheEdVerse/status/1039192358343065600"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >counts as canon until an official book says otherwise</a
+                        >. His answers to fans on the Candlekeep forums and the books he publishes himself are not
+                        official publications, though, so names that come only from them are labelled.
+                    </p>
+                    <p>
+                        Some naming rules come from D&amp;D books that were not written for any one setting, such as the
+                        <cite>Player's Handbook</cite> and <cite>Races of the Wild</cite>.
+                    </p>
+                </details>
+                <details>
+                    <summary>Elves (Tel’Quessir)</summary>
                     <p>
                         The elves of Faerûn include the surface elves and the drow, who share a common ancestry. The
                         notes here apply to both; the naming of each is described in its own section below, including
@@ -320,13 +339,8 @@
                         No two elves share a name except by choice (<cite>The Complete Book of Elves</cite>, 2e). If a
                         generated name matches that of a published character, it is flagged so you know.
                     </p>
-                    <p>
-                        A small number of names come from Ed Greenwood's answers to fans on the Candlekeep forums rather
-                        than from official books. He created the Forgotten Realms, but his answers are not official
-                        publications, so names that come only from them are labelled.
-                    </p>
                     <details>
-                        <summary>Surface elves</summary>
+                        <summary>Surface Elves</summary>
                         <p>
                             Surface elves have several lineages, the most common being high elves (sun and moon elves)
                             and wood elves. While no distinct naming conventions are explicitly documented for these
@@ -432,7 +446,7 @@
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
                 <button type="button" class="privacy-link">Privacy</button>
             </p>
-            <p class="site-version">v4.1.5 - Last Updated 10-31-26</p>
+            <p class="site-version">v4.2.0 - Last Updated 11-22-26</p>
         </footer>
 
         <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
@@ -478,6 +492,6 @@
             <form method="dialog"><button>Close</button></form>
         </dialog>
 
-        <script type="module" src="js/app.js?v=4.1.5"></script>
+        <script type="module" src="js/app.js?v=4.2.0"></script>
     </body>
 </html>

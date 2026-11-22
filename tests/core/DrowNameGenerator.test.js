@@ -1,21 +1,58 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { DrowNameGenerator } from "../../js/core/DrowNameGenerator.js";
 import { expectGivesUpAfter300Attempts, fixedRandom, seededRandom, sample } from "../helpers/random.js";
-import { readJson } from "../helpers/files.js";
+import {
+    cutFrom,
+    expectBooksOfItsNames,
+    nameTable,
+    publishedName,
+    readLineageData,
+    word
+} from "../helpers/nameData.js";
 
-// Design decisions (2026-10-20): Dragon #267 tables with their own meanings; about 15%
-// apostrophes; males never take feminine components; FOR2 taboos; published matches labeled; locks keep components.
-const data = readJson("data/drowNames.json");
+const data = readLineageData("drow");
+const tableOf = (type) => data.tables.find((t) => t.type === type);
+const realPrefixes = tableOf("given").prefixes;
+const realSuffixes = tableOf("given").suffixes;
+// a table entry gives `text` when its female and male forms are the same
+const formsOf = (e) => ({ female: e.female ?? e.text, male: e.male ?? e.text, meaning: e.meaning });
 const personal = (result) => result.name.slice(0, result.name.lastIndexOf(" "));
 const components = (result) => result.parts.filter((p) => p.role === "prefix" || p.role === "suffix");
-const fixture = (overrides = {}) => ({
-    prefixes: [{ female: "bri", male: "bri", meaning: "Graceful" }],
-    suffixes: [{ female: "za", male: "za", meaning: "Lover" }],
-    housePrefixes: [{ text: "baen", meaning: "Blessed by" }],
-    houseSuffixes: [{ text: "rae", meaning: "Fell powers" }],
-    publishedHouses: [],
-    ...overrides
-});
+const TABLES = "Dragon #267";
+// what every table part carries besides its text and meaning: its table as its source, and its place in the name
+const TABLE_PART = { sources: [{ title: TABLES, authority: "official" }], section: "given" };
+const HOUSE_PART = { ...TABLE_PART, section: "family", kind: "prefix" };
+// Drow data as generators.js gives it, from short lists; `commonWords` is the FOR2 glossary and `forbiddenNames` the
+// deity names.
+const fixture = ({
+    prefixes = [{ female: "bri", male: "bri", meaning: "Graceful" }],
+    suffixes = [{ female: "za", male: "za", meaning: "Lover" }],
+    housePrefixes = [{ text: "baen", meaning: "Blessed by" }],
+    houseSuffixes = [{ text: "rae", meaning: "Fell powers" }],
+    publishedNames = [],
+    publishedHouses = [],
+    commonWords = [],
+    forbiddenNames = [],
+    openings,
+    endings,
+    joinClusters
+} = {}) => {
+    const given = publishedNames.map((p) => publishedName(p.text, "given", { sources: [p.source] }));
+    const cut = cutFrom({ openings, endings, joins: joinClusters }, given);
+    return {
+        tables: [
+            nameTable("given", { prefixes, suffixes, sources: TABLE_PART.sources }),
+            nameTable("house", { prefixes: housePrefixes, suffixes: houseSuffixes, sources: TABLE_PART.sources })
+        ],
+        names: [
+            ...given,
+            ...cut.names,
+            ...(publishedHouses || []).map((h) => publishedName(h.text, "house", { sources: [h.source] }))
+        ],
+        words: [...commonWords.map((w) => word(w, "glossary")), ...forbiddenNames.map((w) => word(w, "forbidden"))],
+        split: { given: cut.split }
+    };
+};
 
 describe("DrowNameGenerator with the published tables", () => {
     it("puts an apostrophe in about 15% of personal names, never two in one word", () => {
@@ -29,7 +66,10 @@ describe("DrowNameGenerator with the published tables", () => {
     it("never gives a male a feminine-only component, and takes meanings from the component's own table entry", () => {
         const meaningsByMaleForm = (entries) =>
             entries.reduce((map, e) => map.set(e.male, [...(map.get(e.male) || []), e.meaning]), new Map());
-        const tables = { prefix: meaningsByMaleForm(data.prefixes), suffix: meaningsByMaleForm(data.suffixes) };
+        const tables = {
+            prefix: meaningsByMaleForm(realPrefixes.map(formsOf)),
+            suffix: meaningsByMaleForm(realSuffixes.map(formsOf))
+        };
         sample(new DrowNameGenerator(data), 500, { style: "masculine" }).forEach((r) =>
             components(r).forEach((f) => expect(tables[f.role].get(f.text)).toContain(f.meaning))
         );
@@ -37,7 +77,10 @@ describe("DrowNameGenerator with the published tables", () => {
 
     it("gives neutral names only components whose female and male forms are the same", () => {
         const shared = new Set(
-            [...data.prefixes, ...data.suffixes].filter((e) => e.female === e.male).map((e) => e.male)
+            [...realPrefixes, ...realSuffixes]
+                .map(formsOf)
+                .filter((e) => e.female === e.male)
+                .map((e) => e.male)
         );
         sample(new DrowNameGenerator(data), 300, { style: "neutral" }).forEach((r) =>
             components(r).forEach((f) => expect(shared.has(f.text)).toBe(true))
@@ -60,14 +103,12 @@ describe("DrowNameGenerator with the published tables", () => {
         expect(new Set(next.map((r) => r.parts.find((p) => p.key === "n1").text)).size).toBeGreaterThan(1);
     });
 
-    it("names the books a split component's source names come from (Expanded Variety)", () => {
-        const bookOf = new Map(data.publishedNames.map((p) => [p.text, p.source.title]));
+    it("names every book a split component's source names come from, each once (Expanded Variety)", () => {
+        const given = data.names.filter((n) => n.type === "given");
         const splits = sample(new DrowNameGenerator(data), 300, { expanded: true }).flatMap((r) =>
             r.parts.filter((p) => p.method === "split")
         );
-        expect(splits.length).toBeGreaterThan(0);
-        splits.forEach((p) => expect(p.books).toEqual([...new Set(p.from.map((name) => bookOf.get(name)))]));
-        expect(splits.every((p) => p.books.length > 0)).toBe(true);
+        expectBooksOfItsNames(splits, () => given);
     });
 
     it("keeps locked components in their places", () => {
@@ -99,7 +140,7 @@ describe("DrowNameGenerator rules", () => {
         );
         const result = gen.generate({ style: "feminine", random: fixedRandom(0.1) });
         expect(result.name).toBe("Briza Baenrae");
-        expect(result.published.source.title).toBe("Menzoberranzan (2e)");
+        expect(result.published.sources).toEqual([{ title: "Menzoberranzan (2e)" }]);
     });
 
     it("composes a house meaning from its two table entries", () => {
@@ -237,9 +278,8 @@ describe("DrowNameGenerator structure controls, switching and rolls under locks"
 });
 
 describe("DrowNameGenerator long names", () => {
-    // Sampling: 6,000 unlocked feminine rolls (seed 1), keeping those in the three-component shape, against 30 rolls
-    // (seeds 100+) for each of 60 different locked first components in that same shape. Comparing within one shape
-    // keeps shape weights out of it; the locked components are drawn uniformly, as an unlocked roll draws them.
+    // Sampling: 6,000 unlocked feminine rolls (seed 1) in the three-component shape, against 30 rolls (seeds 100+) for
+    // each of 60 locked first components in that shape, so shape weights stay out of it.
     const SHAPE = "prefix,suffix,suffix";
     const gen = new DrowNameGenerator(data);
     const roll = (count, seed, locks = {}) => {
@@ -263,11 +303,10 @@ describe("DrowNameGenerator long names", () => {
     });
 });
 
-// BMN-81: rules that earlier tests left unguarded, found by mutation testing (Stryker).
+// Rules that earlier tests left unguarded, found by mutation testing (Stryker).
 describe("DrowNameGenerator rule guards", () => {
-    // The draws of one attempt, in the order the generator takes them: the shape, each table slot (the form for a
-    // female, then the entry), the published-house share, and a built house's prefix and suffix. Expanded Variety adds
-    // a split-or-table draw before each slot.
+    // One attempt's draws, in order: shape, each slot (a female's form, then the entry), published-house share, house
+    // prefix and suffix. Expanded Variety adds a split-or-table draw before each slot.
     const attempt = ({ shape = 0.1, prefix = [0.9, 0], suffix = [0.9, 0], house = [0.9, 0, 0] } = {}) => [
         shape,
         ...prefix,
@@ -418,7 +457,7 @@ describe("DrowNameGenerator rule guards", () => {
             );
         });
 
-        it("counts an accented vowel as a syllable (BMN-97)", () => {
+        it("counts an accented vowel as a syllable", () => {
             // "balarené" has four syllables, the last of them accented (as in -rené, from Chilrené)
             const accented = fixture({
                 prefixes: [{ female: "bala", male: "bala", meaning: "Graceful" }],
@@ -454,7 +493,7 @@ describe("DrowNameGenerator rule guards", () => {
             expect(part(table, "f1").method).toBeUndefined();
         });
 
-        it("cites the tables if any part has a meaning, and not if none does", () => {
+        it("credits table components to the tables' issue, and adds no separate tables credit", () => {
             const onePublished = { publishedHouses: [published] };
             const house = [0.1, 0];
             const mixed = roll(
@@ -462,13 +501,14 @@ describe("DrowNameGenerator rule guards", () => {
                 { expanded: true },
                 ...attempt({ prefix: [0.4, 0], suffix: [0.9, 0.9, 0], house })
             );
-            expect(mixed.tables).toMatch(/Dragon #267/);
+            mixed.parts.filter((p) => p.meaning).forEach((p) => expect(p.sources).toEqual(TABLE_PART.sources));
+            expect(mixed).not.toHaveProperty("tables");
             const unknown = roll(
                 fixture({ ...splitData, ...onePublished }),
                 { expanded: true },
                 ...attempt({ prefix: [0.4, 0], suffix: [0.4, 0], house })
             );
-            expect(unknown.tables).toBeUndefined();
+            expect(unknown).not.toHaveProperty("tables");
         });
 
         it("offers the other published components for a published-name slot only, besides the table entries", () => {
@@ -543,8 +583,8 @@ describe("DrowNameGenerator rule guards", () => {
             const female = gen.generate({ style: "feminine", random: fixedRandom(...attempt()) });
             const male = gen.generate({ style: "masculine", random: fixedRandom(...attempt()) });
             expect(gen.optionsFor(female, "f0")).toEqual([
-                { key: "f0", role: "prefix", text: "bri", meaning: "Graceful" },
-                { key: "f0", role: "prefix", text: "kel", meaning: "Dark" }
+                { ...TABLE_PART, key: "f0", role: "prefix", kind: "prefix", text: "bri", meaning: "Graceful" },
+                { ...TABLE_PART, key: "f0", role: "prefix", kind: "prefix", text: "kel", meaning: "Dark" }
             ]);
             expect(texts(gen.optionsFor(male, "f0"))).toEqual(["bro", "kal"]);
             expect(texts(gen.optionsFor(female, "f1"))).toEqual(["za"]);
@@ -585,7 +625,15 @@ describe("DrowNameGenerator rule guards", () => {
         it("offers the published houses, none when the data has none", () => {
             const result = gen.generate({ style: "feminine", random: fixedRandom(...attempt()) });
             expect(gen.optionsFor(result, "house")).toEqual([
-                { key: "house", role: "house", text: "Baenre", method: "published", source: published.source }
+                {
+                    key: "house",
+                    role: "house",
+                    text: "Baenre",
+                    method: "published",
+                    sources: [published.source],
+                    section: "family",
+                    kind: "whole"
+                }
             ]);
             const bare = new DrowNameGenerator(fixture({ publishedHouses: undefined }));
             expect(bare.optionsFor(result, "house")).toEqual([]);
@@ -595,8 +643,8 @@ describe("DrowNameGenerator rule guards", () => {
         it("offers house prefixes except those beginning with the L of Lolth", () => {
             const result = gen.generate({ style: "feminine", random: fixedRandom(...attempt()) });
             expect(gen.optionsFor(result, "n0")).toEqual([
-                { key: "n0", role: "house prefix", text: "vael", meaning: "Blood of the" },
-                { key: "n0", role: "house prefix", text: "baen", meaning: "Blessed by" }
+                { ...HOUSE_PART, key: "n0", role: "house prefix", text: "vael", meaning: "Blood of the" },
+                { ...HOUSE_PART, key: "n0", role: "house prefix", text: "baen", meaning: "Blessed by" }
             ]);
             const switched = gen.getSurnameSwitchOptions(
                 gen.generate({ style: "feminine", random: fixedRandom(...attempt({ house: [0.1, 0] })) })
@@ -691,15 +739,20 @@ describe("DrowNameGenerator rule guards", () => {
 });
 
 describe("DrowNameGenerator input guards", () => {
+    // the personal-name table without one of its lists, or with none of them
+    const without = (list) => {
+        const data = fixture();
+        const [given, ...rest] = data.tables;
+        return { ...data, tables: [{ ...given, [list]: undefined }, ...rest] };
+    };
     it.each([
-        ["prefixes", { prefixes: [] }],
-        ["suffixes", { suffixes: [] }],
-        ["prefixes (missing)", { prefixes: undefined }],
-        ["suffixes (missing)", { suffixes: undefined }]
-    ])("refuses data with no %s", (_, overrides) => {
-        expect(() => new DrowNameGenerator(fixture(overrides))).toThrow(
-            "Drow name data is missing prefixes or suffixes"
-        );
+        ["prefixes", fixture({ prefixes: [] })],
+        ["suffixes", fixture({ suffixes: [] })],
+        ["prefixes (missing)", without("prefixes")],
+        ["suffixes (missing)", without("suffixes")],
+        ["personal-name table", { ...fixture(), tables: fixture().tables.slice(1) }]
+    ])("refuses data with no %s", (_, data) => {
+        expect(() => new DrowNameGenerator(data)).toThrow("Drow name data is missing prefixes or suffixes");
     });
 
     it("refuses missing data", () => {

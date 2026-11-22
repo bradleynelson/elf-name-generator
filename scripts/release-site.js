@@ -5,9 +5,8 @@ import { stampText, stampedFiles, stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 
-// Only website assets can be approved; directory globs and private/tooling paths are forbidden. The page's own files,
-// the share and touch images, robots.txt and sitemap.xml are named exactly; fonts/ holds the self-hosted OFL fonts and
-// their license, which the OFL requires to ship with them.
+// Only website assets can be approved; directory globs and private or tooling paths are forbidden. fonts/ holds the
+// self-hosted OFL fonts and their licence, which the OFL requires to ship with them.
 const APPROVED_PATHS = [
     /^(?:index\.html|style\.css|CNAME|LICENSE|robots\.txt|sitemap\.xml)$/,
     /^(?:favicon\.(?:ico|png)|apple-touch-icon\.png|share-card\.png)$/,
@@ -100,9 +99,8 @@ function checkReferences(root, files) {
     }
 }
 
-// The site is served from the source files, so they must carry the version stamps (scripts/stamp-version.js, run by
-// scripts/version.js): every local script, stylesheet and data reference ends in the same ?v=<version>, which is the
-// package version. A release with a missing or mismatched stamp could let a browser mix old cached files with new ones.
+// The site is served from its source files, so every local reference must carry the package version's ?v= stamp, or
+// a browser could mix old cached files with new ones.
 function checkVersionStamps(root) {
     const version = stampedVersion(root);
     if (!version) throw new Error("Version stamps are missing from index.html; run node scripts/stamp-version.js.");

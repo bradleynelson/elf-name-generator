@@ -1,6 +1,5 @@
-// Checks the published site after a deploy: the page carries this version, every approved file is served, and every
-// other file in the repository returns 404. Packaging tests prove what dist/ holds; only this proves what the host
-// serves. Usage: node scripts/check-live-site.js [base URL], from a Git checkout (it lists the tracked files).
+// Packaging tests prove what dist/ holds; only this proves what the host serves. Run it from a Git checkout: it lists
+// the tracked files.
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";

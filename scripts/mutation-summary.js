@@ -1,5 +1,3 @@
-// Turns Stryker's JSON report into a short Markdown summary for the GitHub Actions run page: the overall score against
-// the alarm floor, then each file weakest first. Usage: node scripts/mutation-summary.js [report], after `stryker run`.
 // Writes to $GITHUB_STEP_SUMMARY when set (in Actions), otherwise prints.
 import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import path from "node:path";

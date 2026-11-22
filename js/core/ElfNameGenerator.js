@@ -1,28 +1,50 @@
-// Surface-elf names (design decisions, 2026-10-21). Personal names come from
-// the elven name tables in Races of the Wild (3.5e, pp30-31), a reprint of "By Any Other Name" (Dragon #251): a
-// prefix and one or more suffixes, each with a published meaning. A family name is a published family name (with its
-// translation when a book gives one), a surname built from the same tables, or a Common-form name from words found in
-// published family names. Expanded Variety lets any prefix or suffix slot take a component of a published name instead
-// (its meaning unknown). Drow follow their own tables (DrowNameGenerator); generators.js picks between the two.
-//
-// Result shape (shared with DrowNameGenerator): { name, sex, subrace, parts, published?, shape?, familyShape?,
-// tables? }. Each part has a `key` (stable slot id), a `role`, its `text`, and its provenance. Parts passed in `locks`
-// are kept; the rest are re-rolled. `shape` / `familyShape` let locked table parts keep their places; `tables` names
-// the tables used.
-import { RecentNames, selectRandom, selectWeighted } from "./random.js?v=4.1.5";
-import { SplitComponents, VOWELS, joinsCleanly } from "./splitComponents.js?v=4.1.5";
-import { ELF_SUBRACES, SEX_BY_STYLE } from "./species.js?v=4.1.5";
 import {
+    RecentNames,
+    generateUnrepeated,
+    generateWithRetries,
+    selectRandom,
+    selectWeighted
+} from "./random.js?v=4.2.0";
+import { SplitComponents, VOWELS, joinsCleanly, sourcesInOrder } from "./splitComponents.js?v=4.2.0";
+import { ELF_SUBRACES, SEX_BY_STYLE } from "./species.js?v=4.2.0";
+import { getSpellings, NAME_TYPE } from "./speciesData.js?v=4.2.0";
+import {
+    capitalize,
     getAvailableControls,
     getChangedShape,
     getKeptParts,
+    includesSlotKey,
+    isStructurePart,
+    joiningLetter,
+    jointKey,
+    KIND,
     NAME_STRUCTURE_CONTROL,
+    SECTION,
     selectRollShape,
     sameShape,
-    getSlotNumber
-} from "./nameStructure.js?v=4.1.5";
+    slotKey,
+    structurePart,
+    surnameStart,
+    wholeSection,
+    wordsOf
+} from "./nameStructure.js?v=4.2.0";
 
-const MAX_ATTEMPTS = 300;
+const PERSONAL = {
+    name: "personal",
+    section: SECTION.GIVEN,
+    keyPrefix: "t",
+    rolePrefix: "",
+    shapeKey: "shape",
+    splitsBySex: true
+};
+const FAMILY = {
+    name: "family",
+    section: SECTION.FAMILY,
+    keyPrefix: "n",
+    rolePrefix: "family ",
+    shapeKey: "familyShape",
+    splitsBySex: false // Chosen: the whole family bears a family name
+};
 // Inferred: published personal names have 4-11 letters and 2-4 syllables, about 10% with four. Chosen: keep
 // four-syllable words with this probability so they stay uncommon (applied per word).
 const MIN_LETTERS = 4;
@@ -38,65 +60,69 @@ const NAME_SHAPES = [
 ];
 // Chosen: table-built surnames take the first two shapes (a family name is one word).
 const SURNAME_SHAPES = NAME_SHAPES.slice(0, 2);
-// Sourced (Dragon #251): if a combination does not sound right, "add an a, e, i, l, r, s, sh, or an apostrophe".
-// Chosen: a join whose consonants never meet in a published elf name takes one of these letters, picked at random
-// among those that make clean joins; apostrophes come only from the apostrophe shape.
+// Sourced (Dragon #251): a join that sounds wrong may "add an a, e, i, l, r, s, sh, or an apostrophe". Chosen: only
+// where the consonants never meet in a published elf name; apostrophes come only from the apostrophe shape.
 const JOINING_LETTERS = ["a", "e", "i", "l", "r", "s", "sh"];
+const JOINING_LETTER_BASIS = "Dragon #251";
 // Chosen: more than three vowels in a row at a join reads as a typo.
 const VOWEL_PILE = new RegExp(`[${VOWELS}]{4}`);
 // Inferred: none of the 520 published elf names has "yy" (doubled a, e, i and o do occur), so a join such as -cy + yth
 // that would make one is rebuilt.
 const DOUBLED_Y = /yy/i;
-// Chosen: with Expanded Variety on, each prefix or suffix slot of a table name is filled with a
-// component of a published name (an opening or an ending) with this probability, so one name can mix both kinds.
+// Chosen: with Expanded Variety, the chance that a prefix or suffix slot takes a component of a published name.
 const SPLIT_COMPONENT_SHARE = 0.5;
 // Chosen: share of Elvish-form family names taken from published family names (the rest are built).
 const PUBLISHED_HOUSE_SHARE = 0.5;
 // Inferred, small samples: words and houses seen with a subrace are this many times likelier (a preference).
 const SUBRACE_WEIGHT = 3;
+// the default lineage, which stands for any surface elf
+const ANY_SUBRACE = ELF_SUBRACES[0];
 const VOWEL_GROUP = new RegExp(`[${VOWELS}]+`, "g");
-const STRUCTURE = { "'": "apostrophe", " ": "space" };
 
+/**
+ * Surface-elf names (a NameGenerator, generators.js). Sourced: the elven name tables of Races of the Wild (3.5e,
+ * pp30-31), a reprint of "By Any Other Name" (Dragon #251).
+ */
 export class ElfNameGenerator {
-    /**
-     * @param {Object} data - contents of data/elfNames.json
-     */
-    constructor(data) {
-        if (!data?.tables?.prefixes?.length || !data.tables.suffixes?.length) {
+    constructor({ names = [], tables = [], words = [], split = {}, sources = [] } = {}) {
+        const table = tables.find((t) => t.type === NAME_TYPE.GIVEN);
+        if (!table?.prefixes?.length || !table.suffixes?.length) {
             throw new Error("Elf name data is missing the name tables");
         }
-        this.tables = data.tables;
-        this.data = data;
-        const tableTexts = {
-            prefix: new Set(data.tables.prefixes.map((p) => p.text.toLowerCase())),
-            suffix: new Set(data.tables.suffixes.flatMap((s) => [...s.male, ...s.female]).map((t) => t.toLowerCase()))
+        const tableSources = table.sources;
+        this.tables = {
+            prefixes: table.prefixes.map((entry) => ({
+                text: getSpellings(entry, "male")[0],
+                meaning: entry.meaning,
+                sources: tableSources
+            })),
+            suffixes: table.suffixes.map((entry) => ({
+                male: getSpellings(entry, "male"),
+                female: getSpellings(entry, "female"),
+                meaning: entry.meaning,
+                sources: tableSources
+            }))
         };
-        this.split = new SplitComponents(data, tableTexts, data.publishedNames);
-        this.familySplit = new SplitComponents(
-            {
-                openings: data.familyOpenings,
-                endings: data.familyEndings,
-                joinClusters: data.familyJoinClusters
-            },
-            tableTexts,
-            data.familyNames
-        );
-        this.publishedByName = new Map((data.publishedNames || []).map((p) => [p.text.toLowerCase(), p]));
-        this.houseNames = new Set((data.familyNames || []).map((f) => f.text.toLowerCase()));
+        const publishedNames = names.filter((n) => n.type === NAME_TYPE.GIVEN);
+        this.familyNames = names.filter((n) => n.type === NAME_TYPE.FAMILY);
+        const tableTexts = {
+            prefix: new Set(this.tables.prefixes.map((p) => p.text.toLowerCase())),
+            suffix: new Set(this.tables.suffixes.flatMap((s) => [...s.male, ...s.female]).map((t) => t.toLowerCase()))
+        };
+        this.splits = {
+            [PERSONAL.name]: new SplitComponents(split.given, { names: publishedNames, tableTexts, sources }),
+            [FAMILY.name]: new SplitComponents(split.family, { names: this.familyNames, tableTexts, sources })
+        };
+        const wordsFor = (use, format) =>
+            words.filter((w) => w.use === use).map((w) => ({ text: format(w.text), lineages: w.lineages }));
+        this.commonWords = { first: wordsFor("common-first", capitalize), second: wordsFor("common-second", (t) => t) };
+        this.sourceOrder = new Map(sources.map((source, index) => [source, index]));
+        this.commonFormShare = measureCommonFormShare(this.familyNames);
+        this.publishedByName = new Map(publishedNames.map((p) => [p.text.toLowerCase(), p]));
+        this.houseNames = new Set(this.familyNames.map((f) => f.text.toLowerCase()));
         this.recent = new RecentNames();
     }
 
-    /**
-     * @param {Object} [options]
-     * @param {string} [options.subrace="high-elf"] - one of ELF_SUBRACES
-     * @param {string} [options.style="neutral"] - "neutral", "feminine" or "masculine"
-     * @param {boolean} [options.expanded=false] - Expanded Variety: slots may take components of published names
-     * @param {boolean} [options.reshape=false] - a roll: locked slots keep their place, but the shape may change to any
-     *   (weighted) shape in which every locked slot is still valid; otherwise `locks.shape` is kept
-     * @param {Object} [options.locks] - parts to keep by key: first-name components "t0".. (with `shape`), surname components
-     *   "n0".. (with `familyShape`), or a whole "family"
-     * @param {Function} [options.random] - random number source, Math.random by default
-     */
     generate({
         subrace = "high-elf",
         style = "neutral",
@@ -107,223 +133,155 @@ export class ElfNameGenerator {
     } = {}) {
         if (!ELF_SUBRACES.includes(subrace)) throw new Error(`Unknown elf subrace: ${subrace}`);
         const sex = SEX_BY_STYLE[style] || null;
-        let repeat = null;
-        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+        const result = generateUnrepeated(() => {
             const personal = this._buildTable(sex, locks, random, { expanded, reshape });
             const family = locks.family
-                ? whole(locks.family)
-                : locksTableParts(locks, "n")
-                  ? this._buildTableFamily(random, locks, expanded, reshape)
+                ? wholeSection(locks.family)
+                : includesSlotKey(Object.keys(locks), FAMILY.keyPrefix)
+                  ? this._buildTableFamily(locks, random, { expanded, reshape })
                   : this._buildFamily(subrace, expanded, random);
-            if (!personal || !family) continue;
-            const result = this._assemble(personal, family, sex, subrace);
-            if (!this.recent.has(result.name)) return this._remember(result);
-            repeat = repeat || result;
-        }
-        if (repeat) return this._remember(repeat);
-        throw new Error("Could not make an elf name with these choices. Try unlocking a part.");
+            return personal && family ? this._assemble(personal, family, sex, subrace) : null;
+        }, this.recent);
+        if (!result) throw new Error("Could not make an elf name with these choices. Try unlocking a part.");
+        return result;
     }
 
-    /**
-     * Alternatives for one part of a result, for the part picker: only those that make a valid name with the rest of
-     * the name kept as it is, so choosing one never fails.
-     */
     optionsFor(result, key) {
-        if (key === "family") return (this.data.familyNames || []).map((f) => publishedFamilyPart(f));
+        if (key === "family") return this.familyNames.map((f) => publishedFamilyPart(f));
         const part = result.parts.find((p) => p.key === key);
-        if (!part || !TABLE_KEY.test(key)) return [];
-        // surname components use the suffix forms shared by both genders, as for building them
-        const isSurname = part.role.startsWith("family");
+        const section = [PERSONAL, FAMILY].find(({ keyPrefix }) => includesSlotKey([key], keyPrefix));
+        if (!part || !section) return [];
+        const isSurname = section === FAMILY;
         const sex = isSurname ? "neutral" : result.sex;
-        const slot = part.role.endsWith("prefix") ? "prefix" : "suffix";
+        const slot = part.kind;
         // every published spelling of a suffix is its own option, so the one in the name is always listed
-        const spellings = (entry) =>
-            (sex === "female" ? entry.female : entry.male).map((_, i, forms) => i / forms.length);
         const options =
-            slot === "prefix"
-                ? this.tables.prefixes.map((entry) => tablePart(key, part.role, entry))
+            slot === KIND.PREFIX
+                ? this.tables.prefixes.map((entry) => tablePart(key, section, slot, entry))
                 : this._suffixesFor(sex).flatMap((entry) =>
-                      spellings(entry).map((pick) => this._suffixPart(key, part.role, entry, sex, () => pick))
+                      suffixForms(entry, sex).map((text) => suffixPart(key, section, entry, sex, text))
                   );
-        // a component taken from a published name also offers the other components of that kind
         if (part.method === "split") {
-            const source = isSurname ? this.familySplit : this.split;
-            const components = source.componentsFor(slot, isSurname ? null : result.sex);
-            options.push(...components.map((component) => ({ ...component, key, role: part.role })));
+            const components = this._splitComponents(section, slot, result.sex);
+            options.push(...components.map((component) => slotPart(component, key, section, slot)));
         }
         const kept = { ...Object.fromEntries(result.parts.map((p) => [p.key, p])), shape: result.shape };
         const fits = (option) => {
             const locks = { ...kept, familyShape: result.familyShape, [key]: option };
             const random = () => 0; // any joining letter that fits will do; this only tests whether one exists
-            return isSurname ? this._buildTableFamily(random, locks) : this._buildTable(result.sex, locks, random);
+            return isSurname ? this._buildTableFamily(locks, random) : this._buildTable(result.sex, locks, random);
         };
         return options.filter(fits);
     }
 
-    /**
-     * The structure controls that can be pressed on a result, as { control, on }: "given" (short or long first name),
-     * "surname" (short or long, table-built surnames only) and "compound" (the second given name). A control is listed
-     * only if the changed name builds with every part kept.
-     */
     getStructureControls(result, locked = new Set(), options = {}) {
         return getAvailableControls(STRUCTURE_CONTROLS, result, this, locked, options);
     }
 
-    /**
-     * Presses a structure control: the name with one section made longer or shorter, or the compound name added or removed.
-     * Every current part is kept in its slot (the new slots are the only random ones), so locks stay valid; a change
-     * that would delete a locked slot is unavailable. Does not count as a roll.
-     * @param {Set<string>} [options.locked] - keys of the parts the visitor locked
-     * @returns {Object|null} the new name, or null if the change is unavailable
-     */
     generateStructureChange(result, control, options = {}) {
         const { locked = new Set(), expanded = false, random = Math.random } = options;
         const spec = STRUCTURE_CONTROLS[control];
         if (!spec) return null;
-        const { prefix } = spec;
-        const shape = getChangedShape(control, result[spec.shapeKey], locked, prefix, ELF_NAMES);
+        const { section } = spec;
+        const shape = getChangedShape(control, result[section.shapeKey], locked, section.keyPrefix, ELF_NAMES);
         if (!shape) return null;
-        const kept = getKeptParts(result.parts, prefix);
-        const sections = sectionsOf(result);
-        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            const built =
-                prefix === "t"
-                    ? this._buildTable(result.sex, kept, random, { shape, expanded, applyPreferences: false })
-                    : this._buildTableFamily(random, { ...kept, familyShape: shape }, expanded, false, false);
-            if (!built) continue;
-            const changedName = { text: built.text, parts: built.parts, shape };
-            const { personal, family } = sections;
-            return this._assemble(
-                ...(prefix === "t" ? [changedName, family] : [personal, changedName]),
-                result.sex,
-                result.subrace
-            );
-        }
-        return null;
+        const kept = getKeptParts(result.parts, section.keyPrefix);
+        const built = generateWithRetries(() => spec.rebuild(this, result.sex, kept, shape, { expanded, random }));
+        if (!built) return null;
+        const sections = { ...sectionsOf(result), [section.name]: { text: built.text, parts: built.parts, shape } };
+        return this._assemble(sections.personal, sections.family, result.sex, result.subrace);
     }
 
-    /**
-     * For the surname picker: the other kind of surname to switch to, as { kind, options } ("published" family names, or
-     * "constructed" from a chosen table prefix). No options if the switch would drop a locked part.
-     */
     getSurnameSwitchOptions(result, locked = new Set(), options = {}) {
         if (result.familyShape) {
-            const hasLock = [...locked].some((key) => getSlotNumber(key, "n") !== undefined);
-            const published = (this.data.familyNames || []).map((f) => publishedFamilyPart(f));
+            const hasLock = includesSlotKey(locked, FAMILY.keyPrefix);
+            const published = this.familyNames.map((f) => publishedFamilyPart(f));
             return { kind: "published", options: hasLock ? [] : published };
         }
-        const prefixes = this.tables.prefixes.map((entry) => tablePart("n0", "family prefix", entry));
+        const prefixes = this.tables.prefixes.map((entry) =>
+            tablePart(slotKey(FAMILY.keyPrefix, 0), FAMILY, KIND.PREFIX, entry)
+        );
         const buildable = (prefix) => this.generateSurnameChange(result, prefix, options);
         return { kind: "constructed", options: locked.has("family") ? [] : prefixes.filter(buildable) };
     }
 
-    /**
-     * Replaces the surname with a published family name, or builds one from a chosen table prefix (its suffix and shape
-     * follow the usual weights). The first name is kept. Does not count as a roll.
-     * @param {Object} choice - a part from getSurnameSwitchOptions
-     * @returns {Object|null} the new name, or null if no surname builds with that prefix
-     */
     generateSurnameChange(result, choice, options = {}) {
         const { expanded = false, random = Math.random } = options;
         const { personal } = sectionsOf(result);
-        if (choice.key === "family") return this._assemble(personal, whole(choice), result.sex, result.subrace);
-        // ">=" would skip the loop, so every surname change would return null: the surname-switch tests catch that
-        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            const family = this._buildTableFamily(random, { [choice.key]: choice }, expanded, true);
-            if (family) return this._assemble(personal, family, result.sex, result.subrace);
-        }
-        return null;
+        if (choice.key === "family") return this._assemble(personal, wholeSection(choice), result.sex, result.subrace);
+        const family = generateWithRetries(() =>
+            this._buildTableFamily({ [choice.key]: choice }, random, { expanded, reshape: true })
+        );
+        return family && this._assemble(personal, family, result.sex, result.subrace);
     }
 
-    _remember(result) {
-        this.recent.add(result.name);
-        return result;
-    }
-
-    /** Suffix table entries for a gender: neutral names use only the suffixes the tables give both genders. */
+    // Chosen: a neutral name uses only the suffixes the tables give both genders.
     _suffixesFor(sex) {
         const suffixes = this.tables.suffixes;
         return sex === "neutral" ? suffixes.filter((s) => sameForms(s)) : suffixes;
     }
 
-    /** A suffix in the form for the gender; alternate spellings (Sourced: "alternate spellings") are picked at random. */
-    _suffixPart(key, role, entry, sex, random) {
-        const forms = sex === "female" ? entry.female : entry.male;
-        const text = forms[Math.floor(random() * forms.length)];
-        return { ...tablePart(key, role, entry), text, meaning: genderedMeaning(entry, sex) };
+    _splitComponents(section, slot, sex) {
+        return this.splits[section.name].componentsFor(slot, section.splitsBySex ? sex : null);
     }
 
-    /**
-     * A name from the tables in one of the published shapes (or the given one); locked parts keep their places. The
-     * four-syllable preference applies unless `applyPreferences` is false, locks or not. A surname
-     * uses keys "n0".. and roles "family prefix" / "family suffix", so its components can be locked like a first name's.
-     */
+    // The picker omits `reshape`, locks every slot and draws 0, so a rolled shape is the shortest that keeps every
+    // slot: the name's own.
     _buildTable(
         sex,
         locks,
         random,
-        {
-            shape: given = null,
-            applyPreferences = true,
-            surname = false,
-            expanded,
-            // omitted (falsy) by the callers that give the shape, and by the picker: it locks every slot and draws 0,
-            // so a rolled shape is the shortest that keeps every slot, which is the name's own
-            reshape
-        } = {}
+        { section = PERSONAL, shape: given = null, applyPreferences = true, expanded, reshape } = {}
     ) {
-        const keyPrefix = surname ? "n" : "t";
-        const choseAny = locksTableParts(locks, keyPrefix);
+        const { keyPrefix } = section;
+        const choseAny = includesSlotKey(Object.keys(locks), keyPrefix);
         const shape =
             given || (choseAny && !reshape ? locks.shape : selectRollShape(NAME_SHAPES, locks, keyPrefix, random));
-        const source = surname ? this.familySplit : this.split;
-        const mixes = expanded && source.isAvailable;
+        const mixes = expanded && this.splits[section.name].isAvailable;
         const components = shape.map((role, index) => {
-            const key = `${role in STRUCTURE ? "s" : keyPrefix}${index}`;
-            if (role in STRUCTURE) return { key, role: STRUCTURE[role], text: role };
+            const structure = structurePart(role, index);
+            if (structure) return structure;
+            const key = slotKey(keyPrefix, index);
             if (locks[key]) return locks[key];
-            const componentRole = surname ? `family ${role}` : role;
-            // a test catches ">="; "<=" cannot be caught, since the rule is a probability
             // Stryker disable next-line EqualityOperator: "<=" differs only on a draw equal to the share
             if (mixes && random() < SPLIT_COMPONENT_SHARE) {
-                const component = selectRandom(source.componentsFor(role, surname ? null : sex), random);
-                return { ...component, key, role: componentRole };
+                const component = selectRandom(this._splitComponents(section, role, sex), random);
+                return slotPart(component, key, section, role);
             }
-            if (role === "prefix") return tablePart(key, componentRole, selectRandom(this.tables.prefixes, random));
-            return this._suffixPart(key, componentRole, selectRandom(this._suffixesFor(sex), random), sex, random);
+            if (role === KIND.PREFIX) return tablePart(key, section, role, selectRandom(this.tables.prefixes, random));
+            const entry = selectRandom(this._suffixesFor(sex), random);
+            // Sourced: the tables give "alternate spellings"; one is picked at random
+            return suffixPart(key, section, entry, sex, selectRandom(suffixForms(entry, sex), random));
         });
-        const parts = this._join(components, random, keyPrefix, source.clusters, locks);
+        const parts = this._join(components, locks, random, section);
         if (!parts) return null;
-        const words = parts
-            .map((p) => p.text)
-            .join("")
-            .split(" ");
+        const words = wordsOf(parts);
         // Chosen: in the apostrophe shape the length rules apply to the part after the apostrophe (the part before is
         // a single suffix), so the shape keeps the share chosen for it
         if (!words.every((word) => this._acceptable(word.split("'").at(-1), applyPreferences, random))) return null;
         return { text: words.map(capitalize).join(" "), parts, shape };
     }
 
-    /**
-     * Joins table parts, adding a joining letter (Dragon #251) where the consonants would not meet cleanly. `clusters`
-     * are those found inside published personal names, or published family names for a surname. A locked joining
-     * letter is kept while it still fits, so choosing one component does not change the joins elsewhere.
-     */
-    _join(components, random, keyPrefix, clusters, locks) {
+    // Clean joins are clusters found inside the section's published names. A locked joining letter is kept while it
+    // fits, so choosing one component does not change the other joins.
+    _join(components, locks, random, section) {
+        const { clusters } = this.splits[section.name];
         const out = [];
         for (const part of components) {
             const previous = out.at(-1);
-            if (previous && !REVERSE_STRUCTURE.has(previous.role) && !REVERSE_STRUCTURE.has(part.role)) {
+            if (previous && !isStructurePart(previous) && !isStructurePart(part)) {
                 const before = previous.text;
                 if (!joinsCleanly(before, part.text, clusters)) {
                     const letters = JOINING_LETTERS.filter(
                         (l) => joinsCleanly(before, l, clusters) && joinsCleanly(before + l, part.text, clusters)
                     );
                     if (!letters.length) return null;
-                    const key = `${keyPrefix}j${out.length}`;
-                    const kept = locks[key]?.text;
+                    const kept = locks[jointKey(section.keyPrefix, out.length)]?.text;
                     const text = letters.includes(kept) ? kept : selectRandom(letters, random);
-                    out.push({ key, role: "joining letter", text });
+                    out.push({
+                        ...joiningLetter(section.keyPrefix, out.length, text, section.section),
+                        basis: JOINING_LETTER_BASIS
+                    });
                 }
             }
             out.push(part);
@@ -332,56 +290,57 @@ export class ElfNameGenerator {
         return VOWEL_PILE.test(text) || DOUBLED_Y.test(text) || /(.)\1\1/.test(text) ? null : out;
     }
 
-    /** A family name: { text, parts, shape? } (table-built surnames are several lockable components). */
     _buildFamily(subrace, expanded, random) {
-        if (random() < (this.data.commonFormShare?.[subrace] ?? 0)) {
-            return whole(this._buildCommonFamily(subrace, random));
+        if (random() < (this.commonFormShare[subrace] ?? 0)) {
+            return wholeSection(this._buildCommonFamily(subrace, random));
         }
         if (random() < PUBLISHED_HOUSE_SHARE) {
             // Stryker disable next-line ArrayDeclaration: the stand-in has no `form`, so the filter drops it
-            const houses = (this.data.familyNames || []).filter((f) => f.form === "elvish");
-            const weight = (f) => (f.subraces?.includes(subrace) ? SUBRACE_WEIGHT : 1);
-            return whole(publishedFamilyPart(selectWeighted(houses, weight, random)));
+            const houses = this.familyNames.filter((f) => f.form === "elvish");
+            const weight = (f) => (f.lineages.includes(subrace) ? SUBRACE_WEIGHT : 1);
+            return wholeSection(publishedFamilyPart(selectWeighted(houses, weight, random)));
         }
-        return this._buildTableFamily(random, {}, expanded);
+        return this._buildTableFamily({}, random, { expanded });
     }
 
-    /**
-     * A surname from the tables, in components that can be locked. Chosen: it uses the suffix forms shared by both
-     * genders, as the whole family bears it.
-     */
-    _buildTableFamily(
-        random,
-        locks = {},
-        expanded,
-        // as at _buildTable; the other caller that omits it locks nothing, so it rolls a shape either way
-        reshape,
-        applyPreferences = true
-    ) {
-        const keepsShape = locksTableParts(locks, "n") && !reshape;
-        const shape = keepsShape ? locks.familyShape : selectRollShape(SURNAME_SHAPES, locks, "n", random);
-        const built = this._buildTable("neutral", locks, random, { shape, applyPreferences, surname: true, expanded });
+    // Chosen: a surname uses the suffix forms both genders share, as the whole family bears it.
+    _buildTableFamily(locks, random, { expanded, reshape, applyPreferences = true } = {}) {
+        const keepsShape = includesSlotKey(Object.keys(locks), FAMILY.keyPrefix) && !reshape;
+        const shape = keepsShape ? locks.familyShape : selectRollShape(SURNAME_SHAPES, locks, FAMILY.keyPrefix, random);
+        const built = this._buildTable("neutral", locks, random, {
+            section: FAMILY,
+            shape,
+            applyPreferences,
+            expanded
+        });
         if (!built || this.houseNames.has(built.text.toLowerCase())) return null;
         return { text: built.text, parts: built.parts, shape };
     }
 
-    /** Sourced-word family name (S2): a first and second word, each found in a published elf family name. */
+    // Sourced words: a Common-form family name joins two words, each found in a published elf family name.
     _buildCommonFamily(subrace, random) {
-        const weight = (w) => (w.subraces?.includes(subrace) ? SUBRACE_WEIGHT : 1);
-        const { first = [], second = [] } = this.data.approvedWords || {};
+        const weight = (w) => (w.lineages.includes(subrace) ? SUBRACE_WEIGHT : 1);
+        const { first, second } = this.commonWords;
         const a = selectWeighted(first, weight, random);
         const b = selectWeighted(second, weight, random);
         if (!a || !b || a.text.toLowerCase() === b.text.toLowerCase()) return null;
         const text = a.text + b.text;
-        const published = (this.data.familyNames || []).find((f) => f.text.toLowerCase() === text.toLowerCase());
+        const published = this.familyNames.find((f) => f.text.toLowerCase() === text.toLowerCase());
         if (published) return publishedFamilyPart(published);
-        return { key: "family", role: "family name", text, method: "composed", words: [a.text, b.text] };
+        const commonFormNames = this.familyNames.filter((f) => f.form === "common");
+        const opens = (f) => f.text.toLowerCase().startsWith(a.text.toLowerCase());
+        const closes = (f) => f.text.toLowerCase().endsWith(b.text.toLowerCase());
+        const found = [commonFormNames.filter(opens), commonFormNames.filter(closes)];
+        return {
+            ...WHOLE_FAMILY,
+            text,
+            method: "composed",
+            words: [a.text, b.text],
+            wordNames: found.map((names) => names.map((f) => f.text)),
+            wordSources: found.map((names) => sourcesInOrder(names, this.sourceOrder))
+        };
     }
 
-    /**
-     * Length rules; the four-syllable preference applies to a roll, with or without locks (BMN-56). Triple letters
-     * are already refused when the parts are joined (_join).
-     */
     _acceptable(text, applyPreferences, random) {
         if (text.length < MIN_LETTERS || text.length > MAX_LETTERS) return false;
         const syllables = text.match(VOWEL_GROUP)?.length ?? 0;
@@ -391,10 +350,7 @@ export class ElfNameGenerator {
 
     _assemble(personal, family, sex, subrace) {
         const published = this.publishedByName.get(personal.text.toLowerCase());
-        // the tables are cited only when a slot was filled from them: with Expanded Variety every slot can be a split
-        // component, whose meaning is unknown
         const parts = [...personal.parts, ...family.parts];
-        const usesTables = parts.some((p) => TABLE_KEY.test(p.key) && p.method !== "split");
         return {
             name: `${personal.text} ${family.text}`,
             sex,
@@ -402,65 +358,63 @@ export class ElfNameGenerator {
             ...(personal.shape ? { shape: personal.shape } : {}),
             ...(family.shape ? { familyShape: family.shape } : {}),
             parts,
-            ...(usesTables ? { tables: `${this.tables.title}, first published in ${this.tables.origin}` } : {}),
-            ...(published ? { published: { source: published.source } } : {})
+            ...(published ? { published: { sources: published.sources } } : {})
         };
     }
 }
 
-// The structure controls reuse the shapes above, so they add no new naming pattern. "Compound Name" is the second word
-// of the two-word shape (Chosen: it is added or removed as a whole).
+// Chosen: the compound name, the two-word shape's second word, is added or removed whole.
 const ELF_NAMES = { short: NAME_SHAPES[0].shape, long: NAME_SHAPES[1].shape, compound: NAME_SHAPES[2].shape };
-// the order the toggles appear in: first name, the compound name between the names, then the surname
+// preferences apply only to rolls, and a structure change is not one
+const rebuildFirstName = (generator, sex, kept, shape, { expanded, random }) =>
+    generator._buildTable(sex, kept, random, { shape, expanded, applyPreferences: false });
+const rebuildSurname = (generator, _sex, kept, shape, { expanded, random }) =>
+    generator._buildTableFamily({ ...kept, familyShape: shape }, random, { expanded, applyPreferences: false });
+// key order is the order the controls are shown in
 const STRUCTURE_CONTROLS = {
     [NAME_STRUCTURE_CONTROL.FIRST_NAME]: {
-        prefix: "t",
-        shapeKey: "shape",
+        section: PERSONAL,
+        rebuild: rebuildFirstName,
         isOn: (r) => sameShape(r.shape, ELF_NAMES.long)
     },
     [NAME_STRUCTURE_CONTROL.COMPOUND_NAME]: {
-        prefix: "t",
-        shapeKey: "shape",
+        section: PERSONAL,
+        rebuild: rebuildFirstName,
         isOn: (r) => sameShape(r.shape, ELF_NAMES.compound)
     },
     [NAME_STRUCTURE_CONTROL.SURNAME]: {
-        prefix: "n",
-        shapeKey: "familyShape",
+        section: FAMILY,
+        rebuild: rebuildSurname,
         isOn: (r) => sameShape(r.familyShape, ELF_NAMES.long)
     }
 };
 
-/**
- * The first name and surname of a result as sections ({ text, parts, shape }), for rebuilding one of them. The surname
- * is one word, so the name splits at its last space.
- */
+// a surname is one word, so the name splits at its last space
 function sectionsOf(result) {
     const cut = result.name.lastIndexOf(" ");
-    const parts = (...prefixes) => result.parts.filter((p) => prefixes.some((prefix) => p.key.startsWith(prefix)));
+    const start = surnameStart(result.parts);
     return {
-        personal: {
-            text: result.name.slice(0, cut),
-            // part keys are t#, tj#, s#, n#, nj# and "family"
-            parts: parts("t", "s"),
-            shape: result.shape
-        },
-        family: {
-            text: result.name.slice(cut + 1),
-            parts: parts("n", "family"),
-            shape: result.familyShape
-        }
+        personal: { text: result.name.slice(0, cut), parts: result.parts.slice(0, start), shape: result.shape },
+        family: { text: result.name.slice(cut + 1), parts: result.parts.slice(start), shape: result.familyShape }
     };
 }
 
-const REVERSE_STRUCTURE = new Set(["apostrophe", "space"]);
-const TABLE_KEY = /^[tn]\d/;
-const locksTableParts = (locks, keyPrefix) =>
-    Object.keys(locks).some((key) => new RegExp(`^${keyPrefix}\\d`).test(key));
-// a family name made of one part (published or Common-form)
-const whole = (part) => part && { text: part.text, parts: [part] };
-const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 const sameForms = (entry) => entry.male.join() === entry.female.join();
-const tablePart = (key, role, entry) => ({ key, role, text: entry.text, meaning: entry.meaning });
+const slotPart = (component, key, section, slot) => ({
+    ...component,
+    key,
+    role: `${section.rolePrefix}${slot}`,
+    section: section.section,
+    kind: slot
+});
+const tablePart = (key, section, slot, entry) =>
+    slotPart({ text: entry.text, meaning: entry.meaning, sources: entry.sources }, key, section, slot);
+const suffixForms = (entry, sex) => (sex === "female" ? entry.female : entry.male);
+const suffixPart = (key, section, entry, sex, text) => ({
+    ...tablePart(key, section, KIND.SUFFIX, entry),
+    text,
+    meaning: genderedMeaning(entry, sex)
+});
 
 /** "Lord/Lady" reads "Lord" on a male name and "Lady" on a female one (paired suffixes only). */
 function genderedMeaning(entry, sex) {
@@ -472,16 +426,29 @@ function genderedMeaning(entry, sex) {
         .join(", ");
 }
 
+const WHOLE_FAMILY = { key: "family", role: "family name", section: SECTION.FAMILY, kind: KIND.WHOLE };
 const publishedFamilyPart = (f) =>
     f && {
-        key: "family",
-        role: "family name",
+        ...WHOLE_FAMILY,
         text: f.text,
         method: "published",
         // "elvish" or "common" (already English, like Morninglight)
         form: f.form,
-        source: f.source,
+        sources: f.sources,
         // Sourced: a translation published with the name (PHB: Galanodel = Moonwhisper); other names have none
-        ...(f.translation ? { meaning: f.translation.text, meaningSource: f.translation.title } : {}),
+        ...(f.meaning ? { meaning: f.meaning, meaningSource: f.meaningSource } : {}),
         ...(f.note ? { note: f.note } : {})
     };
+
+// Inferred from the published family names: each subrace's share of Common-form names (all of them for any surface
+// elf). Chosen: rounded to two places, as first measured; a subrace no family name is tied to gets none.
+function measureCommonFormShare(familyNames) {
+    const share = (names) =>
+        names.length ? Math.round((names.filter((f) => f.form === "common").length / names.length) * 100) / 100 : null;
+    return Object.fromEntries(
+        ELF_SUBRACES.map((subrace) => [
+            subrace,
+            share(subrace === ANY_SUBRACE ? familyNames : familyNames.filter((f) => f.lineages.includes(subrace)))
+        ])
+    );
+}

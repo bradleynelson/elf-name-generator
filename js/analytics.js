@@ -1,7 +1,5 @@
-// Google Analytics 4 (gtag.js): consent, loading, usage events and error reports, in one place. It loads only after
-// the visitor accepts, and only on the production site, so development and test traffic never reaches the property.
-// Events carry controlled values only (see ANALYTICS.md), never generated names or their components. A failure here
-// never reaches the generator.
+// Loads only after consent and only on production; events carry controlled values only (ANALYTICS.md), never names.
+// A failure here never reaches the generator.
 const MEASUREMENT_ID = "G-8T9GFW6PVK";
 const CONSENT_KEY = "analytics_consent";
 const PRODUCTION_HOSTS = ["espruar.com", "www.espruar.com"];
@@ -34,8 +32,8 @@ export function track(event, params = {}) {
 }
 
 /**
- * Errors go to the console in full. Google Analytics (only with consent) gets where it happened and the error's type,
- * such as "generator_typeerror", never its message, which could contain a name, a URL or other page content.
+ * Logs an error; with consent, also sends its area and type ("generator_typeerror"), never its message, which may
+ * hold page content.
  * @param {string} where - a fixed area: "generator", "data_load", "page" or "promise"
  */
 export function reportError(error, where = "page") {

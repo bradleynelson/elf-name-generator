@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { RecentNames, selectRandom, selectWeighted } from "../../js/core/random.js";
+import {
+    RecentNames,
+    generateUnrepeated,
+    generateWithRetries,
+    selectRandom,
+    selectWeighted
+} from "../../js/core/random.js";
 import { fixedRandom } from "../helpers/random.js";
 
 describe("selectRandom", () => {
@@ -83,5 +89,45 @@ describe("RecentNames", () => {
         expect(recent.has("a")).toBe(false);
         expect(recent.has("b")).toBe(true);
         expect(recent.has("c")).toBe(true);
+    });
+});
+
+describe("generateWithRetries", () => {
+    it("returns the first attempt that builds, without trying again", () => {
+        const build = fixedRandom(null, null, "Ael", "Bel");
+        expect(generateWithRetries(build)).toBe("Ael");
+    });
+
+    it("gives up with null after 300 attempts", () => {
+        let attempts = 0;
+        expect(generateWithRetries(() => (attempts++, null))).toBeNull();
+        expect(attempts).toBe(300);
+    });
+});
+
+describe("generateUnrepeated", () => {
+    const named = (...names) => fixedRandom(...names.map((name) => name && { name }));
+
+    it("returns the first name not used recently, and remembers it", () => {
+        const recent = new RecentNames();
+        recent.add("Ael");
+        expect(generateUnrepeated(named(null, "Ael", "Bel"), recent)).toEqual({ name: "Bel" });
+        expect(recent.has("Bel")).toBe(true);
+    });
+
+    it("returns the first repeat, and remembers it, when every attempt was used recently", () => {
+        const recent = new RecentNames();
+        ["Ael", "Bel"].forEach((name) => recent.add(name));
+        let attempts = 0;
+        const build = () => ({ name: ++attempts === 1 ? "Ael" : "Bel" });
+        expect(generateUnrepeated(build, recent)).toEqual({ name: "Ael" });
+        expect(attempts).toBe(300);
+        expect(recent.names.at(-1)).toBe("Ael");
+    });
+
+    it("returns null and remembers nothing when no attempt builds", () => {
+        const recent = new RecentNames();
+        expect(generateUnrepeated(() => null, recent)).toBeNull();
+        expect(recent.names).toEqual([]);
     });
 });

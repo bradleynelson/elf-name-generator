@@ -1,7 +1,7 @@
 # Faerûn Name Generator
 
-Elf and drow names for Dungeons & Dragons, built from official Forgotten Realms lore and the naming systems published
-for them, with the meaning and source of every component shown.
+Elf and drow names for Dungeons & Dragons, built from official and licensed Forgotten Realms material and the naming
+systems published for them, with the meaning and sources of every component shown.
 
 **Live site:** [espruar.com](https://espruar.com)
 
@@ -20,7 +20,7 @@ Choose a gender (neutral, female or male) and a lineage (any, sun elf, moon elf,
   unknown and marked as such.
 - **Roll 10 More, History and Saved names:** history and saved names are kept only in your browser.
 - **Name meanings and sources:** the breakdown under each name lists every component with its meaning or the
-  published names and books it comes from.
+  published names it comes from, and every book it appears in.
 
 Each name is also shown in Espruar, the elven alphabet (drow names in the High Drowic font).
 
@@ -30,16 +30,23 @@ Each name is also shown in Espruar, the elven alphabet (drow names in the High D
 "By Any Other Name" in _Dragon_ #251: a prefix and one or more suffixes, each with its own meaning, in the shapes the
 tables give. Suffixes take male or female forms where the tables list them; neutral names use the forms shared by
 both. Family names are published Forgotten Realms family names (with their translation when a book gives one), new
-ones built from the same tables, or Common-language names made from words found in published family names.
+ones built from the same tables, or English names made from two words found in published English family names.
 
 **Drow.** Names come from the tables in "By Any Other Name: The Drow" (_Dragon_ #267), with their published meanings.
 Houses are published Forgotten Realms houses or built from the same article's house tables. Drow naming taboos from
 _The Drow of the Underdark_ (2e) are respected: no names resembling drow deities, and no house names beginning with the
 "L" sound of Lolth.
 
-**Sources.** Forgotten Realms books and setting-neutral core rulebooks. A small number of names come from Ed
-Greenwood's answers to fans; he created the Forgotten Realms, but those answers are not official publications, so they
-are labelled on the page.
+**Sources.** About 3,500 published elf and drow names from about 600 books and magazines: official and licensed
+Forgotten Realms material and setting-neutral core rulebooks. Fan products and community-written content (such as Dungeon Masters
+Guild titles) are not used. A small number of names come from Ed Greenwood, who created the Forgotten Realms: his
+answers to fans and his own book _The Border Kingdoms_. They are not official publications, so they are labelled on
+the page.
+
+**How many names.** Counting every name shape, every component that fits each slot and every family name, the name
+tables alone allow over a quadrillion theoretically possible combinations (about 1.8 quadrillion for neutral names).
+With Expanded Variety on, that rises past 300 quintillion for neutral names and past 15 sextillion for female or male
+names. The count multiplies slot choices, so a few spellings repeat.
 
 ## Species
 

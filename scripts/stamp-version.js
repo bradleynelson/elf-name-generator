@@ -1,7 +1,4 @@
-// Puts ?v=<version> on every local script, stylesheet and data reference in the site's source files. The site is served
-// straight from these files, so a browser holding an older cached copy of one file can never be paired with newer ones:
-// each release asks for new URLs. Run by scripts/version.js on every bump; scripts/release-site.js refuses a release
-// whose stamps are missing or disagree.
+// Each release asks for new URLs, so a browser never pairs an older cached file with newer ones.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
