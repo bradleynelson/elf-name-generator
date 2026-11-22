@@ -65,7 +65,7 @@ test("the source files carry one version on every local script, stylesheet and d
     assert.match(read("index.html"), /href="favicon\.ico"/, "files that never change are not stamped");
     assert.match(read("js/app.js"), new RegExp(`from "\\./core/generators\\.js\\?v=${version}"`));
     assert.match(read("js/core/generators.js"), new RegExp(`from "\\./ElfNameGenerator\\.js\\?v=${version}"`));
-    assert.match(read("js/app.js"), new RegExp(`"data/drowNames\\.json\\?v=${version}"`));
+    assert.match(read("js/core/species.js"), new RegExp(`"data/elfNames\\.json\\?v=${version}"`));
     assert.match(read("js/core/DrowNameGenerator.js"), new RegExp(`from "\\./random\\.js\\?v=${version}"`));
 });
 
@@ -326,7 +326,7 @@ test("mutation testing runs monthly or by hand in production only, read-only, an
     assert.equal(scripts["test:mutation"], "stryker run");
     const config = JSON.parse(readFileSync(path.join(repositoryRoot, "stryker.config.json"), "utf8"));
     assert.deepEqual(config.mutate, ["js/core/**/*.js"]);
-    // the no-backsliding floor (owner, 2026-10-29): raised as the gaps close, never lowered; 100 since BMN-84 (owner)
+    // the no-backsliding floor: raised as the gaps closed, never lowered; every break in core logic must be caught
     assert.ok(config.thresholds.break >= 100, `floor ${config.thresholds.break}%`);
 });
 

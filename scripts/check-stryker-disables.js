@@ -1,10 +1,8 @@
-// Counts the `Stryker disable` directives in js/ and compares each file with the ceiling in stryker-disable-ceiling.json.
-// A disable is only for a truly equivalent mutant, and the count goes down, never up: a file above its ceiling fails, and
-// so does a file below it, so the ceiling is lowered in the same commit as the directive it no longer needs.
-// Usage: node scripts/check-stryker-disables.js (run by `npm run check`).
+// A Stryker disable is only for a truly equivalent mutant, so its per-file ceiling only moves down.
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { ceilingProblems } from "./ceiling.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const CEILING_FILE = "stryker-disable-ceiling.json";
@@ -29,21 +27,11 @@ export function countStrykerDisables(root = repositoryRoot) {
 
 /** Problems found comparing the counts with the ceiling (both `{ file: count }`); empty when they match. */
 export function strykerDisableProblems(counts, ceiling) {
-    const problems = [];
-    for (const file of [...new Set([...Object.keys(counts), ...Object.keys(ceiling)])].sort()) {
-        const found = counts[file] ?? 0;
-        const allowed = ceiling[file] ?? 0;
-        if (found > allowed) {
-            problems.push(
-                `${file}: ${found} Stryker disable directives, ceiling ${allowed}. Add a test or remove the code instead; a disable is only for a truly equivalent mutant.`
-            );
-        } else if (found < allowed) {
-            problems.push(
-                `${file}: ${found} Stryker disable directives, ceiling ${allowed}. Lower the ceiling to ${found} in ${CEILING_FILE} (it only moves down).`
-            );
-        }
-    }
-    return problems;
+    return ceilingProblems(counts, ceiling, {
+        noun: "Stryker disable directives",
+        ceilingFile: CEILING_FILE,
+        overAdvice: "Add a test or remove the code instead; a disable is only for a truly equivalent mutant."
+    });
 }
 
 function main() {

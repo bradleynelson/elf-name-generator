@@ -1,12 +1,23 @@
 import { describe, expect, it } from "vitest";
 import {
+    capitalize,
     getAvailableControls,
     getChangedShape,
     getKeptParts,
     getLocks,
     getSlotNumber,
+    getStoredPlace,
+    includesSlotKey,
+    isStructurePart,
+    joiningLetter,
+    jointKey,
     sameShape,
-    selectRollShape
+    selectRollShape,
+    slotKey,
+    structurePart,
+    surnameStart,
+    wholeSection,
+    wordsOf
 } from "../../js/core/nameStructure.js";
 import { fixedRandom } from "../helpers/random.js";
 
@@ -33,6 +44,86 @@ describe("sameShape and getSlotNumber", () => {
         expect(getSlotNumber("tj1", "t")).toBeUndefined(); // a joining letter is not a slot
         expect(getSlotNumber("n0", "t")).toBeUndefined();
         expect(getSlotNumber("family", "n")).toBeUndefined();
+    });
+});
+
+describe("part keys", () => {
+    it("names a slot by its section's key prefix and position, and a joining letter by its place among the parts", () => {
+        expect(slotKey("t", 2)).toBe("t2");
+        expect(getSlotNumber(slotKey("n", 10), "n")).toBe(10);
+        expect(jointKey("t", 1)).toBe("tj1");
+        expect(getSlotNumber(jointKey("t", 1), "t")).toBeUndefined();
+    });
+
+    it("tells whether any key is a slot of the section, from a list or a set of keys", () => {
+        expect(includesSlotKey(["t0", "shape"], "t")).toBe(true);
+        expect(includesSlotKey(new Set(["n0", "tj1", "family", "shape"]), "t")).toBe(false);
+        expect(includesSlotKey(new Set(), "n")).toBe(false);
+    });
+
+    it("makes the part for an apostrophe or a space in a shape, keyed by position, and nothing for a component slot", () => {
+        const joint = { section: "given", kind: "joint" };
+        expect(structurePart("'", 1)).toEqual({ key: "s1", role: "apostrophe", text: "'", ...joint });
+        expect(structurePart(" ", 2)).toEqual({ key: "s2", role: "space", text: " ", ...joint });
+        expect(structurePart("prefix", 0)).toBeNull();
+        expect(isStructurePart(structurePart(" ", 2))).toBe(true);
+        expect(isStructurePart({ role: "joining letter" })).toBe(false);
+    });
+
+    it("makes a joining letter, a joint of the section it joins", () => {
+        expect(joiningLetter("n", 1, "e", "family")).toEqual({
+            key: "nj1",
+            role: "joining letter",
+            text: "e",
+            section: "family",
+            kind: "joint"
+        });
+    });
+});
+
+describe("parts saved by 4.1.5 or earlier", () => {
+    it.each([
+        [{ key: "t0", role: "prefix" }, "given", "prefix"],
+        [{ key: "f2", role: "suffix" }, "given", "suffix"],
+        [{ key: "s1", role: "apostrophe" }, "given", "joint"],
+        [{ key: "s3", role: "space" }, "given", "joint"],
+        [{ key: "tj1", role: "joining letter" }, "given", "joint"],
+        [{ key: "nj1", role: "joining letter" }, "family", "joint"],
+        [{ key: "n0", role: "family prefix" }, "family", "prefix"],
+        [{ key: "n1", role: "house suffix" }, "family", "suffix"],
+        [{ key: "family", role: "family name" }, "family", "whole"],
+        [{ key: "house", role: "house" }, "family", "whole"]
+    ])("reads the place of %o from its key and role", (part, section, kind) => {
+        expect(getStoredPlace(part)).toEqual({ section, kind });
+    });
+});
+
+describe("sections and words", () => {
+    const parts = [
+        { key: "t0", role: "prefix", text: "ael", section: "given" },
+        { key: "s1", role: "space", text: " ", section: "given" },
+        { key: "t2", role: "suffix", text: "thas", section: "given" },
+        { key: "n0", role: "family prefix", text: "gal", section: "family" }
+    ];
+
+    it("finds where the surname starts: the first part of the family section", () => {
+        expect(surnameStart(parts)).toBe(3);
+        expect(surnameStart([{ section: "given" }, { section: "family" }])).toBe(1);
+        expect(surnameStart([{ section: "given" }])).toBe(-1);
+    });
+
+    it("joins the parts' text into words at each space", () => {
+        expect(wordsOf(parts)).toEqual(["ael", "thasgal"]);
+    });
+
+    it("capitalizes only the first letter, keeping lower case after an apostrophe", () => {
+        expect(capitalize("berg'inyon")).toBe("Berg'inyon");
+    });
+
+    it("makes a section of one whole part, and nothing of no part", () => {
+        const house = { key: "house", text: "Baenre" };
+        expect(wholeSection(house)).toEqual({ text: "Baenre", parts: [house] });
+        expect(wholeSection(null)).toBeNull();
     });
 });
 

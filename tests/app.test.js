@@ -126,7 +126,6 @@ describe("page flows", () => {
         expect(pressed()).toHaveLength(1);
         const startedPublished = surnamePart().closest("[data-key]").dataset.key === "family";
         expect(pressed()[0].textContent).toBe(startedPublished ? "Published" : "Constructed");
-        // choose from the other list
         tabs()[startedPublished ? 1 : 0].click();
         expect(pressed()[0].textContent).toBe(startedPublished ? "Constructed" : "Published");
         document.querySelector(".part-picker-option").click();
@@ -249,6 +248,20 @@ describe("page flows", () => {
         // the history is newest first: the second entry is the name shown before this one
         document.querySelectorAll("#historyList .name-list-name")[1].click();
         expect(document.querySelectorAll(".name-part.is-locked")).toHaveLength(0);
+    });
+
+    it("takes the settings from an earlier name shown again, and the next roll follows them", () => {
+        const pick = (lineage) => {
+            $("pickerLineage").value = lineage;
+            $("pickerLineage").dispatchEvent(new Event("change")); // picking a lineage makes a name of it
+        };
+        pick("drow");
+        pick("high-elf");
+        // the history is newest first: the second entry is the drow name
+        document.querySelectorAll("#historyList .name-list-name")[1].click();
+        expect($("pickerLineage").value).toBe("drow");
+        roll();
+        expect(document.body.textContent).toMatch(/High Drowic/);
     });
 
     it("brings back cleared history with Undo", () => {

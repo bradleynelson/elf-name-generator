@@ -1,23 +1,21 @@
-// Rendering only: turns results and lists into page content. Text is always set with textContent.
-import { NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.5";
+// Rendering only; text is always set with textContent. Reads a part's `section` and `kind`, never species rules.
+import { isSurnamePart, KIND, NAME_STRUCTURE_CONTROL, surnameStart } from "./core/nameStructure.js?v=4.2.0";
+import { getLineage } from "./core/species.js?v=4.2.0";
 
 const $ = (id) => document.getElementById(id);
-const STRUCTURAL = new Set(["joining letter", "apostrophe", "space"]);
 const LABELS = {
     "family name": "family name",
     prefix: "prefix",
     suffix: "suffix",
     "family prefix": "family name prefix",
     "family suffix": "family name suffix",
-    house: "house",
-    "house prefix": "house prefix",
-    "house suffix": "house suffix"
+    house: "house name",
+    "house prefix": "house name prefix",
+    "house suffix": "house name suffix"
 };
-// family names and houses: whole (published or Common-form) or in table components
-const isSurnamePart = (part) => /^(family|house)/.test(part.role);
-// the surname starts a word at its first component; a joining letter inside it does not start another
-const surnameStart = (parts) => parts.findIndex(isSurnamePart);
-const TABLE_ROLES = new Set(["prefix", "suffix", "family prefix", "family suffix", "house prefix", "house suffix"]);
+const isSlotComponent = (part) => part.kind === KIND.PREFIX || part.kind === KIND.SUFFIX;
+// Ed Greenwood's own sources read "from", not "published in"
+const isFromCreator = (sources) => sources?.[0]?.authority === "creator";
 
 function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -50,10 +48,8 @@ function iconButton(className, iconName, label, onClick) {
     return node;
 }
 
-/** What a part is called in labels and the picker title. */
 const partLabel = (part) => LABELS[part.role] || part.role;
 
-/** Display text of each part: the first part of each word starts with a capital. */
 function displayTexts(parts) {
     let wordStart = true;
     const start = surnameStart(parts);
@@ -72,30 +68,25 @@ function displayTexts(parts) {
 // "Infested, plague" -> "Infested": the first gloss of each part
 const firstGloss = (meaning) => meaning.split(", ")[0];
 
-/**
- * The meaning shown above one word, as segments ({ text, unknown?, split? }). Kinds stay distinct: a book's translation
- * ("Moonwhisper"), meanings built from published naming tables ("Age · Gift · Fair"; a drow house reads as one
- * phrase), split components (Expanded Variety), whose meaning is unknown: "Unknown" for one component, "Meaning
- * unknown" when every component is; and published Elvish family names or drow houses without a translation, "Meaning
- * unknown". Family names already in English (Morninglight, or built from Common words) show none.
- */
+// `whole` is shown over the word, `byPart` over each component
 function wordMeaning(parts) {
     const phrase = parts.find((p) => p.wordMeaning);
-    if (phrase) return [{ text: phrase.wordMeaning }];
+    if (phrase) return { whole: { text: phrase.wordMeaning } };
     const translated = parts.find((p) => p.meaningSource);
-    if (translated) return [{ text: translated.meaning }];
+    if (translated) return { whole: { text: translated.meaning } };
     if (parts.some((p) => p.method === "published" && p.form !== "common")) {
-        return [{ text: "Meaning unknown", unknown: true }];
+        return { whole: { text: "Meaning unknown", unknown: true } };
     }
-    const components = parts.filter((p) => TABLE_ROLES.has(p.role));
-    if (components.length) {
-        if (components.every((p) => p.method === "split"))
-            return [{ text: "Meaning unknown", unknown: true, split: true }];
-        return components.map((p) =>
-            p.method === "split" ? { text: "Unknown", unknown: true, split: true } : { text: firstGloss(p.meaning) }
-        );
+    const composed = parts.find((p) => p.method === "composed");
+    if (composed) return { whole: { text: composed.words.join("-").toLowerCase(), gloss: true } };
+    const components = parts.filter(isSlotComponent);
+    if (!components.length) return {};
+    if (components.every((p) => p.method === "split")) {
+        return { whole: { text: "Meaning unknown", unknown: true, split: true } };
     }
-    return [];
+    const segment = (p) =>
+        p.method === "split" ? { text: "Unknown", unknown: true, split: true } : { text: firstGloss(p.meaning) };
+    return { byPart: new Map(components.map((p) => [p, segment(p)])) };
 }
 
 /**
@@ -106,72 +97,139 @@ function wordMeaning(parts) {
  *   and the function called with the one pressed, shown as + / - beside the words they change
  */
 export function renderResult(result, locked, handlers) {
-    const fromCreator = result.published?.source.creator;
-    const matchNote = fromCreator ? "a name used by Ed Greenwood" : "a published name";
+    renderNameText(result);
+    renderWords(result, locked, handlers);
+    renderScript(result);
+    renderSources(result);
+}
+
+function renderNameText(result) {
+    const matchNote = isFromCreator(result.published?.sources) ? "a name used by Ed Greenwood" : "a published name";
     $("nameText").textContent = result.published ? `${result.name}, ${matchNote}` : result.name;
-    const texts = displayTexts(result.parts);
-    // parts are grouped into words, so a narrow screen wraps between words, never inside one, and each word carries
-    // its own meaning above it
+}
+
+// a space ends a word, and the surname starts one at its first component (a joining letter inside it does not)
+function groupWords(parts) {
     const words = [];
-    const start = surnameStart(result.parts);
-    result.parts.forEach((part, index) => {
+    const start = surnameStart(parts);
+    parts.forEach((part, index) => {
         if (part.role === "space") return words.push([]);
         if (!words.length || index === start) words.push([]);
         words.at(-1).push(index);
     });
-    const { controls = [], onChange: onStep } = handlers.structure || {};
-    const stepState = new Map(controls.map(({ control, on }) => [control, on]));
+    return words;
+}
+
+// word by word, so narrow screens wrap between words; a missing compound name shows as an empty slot
+function renderWords(result, locked, handlers) {
+    const texts = displayTexts(result.parts);
+    const { controls = [], onChange } = handlers.structure || {};
+    const steps = new Map(controls.map(({ control, on }) => [control, on]));
+    const { FIRST_NAME, COMPOUND_NAME, SURNAME } = NAME_STRUCTURE_CONTROL;
     let firstNameWords = 0;
     $("nameDials").replaceChildren(
-        ...words.flatMap((indexes) => {
-            const segments = wordMeaning(indexes.map((i) => result.parts[i]));
-            const caption = element("span", "name-word-meaning");
-            segments.forEach((segment, n) => {
-                if (n) caption.append(" · ");
-                caption.append(element("span", segment.split ? "name-word-unknown" : null, segment.text));
+        ...groupWords(result.parts).flatMap((indexes) => {
+            const parts = indexes.map((i) => result.parts[i]);
+            const isSurname = isSurnamePart(parts[0]);
+            const kind = isSurname ? SURNAME : firstNameWords++ === 0 ? FIRST_NAME : COMPOUND_NAME;
+            const { whole, byPart } = wordMeaning(parts);
+            const row = element("span", `name-word-parts${byPart ? " has-part-meanings" : ""}`);
+            indexes.forEach((i) => {
+                const part = result.parts[i];
+                const meaning = byPart && renderMeaning("name-part-meaning", byPart.get(part));
+                row.append(renderPart(part, texts[i], locked.has(part.key), handlers, meaning));
             });
-            const word = element("span", "name-word");
-            const row = element("span", "name-word-parts");
-            indexes.forEach((i) =>
-                row.append(renderPart(result.parts[i], texts[i], locked.has(result.parts[i].key), handlers))
-            );
-            // a control sits at the end of the word it changes (given name, compound name, surname); a compound name
-            // that is not there yet is a dashed empty slot between the first name and the surname
-            const isSurname = isSurnamePart(result.parts[indexes[0]]);
-            const kind = isSurname
-                ? NAME_STRUCTURE_CONTROL.SURNAME
-                : firstNameWords++ === 0
-                  ? NAME_STRUCTURE_CONTROL.FIRST_NAME
-                  : NAME_STRUCTURE_CONTROL.COMPOUND_NAME;
-            const slot =
-                isSurname && stepState.get(NAME_STRUCTURE_CONTROL.COMPOUND_NAME) === false
-                    ? [renderStep(NAME_STRUCTURE_CONTROL.COMPOUND_NAME, false, onStep)]
-                    : [];
-            if (stepState.has(kind) && (kind !== NAME_STRUCTURE_CONTROL.COMPOUND_NAME || stepState.get(kind))) {
-                row.append(renderStep(kind, stepState.get(kind), onStep));
+            if (steps.has(kind) && (kind !== COMPOUND_NAME || steps.get(kind))) {
+                row.append(renderStep(kind, steps.get(kind), onChange));
             }
-            word.append(caption, row);
+            const word = element("span", "name-word");
+            word.append(renderMeaning("name-word-meaning", byPart ? null : whole), row);
+            const slot =
+                isSurname && steps.get(COMPOUND_NAME) === false ? [renderStep(COMPOUND_NAME, false, onChange)] : [];
             return [...slot, word];
-        })
-    );
-    const script = $("nameScript");
-    // the script fonts have no apostrophe glyph and would show an empty box
-    script.textContent = result.name.replace(/'/g, "");
-    script.dataset.script = result.subrace === "drow" ? "high-drowic" : "espruar";
-    $("nameScriptLabel").textContent =
-        result.subrace === "drow" ? "Written in the High Drowic font" : "Written in Espruar, the elven alphabet";
-    $("nameSources").replaceChildren(
-        ...describeSources(result).map(([label, value]) => {
-            const row = element("div", "name-sources-row");
-            row.append(element("span", "name-sources-label", label), element("span", "name-sources-value", value));
-            return row;
         })
     );
 }
 
-/** One part: a button to choose another option and a lock; joints (joining letter, apostrophe) are plain text. */
-function renderPart(part, text, isLocked, { onToggleLock, onChoose }) {
-    if (STRUCTURAL.has(part.role)) {
+function renderMeaning(className, segment) {
+    const caption = element("span", className);
+    if (segment) {
+        const style = segment.split ? "name-word-unknown" : segment.gloss ? "name-word-gloss" : null;
+        caption.append(element("span", style, segment.text));
+    }
+    return caption;
+}
+
+function renderScript(result) {
+    const { font, label } = getLineage(result.subrace).script;
+    const node = $("nameScript");
+    // the script fonts have no apostrophe glyph and would show an empty box
+    node.textContent = result.name.replace(/'/g, "");
+    node.dataset.script = font;
+    $("nameScriptLabel").textContent = label;
+}
+
+function renderSources(result) {
+    $("nameSources").replaceChildren(
+        ...describeSources(result).map((row) => {
+            const node = element("div", "name-sources-row");
+            const value = element("div", "name-sources-value");
+            const text = element("p", "name-sources-text", row.text);
+            if (row.names) text.append(" cut from ", ...renderList(row.names, (name) => name, NAME_LIST));
+            if (row.asIn) text.append(" as in ", ...renderList(row.asIn, (name) => name, NAME_LIST));
+            if (row.note) text.append(`. ${row.note}`);
+            value.append(text);
+            if (row.sources?.length) value.append(renderSourceLine(row.sources, row.meaningFrom));
+            if (row.from) value.append(element("p", "name-sources-from", row.from));
+            if (row.ruleFrom) {
+                const line = element("p", "name-sources-from", "rule from ");
+                line.append(element("cite", null, row.ruleFrom));
+                value.append(line);
+            }
+            node.append(element("span", "name-sources-label", row.label), value);
+            return node;
+        })
+    );
+}
+
+function renderSourceLine(sources, meaningFrom) {
+    const line = element("p", "name-sources-from");
+    const books = element("span", "name-sources-books");
+    books.append(...renderList(sources, (source) => element("cite", null, source.title), SOURCE_LIST));
+    line.append(books);
+    if (meaningFrom) line.append(" · meaning from ", element("cite", null, meaningFrom));
+    return line;
+}
+
+const NAME_LIST = { shown: 2, separator: ", ", last: " and ", noun: " names" };
+const SOURCE_LIST = { shown: 1, separator: "; ", last: "; ", noun: "" };
+
+// everything shows when only one more would be hidden, so there is never an "and 1 more"
+function renderList(items, show, { shown: limit, separator, last, noun }) {
+    const shown = items.length <= limit + 1 ? items.length : limit;
+    const rest = items.slice(shown);
+    const first = items.slice(0, shown).flatMap((item, n) => {
+        if (!n) return [show(item)];
+        return [!rest.length && n === shown - 1 ? last : separator, show(item)];
+    });
+    if (!rest.length) return first;
+    const more = element("span", "name-sources-rest");
+    more.hidden = true;
+    more.append(...rest.flatMap((item) => [separator, show(item)]));
+    const count = `and ${rest.length} more${noun}`;
+    const toggle = button("name-sources-more", count, null, () => {
+        const isOpen = toggle.getAttribute("aria-expanded") !== "true";
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        toggle.textContent = isOpen ? "show fewer" : count;
+        more.hidden = !isOpen;
+    });
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.title = more.textContent.slice(separator.length);
+    return [...first, more, toggle];
+}
+
+function renderPart(part, text, isLocked, { onToggleLock, onChoose }, meaning) {
+    if (part.kind === KIND.JOINT) {
         return element("span", `name-part-joint name-part-${part.role.replace(" ", "-")}`, text);
     }
     const label = partLabel(part);
@@ -183,7 +241,7 @@ function renderPart(part, text, isLocked, { onToggleLock, onChoose }) {
         onToggleLock(part.key)
     );
     lock.setAttribute("aria-pressed", String(isLocked));
-    wrapper.append(choose, lock);
+    wrapper.append(...(meaning ? [meaning] : []), choose, lock);
     return wrapper;
 }
 
@@ -206,70 +264,75 @@ function renderStep(control, isOn, onChange) {
     return step;
 }
 
-/** Puts keyboard focus back on a structure button after the name is redrawn. */
 export function focusStructure(control) {
     $("nameDials").querySelector(`[data-control="${control}"]`)?.focus();
 }
 
-/** Puts keyboard focus back on a part after the name is redrawn (its buttons are replaced). */
+/** After a redraw, which replaces the part's buttons. */
 export function focusPart(key, control) {
     $("nameDials").querySelector(`[data-key="${key}"] .name-part-${control}`)?.focus();
 }
 
-/** One labelled row per part: what it is and where it comes from (names and the books they appear in). */
 function describeSources(result) {
-    const from = (part) => {
-        const books = part.books?.length ? ` (${part.books.join("; ")})` : "";
-        return `from ${part.from.join(", ")}${books}`;
-    };
-    const label = (part) => partLabel(part).charAt(0).toUpperCase() + partLabel(part).slice(1);
-    const rows = result.parts.map((part) => {
-        switch (part.method || part.role) {
-            case "split":
-                return part.role.endsWith("prefix")
-                    ? [label(part), `${part.text}- ${from(part)}`]
-                    : [label(part), `-${part.text} ${from(part)}`];
-            case "joining letter":
-                return [
-                    "Joining letter",
-                    `-${part.text}- added so the components join smoothly, as Dragon #251 suggests`
-                ];
-            case "prefix":
-            case "suffix":
-            case "family prefix":
-            case "family suffix":
-            case "house prefix":
-            case "house suffix":
-                return [label(part), `${part.text} means "${part.meaning}"`];
-            case "published": {
-                const where = `${part.source.creator ? "from a" : "published in"} ${part.source.title}`;
-                const note = part.note ? `. ${part.note}` : "";
-                if (!part.meaningSource) return [label(part), `${part.text}, ${where}${note}`];
-                const book = part.meaningSource === part.source.title ? "" : ` (translated in ${part.meaningSource})`;
-                return [label(part), `${part.text} means "${part.meaning}"${book}, ${where}${note}`];
-            }
-            case "composed": {
-                const [first, second] = part.words;
-                return [label(part), `${part.text}: "${first}" and "${second}", words from published elf family names`];
-            }
-            default:
-                return null;
-        }
-    });
-    if (result.tables) rows.push(["Tables", `${result.tables}, which also gives the meanings`]);
-    // a generated first name that matches a published one; names known only from Ed Greenwood's forum answers are
-    // labelled apart from book names
+    const rows = result.parts.flatMap(describePart);
     if (result.published) {
         const personal = result.name.slice(0, result.name.lastIndexOf(" "));
-        const { source } = result.published;
-        rows.unshift([
-            "Published name",
-            source.creator
-                ? `${personal} is used by Ed Greenwood, the Realms' creator, in a forum answer`
-                : `${personal} appears in ${source.title}`
-        ]);
+        rows.unshift({ label: "Published name", text: personal, sources: result.published.sources });
     }
     return rows.filter(Boolean);
+}
+
+const keepTogether = (text) => text.replaceAll(" ", "\u00a0");
+
+/** A part's row (one per word for a composed family name), or null for an apostrophe or a space. */
+function describePart(part) {
+    const label = partLabel(part).charAt(0).toUpperCase() + partLabel(part).slice(1);
+    const shown = part.kind === KIND.PREFIX ? `${part.text}-` : part.kind === KIND.SUFFIX ? `-${part.text}` : part.text;
+    switch (part.method) {
+        case "split":
+            return { label, text: shown, names: part.from, sources: part.sources };
+        case "published": {
+            const text = part.meaningSource ? `${part.text} means "${part.meaning}"` : part.text;
+            const meaningFrom = part.meaningSource !== part.sources[0]?.title ? part.meaningSource : undefined;
+            return { label, text, note: part.note, sources: part.sources, meaningFrom };
+        }
+        case "composed": {
+            const [first, second] = part.words.map((word) => word.toLowerCase());
+            if (part.wordNames) {
+                return [first, second].map((word, n) => ({
+                    label: `${keepTogether(label)}, ${keepTogether(`${n ? "second" : "first"} word`)}`,
+                    text: `"${word}"`,
+                    asIn: part.wordNames[n],
+                    sources: part.wordSources[n]
+                }));
+            }
+            // names saved by earlier versions say only where the words come from, or nothing
+            const from = part.wordsFrom && `words from ${part.wordsFrom}`;
+            return { label, text: `${part.text}: "${first}" and "${second}"`, from };
+        }
+        default:
+            if (part.role === "joining letter") {
+                const text = `-${part.text}- added so the components join smoothly`;
+                return { label: "Joining letter", text, ruleFrom: part.basis };
+            }
+            return isSlotComponent(part)
+                ? { label, text: `${shown} means "${part.meaning}"`, sources: part.sources }
+                : null;
+    }
+}
+
+/**
+ * Fills the lineage picker from the species description, in its order; the first lineage is the default.
+ * @param {{ value: string, label: string }[]} lineages
+ */
+export function renderLineagePicker(lineages) {
+    $("pickerLineage").replaceChildren(
+        ...lineages.map(({ value, label }) => {
+            const option = element("option", null, label);
+            option.value = value;
+            return option;
+        })
+    );
 }
 
 /** The bookmark stays filled while the current name is saved; pressing it again removes the name. */
@@ -286,7 +349,7 @@ export function renderNameList(listId, results, onPick) {
             const item = element("li");
             item.append(button("name-list-name", result.name, `Show ${result.name}`, () => onPick(result)));
             if (result.published) {
-                const badge = result.published.source.creator ? "Ed Greenwood" : "published";
+                const badge = isFromCreator(result.published.sources) ? "Ed Greenwood" : "published";
                 item.append(element("span", "name-list-badge", badge));
             }
             return item;
@@ -321,12 +384,10 @@ export function renderFavorites(favorites, { canLoad, onLoad, onCopy, onRemove, 
 }
 
 /**
- * Opens the full list of options for one part, sorted alphabetically, with the current one marked and in view. A
- * surname offers two lists (published and constructed), switched by a pair of toggle buttons (`aria-pressed`, plain
- * buttons rather than an ARIA tab widget, so no arrow-key handling is needed); every other part has a single list.
- * The title ("Choose the family name prefix") is taken from the role of the options in the list shown.
+ * Opens the sorted options for one part, with the current one marked. A surname has two lists (published and
+ * constructed) switched by toggle buttons (aria-pressed rather than an ARIA tab widget, so no arrow-key handling).
  * @param {{ kind?: string, label?: string, options: Object[], onPick: Function, selected?: boolean }[]} tabs - parts
- *   from the generator; the tab marked `selected` is the kind the part is now and is shown first
+ *   from the generator; the tab marked `selected` is the part's current kind and is shown first
  * @param {string} currentText
  */
 export function openPartPicker(tabs, currentText) {

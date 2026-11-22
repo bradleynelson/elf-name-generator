@@ -17,8 +17,44 @@ const result = (name) => ({
     name,
     sex: "neutral",
     subrace: "moon-elf",
-    parts: [{ key: "t0", role: "prefix", text: name }]
+    parts: [{ key: "t0", role: "prefix", text: name, section: "given", kind: "prefix" }]
 });
+
+// A result as version 4.1.5 and earlier stored it: parts without section or kind, one `source` per published name and
+// the books of a split component as titles.
+const savedBy415 = {
+    name: "Alra Elerae Starym",
+    sex: "neutral",
+    subrace: "sun-elf",
+    published: { source: { title: "Cormanthyr", file: "Cormanthyr.pdf", pdfPages: [3], scope: "fr" } },
+    tables: 'Races of the Wild (3.5e), first published in Dragon #251 (1998), "By Any Other Name"',
+    parts: [
+        { key: "t0", role: "prefix", text: "al", method: "split", from: ["Alarra"], books: ["Cormanthyr", "FRCS"] },
+        { key: "tj1", role: "joining letter", text: "r" },
+        { key: "t2", role: "suffix", text: "a", meaning: "Gift" },
+        { key: "s3", role: "space", text: " " },
+        {
+            key: "family",
+            role: "family name",
+            text: "Starym",
+            method: "published",
+            // 4.1.5 stored Ed Greenwood's answers under their old credit line
+            source: { title: "forum answer by Ed Greenwood, the Realms' creator", file: "Part 9.pdf", creator: true }
+        }
+    ]
+};
+const drowSavedBy415 = {
+    name: "Vic Baenre",
+    sex: "male",
+    subrace: "drow",
+    tables: "By Any Other Name: The Drow (Dragon #267)",
+    parts: [
+        { key: "f0", role: "prefix", text: "vic", meaning: "Death" },
+        { key: "n0", role: "house prefix", text: "baen" },
+        { key: "nj1", role: "joining letter", text: "r" },
+        { key: "n1", role: "house suffix", text: "re" }
+    ]
+};
 
 describe("saved names", () => {
     it("keeps a saved name across page loads, with its full result", () => {
@@ -64,6 +100,21 @@ describe("saved names", () => {
         expect(loadFavorites()).toEqual(stored);
     });
 
+    it("shows a name saved by 4.1.5 or earlier with each part's section, kind and sources, keeping it as stored", () => {
+        const stored = [{ name: savedBy415.name, result: savedBy415 }];
+        localStorage.setItem("faerunNameFavorites", JSON.stringify(stored));
+        const [record] = loadFavorites();
+        expect(canLoadFavorite(record)).toBe(true);
+        expect(record.result.parts.map((p) => [p.section, p.kind])).toEqual([
+            ["given", "prefix"],
+            ["given", "joint"],
+            ["given", "suffix"],
+            ["given", "joint"],
+            ["family", "whole"]
+        ]);
+        expect(JSON.parse(localStorage.getItem("faerunNameFavorites"))).toEqual(stored);
+    });
+
     it("explains when the browser will not store a name", () => {
         const setItem = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
             throw new Error("QuotaExceededError");
@@ -106,6 +157,47 @@ describe("history", () => {
         expect(loadHistory().map((r) => r.name)).toEqual(["Ilsevel"]);
         localStorage.setItem("faerunNameHistory", "{not json");
         expect(loadHistory()).toEqual([]);
+    });
+
+    it("fills in what a result saved by 4.1.5 or earlier lacks: section, kind and sources", () => {
+        saveHistory([savedBy415, drowSavedBy415]);
+        const [elf, drow] = loadHistory();
+        expect(elf.published).toEqual({ sources: [{ title: "Cormanthyr", authority: "official" }] });
+        const [split, , table, , family] = elf.parts;
+        expect(split).toEqual({
+            key: "t0",
+            role: "prefix",
+            text: "al",
+            method: "split",
+            from: ["Alarra"],
+            sources: [{ title: "Cormanthyr" }, { title: "FRCS" }],
+            section: "given",
+            kind: "prefix"
+        });
+        expect(table.sources).toEqual([
+            { title: "Races of the Wild (3.5e)", authority: "official" },
+            { title: "Dragon #251", authority: "official" }
+        ]);
+        expect(drow.parts[0].sources).toEqual([{ title: "Dragon #267", authority: "official" }]);
+        expect(drow.parts.find((p) => p.key === "nj1").sources).toBeUndefined();
+        expect(family).toMatchObject({
+            section: "family",
+            kind: "whole",
+            sources: [{ title: "Forum answer by Ed Greenwood (Realms creator)", authority: "creator" }]
+        });
+        expect(family.source).toBeUndefined();
+        // a drow house and the joining letter inside a surname belong to the family name
+        expect(drow.parts.map((p) => [p.section, p.kind])).toEqual([
+            ["given", "prefix"],
+            ["family", "prefix"],
+            ["family", "joint"],
+            ["family", "suffix"]
+        ]);
+    });
+
+    it("leaves a result saved by this version as it is", () => {
+        saveHistory([result("Ilsevel")]);
+        expect(loadHistory()).toEqual([result("Ilsevel")]);
     });
 
     it("keeps working for the visit when the browser will not store history", () => {

@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-11-22
+
+### Fixed
+
+- Names that came only from fan products or community-written content (Dungeon Masters Guild titles, Convention-Created Content) are no longer offered as published names (111 names). Wizards' own Adventurers League adventures and the RPGA's Living campaigns still count.
+- Ed Greenwood's own book The Border Kingdoms is now a source, credited to him as the Realms' creator, like his forum answers.
+- Every book is now credited by its published name and edition only, such as "Sea of Fallen Stars (2e)" or "Dungeon #157". The name data no longer carries file names, scan or copy labels, or version tags, and copies of the same book are credited as one.
+- Elvish family names that happen to contain an English word, such as Starym, Mistrivvin and Merlistar, are no longer treated as English names: they show "Meaning unknown", no longer count towards the share of English family names (16 names), and are no longer given as examples of an English word ("star" as in Starym). A name now counts as English only when the whole name is made of English words. The same rule lets Expanded Variety cut about 25 more Elvish first names into components, such as Chandra and Elistar, and treats a few English names it missed, such as Snowmane, as English. The misprinted family name Nightwhispher is now shown as Nightwhisper.
+- Names from the scan that binds Forgotten Realms accessories FR1 to FR16 are now credited to the book each page comes from, such as Hall of Heroes (1e) or Old Empires (2e), instead of "Forgotten Realms FR1-FR16" (20 names).
+
+### Changed
+
+- The intro now says names are built from official and licensed Forgotten Realms material; authors' answers and general D&D books are credited in the lore section. Search and link previews mention Realmslore and general D&D books.
+- The intro line sits evenly between the title and the name card.
+- The name breakdown now credits every book each part comes from, on a smaller line under that part: up to two books in full, otherwise the first and "and N more", which opens the rest. Books are listed by a fixed rule: official books before Ed Greenwood's own forum answers and books, then the source that gives the most names.
+- A component cut from published names now says so ("cut from Aeril, Aquaril and 3 more names"), and the separate "Tables" row is gone: each table component credits its own books, also on names saved by earlier versions. The elf tables are credited to Races of the Wild (3.5e) and Dragon #251, and the drow tables to Dragon #267; magazines are named by issue.
+- Each table meaning now sits over its own component, and a family name made of two English words shows them over the name, such as _evening-bow_.
+- A family name made of two English words now gets a row per word in the breakdown, naming the published family names that word appears in and their books ("bow" as in Crystalbow, Slenderbow and Strongbow).
+- Drow house components are labelled "House name prefix" and "House name suffix", like the elf family name rows.
+- A joining letter's row credits its rule on the source line ("rule from Dragon #251"), like the other rows.
+- Ed Greenwood's forum answers are credited as "Forum answer by Ed Greenwood (Realms creator)", also on names saved by earlier versions.
+- A component cut from a published name, on a neutral name, now cites the first five names it comes from in alphabetical order.
+- Many more published elf and drow names, from a full read of the source books (the name lists are roughly three times larger), each checked against the book's setting rules. Names that were misread from scans have been corrected or removed; plurals, index entries and names from other worlds (Greyhawk, Dark Sun, Eberron) or from Shakespeare are out; half-elves and the 1991-93 TSR trading cards are left out for now.
+- A name printed in several styles (capitals, curly or straight apostrophes, accents) is now shown once, in the form most books print. Where books print a name both with and without an apostrophe, such as Druu'giir and Druugiir, both are kept.
+- The lore section is now "Etymology & Realmslore". A new first note, "Sources and Canon", explains how the Forgotten Realms Wiki ranks sources, where Ed Greenwood's own word stands, and why names from his forum answers and his own books are labelled. "Elves of the Realms" is now "Elves (Tel’Quessir)".
+
+### Maintenance
+
+- Code comments are cut to the short reasons and rules someone changing the code needs (about 1,000 lines down to about 730), and a new check fails the build if a comment runs over two lines (except documentation of a public interface), names a ticket or the maintainer, or a file's comment count grows. The page works exactly as before.
+- The name data file is about half the download it was: the openings and endings Expanded Variety cuts from published names are now worked out by the page when it loads instead of being shipped in the file. Names are built exactly as before.
+- The name data check now also fails if a data file mentions a folder on the computer that builds it.
+- Every elf lineage, drow included, now comes from one name data file, with each book listed once and every book a name appears in kept. The lineage list, its labels and each lineage's script come from one description in the code, so the page itself has no drow-specific code. Names saved or in the history from earlier versions still load.
+- The elf and drow name generators and the name display were tidied inside, with names built exactly as before: shared helpers replace copied code, and each part of the display is drawn by its own function.
+- The tests now notice any change to which names each lineage builds from, how the books' lineage words map to the lineages, and the order sources are credited in.
+
 ## [4.1.5] - 2026-10-31
 
 ### Fixed

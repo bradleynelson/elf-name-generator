@@ -1,9 +1,7 @@
 name: Weekly Lighthouse check
 
-# Audits the live site once a week (and on demand). Accessibility below the threshold in .github/lighthouserc.json
-# fails the run, so GitHub emails the owner; performance, best practices and SEO are reported as warnings. The full
-# reports are kept as a run artifact. Scheduled runs only start from the default branch, so in practice this runs in
-# the production repository.
+# Only accessibility below the threshold in .github/lighthouserc.json fails the run. Scheduled runs start only from
+# the default branch, so in practice this runs in the production repository.
 on:
     schedule:
         - cron: "0 6 * * 1" # Mondays 06:00 UTC

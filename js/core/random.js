@@ -1,5 +1,7 @@
-// Random selection shared by the generators. `random` returns a number in [0, 1) like Math.random; tests pass a
-// seeded function for repeatable results.
+// `random` is any function like Math.random; tests pass a seeded one.
+
+// Chosen: how many times a generator rebuilds a name that broke a rule before it gives up.
+const MAX_ATTEMPTS = 300;
 
 export function selectRandom(items, random = Math.random) {
     return items.length ? items[Math.floor(random() * items.length)] : null;
@@ -30,4 +32,36 @@ export class RecentNames {
         this.names.push(name);
         if (this.names.length > this.size) this.names.shift();
     }
+}
+
+/**
+ * The first result `build` makes in up to MAX_ATTEMPTS calls, or null if every call returned null (a broken rule).
+ * @param {function(): (Object|null)} build
+ */
+export function generateWithRetries(build) {
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+        const result = build();
+        if (result) return result;
+    }
+    return null;
+}
+
+/**
+ * Like generateWithRetries, but keeps trying past a name used recently: the first name not in `recent` wins, else the
+ * first repeat (a repeat is allowed when nothing else is possible). Records the name it returns in `recent`.
+ * @param {function(): ({ name: string }|null)} build
+ * @param {RecentNames} recent - the generator's recent-use memory, updated here and nowhere else
+ * @returns {Object|null} null if no attempt built a name
+ */
+export function generateUnrepeated(build, recent) {
+    let repeat = null;
+    const fresh = generateWithRetries(() => {
+        const result = build();
+        if (!result || !recent.has(result.name)) return result;
+        repeat = repeat || result;
+        return null;
+    });
+    const chosen = fresh || repeat;
+    if (chosen) recent.add(chosen.name);
+    return chosen;
 }

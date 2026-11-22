@@ -1,17 +1,15 @@
-// Checks the shape of data/elfNames.json and data/drowNames.json, which the private pipeline writes and the site
-// publishes as-is. The shapes below are what ElfNameGenerator, DrowNameGenerator, SplitComponents and the UI read
-// (fields, required provenance, meanings), not a copy of today's JSON. A failure means fixing the pipeline script and
-// rebuilding, never editing the JSON (.claude/DATA_PIPELINE.md).
-// The generator constructors still refuse data with no prefix or suffix table at run time; the same requirement is
-// stated here (a required, non-empty list) so a bad rebuild fails before it ships.
-// Usage: node scripts/check-data.js (run by `npm run check`).
+// The shape below is what loadSpeciesData, the generators and the UI read, not a copy of today's JSON. A failure means
+// fixing the data builder and rebuilding, never editing the generated JSON.
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ELF_SUBRACES } from "../js/core/species.js";
+import { SPECIES } from "../js/core/species.js";
+import { NAME_TYPE, SCHEMA } from "../js/core/speciesData.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
-export const NAME_DATA_FILES = ["data/elfNames.json", "data/drowNames.json"];
+// each species' data file, as the page asks for it without its version stamp
+const SPECIES_OF_FILE = new Map(Object.values(SPECIES).map((species) => [species.dataFile.split("?")[0], species]));
+export const NAME_DATA_FILES = [...SPECIES_OF_FILE.keys()];
 
 // A rule inspects a value found at `at` ({ file, path, label, problems }) and records what is wrong with it.
 const fail = (at, message) => {
@@ -20,37 +18,27 @@ const fail = (at, message) => {
 };
 const field = (at, name) => ({ ...at, path: at.path ? `${at.path}.${name}` : name });
 const item = (at, index, label) => ({ ...at, path: `${at.path}[${index}]`, label });
+// the record's own text names it in a message; a plain text inherits its record's name
+const entryOf = (at, index, entry) => item(at, index, typeof entry?.text === "string" ? entry.text : at.label);
 
 const text = (value, at) => {
     if (typeof value !== "string" || !value.trim()) fail(at, "expected non-empty text");
 };
-const positiveInteger = (value, at) => {
-    if (!Number.isInteger(value) || value < 1) fail(at, "expected a positive whole number");
-};
-const isTrue = (value, at) => {
-    if (value !== true) fail(at, "expected true");
-};
-const fraction = (value, at) => {
-    if (typeof value !== "number" || !(value >= 0 && value <= 1)) fail(at, "expected a number from 0 to 1");
+const is = (expected) => (value, at) => {
+    if (value !== expected) fail(at, `expected ${JSON.stringify(expected)}`);
 };
 const oneOf =
     (...allowed) =>
     (value, at) => {
         if (!allowed.includes(value)) fail(at, `expected one of ${allowed.map((a) => `"${a}"`).join(", ")}`);
     };
-const nullable = (rule) => (value, at) => {
-    if (value !== null) rule(value, at);
-};
 const optional = (rule) => Object.assign((value, at) => value === undefined || rule(value, at), { optional: true });
 const list =
     (rule, { min = 1 } = {}) =>
     (value, at) => {
         if (!Array.isArray(value)) return fail(at, "expected a list");
         if (value.length < min) fail(at, "expected a non-empty list");
-        // the record's own text names the row in the pipeline's output
-        value.forEach((entry, index) =>
-            rule(entry, item(at, index, typeof entry?.text === "string" ? entry.text : at.label))
-        );
+        value.forEach((entry, index) => rule(entry, entryOf(at, index, entry)));
     };
 const record = (fields) => (value, at) => {
     if (typeof value !== "object" || value === null || Array.isArray(value)) return fail(at, "expected a record");
@@ -59,99 +47,123 @@ const record = (fields) => (value, at) => {
         else rule(value[name], field(at, name));
     }
 };
+/** A record whose every key is an id and every value follows `rule`; at least one entry. */
+const idMap = (rule) => (value, at) => {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) return fail(at, "expected a record");
+    if (!Object.keys(value).length) fail(at, "expected at least one entry");
+    for (const [id, entry] of Object.entries(value)) rule(entry, field(at, id));
+};
+// a table's spelling: one, or a list when the table prints alternates (the first is the main form)
+const spelling = (value, at) => (Array.isArray(value) ? list(text)(value, at) : text(value, at));
 
-const SEX_OF_PUBLISHED_NAME = nullable(oneOf("female", "male"));
-// "unstated": the source gives the name no sex
-const SEX_OF_ENDING = oneOf("female", "male", "unstated");
-const source = record({
-    title: text,
-    file: text,
-    pdfPages: list(positiveInteger),
-    scope: text,
-    // true for a name from the Realms' creator (a forum answer), which the UI credits to him
-    creator: optional(isTrue)
-});
-const subraces = list(oneOf(...ELF_SUBRACES), { min: 0 });
-const publishedName = record({ text, sex: SEX_OF_PUBLISHED_NAME, source });
-const cutFrom = record({ text, from: list(text) });
-const cutEndingFrom = record({ text, sex: SEX_OF_ENDING, from: list(text) });
-const meaningOnly = record({ text, meaning: text });
-const approvedWord = record({ text, subraces });
-
-const SHAPES = {
-    "data/elfNames.json": record({
-        description: text,
-        generated: text,
-        tables: record({
-            title: text,
-            origin: text,
-            prefixes: list(meaningOnly),
-            suffixes: list(record({ male: list(text), female: list(text), meaning: text }))
-        }),
-        openings: list(cutFrom),
-        endings: list(cutEndingFrom),
-        joinClusters: list(text),
-        publishedNames: list(publishedName),
-        familyNames: list(
+// The shape of a species' file; `lineageWord` knows the species' own words. Every id a name, table or translation
+// cites must be in `sources` (checked apart, so a broken id names the record that cites it).
+const shapeOf = (species) => {
+    const lineages = optional(list(oneOf(...Object.keys(species.lineageWords))));
+    // a table entry gives `text` when its female and male forms are the same, otherwise `female` and `male`
+    const tableEntry = (value, at) =>
+        record(
+            value?.text === undefined
+                ? { female: spelling, male: spelling, meaning: text }
+                : { text: spelling, meaning: text }
+        )(value, at);
+    return record({
+        schema: is(SCHEMA),
+        // "creator": Ed Greenwood's own works, which the page credits to him
+        sources: idMap(record({ title: text, authority: oneOf("official", "creator") })),
+        names: list(
             record({
                 text,
+                type: oneOf(...Object.values(NAME_TYPE)),
+                sex: optional(oneOf("female", "male", "unisex")),
+                meaning: optional(text),
+                meaningSource: optional(text),
+                note: optional(text),
                 form: oneOf("elvish", "common"),
-                subraces,
-                source,
-                translation: optional(record({ text, title: text })),
-                note: optional(text)
+                lineages,
+                sources: list(text)
             })
         ),
-        familyOpenings: list(cutFrom),
-        familyEndings: list(cutFrom),
-        familyJoinClusters: list(text),
-        approvedWords: record({ first: list(approvedWord), second: list(approvedWord) }),
-        commonFormShare: record(Object.fromEntries(ELF_SUBRACES.map((subrace) => [subrace, fraction])))
-    }),
-    "data/drowNames.json": record({
-        description: text,
-        generated: text,
-        tableSource: record({ title: text }),
-        prefixes: list(record({ female: text, male: text, meaning: text })),
-        suffixes: list(record({ female: text, male: text, meaning: text })),
-        housePrefixes: list(meaningOnly),
-        houseSuffixes: list(meaningOnly),
-        publishedNames: list(publishedName),
-        publishedHouses: list(record({ text, source })),
-        openings: list(cutFrom),
-        endings: list(cutEndingFrom),
-        joinClusters: list(text),
-        forbiddenNames: list(text),
-        commonWords: list(text)
-    })
-};
-
-// Components cut from published names say which names; each must be one the data publishes, or its books are lost.
-const CUT_FROM = {
-    "data/elfNames.json": [
-        ["openings", "publishedNames"],
-        ["endings", "publishedNames"],
-        ["familyOpenings", "familyNames"],
-        ["familyEndings", "familyNames"]
-    ],
-    "data/drowNames.json": [
-        ["openings", "publishedNames"],
-        ["endings", "publishedNames"]
-    ]
-};
-
-function checkCutFrom(data, listName, publishedList, at) {
-    if (!Array.isArray(data[listName]) || !Array.isArray(data[publishedList])) return;
-    const published = new Set(data[publishedList].map((entry) => entry?.text));
-    data[listName].forEach((entry, index) => {
-        if (!Array.isArray(entry?.from)) return;
-        for (const name of entry.from.filter((name) => !published.has(name))) {
-            fail(
-                field(item({ ...at, path: listName }, index, entry.text), "from"),
-                `"${name}" is not a text in ${publishedList}`
-            );
-        }
+        tables: list(
+            record({
+                type: oneOf(NAME_TYPE.GIVEN, NAME_TYPE.HOUSE),
+                lineages,
+                sources: list(text),
+                prefixes: list(tableEntry),
+                suffixes: list(tableEntry)
+            })
+        ),
+        words: list(record({ text, use: oneOf("common-first", "common-second", "glossary", "forbidden"), lineages }))
     });
+};
+
+// Each source id a record cites must be one the file lists, or the page cannot name the book.
+function checkSourceIds(data, at) {
+    const known = new Set(Object.keys(data.sources ?? {}));
+    if (!known.size) return; // reported once by the shape check, not again for every citation
+    const cite = (id, where) => {
+        if (typeof id === "string" && !known.has(id)) fail(where, `"${id}" is not an id in sources`);
+    };
+    const each = (listName, check) => {
+        if (Array.isArray(data[listName]))
+            data[listName].forEach((entry, index) => check(entry, entryOf({ ...at, path: listName }, index, entry)));
+    };
+    each("names", (name, where) => {
+        if (Array.isArray(name?.sources)) name.sources.forEach((id) => cite(id, field(where, "sources")));
+        cite(name?.meaningSource, field(where, "meaningSource"));
+    });
+    each("tables", (table, where) => {
+        if (Array.isArray(table?.sources)) table.sources.forEach((id) => cite(id, field(where, "sources")));
+    });
+}
+
+// The site publishes data/*.json as-is, so no text may carry a path on the building computer or cite the builder's
+// working files. Generic shapes only: this file is public, so it names no one's folder.
+const LOCAL_PATH = new RegExp(
+    [
+        String.raw`\b[A-Za-z]:[\\/]`,
+        String.raw`[\\/](?:Users|home)[\\/]`,
+        String.raw`\\\\[\w.-]+\\`,
+        String.raw`\bv3[\\/](?:review|dataset)\b`
+    ].join("|"),
+    "i"
+);
+
+function checkNoLocalPaths(value, at) {
+    if (typeof value === "string") {
+        const found = value.match(LOCAL_PATH);
+        if (found) fail(at, `contains a local path ("${found[0]}")`);
+    } else if (Array.isArray(value)) {
+        value.forEach((entry, index) => checkNoLocalPaths(entry, entryOf(at, index, entry)));
+    } else if (typeof value === "object" && value !== null) {
+        for (const [name, entry] of Object.entries(value)) checkNoLocalPaths(entry, field(at, name));
+    }
+}
+
+// A source says only its name: never how the copy was acquired, a file's version tag or underscores. Whole words
+// only, so a title that merely contains the letters ("Scandal", "Printworks") passes.
+const ACQUISITION_LABEL = new RegExp(
+    [
+        String.raw`(?<![a-z])(?:ocr|pdf|print|scan(?:ned)?|rip|bookmarked|cropped|sanitized|watermarked|hq|oef)(?![a-z])`,
+        String.raw`\bv\d+(?:\.\d+)*[a-z]?\b`,
+        "_"
+    ].join("|"),
+    "i"
+);
+const SOURCE_FIELDS = new Set(["title", "authority"]);
+
+function checkSourcesSayOnlyTheirNames(data, at) {
+    const acquired = (text, where) => {
+        const found = typeof text === "string" && text.match(ACQUISITION_LABEL);
+        if (found) fail(where, `says how the copy was acquired ("${found[0]}"); a source says only its name`);
+    };
+    for (const [id, source] of Object.entries(data.sources ?? {})) {
+        const where = field({ ...at, path: "sources" }, id);
+        acquired(id, where);
+        acquired(source?.title, field(where, "title"));
+        for (const name of Object.keys(source ?? {}).filter((name) => !SOURCE_FIELDS.has(name)))
+            fail(field(where, name), "a source carries only its title and authority");
+    }
 }
 
 /**
@@ -163,8 +175,10 @@ function checkCutFrom(data, listName, publishedList, at) {
  */
 export function validateNameData(file, data) {
     const at = { file, path: "", label: undefined, problems: [] };
-    SHAPES[file](data, at);
-    for (const [listName, publishedList] of CUT_FROM[file]) checkCutFrom(data, listName, publishedList, at);
+    shapeOf(SPECIES_OF_FILE.get(file))(data, at);
+    checkSourceIds(data, at);
+    checkSourcesSayOnlyTheirNames(data, at);
+    checkNoLocalPaths(data, at);
     return at.problems;
 }
 
@@ -174,12 +188,10 @@ function main() {
     );
     if (problems.length) {
         console.error(problems.join("\n"));
-        console.error(
-            "Fix the pipeline script and rebuild the data; do not edit data/*.json (.claude/DATA_PIPELINE.md)."
-        );
+        console.error("Fix the generator and rebuild the data; do not edit data/*.json by hand.");
         process.exit(1);
     }
-    console.log(`Name data: ${NAME_DATA_FILES.length} files have the agreed shape.`);
+    console.log(`Name data: ${NAME_DATA_FILES.length} file(s) have the agreed shape and no local paths.`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

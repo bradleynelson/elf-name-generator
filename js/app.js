@@ -1,7 +1,8 @@
-// Coordinates the page: loads data, keeps the current name and its locks, and reacts to the controls.
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.1.5";
-import { createGeneratorFor } from "./core/generators.js?v=4.1.5";
-import { getLocks, NAME_STRUCTURE_CONTROL } from "./core/nameStructure.js?v=4.1.5";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.2.0";
+import { createGeneratorFor } from "./core/generators.js?v=4.2.0";
+import { getLocks, KIND, NAME_STRUCTURE_CONTROL, SECTION } from "./core/nameStructure.js?v=4.2.0";
+import { getLineage, getStyleForSex, SEX_BY_STYLE, SPECIES } from "./core/species.js?v=4.2.0";
+import { loadSpeciesData } from "./core/speciesData.js?v=4.2.0";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -14,22 +15,32 @@ import {
     saveHistory,
     saveSetting,
     storageAvailable
-} from "./favorites.js?v=4.1.5";
+} from "./favorites.js?v=4.2.0";
 import {
     focusPart,
     focusStructure,
     openPartPicker,
     renderFavorites,
+    renderLineagePicker,
     renderNameList,
     renderResult,
     renderSaved,
     showNotice
-} from "./ui.js?v=4.1.5";
+} from "./ui.js?v=4.2.0";
 
 const $ = (id) => document.getElementById(id);
 const LIST_SIZE = 10;
 const HISTORY_SIZE = 10;
-const state = { generatorFor: null, result: null, controls: [], locked: new Set(), favorites: [], history: [] };
+// The settings live in state; the controls show them and are never read back.
+const state = {
+    generatorFor: null,
+    result: null,
+    controls: [],
+    locked: new Set(),
+    favorites: [],
+    history: [],
+    settings: { subrace: null, style: "neutral", expanded: false }
+};
 
 // A failed or unreadable copy (often a stale cached file) is retried once, bypassing the browser cache.
 async function loadJson(path) {
@@ -44,49 +55,39 @@ async function loadJson(path) {
     throw new Error(`Could not load ${path}`);
 }
 
-function options() {
-    return {
-        subrace: $("pickerLineage").value,
-        style: $("pickerSex").value,
-        expanded: $("expandedToggle").getAttribute("aria-pressed") === "true"
-    };
+const options = () => ({ ...state.settings });
+
+function showSettings() {
+    const { subrace, style, expanded } = state.settings;
+    $("pickerLineage").value = subrace;
+    $("pickerSex").value = style;
+    $("expandedToggle").setAttribute("aria-pressed", String(expanded));
 }
 
-/** The generator that serves the lineage picked on the page; a result already made goes back to its own (`generatorFor`). */
 function pickedGenerator() {
     return state.generatorFor(options().subrace);
 }
 
 // Usage analytics (event plan in ANALYTICS.md): controlled lowercase values, never names or their components
-const GENDER_VALUES = { neutral: "neutral", feminine: "female", masculine: "male" };
-const LINEAGE_VALUES = {
-    "high-elf": "any",
-    "sun-elf": "sun_elf",
-    "moon-elf": "moon_elf",
-    "wood-elf": "wood_elf",
-    drow: "drow"
-};
+const POSITION_VALUES = { [SECTION.GIVEN]: "first_name", [SECTION.FAMILY]: "family_name" };
 
-/** The current settings as event parameters, plus any event-specific ones. */
 function usage(extra = {}) {
     const { subrace, style, expanded } = options();
+    const lineage = getLineage(subrace);
     return {
-        species: "elf",
+        species: lineage.species.analytics,
         generation_mode: expanded ? "expanded" : "standard",
-        character_gender: GENDER_VALUES[style],
-        lineage: LINEAGE_VALUES[subrace],
+        character_gender: SEX_BY_STYLE[style],
+        lineage: lineage.analytics,
         ...extra
     };
 }
 
 /** Where a component sits and what kind it is, without its text. */
-function describeComponent(part) {
-    const kind = part.role.match(/(prefix|suffix)$/)?.[1] || "whole";
-    return {
-        component_position: /^(family|house)/.test(part.role) ? "family_name" : "first_name",
-        component_type: kind
-    };
-}
+const describeComponent = (part) => ({
+    component_position: POSITION_VALUES[part.section],
+    component_type: part.kind
+});
 
 const SURNAME_KINDS = ["published", "constructed"]; // the order of the picker's tabs
 const STRUCTURE_VALUES = {
@@ -97,11 +98,7 @@ const STRUCTURE_VALUES = {
 const ORIGINS = { split: "split", published: "published", composed: "common_words" };
 const originOf = (part) => ORIGINS[part.method] || "table";
 
-/**
- * Shows a result; new results also go to the top of the history (restoring from a list does not).
- * `focus` ({ key, control: "text" | "lock" }) returns keyboard focus to the part that was used, since redrawing
- * replaces its buttons.
- */
+// `focus` ({ key, control }) puts keyboard focus back on that part after the redraw.
 function show(result, { remember = true, focus = null } = {}) {
     state.result = result;
     if (remember) {
@@ -126,14 +123,12 @@ function updateHistory(history) {
     $("historyClear").hidden = !history.length;
 }
 
-/**
- * Shows an earlier name and matches the controls to it, so the next name follows the same settings. Locks are
- * cleared: they belonged to the components of the name on screen, not to whatever fills the same slots in this one.
- */
+// locks are cleared: they belonged to the previous name
 function restore(result, { remember = true } = {}) {
     state.locked.clear();
-    $("pickerLineage").value = result.subrace;
-    $("pickerSex").value = { female: "feminine", male: "masculine" }[result.sex] || "neutral";
+    state.settings.subrace = result.subrace;
+    state.settings.style = getStyleForSex(result.sex);
+    showSettings();
     show(result, { remember });
 }
 
@@ -170,15 +165,13 @@ function toggleLock(key) {
     show(state.result, { remember: false, focus: { key, control: "lock" } });
 }
 
-/** Opens the options that fit one part; the chosen one replaces it while the rest of the name stays as it is. */
 function choosePart(key) {
     const current = state.result;
     const part = current.parts.find((p) => p.key === key);
     const generator = state.generatorFor(current.subrace);
     const choices = attempt(() => generator.optionsFor(current, key));
-    // a surname can also be switched to the other kind (published or constructed) without rolling
-    const isWholeSurname = key === "family" || key === "house"; // a published family name or drow house
-    const isSurname = isWholeSurname || /^n\d/.test(key);
+    const isSurname = part.section === SECTION.FAMILY;
+    const isWholeSurname = isSurname && part.kind === KIND.WHOLE;
     const other = isSurname ? generator.getSurnameSwitchOptions(current, state.locked, options()) : null;
     const own = {
         kind: isWholeSurname ? "published" : "constructed",
@@ -211,7 +204,7 @@ function choosePart(key) {
     openPartPicker(tabs, part.text);
 }
 
-/** Presses a + or - beside the name (longer or shorter first name or surname, compound name); only a roll joins the history. */
+// only a roll joins the history
 function handleStructureChange(control) {
     const changed = state.generatorFor(state.result.subrace).generateStructureChange(state.result, control, {
         ...options(),
@@ -292,16 +285,22 @@ function wireControls() {
         track("name_setting_changed", usage({ setting_name: settingName, setting_value: settingValue }));
         fresh();
     };
-    $("pickerSex").addEventListener("change", (event) => changeSetting("gender", GENDER_VALUES[event.target.value]));
-    $("pickerLineage").addEventListener("change", (event) =>
-        changeSetting("lineage", LINEAGE_VALUES[event.target.value])
-    );
-    // Expanded Variety is off until chosen; the last choice is remembered in this browser
+    state.settings.subrace = $("pickerLineage").value; // the picker's first lineage, the default
+    $("pickerSex").addEventListener("change", (event) => {
+        state.settings.style = event.target.value;
+        changeSetting("gender", SEX_BY_STYLE[event.target.value]);
+    });
+    $("pickerLineage").addEventListener("change", (event) => {
+        state.settings.subrace = event.target.value;
+        changeSetting("lineage", getLineage(event.target.value).analytics);
+    });
     const expanded = $("expandedToggle");
-    expanded.setAttribute("aria-pressed", String(loadSetting("expandedVariety", false) === true));
+    state.settings.expanded = loadSetting("expandedVariety", false) === true;
+    showSettings();
     expanded.addEventListener("click", () => {
-        const isOn = expanded.getAttribute("aria-pressed") !== "true";
-        expanded.setAttribute("aria-pressed", String(isOn));
+        const isOn = !state.settings.expanded;
+        state.settings.expanded = isOn;
+        showSettings();
         saveSetting("expandedVariety", isOn);
         track("expanded_variety_changed", usage({ setting_value: isOn ? "on" : "off" }));
         fresh();
@@ -337,7 +336,6 @@ function wireControls() {
         if (event.target === event.currentTarget && outside) event.currentTarget.close();
     });
     $("copyButton").addEventListener("click", () => copyName(state.result.name, "current"));
-    // the bookmark toggles: save the current name, or remove it if it is already saved
     $("saveButton").addEventListener("click", () => {
         const wasSaved = isSaved(state.result);
         updateFavorites((list) =>
@@ -369,14 +367,17 @@ async function start() {
         dialog: $("privacyDialog"),
         links: document.querySelectorAll(".privacy-link")
     });
+    const species = Object.entries(SPECIES);
+    renderLineagePicker(species.flatMap(([, { lineages }]) => lineages));
     try {
-        const [elfNames, drowNames] = await Promise.all([
-            loadJson("data/elfNames.json?v=4.1.5"),
-            loadJson("data/drowNames.json?v=4.1.5")
-        ]);
-        state.generatorFor = createGeneratorFor(elfNames, drowNames);
+        // a file in an older shape (often a stale cached copy) is refused by loadSpeciesData, like a failed download
+        const files = await Promise.all(species.map(([, { dataFile }]) => loadJson(dataFile)));
+        const data = Object.fromEntries(
+            species.map(([name, description], i) => [name, loadSpeciesData(files[i], description)])
+        );
+        state.generatorFor = createGeneratorFor(data);
     } catch (error) {
-        // a stale cached copy of the site is the usual cause; a hard refresh (Ctrl+F5) bypasses the cache, Reload does not
+        // usually a stale cached copy: Ctrl+F5 bypasses the cache, Reload does not
         showNotice("The name lists could not be loaded. Please refresh with Ctrl+F5 (Cmd+Shift+R on a Mac).", {
             label: "Reload",
             onClick: () => location.reload()

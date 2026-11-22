@@ -15,7 +15,7 @@ on:
         branches:
             - main
             - develop
-    # A merge into main publishes once the tests pass (owner's choice, 2026-10-23). Run workflow republishes main by hand,
+    # A merge into main publishes once the tests pass. Run workflow republishes main by hand,
     # for example after a failed deploy, and needs the box ticked.
     workflow_dispatch:
         inputs:
@@ -49,9 +49,8 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            # Every npm package here is a development tool; none reaches visitors. High and critical advisories fail
-            # the build (update the dependency, or record a reviewed exception in DECISIONS.md and adjust this step);
-            # low and moderate ones are listed in the log without failing it.
+            # Every npm package here is a development tool. High and critical advisories fail the build (update the
+            # dependency, or review the exception and adjust this step); low and moderate ones are only listed.
             - name: Check for vulnerabilities
               run: |
                   npm audit || true

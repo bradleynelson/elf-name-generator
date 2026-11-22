@@ -1,8 +1,5 @@
-# Weekly version updates, grouped so each ecosystem opens at most one pull request a week. Security updates
-# (switched on in the repository settings) still open as soon as an alert appears. Only the development tools are
-# npm packages; nothing here ships to visitors. Chosen: a release must be a week old before it is proposed, so a
-# compromised version is usually caught and pulled first. Runs only where this file is on the default branch
-# (production `main`; dev's default branch is the old `develop`).
+# Chosen: a release must be a week old before it is proposed, so a compromised version is usually pulled first. Runs
+# only where this file is on the default branch (production `main`; dev's default branch is the old `develop`).
 version: 2
 updates:
     - package-ecosystem: "npm"
