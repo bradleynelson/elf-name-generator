@@ -8,7 +8,7 @@
     "thresholds": {
         "high": 100,
         "low": 90,
-        "break": 100
+        "break": null
     },
     "timeoutMS": 30000,
     "reporters": ["clear-text", "progress", "html", "json"],

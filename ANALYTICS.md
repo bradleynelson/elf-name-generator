@@ -23,7 +23,7 @@ The automatic `page_view` from `gtag("config")` is the only page view; no others
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `name_generated`           | The visitor rolls: Roll Name, the spacebar, or Roll 10 More. Not sent for the name shown on page load, or when a setting change shows a new name | `roll_type`, `name_count`, `trigger`                                                           |
 | `name_copied`              | A copy to the clipboard succeeds (not just the click)                                                                                            | `copy_source`                                                                                  |
-| `name_saved`               | The bookmark adds the current name to saved names                                                                                                | —                                                                                              |
+| `name_saved`               | A bookmark adds a name to saved names: on the name card, or beside a name in Roll 10 More or History                                             | `save_source`                                                                                  |
 | `component_picker_opened`  | The visitor opens the options list for a component                                                                                               | `component_position`, `component_type`                                                         |
 | `component_selected`       | The visitor picks an option and the new name is shown                                                                                            | `component_position`, `component_type`, `component_origin`                                     |
 | `component_lock_changed`   | The visitor locks or unlocks a component                                                                                                         | `component_position`, `component_type`, `locked`                                               |
@@ -32,39 +32,41 @@ The automatic `page_view` from `gtag("config")` is the only page view; no others
 | `expanded_variety_changed` | The visitor turns Expanded Variety on or off                                                                                                     | `setting_value`                                                                                |
 | `name_sources_opened`      | The visitor opens "Name meanings and sources" (not on close)                                                                                     | —                                                                                              |
 | `name_setting_changed`     | The visitor changes gender or lineage                                                                                                            | `setting_name`, `setting_value`                                                                |
+| `species_changed`          | The visitor picks another species                                                                                                                | —                                                                                              |
 | `exception`                | An error reaches the page (GA4's standard event)                                                                                                 | `description` (area and error type, such as `generator_typeerror`; never the message), `fatal` |
 
-`species_changed` is not sent yet: elf is the only species that can be chosen. Add it when a second species is
-selectable.
+`species_changed` is sent when the visitor picks another species in the picker (with the common parameters, so it
+carries the new species and its first lineage).
 
 ### Common parameters (on every usage event)
 
-| Parameter          | Values                                           |
-| ------------------ | ------------------------------------------------ |
-| `species`          | `elf`                                            |
-| `generation_mode`  | `standard`, `expanded` (Expanded Variety on)     |
-| `character_gender` | `neutral`, `female`, `male`                      |
-| `lineage`          | `any`, `sun_elf`, `moon_elf`, `wood_elf`, `drow` |
+| Parameter          | Values                                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| `species`          | `elf`, `dwarf`                                                                                          |
+| `generation_mode`  | `standard`, `expanded` (Expanded Variety on)                                                            |
+| `character_gender` | `neutral`, `female`, `male`                                                                             |
+| `lineage`          | `any`, `sun_elf`, `moon_elf`, `wood_elf`, `drow`, `shield_dwarf`, `gold_dwarf`, `wild_dwarf`, `duergar` |
 
 Settings are read when the event is sent, so a setting change carries the new value.
 
 ### Event parameters
 
-| Parameter            | Values                                                            | Meaning                                                                    |
-| -------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `roll_type`          | `single`, `list`                                                  | One name, or the Roll 10 More list                                         |
-| `name_count`         | number                                                            | Names produced by the roll (1, or up to 10 for a list)                     |
-| `trigger`            | `button`, `spacebar`                                              | How the roll was asked for                                                 |
-| `copy_source`        | `current`, `saved`                                                | The name card, or a saved name                                             |
-| `component_position` | `first_name`, `family_name`                                       | Drow houses count as `family_name`                                         |
-| `component_type`     | `prefix`, `suffix`, `whole`                                       | `whole` is a family name chosen as one piece                               |
-| `component_origin`   | `table`, `split`, `published`, `common_words`                     | Where the chosen option comes from                                         |
-| `structure_control`  | `first_name_length`, `surname_length`, `compound_name`            | Which button was pressed                                                   |
-| `structure_value`    | `on`, `off`                                                       | The change made: a suffix or compound name added is `on`, removed is `off` |
-| `surname_kind`       | `published`, `constructed`                                        | The kind of surname the visitor switched to                                |
-| `locked`             | `on`, `off`                                                       | The lock's new state                                                       |
-| `setting_name`       | `gender`, `lineage`                                               | Which setting changed                                                      |
-| `setting_value`      | gender or lineage values above; `on` / `off` for Expanded Variety | The new value                                                              |
+| Parameter            | Values                                                                | Meaning                                                                                                        |
+| -------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `roll_type`          | `single`, `list`                                                      | One name, or the Roll 10 More list                                                                             |
+| `name_count`         | number                                                                | Names produced by the roll (1, or up to 10 for a list)                                                         |
+| `trigger`            | `button`, `spacebar`                                                  | How the roll was asked for                                                                                     |
+| `copy_source`        | `current`, `saved`, `saved_all`, `list_all`, `list`, `history`        | The name card, a saved name, all saved names, all of Roll 10 More, or one name in Roll 10 More or History      |
+| `save_source`        | `current`, `list`, `history`                                          | The name card's bookmark, or one beside a name in Roll 10 More or History                                      |
+| `component_position` | `first_name`, `family_name`, `name_phrase`                            | Drow houses and dwarf clans count as `family_name`; a dwarf name phrase's qualifier or parent is `name_phrase` |
+| `component_type`     | `prefix`, `suffix`, `whole`                                           | `whole` is a family name chosen as one piece                                                                   |
+| `component_origin`   | `table`, `split`, `published`, `common_words`                         | Where the chosen option comes from                                                                             |
+| `structure_control`  | `first_name_length`, `surname_length`, `compound_name`, `name_phrase` | Which button was pressed                                                                                       |
+| `structure_value`    | `on`, `off`                                                           | The change made: a suffix or compound name added is `on`, removed is `off`                                     |
+| `surname_kind`       | `published`, `constructed`                                            | The kind of surname the visitor switched to                                                                    |
+| `locked`             | `on`, `off`                                                           | The lock's new state                                                                                           |
+| `setting_name`       | `gender`, `lineage`                                                   | Which setting changed                                                                                          |
+| `setting_value`      | gender or lineage values above; `on` / `off` for Expanded Variety     | The new value                                                                                                  |
 
 ## GA4 setup still needed (manual, in the GA4 admin)
 
@@ -72,7 +74,7 @@ Settings are read when the event is sent, so a setting change carries the new va
    `species`, `generation_mode`, `character_gender`, `lineage`, `roll_type`, `trigger`, `copy_source`,
    `component_position`, `component_type`, `component_origin`, `locked`, `setting_name`, `setting_value`,
    `structure_control`, `structure_value`, `surname_kind` (the last three arrived with version 4.1.0; register them after
-   that release).
+   that release), `save_source` (arrives with the next release; register it after that release), `description` (the error area and type of an `exception`; registered 2026-11-22).
    Data appears only from the day each one is registered.
 2. **Custom metric:** `name_count` (scope Event, unit Standard), for names per user.
 3. **Key event:** `name_copied` is marked as a key event (done 2026-10-23); copying is the clearest sign a name was

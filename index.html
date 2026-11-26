@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Faerûn Name Generator | Elf and Drow Names from the Forgotten Realms</title>
+        <title>Faerûn Name Generator | Elf and Dwarf Names from the Forgotten Realms</title>
         <meta
             name="description"
-            content="Free D&D elf and drow name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part."
+            content="Free D&D elf and dwarf name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part."
         />
         <link rel="canonical" href="https://espruar.com/" />
         <meta name="theme-color" content="#1c1b1a" media="(prefers-color-scheme: dark)" />
@@ -15,45 +15,57 @@
         <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-        <!-- link previews; image built from scripts/share-card.html -->
+        <!-- link previews -->
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Faerûn Name Generator" />
         <meta property="og:url" content="https://espruar.com/" />
-        <meta property="og:title" content="Faerûn Name Generator: Elf and Drow Names" />
+        <meta property="og:title" content="Faerûn Name Generator: Elf and Dwarf Names" />
         <meta
             property="og:description"
-            content="Free D&D elf and drow name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part."
+            content="Free D&D elf and dwarf name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part."
         />
         <meta property="og:image" content="https://espruar.com/share-card.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta
             property="og:image:alt"
-            content="Faerûn Name Generator: the elf name Nimethil Karori with the meaning of each part, written in Espruar"
+            content="Faerûn Name Generator: the elf name Alran Starflower with the meaning of each part, written in Espruar, above the Roll Name button"
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.2.0" />
+        <link rel="stylesheet" href="style.css?v=4.3.0" />
         <!-- fetch modules in parallel rather than one import at a time -->
-        <link rel="modulepreload" href="js/app.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/ui.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/species.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/speciesData.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/DrowNameGenerator.js?v=4.2.0" />
-        <link rel="modulepreload" href="js/core/generators.js?v=4.2.0" />
-        <link rel="preload" href="data/elfNames.json?v=4.2.0" as="fetch" crossorigin />
+        <link rel="modulepreload" href="js/app.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/ui.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/dom.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/sourcesPanel.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/messages.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/nameLists.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/nameListsView.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/joiningLetters.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/spelling.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/nameTables.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/nameRolls.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/species.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/speciesData.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/DwarfNameGenerator.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/dwarfLineages.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/elfLineages.js?v=4.3.0" />
+        <link rel="modulepreload" href="js/core/generators.js?v=4.3.0" />
+        <link rel="preload" href="data/elfNames.json?v=4.3.0" as="fetch" crossorigin />
+        <link rel="preload" href="data/dwarfNames.json?v=4.3.0" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
                 "@type": "WebApplication",
                 "name": "Faerûn Name Generator",
-                "description": "Free D&D elf and drow name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part.",
+                "description": "Free D&D elf and dwarf name generator for the Forgotten Realms. Names built from Realmslore and general D&D books, with the meaning and source of every part.",
                 "url": "https://espruar.com/",
                 "applicationCategory": "GameApplication",
                 "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -131,6 +143,32 @@
                     d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"
                 />
             </symbol>
+            <symbol id="icon-check" viewBox="0 0 24 24">
+                <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 12.5l4.5 4.5L19 7.5"
+                />
+            </symbol>
+            <symbol id="icon-warning" viewBox="0 0 24 24">
+                <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 3l10 18H2zM12 10v5M12 18h.01"
+                />
+            </symbol>
+            <symbol id="icon-error" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v6M12 16.5h.01" />
+                </g>
+            </symbol>
         </svg>
 
         <a href="#main" class="skip-link">Skip to the name generator</a>
@@ -148,14 +186,13 @@
                     <span class="name-picker-group">
                         <label class="visually-hidden" for="pickerSex">Gender</label>
                         <select id="pickerSex" class="name-picker-sex">
-                            <option value="neutral" selected>neutral</option>
+                            <option value="neutral" selected>unisex</option>
                             <option value="feminine">female</option>
                             <option value="masculine">male</option>
                         </select>
                         <label class="visually-hidden" for="pickerSpecies">Species</label>
                         <select id="pickerSpecies" class="name-picker-species">
                             <option value="elf">elf</option>
-                            <option disabled>more coming soon</option>
                         </select>
                     </span>
                     <span class="name-picker-group">
@@ -163,8 +200,10 @@
                         <label class="visually-hidden" for="pickerLineage">Lineage</label>
                         <!-- options filled from js/core/species.js -->
                         <select id="pickerLineage" class="name-picker-lineage"></select>
+                        <span>lineage.</span>
                     </span>
                 </form>
+                <p class="small-pool-note" id="smallPoolNote" hidden></p>
                 <div class="expanded">
                     <button
                         type="button"
@@ -196,10 +235,28 @@
                     Tap any name component to see compatible options. Lock it to keep it. Use + and − to add or remove
                     components.
                 </p>
+                <div class="name-card-loading" id="nameLoading" data-step="loading">
+                    <svg class="name-card-loader" viewBox="0 0 56 56" aria-hidden="true">
+                        <!-- blurring the drops and sharpening their edges again makes nearby drops run together -->
+                        <filter id="name-card-loader-goo">
+                            <feGaussianBlur stdDeviation="2.6" />
+                            <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" />
+                        </filter>
+                        <g class="name-card-loader-drops">
+                            <circle cx="28" cy="28" r="12" />
+                            <g><circle cx="28" cy="13" r="6.5" /></g>
+                            <g><circle cx="28" cy="14" r="5.5" /></g>
+                            <g><circle cx="28" cy="12" r="4.5" /></g>
+                        </g>
+                    </svg>
+                    <p class="name-card-loading-title" id="nameLoadingTitle">Loading the name lists</p>
+                    <p class="name-card-loading-note" id="nameLoadingNote"></p>
+                </div>
                 <p class="name-card-text visually-hidden" id="nameText" aria-live="polite"></p>
                 <div class="name-card-dials" id="nameDials"></div>
                 <p class="name-card-script" id="nameScript" aria-hidden="true"></p>
                 <p class="name-card-script-label" id="nameScriptLabel"></p>
+                <p class="name-card-note" id="lineageNote" hidden></p>
                 <div class="name-card-actions">
                     <div class="generate">
                         <svg class="generate-filters" width="0" height="0" aria-hidden="true" focusable="false">
@@ -222,13 +279,209 @@
                                 <feComposite in="cut" in2="cutMask" operator="in" result="innerShadow" />
                                 <feComposite in="innerShadow" in2="SourceGraphic" operator="over" />
                             </filter>
+                            <!-- gathers the inner glow unevenly, brighter in some places than others, as in real glass -->
+                            <filter id="generate-texture" x="0" y="0" width="100%" height="100%">
+                                <feTurbulence
+                                    type="fractalNoise"
+                                    baseFrequency="0.035 0.09"
+                                    numOctaves="2"
+                                    seed="7"
+                                    result="noise"
+                                />
+                                <feColorMatrix
+                                    in="noise"
+                                    type="matrix"
+                                    values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  1 0 0 0 0"
+                                    result="patches"
+                                />
+                                <feComposite
+                                    in="SourceGraphic"
+                                    in2="patches"
+                                    operator="arithmetic"
+                                    k1="1.3"
+                                    k2="0.35"
+                                />
+                            </filter>
                         </svg>
+                        <span class="generate-lift" aria-hidden="true"></span>
                         <span class="generate-motes" aria-hidden="true"
                             ><span></span><span></span><span></span><span></span><span></span><span></span><span></span
                             ><span></span><span></span><span></span><span></span><span></span><span></span><span></span
                             ><span></span><span></span><span></span><span></span><span></span><span></span
                         ></span>
-                        <button type="button" class="generate-button" id="generateButton">
+                        <button type="button" class="generate-button" id="generateButton" aria-disabled="true">
+                            <svg
+                                class="generate-facets"
+                                viewBox="0 0 300 100"
+                                preserveAspectRatio="none"
+                                aria-hidden="true"
+                                focusable="false"
+                            >
+                                <defs>
+                                    <filter
+                                        id="generate-splotch"
+                                        x="0"
+                                        y="0"
+                                        width="100%"
+                                        height="100%"
+                                        color-interpolation-filters="sRGB"
+                                    >
+                                        <feTurbulence
+                                            type="fractalNoise"
+                                            baseFrequency="0.016 0.04"
+                                            numOctaves="2"
+                                            seed="11"
+                                            result="noise"
+                                        />
+                                        <feColorMatrix
+                                            in="noise"
+                                            type="matrix"
+                                            values="0 0 0 0 1  0 0 0 0 0.3  0 0 0 0 0.08  1.1 0 0 0 -0.55"
+                                            result="warm"
+                                        />
+                                        <feColorMatrix
+                                            in="noise"
+                                            type="matrix"
+                                            values="0 0 0 0 0.08  0 0 0 0 0  0 0 0 0 0.01  -1.2 0 0 0 0.62"
+                                            result="deep"
+                                        />
+                                        <feMerge>
+                                            <feMergeNode in="deep" />
+                                            <feMergeNode in="warm" />
+                                        </feMerge>
+                                    </filter>
+                                    <clipPath id="generate-table">
+                                        <path
+                                            d="M34,18 L266,18 A16,17 0 0 1 282,35 L282,65 A16,17 0 0 1 266,82 L34,82 A16,17 0 0 1 18,65 L18,35 A16,17 0 0 1 34,18 Z"
+                                        />
+                                    </clipPath>
+                                    <filter id="generate-facet-blur">
+                                        <feGaussianBlur stdDeviation="0.9" />
+                                    </filter>
+                                    <filter id="generate-light-blur">
+                                        <feGaussianBlur stdDeviation="0.5" />
+                                    </filter>
+                                    <linearGradient id="generate-top-band" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0" stop-color="#7a1424" />
+                                        <stop offset="0.5" stop-color="#5a0a16" />
+                                        <stop offset="1" stop-color="#3e0410" />
+                                    </linearGradient>
+                                    <linearGradient id="generate-bottom-band" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0" stop-color="#e02a30" />
+                                        <stop offset="0.35" stop-color="#b8121e" />
+                                        <stop offset="0.75" stop-color="#5a0610" />
+                                        <stop offset="1" stop-color="#3e0410" />
+                                    </linearGradient>
+                                    <linearGradient id="generate-left-bevel" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#c2202a" />
+                                        <stop offset="1" stop-color="#8a0e18" />
+                                    </linearGradient>
+                                    <linearGradient id="generate-right-bevel" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#5a0812" />
+                                        <stop offset="1" stop-color="#8a1018" />
+                                    </linearGradient>
+                                    <linearGradient
+                                        id="generate-top-edge"
+                                        gradientUnits="userSpaceOnUse"
+                                        x1="22.7"
+                                        y1="0"
+                                        x2="278"
+                                        y2="0"
+                                    >
+                                        <stop offset="0" stop-color="#ece4df" stop-opacity="0.45" />
+                                        <stop offset="0.45" stop-color="#ece4df" stop-opacity="0.3" />
+                                        <stop offset="1" stop-color="#ece4df" stop-opacity="0.05" />
+                                    </linearGradient>
+                                    <linearGradient
+                                        id="generate-left-edge"
+                                        gradientUnits="userSpaceOnUse"
+                                        x1="0"
+                                        y1="23"
+                                        x2="0"
+                                        y2="77"
+                                    >
+                                        <stop offset="0" stop-color="#ece4df" stop-opacity="0.3" />
+                                        <stop offset="1" stop-color="#ece4df" stop-opacity="0" />
+                                    </linearGradient>
+                                    <linearGradient
+                                        id="generate-right-edge"
+                                        gradientUnits="userSpaceOnUse"
+                                        x1="0"
+                                        y1="23"
+                                        x2="0"
+                                        y2="77"
+                                    >
+                                        <stop offset="0" stop-color="#ece4df" stop-opacity="0" />
+                                        <stop offset="0.6" stop-color="#ece4df" stop-opacity="0.14" />
+                                        <stop offset="1" stop-color="#ece4df" stop-opacity="0" />
+                                    </linearGradient>
+                                    <linearGradient
+                                        id="generate-bottom-edge"
+                                        gradientUnits="userSpaceOnUse"
+                                        x1="34"
+                                        y1="0"
+                                        x2="266"
+                                        y2="0"
+                                    >
+                                        <stop offset="0" stop-color="#ffb0a8" stop-opacity="0" />
+                                        <stop offset="0.5" stop-color="#ffb0a8" stop-opacity="0.3" />
+                                        <stop offset="1" stop-color="#ffb0a8" stop-opacity="0" />
+                                    </linearGradient>
+                                </defs>
+                                <g filter="url(#generate-facet-blur)" opacity="0.75">
+                                    <path
+                                        fill="url(#generate-top-band)"
+                                        d="M22.7,23 L0,0 L300,0 L277.3,23 A16,17 0 0 0 266,18 L34,18 A16,17 0 0 0 22.7,23 Z"
+                                    />
+                                    <path
+                                        fill="url(#generate-bottom-band)"
+                                        fill-opacity="0.85"
+                                        d="M22.7,77 L0,100 L300,100 L277.3,77 A16,17 0 0 1 266,82 L34,82 A16,17 0 0 1 22.7,77 Z"
+                                    />
+                                    <path
+                                        fill="url(#generate-left-bevel)"
+                                        d="M0,0 L22.7,23 A16,17 0 0 0 18,35 L18,65 A16,17 0 0 0 22.7,77 L0,100 Z"
+                                    />
+                                    <path
+                                        fill="url(#generate-right-bevel)"
+                                        d="M300,0 L277.3,23 A16,17 0 0 1 282,35 L282,65 A16,17 0 0 1 277.3,77 L300,100 Z"
+                                    />
+                                    <g opacity="0.45">
+                                        <path fill="#601e22" d="M34,0 L266,0 L266,6 L34,6 Z" />
+                                        <path fill="#4e1c1b" d="M34,6 L266,6 L266,12 L34,12 Z" />
+                                        <path fill="#6c1726" d="M34,12 L266,12 L266,18 L34,18 Z" />
+                                        <path fill="#75292e" d="M34,82 L266,82 L266,88 L34,88 Z" />
+                                        <path fill="#8b131e" d="M34,88 L266,88 L266,95 L34,95 Z" />
+                                        <path fill="#670717" d="M0,35 L6,35 L6,65 L0,65 Z" />
+                                        <path fill="#5b030c" d="M6,35 L12,35 L12,65 L6,65 Z" />
+                                        <path fill="#5f0a19" d="M12,35 L18,35 L18,65 L12,65 Z" />
+                                        <path fill="#540116" d="M282,35 L288,35 L288,65 L282,65 Z" />
+                                        <path fill="#500109" d="M288,35 L294,35 L294,65 L288,65 Z" />
+                                        <path fill="#530c10" d="M294,35 L300,35 L300,65 L294,65 Z" />
+                                    </g>
+                                    <g opacity="0.5">
+                                        <path fill="#6b2023" d="M34,0 L0,0 L22.7,23 A16,17 0 0 1 34,18 Z" />
+                                        <path fill="#7a1424" d="M0,0 L0,35 L18,35 A16,17 0 0 1 22.7,23 Z" />
+                                        <path fill="#4e0a14" d="M266,0 L300,0 L277.3,23 A16,17 0 0 0 266,18 Z" />
+                                        <path fill="#440510" d="M300,0 L300,35 L282,35 A16,17 0 0 0 277.3,23 Z" />
+                                        <path fill="#5a0812" d="M300,100 L300,65 L282,65 A16,17 0 0 1 277.3,77 Z" />
+                                        <path fill="#4a0610" d="M266,100 L300,100 L277.3,77 A16,17 0 0 1 266,82 Z" />
+                                        <path fill="#701822" d="M34,100 L0,100 L22.7,77 A16,17 0 0 0 34,82 Z" />
+                                        <path fill="#5a0610" d="M0,100 L0,65 L18,65 A16,17 0 0 0 22.7,77 Z" />
+                                    </g>
+                                    <path fill="#e92d36" fill-opacity="0.6" d="M34,96 L266,96 L266,100 L34,100 Z" />
+                                    <g clip-path="url(#generate-table)">
+                                        <path fill="#700f27" fill-opacity="0.4" d="M0,18 L300,18 L300,25 L0,25 Z" />
+                                    </g>
+                                </g>
+                                <rect width="300" height="100" opacity="0.3" filter="url(#generate-splotch)" />
+                                <g class="generate-facet-light" filter="url(#generate-light-blur)">
+                                    <path d="M22.7,23 A16,17 0 0 1 34,18 L266,18" stroke="url(#generate-top-edge)" />
+                                    <path d="M22.7,23 A16,17 0 0 0 18,35 L18,65" stroke="url(#generate-left-edge)" />
+                                    <path d="M282,35 L282,65" stroke="url(#generate-right-edge)" />
+                                    <path d="M34,82 L266,82" stroke="url(#generate-bottom-edge)" />
+                                </g>
+                            </svg>
                             <span class="generate-sheen" aria-hidden="true"></span>
                             <span class="generate-button-text">Roll Name</span>
                         </button>
@@ -241,15 +494,24 @@
                             id="saveButton"
                             aria-label="Save name"
                             aria-pressed="false"
+                            aria-disabled="true"
                             title="Save"
                         >
                             <svg><use href="#icon-bookmark" /></svg>
                         </button>
-                        <button type="button" class="icon-button" id="copyButton" aria-label="Copy name" title="Copy">
+                        <button
+                            type="button"
+                            class="icon-button"
+                            id="copyButton"
+                            aria-label="Copy name"
+                            title="Copy"
+                            aria-disabled="true"
+                        >
                             <svg><use href="#icon-copy" /></svg>
                         </button>
                     </span>
                 </div>
+                <div class="message-slot" id="cardMessage"></div>
 
                 <details class="name-card-sources">
                     <summary id="nameSourcesSummary">Name Meanings and Sources</summary>
@@ -260,8 +522,22 @@
             <section class="panel" aria-labelledby="nameListTitle">
                 <div class="panel-header">
                     <h2 id="nameListTitle">More names</h2>
-                    <button type="button" id="listButton">Roll 10 More</button>
+                    <span class="panel-tools">
+                        <button
+                            type="button"
+                            class="icon-button"
+                            id="copyAllListButton"
+                            aria-label="Copy all names"
+                            title="Copy all"
+                            hidden
+                        >
+                            <svg><use href="#icon-copy" /></svg>
+                        </button>
+                        <button type="button" id="listButton" aria-disabled="true">Roll 10 More</button>
+                    </span>
                 </div>
+                <p class="panel-note">Ten names at a time, cleared when you leave the page or change a setting.</p>
+                <div class="message-slot" id="nameListMessage"></div>
                 <ul class="name-list" id="nameList"></ul>
             </section>
 
@@ -269,9 +545,23 @@
                 <div class="panel-header">
                     <h2 id="historyTitle" tabindex="-1">History</h2>
                     <button type="button" class="history-clear" id="historyClear" hidden>Clear</button>
+                    <span class="history-confirm" id="historyConfirm" hidden>
+                        <button type="button" id="historyCancel">Cancel</button>
+                        <button type="button" class="history-delete" id="historyDelete" aria-label="Delete history">
+                            Delete
+                        </button>
+                    </span>
                 </div>
                 <p class="panel-note">The last 10 names you viewed, kept only in this browser.</p>
+                <div class="message-slot" id="historyStorage"></div>
+                <div class="message-slot" id="historyMessage"></div>
                 <ul class="name-list" id="historyList"></ul>
+                <p class="history-cleared" id="historyCleared" hidden>
+                    History cleared ·
+                    <button type="button" class="history-undo" id="historyUndo" aria-label="Undo clearing history">
+                        Undo
+                    </button>
+                </p>
             </section>
 
             <section class="panel" aria-labelledby="favoritesTitle">
@@ -279,8 +569,20 @@
                     <h2 id="favoritesTitle" tabindex="-1">
                         Saved names <span class="panel-count" id="favoritesCount"></span>
                     </h2>
+                    <button
+                        type="button"
+                        class="icon-button"
+                        id="copyAllSavedButton"
+                        aria-label="Copy all saved names"
+                        title="Copy all"
+                        hidden
+                    >
+                        <svg><use href="#icon-copy" /></svg>
+                    </button>
                 </div>
                 <p class="panel-note">Saved only in this browser on this device; nothing is sent anywhere.</p>
+                <div class="message-slot" id="favoritesStorage"></div>
+                <div class="message-slot" id="favoritesMessage"></div>
                 <ul class="name-list favorites-list" id="favoritesList"></ul>
             </section>
 
@@ -411,6 +713,102 @@
                         </p>
                     </details>
                 </details>
+                <details>
+                    <summary>Dwarves (Stout Folk)</summary>
+                    <p>
+                        The dwarves of Faerûn include shield dwarves (mountain dwarves), gold dwarves (hill dwarves),
+                        wild dwarves (jungle dwarves) and duergar (gray dwarves). While they share a common ancestry,
+                        their naming traditions reflect differences in culture and society.
+                    </p>
+                    <p>
+                        Unlike elves, who traditionally bear unique names, dwarves pass their names down through
+                        generations. A dwarf's first name is traditionally bestowed by a clan elder and belongs to the
+                        clan rather than the individual (<cite>Player's Handbook</cite>, 5e). As such, this generator
+                        uses published first names by default, each shown with the book it comes from. Only three
+                        published dwarf names are given for both men and women, and the
+                        <cite>Races of Stone</cite> tables mark every name male or female by its suffix, so dwarf names
+                        here are female or male, with no unisex option.
+                    </p>
+                    <p>
+                        With Expanded Variety on, first names may also be constructed using the dwarven name tables in
+                        <cite>Races of Stone</cite> (3.5e), first published in <cite>Dragon</cite> #261: a prefix and a
+                        suffix, each with its own meaning. The suffixes differ between masculine and feminine names.
+                        Some prefixes and suffixes are instead the start or end of a documented name; their meanings are
+                        unknown. If a constructed name matches that of a published character, it is flagged so you know.
+                    </p>
+                    <details>
+                        <summary>Shield and Gold Dwarves</summary>
+                        <p>
+                            Clan membership is central to dwarven identity. Members of a clan's founding or ruling
+                            family bear the clan name as their own, while other members identify themselves as being
+                            "of" the clan (<cite>Dwarves Deep</cite>, 2e).
+                        </p>
+                        <p>
+                            This generator uses published clan names, favoring those the sources tie to the chosen
+                            lineage, such as the northern clans for shield dwarves and the southern clans for gold
+                            dwarves (<cite>Dwarves Deep</cite>, 2e); clans no source ties to either can appear for both.
+                        </p>
+                        <p>
+                            To distinguish between dwarves who share a name, dwarves may adopt personal qualifiers, such
+                            as "the Younger" or "Hammerhand," or identify themselves by their ancestry using "son of,"
+                            "daul of" (daughter of), or, less commonly, "blood of" a notable ancestor. They may also
+                            name the hold or realm they come from, as in "of Gauntlgrym" (<cite>Dwarves Deep</cite>,
+                            2e). About one name in ten gets such a phrase here, and the + button beside a name adds one.
+                        </p>
+                        <p>
+                            Gold dwarves place particular importance on ancestry and social standing, maintaining
+                            genealogies that span thousands of years. As a result, their names tend to be longer and
+                            more elaborate than those of other dwarves (<cite>Dwarves Deep</cite>, 2e), so a gold dwarf
+                            name may carry two phrases.
+                        </p>
+                    </details>
+                    <details>
+                        <summary>Wild Dwarves</summary>
+                        <p>
+                            Wild dwarves inhabit the jungles of Faerûn. Unlike other dwarves, they do not organize
+                            themselves into clans, instead considering themselves one extended family,
+                            <i>dur Authalar</i>, meaning "the People" (<cite>Dwarves Deep</cite>, 2e).
+                        </p>
+                        <p>
+                            Only 52 wild dwarf names are documented (26 male and 26 female), so this generator draws on
+                            those alone: with Expanded Variety on, new names are made only from pieces of them, never
+                            from the dwarven name tables. In keeping with their traditions, no clan name is assigned.
+                        </p>
+                    </details>
+                    <details>
+                        <summary>Duergar</summary>
+                        <p>
+                            Duergar, also known as gray dwarves, descend from the shield dwarves of Clan Duergar, who
+                            were enslaved by mind flayers for thousands of years. Following their liberation, they
+                            established their own kingdoms in the Underdark, developing distinct cultural, linguistic
+                            and religious traditions (<cite>Races of Faerûn</cite>, 3e).
+                        </p>
+                        <p>
+                            Unlike surface dwarves, duergar make no distinction between masculine and feminine name
+                            elements in their published naming tables (<cite>Dragon</cite> #281). With Expanded Variety
+                            on, first names may be constructed using prefixes and suffixes from these tables, each with
+                            its own meaning.
+                        </p>
+                        <p>
+                            Duergar may identify themselves by paternal ancestry using "Than," meaning "child of," as in
+                            Sturgor Than Udubyr (<cite>Dragon</cite> #281). They also favor surnames that reflect their
+                            professions and craftsmanship (<cite>Underdark</cite>, 3e); this generator uses published
+                            duergar clan names only.
+                        </p>
+                    </details>
+                    <details>
+                        <summary>Dethek</summary>
+                        <p>
+                            Dethek is the dwarven alphabet of Faerûn, a runic script also used to write several other
+                            languages (<cite>Forgotten Realms Campaign Setting</cite>, 3e). It is an alphabet, not a
+                            language.
+                        </p>
+                        <p>
+                            Under each dwarven name, the same letters are shown in a Dethek font. This is a
+                            letter-for-letter transcription, not a translation.
+                        </p>
+                    </details>
+                </details>
             </section>
         </main>
 
@@ -436,7 +834,7 @@
                 publications remain their property.
             </p>
             <p>
-                Fonts Dalelands Uncial, Espruar and High Drowic by Neale Davidson,
+                Fonts Dalelands Uncial, Dethek, Espruar and High Drowic by Neale Davidson,
                 <a href="https://www.pixelsagas.com" target="_blank" rel="noopener noreferrer">Pixel Sagas</a> (SIL Open
                 Font License). Site icon from his dPoly Gamedings font. Wand and info icons from
                 <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer">Lucide</a> (ISC License).
@@ -446,18 +844,18 @@
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
                 <button type="button" class="privacy-link">Privacy</button>
             </p>
-            <p class="site-version">v4.2.0 - Last Updated 11-22-26</p>
+            <p class="site-version">v4.3.0 - Last Updated 11-26-26</p>
         </footer>
 
-        <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
+        <div class="visually-hidden" id="announcer" role="status" aria-live="polite"></div>
 
         <div class="cookie-banner" id="cookieBanner" role="region" aria-label="Analytics cookies" hidden>
             <p>
-                This site uses cookies via Google Analytics to improve your experience.
+                With your OK, cookies help us track usage and catch errors.
                 <button type="button" class="privacy-link">Learn more</button>
             </p>
-            <button type="button" class="cookie-banner-accept" id="cookieAccept">Accept</button>
-            <button type="button" id="cookieDecline">Decline</button>
+            <button type="button" class="cookie-decline">No</button>
+            <button type="button" class="cookie-accept">OK</button>
         </div>
 
         <dialog class="privacy-dialog" id="privacyDialog" aria-labelledby="privacyTitle">
@@ -468,11 +866,20 @@
                 names, and the settings chosen) and anonymous error reports that help us fix problems.
             </p>
             <p>
-                <strong>What we don't collect:</strong> personal information, the names you generate or any part of
-                them, or your saved names. Saved names and history stay on your device.
+                <strong>What we don't collect:</strong> anything that identifies you, the names you generate or any part
+                of them, or your saved names. Saved names and history stay on your device.
             </p>
-            <p><strong>Your choice:</strong> declining does not affect the site.</p>
-            <form method="dialog"><button>Close</button></form>
+            <p>
+                <strong>Your choice:</strong> declining does not affect how the site works, but accepting helps ensure
+                everything is working as intended.
+            </p>
+            <div class="privacy-dialog-actions">
+                <form method="dialog"><button>Close</button></form>
+                <div class="privacy-dialog-choice" hidden>
+                    <button type="button" class="cookie-decline">No</button>
+                    <button type="button" class="cookie-accept">OK</button>
+                </div>
+            </div>
         </dialog>
 
         <dialog class="part-picker" id="partPicker" aria-labelledby="partPickerTitle">
@@ -492,6 +899,26 @@
             <form method="dialog"><button>Close</button></form>
         </dialog>
 
-        <script type="module" src="js/app.js?v=4.2.0"></script>
+        <!-- a classic script: it must work when a module fails to load; app.js marks the page as started -->
+        <script id="pageGuard">
+            setTimeout(() => {
+                if (document.documentElement.dataset.started) return;
+                const panel = document.getElementById("nameLoading");
+                const reload = document.createElement("button");
+                reload.className = "name-card-loading-reload";
+                reload.textContent = "Reload";
+                reload.onclick = () => location.reload();
+                const title = "The page didn't load.";
+                const note =
+                    "Check your connection, then reload. If that doesn't help, press Ctrl+F5 (Cmd+Shift+R on a Mac) to skip an old saved copy.";
+                panel.dataset.step = "stalled";
+                document.getElementById("nameLoadingTitle").textContent = title;
+                document.getElementById("nameLoadingNote").replaceChildren(note + " ", reload);
+                const said = document.createElement("p");
+                said.textContent = title + " " + note;
+                document.getElementById("announcer").replaceChildren(said);
+            }, 10000);
+        </script>
+        <script type="module" src="js/app.js?v=4.3.0"></script>
     </body>
 </html>

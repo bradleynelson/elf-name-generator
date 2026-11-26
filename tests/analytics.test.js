@@ -3,13 +3,14 @@ import { reportError, setUpConsent, track } from "../js/analytics.js";
 
 // Analytics loads only with consent and only on the production site, and a failure in it never reaches the page.
 const page = () => {
-    document.body.innerHTML = `<div id="banner"></div><button id="accept"></button><button id="decline"></button>
-        <dialog id="dialog"></dialog><button type="button" class="privacy-link"></button>`;
+    document.body.innerHTML = `<div id="banner"><button class="accept"></button><button class="decline"></button></div>
+        <dialog id="dialog"><div class="privacy-dialog-choice" hidden><button class="accept"></button><button class="decline"></button></div></dialog>
+        <button type="button" class="privacy-link"></button>`;
     const $ = (id) => document.getElementById(id);
     return {
         banner: $("banner"),
-        accept: $("accept"),
-        decline: $("decline"),
+        accept: document.querySelectorAll(".accept"),
+        decline: document.querySelectorAll(".decline"),
         dialog: $("dialog"),
         links: document.querySelectorAll(".privacy-link")
     };
@@ -18,9 +19,13 @@ const gtagScript = () => document.head.querySelector('script[src*="googletagmana
 
 beforeEach(() => {
     delete window.gtag;
+    delete window["ga-disable-G-8T9GFW6PVK"];
     document.head.innerHTML = "";
 });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+});
 
 describe("track", () => {
     it("does nothing, and never throws, when analytics is not loaded or fails", () => {
@@ -55,7 +60,7 @@ describe("setUpConsent", () => {
     it("never loads analytics off the production site, even after the visitor accepts", () => {
         const controls = page();
         setUpConsent(controls);
-        controls.accept.click();
+        controls.accept[0].click();
         expect(gtagScript()).toBeNull();
         expect(window.gtag).toBeUndefined();
         expect(controls.banner.hidden).toBe(true);
@@ -66,7 +71,7 @@ describe("setUpConsent", () => {
         const controls = page();
         setUpConsent(controls);
         expect(gtagScript()).toBeNull();
-        controls.accept.click();
+        controls.accept[0].click();
         expect(gtagScript().src).toMatch(/G-8T9GFW6PVK/);
         expect(typeof window.gtag).toBe("function");
     });
@@ -75,9 +80,70 @@ describe("setUpConsent", () => {
         vi.stubGlobal("location", { hostname: "espruar.com", search: "" });
         const controls = page();
         setUpConsent(controls);
-        controls.decline.click();
+        controls.decline[0].click();
         expect(gtagScript()).toBeNull();
         expect(localStorage.getItem("analytics_consent")).toBe("false");
+    });
+
+    it("answers from the privacy dialog too, and the dialog then shows the choice, filled, before it closes", () => {
+        vi.useFakeTimers();
+        vi.stubGlobal("location", { hostname: "espruar.com", search: "" });
+        const controls = page();
+        const [bannerOk, dialogOk] = controls.accept;
+        const [, dialogNo] = controls.decline;
+        setUpConsent(controls);
+        expect([dialogNo, dialogOk].map((button) => button.getAttribute("aria-pressed"))).toEqual(["false", "false"]);
+        expect(bannerOk.hasAttribute("aria-pressed")).toBe(false);
+        controls.dialog.open = true;
+        controls.dialog.close = vi.fn();
+        dialogOk.click();
+        expect(controls.dialog.close).not.toHaveBeenCalled();
+        expect(controls.banner.hidden).toBe(true);
+        vi.advanceTimersByTime(599);
+        expect(controls.dialog.close).not.toHaveBeenCalled();
+        expect([dialogNo, dialogOk].map((button) => button.getAttribute("aria-pressed"))).toEqual(["false", "true"]);
+        expect(localStorage.getItem("analytics_consent")).toBe("true");
+        expect(gtagScript()).not.toBeNull();
+        vi.advanceTimersByTime(1);
+        expect(controls.dialog.close).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not touch the dialog when the answer comes from the banner", () => {
+        vi.useFakeTimers();
+        const controls = page();
+        controls.dialog.close = vi.fn();
+        setUpConsent(controls);
+        controls.accept[0].click();
+        vi.advanceTimersByTime(1000);
+        expect(controls.dialog.close).not.toHaveBeenCalled();
+    });
+
+    it("shows an earlier answer in the dialog on a later visit, with no banner", () => {
+        vi.stubGlobal("location", { hostname: "espruar.com", search: "" });
+        localStorage.setItem("analytics_consent", "false");
+        const controls = page();
+        setUpConsent(controls);
+        expect(controls.banner.hidden).toBe(true);
+        expect(controls.dialog.querySelector(".privacy-dialog-choice").hidden).toBe(false);
+        expect(controls.decline[1].getAttribute("aria-pressed")).toBe("true");
+        expect(controls.accept[1].getAttribute("aria-pressed")).toBe("false");
+        expect(gtagScript()).toBeNull();
+    });
+
+    it("lets a visitor switch from the dialog: No stops sending at once, and OK starts again", () => {
+        vi.stubGlobal("location", { hostname: "espruar.com", search: "" });
+        localStorage.setItem("analytics_consent", "true");
+        const controls = page();
+        setUpConsent(controls);
+        expect(gtagScript()).not.toBeNull();
+        controls.decline[1].click();
+        expect(window["ga-disable-G-8T9GFW6PVK"]).toBe(true);
+        expect(localStorage.getItem("analytics_consent")).toBe("false");
+        expect(controls.decline[1].getAttribute("aria-pressed")).toBe("true");
+        expect(controls.accept[1].getAttribute("aria-pressed")).toBe("false");
+        controls.accept[1].click();
+        expect(window["ga-disable-G-8T9GFW6PVK"]).toBe(false);
+        expect(localStorage.getItem("analytics_consent")).toBe("true");
     });
 
     it("still opens the privacy explanation when the browser blocks storage, and loads no analytics", () => {
@@ -93,6 +159,7 @@ describe("setUpConsent", () => {
         controls.links[0].click();
         expect(controls.dialog.showModal).toHaveBeenCalled();
         expect(controls.banner.hidden).toBe(true);
+        expect(controls.dialog.querySelector(".privacy-dialog-choice").hidden).toBe(true);
         expect(gtagScript()).toBeNull();
     });
 });

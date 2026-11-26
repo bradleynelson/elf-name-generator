@@ -19,7 +19,6 @@ const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, mil
 // approved, but read by GitHub Pages for its settings rather than served
 const HOST_FILES = new Set(["CNAME"]);
 
-/** What the host must serve and what it must not: the approved files, and every other tracked file. */
 export function getLiveExpectations(approved, tracked) {
     const isApproved = new Set(approved);
     return {
@@ -59,7 +58,19 @@ export async function retryWhileProblems(findProblems, { attempts = PROBLEM_ATTE
     return problems;
 }
 
-async function findProblems(base, served, hidden, token) {
+// Name data is checked at the versioned URL the page requests, against the release bytes (old data passes a version check).
+export async function findDataProblems(base, root, version, served) {
+    const problems = [];
+    for (const file of served.filter((name) => name.startsWith("data/") && name.endsWith(".json"))) {
+        const { text } = await status(`${base}/${file}?v=${version}`);
+        if (text !== readFileSync(path.join(root, file), "utf8")) {
+            problems.push(`served data differs from the release: ${file}`);
+        }
+    }
+    return problems;
+}
+
+async function findProblems(base, root, version, served, hidden, token) {
     const problems = [];
     for (const file of served) {
         const { code } = await status(fresh(base, file, token));
@@ -69,7 +80,7 @@ async function findProblems(base, served, hidden, token) {
         const { code } = await status(fresh(base, file, token));
         if (code !== 404) problems.push(`file outside the release is reachable (${code}): ${file}`);
     }
-    return problems;
+    return [...problems, ...(await findDataProblems(base, root, version, served))];
 }
 
 export async function checkLiveSite(base = "https://espruar.com", root = repositoryRoot) {
@@ -80,7 +91,9 @@ export async function checkLiveSite(base = "https://espruar.com", root = reposit
     const token = Date.now().toString(36);
     await waitForVersion(base, version, token);
     // a new token each attempt, so a cached answer from an earlier attempt is not read again
-    const problems = await retryWhileProblems((attempt) => findProblems(base, served, hidden, `${token}-${attempt}`));
+    const problems = await retryWhileProblems((attempt) =>
+        findProblems(base, root, version, served, hidden, `${token}-${attempt}`)
+    );
     if (problems.length) throw new Error(problems.join("\n"));
     return { version, served: served.length, hidden: hidden.length };
 }

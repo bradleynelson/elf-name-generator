@@ -1,13 +1,30 @@
 import { describe, expect, it } from "vitest";
 import {
     capitalize,
+    formatPartLabel,
+    formatSectionText,
+    GIVEN_SLOT,
+    KIND,
+    METHOD,
+    NAME_STRUCTURE_CONTROL,
+    SECTION,
+    SECTION_ANALYTICS,
+    STRUCTURE_CONTROLS,
+    publishedPart,
+    sectionsOf,
+    slotPart,
+    tablePart,
     getAvailableControls,
     getChangedShape,
     getKeptParts,
     getLocks,
     getSlotNumber,
     getStoredPlace,
+    hasKnownMeaning,
+    isSlotComponent,
     includesSlotKey,
+    isEveryPartLocked,
+    isSamePart,
     isStructurePart,
     joiningLetter,
     jointKey,
@@ -15,6 +32,7 @@ import {
     selectRollShape,
     slotKey,
     structurePart,
+    groupWords,
     surnameStart,
     wholeSection,
     wordsOf
@@ -112,6 +130,22 @@ describe("sections and words", () => {
         expect(surnameStart([{ section: "given" }])).toBe(-1);
     });
 
+    it("groups part indexes into words: a space ends one, the surname starts one", () => {
+        expect(groupWords(parts)).toEqual([[0], [2], [3]]);
+    });
+
+    it("lets a space just before the surname be the break, as 4.1.5 saved it", () => {
+        const spaced = [parts[0], parts[1], parts[3]];
+        expect(groupWords(spaced)).toEqual([[0], [2]]);
+        expect(groupWords([parts[0], parts[3]])).toEqual([[0], [1]]);
+    });
+
+    it("leaves an empty word where a space has nothing to end", () => {
+        const space = parts[1];
+        expect(groupWords([parts[0], space, space, parts[3]]).some((word) => word.length === 0)).toBe(true);
+        expect(groupWords([parts[0], space]).some((word) => word.length === 0)).toBe(true);
+    });
+
     it("joins the parts' text into words at each space", () => {
         expect(wordsOf(parts)).toEqual(["ael", "thasgal"]);
     });
@@ -125,10 +159,181 @@ describe("sections and words", () => {
         expect(wholeSection(house)).toEqual({ text: "Baenre", parts: [house] });
         expect(wholeSection(null)).toBeNull();
     });
+
+    it("writes a built section's words capitalized, and a whole part as it was published", () => {
+        expect(formatSectionText(parts.slice(0, 3))).toBe("Ael Thas");
+        expect(formatSectionText([{ key: "family", text: "de Lune", kind: "whole" }])).toBe("de Lune");
+    });
+
+    it("splits a name at its surname, each section's text read from its parts and with its shape", () => {
+        const family = { key: "family", role: "family name", text: "Galanodel", section: "family", kind: "whole" };
+        const result = {
+            name: "Ael Thas Galanodel",
+            shape: ["prefix", " ", "suffix"],
+            parts: [...parts.slice(0, 3), family]
+        };
+        expect(sectionsOf(result)).toEqual({
+            given: { text: "Ael Thas", parts: parts.slice(0, 3), shape: result.shape },
+            family: { text: "Galanodel", parts: [family], shape: undefined }
+        });
+        const built = { ...result, name: "Ael Thas Gal", familyShape: ["prefix"], parts };
+        expect(sectionsOf(built).family).toEqual({ text: "Gal", parts: [parts[3]], shape: ["prefix"] });
+    });
+
+    it("keeps the space 4.1.5 saved before the surname out of the first name's section", () => {
+        const stored = [...parts.slice(0, 3), { key: "s3", role: "space", text: " ", section: "given" }, parts[3]];
+        expect(sectionsOf({ parts: stored })).toMatchObject({
+            given: { text: "Ael Thas", parts: parts.slice(0, 3) },
+            family: { text: "Gal", parts: [parts[3]] }
+        });
+    });
+});
+
+describe("part builders", () => {
+    const entry = { female: ["ra"], male: ["ran"], meaning: "Lord/Lady", sources: [{ title: "Book" }] };
+    const FAMILY_SLOT = { section: "family", rolePrefix: "family " };
+
+    it("puts a component in a slot with its key, role, section and kind, keeping its own fields", () => {
+        const component = { text: "dor", method: METHOD.SPLIT, from: ["Dorn"] };
+        expect(slotPart(component, "t0", "prefix", GIVEN_SLOT)).toEqual({
+            ...component,
+            key: "t0",
+            role: "prefix",
+            section: "given",
+            kind: "prefix"
+        });
+        expect(slotPart(component, "n1", "suffix", FAMILY_SLOT)).toMatchObject({
+            role: "family suffix",
+            section: "family"
+        });
+    });
+
+    it("makes a table part of one spelling, with the entry's meaning and sources", () => {
+        expect(tablePart(entry, "ra", "t1", "suffix", GIVEN_SLOT)).toEqual({
+            key: "t1",
+            role: "suffix",
+            text: "ra",
+            meaning: "Lord/Lady",
+            sources: entry.sources,
+            section: "given",
+            kind: "suffix"
+        });
+    });
+
+    it("makes a published name one whole part", () => {
+        const house = { text: "Baenre", sources: [{ title: "Book" }], meaning: "not carried" };
+        expect(publishedPart(house, "house", "house", "family")).toEqual({
+            key: "house",
+            role: "house",
+            text: "Baenre",
+            method: "published",
+            sources: house.sources,
+            section: "family",
+            kind: "whole"
+        });
+    });
+
+    it("names the three ways a part is made with the values saved names store", () => {
+        expect(METHOD).toEqual({ PUBLISHED: "published", SPLIT: "split", COMPOSED: "composed" });
+    });
+
+    it("names sections and kinds with the values saved names store", () => {
+        expect(SECTION).toEqual({ GIVEN: "given", FAMILY: "family", PHRASE: "phrase" });
+        expect(KIND).toEqual({ PREFIX: "prefix", SUFFIX: "suffix", WHOLE: "whole", JOINT: "joint" });
+    });
+});
+
+describe("structure controls and sections", () => {
+    it("describe every control once: its analytics value and the words of its + and - buttons", () => {
+        for (const control of Object.values(NAME_STRUCTURE_CONTROL)) {
+            const { analytics, addLabel, removeLabel } = STRUCTURE_CONTROLS[control];
+            expect(analytics).toMatch(/^[a-z_]+$/);
+            expect(addLabel).toMatch(/^Add /);
+            expect(removeLabel).toMatch(/^Remove /);
+        }
+        expect(Object.keys(STRUCTURE_CONTROLS)).toHaveLength(Object.keys(NAME_STRUCTURE_CONTROL).length);
+    });
+
+    it("give every section a distinct analytics value", () => {
+        const values = Object.values(SECTION).map((section) => SECTION_ANALYTICS[section]);
+        values.forEach((value) => expect(value).toMatch(/^[a-z_]+$/));
+        expect(new Set(values).size).toBe(values.length);
+    });
+});
+
+describe("formatPartLabel", () => {
+    it("names a surname by what it is: a family name or a house name", () => {
+        const labels = ["family name", "family prefix", "family suffix", "house", "house prefix", "house suffix"].map(
+            (role) => formatPartLabel({ role })
+        );
+        expect(labels).toEqual([
+            "family name",
+            "family name prefix",
+            "family name suffix",
+            "house name",
+            "house name prefix",
+            "house name suffix"
+        ]);
+    });
+
+    it("uses any other role as it reads", () => {
+        expect(["prefix", "suffix", "first name", "parent's name"].map((role) => formatPartLabel({ role }))).toEqual([
+            "prefix",
+            "suffix",
+            "first name",
+            "parent's name"
+        ]);
+    });
+});
+
+describe("isSlotComponent and hasKnownMeaning", () => {
+    const table = { kind: KIND.PREFIX, meaning: "Song" };
+
+    it("counts only prefixes and suffixes as slot components", () => {
+        expect([KIND.PREFIX, KIND.SUFFIX, KIND.WHOLE, KIND.JOINT].map((kind) => isSlotComponent({ kind }))).toEqual([
+            true,
+            true,
+            false,
+            false
+        ]);
+    });
+
+    it("knows a table component's meaning, a translation, a phrase's meaning and a Common-form compound", () => {
+        const known = [
+            table,
+            { kind: KIND.WHOLE, meaning: "Moonwhisper", meaningSource: "Player's Handbook (5e)" },
+            { kind: KIND.SUFFIX, wordMeaning: "Blessed by fell powers" },
+            { kind: KIND.WHOLE, method: METHOD.COMPOSED }
+        ];
+        expect(known.map(hasKnownMeaning)).toEqual([true, true, true, true]);
+    });
+
+    it("knows no meaning for a split component, a published name without a translation, or a joint", () => {
+        const unknown = [
+            { ...table, method: METHOD.SPLIT },
+            { kind: KIND.PREFIX },
+            { kind: KIND.WHOLE, method: METHOD.PUBLISHED, meaning: "untranslated" },
+            { kind: KIND.JOINT }
+        ];
+        expect(unknown.map(hasKnownMeaning)).toEqual([false, false, false, false]);
+    });
+});
+
+describe("isSamePart", () => {
+    const ro = { key: "t0", role: "suffix", text: "ro", meaning: "Summer", section: "given", kind: "suffix" };
+    it("tells apart two table entries with one spelling by their meaning", () => {
+        expect(isSamePart(ro, { ...ro })).toBe(true);
+        expect(isSamePart(ro, { ...ro, meaning: "Walker, Walks" })).toBe(false);
+    });
+    it("tells apart a table entry and a split component with the same letters", () => {
+        const bare = { ...ro, meaning: undefined };
+        expect(isSamePart(bare, { ...bare, method: "split", from: ["Rolen"] })).toBe(false);
+        expect(isSamePart(ro, { ...ro, text: "ra" })).toBe(false);
+    });
 });
 
 describe("selectRollShape", () => {
-    const part = (role) => ({ role });
+    const part = (kind, role = kind) => ({ kind, role });
 
     it("draws by weight when nothing is locked", () => {
         // weights 4/3/2/1: a draw of 0.0 lands on the first shape, 0.95 on the last
@@ -153,8 +358,15 @@ describe("selectRollShape", () => {
 
     it("treats a surname's 'family prefix' as a prefix, and ignores other slots and locks of other keys", () => {
         expect(
-            selectRollShape(shapes, { n0: part("family prefix"), t1: part("prefix") }, "n", fixedRandom(0.95))
+            selectRollShape(shapes, { n0: part("prefix", "family prefix"), t1: part("prefix") }, "n", fixedRandom(0.95))
         ).toEqual(COMPOUND);
+    });
+
+    it("decides by the part's kind, whatever its role label says", () => {
+        const renamed = part("prefix", "family opening");
+        expect(selectRollShape(shapes, { t0: renamed }, "t", fixedRandom(0.95))).toEqual(COMPOUND);
+        expect(selectRollShape(shapes, { t0: part("suffix", "prefix") }, "t", fixedRandom(0))).toEqual(APOSTROPHE);
+        expect(selectRollShape(shapes, { t2: part("suffix", "ending") }, "t", fixedRandom(0.9))).toEqual(LONG);
     });
 
     it("says so when no shape keeps the locks", () => {
@@ -207,6 +419,19 @@ describe("getKeptParts", () => {
     it("keeps the first word's prefix and suffix and the joining letters of that section, by key", () => {
         expect(Object.keys(getKeptParts(parts, "t"))).toEqual(["t0", "t1", "tj1"]);
         expect(Object.keys(getKeptParts(parts, "n"))).toEqual(["n0", "nj1"]);
+    });
+});
+
+describe("isEveryPartLocked", () => {
+    const result = { parts: [{ key: "t0" }, { key: "j0", kind: "joint" }, { key: "t1" }] };
+
+    it("is true only when every part but a joint is locked", () => {
+        expect(isEveryPartLocked(result, new Set(["t0", "t1"]))).toBe(true);
+        expect(isEveryPartLocked(result, new Set(["t0"]))).toBe(false);
+    });
+
+    it("is false before there is a name", () => {
+        expect(isEveryPartLocked(null, new Set(["t0"]))).toBe(false);
     });
 });
 

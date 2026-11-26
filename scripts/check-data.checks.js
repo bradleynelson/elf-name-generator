@@ -101,7 +101,17 @@ const mistakes = [
     [
         "a word of unknown use",
         (d) => (d.words[0].use = "riddle"),
-        `${ELF}: words[0].use: expected one of "common-first", "common-second", "glossary", "forbidden"${record(real.words[0])}`
+        `${ELF}: words[0].use: expected one of "common-first", "common-second", "glossary", "forbidden", "qualifier", "place"${record(real.words[0])}`
+    ],
+    [
+        "a Common word without the family names it comes from",
+        (d) => delete d.words[0].names,
+        `${ELF}: words[0].names: is missing${record(real.words[0])}`
+    ],
+    [
+        "a Common word crediting a name that is not a Common-form family name",
+        (d) => (d.words[0].names = ["Starym"]),
+        `${ELF}: words[0].names: "Starym" is not a Common-form family name${record(real.words[0])}`
     ]
 ];
 
@@ -212,4 +222,49 @@ test("every problem in a file is reported, not only the first", () => {
     data.tables[0].prefixes[0].meaning = "";
     delete data.names[0].sources;
     assert.equal(validateNameData(ELF, data).length, 2);
+});
+
+const dropTable = (data, type, lineage) =>
+    (data.tables = data.tables.filter((t) => !(t.type === type && t.lineages?.includes(lineage))));
+
+test("a file with no drow house table fails naming the missing table and the lineages it breaks", () => {
+    const data = load(ELF);
+    dropTable(data, "house", "drow");
+    assert.deepEqual(validateNameData(ELF, data), [`${ELF}: tables: lineages drow need a "house" table; found none`]);
+});
+
+test("a file with no given-name table for the surface lineages fails", () => {
+    const data = load(ELF);
+    data.tables = data.tables.filter((t) => t.type !== "given" || t.lineages?.includes("drow"));
+    assert.deepEqual(
+        validateNameData(ELF, data),
+        ["high-elf", "sun-elf", "moon-elf", "wood-elf"].map(
+            (lineage) => `${ELF}: tables: lineages ${lineage} need a "given" table; found none`
+        )
+    );
+});
+
+test("a second drow house table fails, since only one would be read", () => {
+    const data = load(ELF);
+    data.tables.push(structuredClone(data.tables.find((t) => t.type === "house" && t.lineages?.includes("drow"))));
+    assert.deepEqual(validateNameData(ELF, data), [`${ELF}: tables: lineages drow need a "house" table; found 2`]);
+});
+
+test("each dwarf lineage but the wild dwarves, who build from splits, needs its given-name table", () => {
+    const DWARF = "data/dwarfNames.json";
+    const lineagesFailingWithout = (isDropped) => {
+        const data = load(DWARF);
+        data.tables = data.tables.filter((t) => !isDropped(t));
+        return validateNameData(DWARF, data).map(
+            (p) => p.match(/lineages (.*) need a "given" table; found none$/)?.[1]
+        );
+    };
+    assert.deepEqual(
+        lineagesFailingWithout((t) => !t.lineages),
+        ["shield-dwarf", "gold-dwarf"]
+    );
+    assert.deepEqual(
+        lineagesFailingWithout((t) => t.lineages),
+        ["duergar"]
+    );
 });

@@ -4,9 +4,10 @@ import {
     generateUnrepeated,
     generateWithRetries,
     selectRandom,
-    selectWeighted
+    selectWeighted,
+    shuffle
 } from "../../js/core/random.js";
-import { fixedRandom } from "../helpers/random.js";
+import { fixedRandom, seededRandom } from "../helpers/random.js";
 
 describe("selectRandom", () => {
     const items = ["a", "b", "c", "d"];
@@ -24,6 +25,29 @@ describe("selectRandom", () => {
 
     it("draws from Math.random when no source is given", () => {
         expect(items).toContain(selectRandom(items));
+    });
+});
+
+describe("shuffle", () => {
+    const items = ["a", "b", "c", "d"];
+
+    it("swaps each place, from the last, with one at or before it that the draw picks", () => {
+        expect(shuffle(items, fixedRandom(0.99))).toEqual(items);
+        expect(shuffle(items, fixedRandom(0))).toEqual(["b", "c", "d", "a"]);
+        expect(shuffle(items, fixedRandom(0.5))).toEqual(["a", "d", "b", "c"]);
+        expect(items).toEqual(["a", "b", "c", "d"]);
+    });
+
+    it("draws once for each place but the first, which has nowhere else to go", () => {
+        let draws = 0;
+        shuffle(items, () => (draws++, 0.5));
+        expect(draws).toBe(items.length - 1);
+    });
+
+    it("can give every order", () => {
+        const random = seededRandom(5);
+        const orders = new Set(Array.from({ length: 200 }, () => shuffle(["a", "b", "c"], random).join("")));
+        expect(orders).toEqual(new Set(["abc", "acb", "bac", "bca", "cab", "cba"]));
     });
 });
 

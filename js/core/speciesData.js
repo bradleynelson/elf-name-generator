@@ -1,10 +1,10 @@
 // The data file holds only what the sources say; decisions such as source order and lineage mapping are made here.
 
-import { cutPublishedNames } from "./splitComponents.js?v=4.2.0";
+import { cutPublishedNames } from "./splitComponents.js?v=4.3.0";
 
 // The data shape this version reads. Another schema (usually a stale cached copy) is refused, so the page asks for a
 // refresh.
-export const SCHEMA = 5;
+export const SCHEMA = 6;
 
 export const NAME_TYPE = Object.freeze({ GIVEN: "given", FAMILY: "family", HOUSE: "house" });
 
@@ -65,13 +65,11 @@ export function loadSpeciesData(raw, species) {
             ...(name.meaningSource ? { meaningSource: sourceOf(name.meaningSource).title } : {})
         })),
         tables: raw.tables.map((table) => ({ ...table, ...tie(table), sources: ordered(table.sources) })),
-        words: raw.words.map((word) => ({ ...word, ...tie(word) })),
+        words: raw.words.map((word) => ({
+            ...word,
+            ...tie(word),
+            ...(word.sources ? { sources: ordered(word.sources) } : {})
+        })),
         split: cutPublishedNames(raw.names)
     };
 }
-
-/**
- * The spellings a table entry gives for a sex: its `female` or `male` forms when the sexes differ, otherwise its `text`.
- * A table that prints alternate spellings gives a list, whose first spelling is the main form.
- */
-export const getSpellings = (entry, sex) => [entry[sex] ?? entry.text].flat();

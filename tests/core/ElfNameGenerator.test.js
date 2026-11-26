@@ -1,7 +1,11 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { ElfNameGenerator } from "../../js/core/ElfNameGenerator.js";
-import { expectGivesUpAfter300Attempts, seededRandom, sample } from "../helpers/random.js";
-import { getSpellings } from "../../js/core/speciesData.js";
+import { ELF_LINEAGE_RULES } from "../../js/core/elfLineages.js";
+import { fixedRandom, seededRandom, sample } from "../helpers/random.js";
+import { isSamePart } from "../../js/core/nameStructure.js";
+import { SPECIES } from "../../js/core/species.js";
+import { readTable } from "../../js/core/nameTables.js";
 import {
     cutFrom,
     expectBooksOfItsNames,
@@ -13,6 +17,8 @@ import {
 } from "../helpers/nameData.js";
 
 const data = readLineageData("high-elf");
+const elfGenerator = (lineageData, lineage = "high-elf") =>
+    new ElfNameGenerator(lineageData, ELF_LINEAGE_RULES[lineage]);
 const givenNames = data.names.filter((n) => n.type === "given");
 const familyNames = data.names.filter((n) => n.type === "family");
 const part = (result, key) => result.parts.find((p) => p.key === key);
@@ -22,7 +28,7 @@ const TABLE_SOURCES = [source("Test tables"), source("Test magazine")];
 const family = (text, { form = "elvish", lineages = [], ...more } = {}) =>
     publishedName(text, "family", { form, lineages, sources: [BOOK], ...more });
 // By default a one-row table, "al" (Sea) + "ra" (Woman), joined directly only when "lr" occurs inside a published
-// name. `commonWords` are { first, second } lists of { text, lineages? }.
+// name. `commonWords` are { first, second } lists of { text, lineages?, names? }.
 const fixture = ({
     prefixes: rows = [{ text: "al", meaning: "Sea" }],
     suffixes = [{ male: ["ra"], female: ["ra"], meaning: "Woman" }],
@@ -36,34 +42,56 @@ const fixture = ({
         tables: [nameTable("given", { prefixes: rows, suffixes, sources: TABLE_SOURCES })],
         names: [...publishedNames, ...cut.names, ...families],
         words: [
-            ...first.map((w) => word(w.text, "common-first", w.lineages)),
-            ...second.map((w) => word(w.text, "common-second", w.lineages))
+            ...first.map((w) => ({ ...word(w.text, "common-first", w.lineages), names: w.names ?? [] })),
+            ...second.map((w) => ({ ...word(w.text, "common-second", w.lineages), names: w.names ?? [] }))
         ],
-        split: { given: cut.split }
+        split: { given: cut.split },
+        sources: []
     };
 };
+const rows = (prefix, suffix) => ({
+    prefixes: [{ text: prefix, meaning: "" }],
+    suffixes: [{ male: [suffix], female: [suffix], meaning: "" }]
+});
+const withRows = (prefix, suffix, extra = {}) => elfGenerator(fixture({ ...rows(prefix, suffix), ...extra }));
 const firstWord = (r) => r.name.split(" ")[0];
 const twoPart = (results) => results.filter((r) => r.shape.join() === "prefix,suffix");
 const elfTable = data.tables.find((t) => t.type === "given");
-const prefixes = elfTable.prefixes.map((e) => ({ text: getSpellings(e, "male")[0], meaning: e.meaning }));
-const suffixes = elfTable.suffixes.map((e) => ({
-    male: getSpellings(e, "male"),
-    female: getSpellings(e, "female"),
-    meaning: e.meaning
-}));
+const read = readTable(elfTable);
+const prefixes = read.prefixes.map((e) => ({ text: e.male[0], meaning: e.meaning }));
+const suffixes = read.suffixes;
 const isShared = (s) => s.male.join() === s.female.join();
 
 describe("ElfNameGenerator with the published tables", () => {
     it("finds published family names for both words of every composed family name, with their books", () => {
-        const gen = new ElfNameGenerator(data);
+        const gen = elfGenerator(data);
         const composed = sample(gen, 400)
             .map((r) => r.parts.find((p) => p.method === "composed"))
             .filter(Boolean);
         expect(composed.length).toBeGreaterThan(20);
         for (const part of composed) {
-            part.wordNames.forEach((names) => expect(names.length).toBeGreaterThan(0));
-            part.wordSources.forEach((sources) => expect(sources.length).toBeGreaterThan(0));
+            expect(part.words.map((w) => w.text).join("")).toBe(part.text);
+            part.words.forEach((w) => expect([w.names.length, w.sources.length]).not.toContain(0));
         }
+    });
+
+    it("credits each word of Shadowoak only to the family names that really have that word, with their books", () => {
+        const shadowOak = data.words.filter(
+            (w) => (w.text === "shadow" && w.use === "common-first") || (w.text === "oak" && w.use === "common-second")
+        );
+        const gen = elfGenerator({ ...data, words: shadowOak });
+        const found = sample(gen, 200)
+            .map((r) => part(r, "family"))
+            .find((p) => p?.method === "composed");
+        const credits = found.words.map((w) => [w.text, w.names, w.sources.map((s) => s.title).sort()]);
+        expect(credits).toEqual([
+            [
+                "Shadow",
+                ["Shadowmane", "Shadowmantle", "Shadowstep"],
+                ["Dungeon #206", "Silver Marches (3e)", "Tomb of Annihilation (5e)", "Tome of Magic (3.5e)"]
+            ],
+            ["oak", ["Silveroak"], ["Cormanthyr: Empire of the Elves (2e)"]]
+        ]);
     });
 
     it.each([
@@ -71,7 +99,7 @@ describe("ElfNameGenerator with the published tables", () => {
         ["masculine", "male"]
     ])("gives %s names the %s suffix forms", (style, sex) => {
         const forms = new Set(suffixes.flatMap((s) => s[sex]));
-        const used = sample(new ElfNameGenerator(data), 300, { style }).flatMap((r) => tableParts(r, "suffix"));
+        const used = sample(elfGenerator(data), 300, { style }).flatMap((r) => tableParts(r, "suffix"));
         used.forEach((p) => expect(forms.has(p.text)).toBe(true));
         expect(used.length).toBeGreaterThan(300);
     });
@@ -80,14 +108,14 @@ describe("ElfNameGenerator with the published tables", () => {
         // a spelling can appear in two rows (-ro is an alternate of -aro "Summer" and its own row "Walker")
         const shared = new Set(suffixes.filter(isShared).flatMap((s) => s.male.map((form) => `${form}=${s.meaning}`)));
         const meaningOf = new Map(prefixes.map((p) => [p.text, p.meaning]));
-        sample(new ElfNameGenerator(data), 300, { style: "neutral" }).forEach((r) => {
+        sample(elfGenerator(data), 300, { style: "neutral" }).forEach((r) => {
             tableParts(r, "suffix").forEach((p) => expect(shared.has(`${p.text}=${p.meaning}`)).toBe(true));
             tableParts(r, "prefix").forEach((p) => expect(meaningOf.get(p.text)).toBe(p.meaning));
         });
     });
 
     it("keeps the published shapes, with the apostrophe shape rare", () => {
-        const shapes = sample(new ElfNameGenerator(data), 3000).map((r) => r.shape.join(""));
+        const shapes = sample(elfGenerator(data), 3000).map((r) => r.shape.join(""));
         const share = (shape) => shapes.filter((s) => s === shape).length / shapes.length;
         expect(share("prefixsuffix")).toBeGreaterThan(share("prefixsuffixsuffix"));
         expect(share("suffix'prefixsuffixsuffix")).toBeGreaterThan(0.02);
@@ -100,12 +128,12 @@ describe("ElfNameGenerator with the published tables", () => {
 
     it("never makes a doubled y, which no published elf name has", () => {
         expect(givenNames.some((p) => /yy/i.test(p.text))).toBe(false);
-        const names = sample(new ElfNameGenerator(data), 3000, { expanded: true }).map((r) => r.name);
+        const names = sample(elfGenerator(data), 3000, { expanded: true }).map((r) => r.name);
         names.forEach((name) => expect(name).not.toMatch(/yy/i));
     });
 
     it("joins awkward parts only with the letters Dragon #251 gives", () => {
-        const letters = sample(new ElfNameGenerator(data), 2000)
+        const letters = sample(elfGenerator(data), 2000)
             .flatMap((r) => r.parts)
             .filter((p) => p.role === "joining letter")
             .map((p) => p.text);
@@ -116,8 +144,8 @@ describe("ElfNameGenerator with the published tables", () => {
     it("mixes split components into table names only with Expanded Variety, endings following gender", () => {
         const isSplit = (p) => p.method === "split";
         const firstName = (r) => r.parts.filter((p) => /^t\d/.test(p.key));
-        expect(sample(new ElfNameGenerator(data), 300).some((r) => r.parts.some(isSplit))).toBe(false);
-        const results = sample(new ElfNameGenerator(data), 300, { style: "feminine", expanded: true });
+        expect(sample(elfGenerator(data), 300).some((r) => r.parts.some(isSplit))).toBe(false);
+        const results = sample(elfGenerator(data), 300, { style: "feminine", expanded: true });
         // some first names mix both kinds in one word; split components carry no meaning but name their sources
         expect(results.some((r) => firstName(r).some(isSplit) && firstName(r).some((p) => !isSplit(p)))).toBe(true);
         const sexOf = new Map(givenNames.map((n) => [n.text, n.sex]));
@@ -137,7 +165,7 @@ describe("ElfNameGenerator with the published tables", () => {
     it("never offers a split component that has the same letters as a table entry, which already has a meaning", () => {
         const tablePrefixes = new Set(prefixes.map((p) => p.text.toLowerCase()));
         const tableSuffixes = new Set(suffixes.flatMap((s) => [...s.male, ...s.female]).map((t) => t.toLowerCase()));
-        const gen = new ElfNameGenerator(data);
+        const gen = elfGenerator(data);
         const results = sample(gen, 1500, { expanded: true });
         const splits = results.flatMap((r) => r.parts.filter((p) => p.method === "split" && /^t\d/.test(p.key)));
         expect(splits.length).toBeGreaterThan(0);
@@ -153,7 +181,7 @@ describe("ElfNameGenerator with the published tables", () => {
     });
 
     it("names every book a split component's source names come from, each once (Expanded Variety)", () => {
-        const splits = sample(new ElfNameGenerator(data), 300, { expanded: true }).flatMap((r) =>
+        const splits = sample(elfGenerator(data), 300, { expanded: true }).flatMap((r) =>
             r.parts.filter((p) => p.method === "split")
         );
         expectBooksOfItsNames(splits, (p) => (p.section === "family" ? familyNames : givenNames));
@@ -161,7 +189,7 @@ describe("ElfNameGenerator with the published tables", () => {
 
     it("carries a family name's published translation, and invents none", () => {
         const translated = new Map(familyNames.filter((f) => f.meaning).map((f) => [f.text, { text: f.meaning }]));
-        const families = sample(new ElfNameGenerator(data), 2000)
+        const families = sample(elfGenerator(data), 2000)
             .map((r) => part(r, "family"))
             .filter(Boolean);
         families
@@ -173,7 +201,7 @@ describe("ElfNameGenerator with the published tables", () => {
 
     it("labels every personal name that matches a published one, and only those", () => {
         const published = new Set(givenNames.map((p) => p.text.toLowerCase()));
-        const results = sample(new ElfNameGenerator(data), 3000, { expanded: true });
+        const results = sample(elfGenerator(data), 3000, { expanded: true });
         results.forEach((r) => {
             const personal = r.name.slice(0, r.name.lastIndexOf(" ")).toLowerCase();
             expect(Boolean(r.published)).toBe(published.has(personal));
@@ -181,21 +209,21 @@ describe("ElfNameGenerator with the published tables", () => {
         expect(results.some((r) => r.published)).toBe(true);
     });
 
-    it("prefers words tied to the subrace for Common-form family names without excluding the others", () => {
+    it("prefers words tied to the lineage for Common-form family names without excluding the others", () => {
         const firstWords = data.words.filter((w) => w.use === "common-first");
         const capitalized = (text) => text.charAt(0).toUpperCase() + text.slice(1);
         const tied = new Set(firstWords.filter((w) => w.lineages.includes("wood-elf")).map((w) => capitalized(w.text)));
-        const used = sample(new ElfNameGenerator(data), 2000, { subrace: "wood-elf" })
+        const used = sample(elfGenerator(data, "wood-elf"), 2000)
             .map((r) => part(r, "family"))
             .filter((f) => f?.words)
-            .map((f) => f.words[0]);
+            .map((f) => f.words[0].text);
         const tiedShare = used.filter((w) => tied.has(w)).length / used.length;
         expect(tiedShare).toBeGreaterThan(tied.size / firstWords.length);
         expect(used.some((w) => !tied.has(w))).toBe(true);
     });
 
     it("keeps locked table parts in their places and re-rolls the rest", () => {
-        const gen = new ElfNameGenerator(data);
+        const gen = elfGenerator(data);
         const first = sample(gen, 50).find((r) => part(r, "family"));
         const locks = { shape: first.shape, t0: part(first, "t0"), family: part(first, "family") };
         const next = sample(gen, 20, { locks });
@@ -207,7 +235,7 @@ describe("ElfNameGenerator with the published tables", () => {
     });
 
     it("builds table surnames from components that can be locked one at a time", () => {
-        const gen = new ElfNameGenerator(data);
+        const gen = elfGenerator(data);
         const first = sample(gen, 50).find((r) => part(r, "n0"));
         expect(part(first, "n0").role).toBe("family prefix");
         const locks = { familyShape: first.familyShape, n0: part(first, "n0") };
@@ -217,7 +245,7 @@ describe("ElfNameGenerator with the published tables", () => {
     });
 
     it("offers in the picker only options that fit the rest of the name, and every one can be chosen", () => {
-        const gen = new ElfNameGenerator(data);
+        const gen = elfGenerator(data);
         sample(gen, 30, { style: "neutral" }).forEach((result) => {
             const key = result.parts.find((p) => p.role === "suffix").key;
             const options = gen.optionsFor(result, key);
@@ -237,9 +265,18 @@ describe("ElfNameGenerator with the published tables", () => {
     });
 });
 
+describe("one elf generator per lineage, steered only by its description", () => {
+    it("names no lineage in its code", () => {
+        const code = readFileSync("js/core/ElfNameGenerator.js", "utf8").toLowerCase();
+        // "any" is an everyday word, so only its stored value is looked for
+        const words = SPECIES.elf.lineages.flatMap((l) => [l.value, l.label]).filter((w) => w !== "any");
+        for (const word of new Set(words)) expect(code, word).not.toMatch(new RegExp(`\\b${word}\\b`));
+    });
+});
+
 describe("ElfNameGenerator rules", () => {
     it("joins components directly when their consonants meet in a published name", () => {
-        const names = twoPart(sample(new ElfNameGenerator(fixture()), 60));
+        const names = twoPart(sample(elfGenerator(fixture()), 60));
         expect(names.length).toBeGreaterThan(0);
         names.forEach((r) => {
             expect(firstWord(r)).toBe("Alra");
@@ -248,13 +285,13 @@ describe("ElfNameGenerator rules", () => {
     });
 
     it("adds one of Dragon #251's letters where the consonants would not meet cleanly", () => {
-        const names = twoPart(sample(new ElfNameGenerator(fixture({ joinClusters: [] })), 60));
+        const names = twoPart(sample(elfGenerator(fixture({ joinClusters: [] })), 60));
         expect(names.length).toBeGreaterThan(0);
         names.forEach((r) => expect(firstWord(r)).toMatch(/^Al[aei]ra$/));
     });
 
     it("keeps its joining letters when every component is locked (as when one is chosen in the picker)", () => {
-        const gen = new ElfNameGenerator(fixture({ joinClusters: [] }));
+        const gen = elfGenerator(fixture({ joinClusters: [] }));
         const first = gen.generate({ random: seededRandom(5) });
         const locks = {
             ...Object.fromEntries(first.parts.map((p) => [p.key, p])),
@@ -265,28 +302,25 @@ describe("ElfNameGenerator rules", () => {
     });
 
     it("explains when components cannot be joined at all, or the tables are missing", () => {
-        const unjoinable = new ElfNameGenerator(
-            fixture({ prefixes: [{ text: "alt", meaning: "" }], joinClusters: [] })
-        );
+        const unjoinable = elfGenerator(fixture({ prefixes: [{ text: "alt", meaning: "" }], joinClusters: [] }));
         expect(() => unjoinable.generate({ random: seededRandom(1) })).toThrow(/unlocking/);
-        expect(() => new ElfNameGenerator({ familyNames: [] })).toThrow(/tables/);
+        expect(() => elfGenerator({ ...data, tables: [] })).toThrow(/tables/);
     });
 
     it("avoids repeating a name within five generations when alternatives exist", () => {
         const rows = ["al", "el", "il", "ol", "ul", "ael", "eil"].map((text) => ({ text, meaning: "" }));
-        const names = sample(new ElfNameGenerator(fixture({ prefixes: rows })), 100).map((r) => r.name);
+        const names = sample(elfGenerator(fixture({ prefixes: rows })), 100).map((r) => r.name);
         names.forEach((name, i) => expect(names.slice(Math.max(0, i - 5), i)).not.toContain(name));
     });
 
-    it("rejects a subrace that is not an elf subrace, drow included", () => {
-        const gen = new ElfNameGenerator(fixture());
-        expect(() => gen.generate({ subrace: "half-elf" })).toThrow(/Unknown elf subrace/);
-        expect(() => gen.generate({ subrace: "drow" })).toThrow(/Unknown elf subrace: drow/);
+    it.each(Object.keys(ELF_LINEAGE_RULES))("gives every %s name the lineage its description names", (lineage) => {
+        const gen = elfGenerator(readLineageData(lineage), lineage);
+        expect(gen.generate({ random: seededRandom(1) }).subrace).toBe(lineage);
     });
 });
 
 describe("ElfNameGenerator structure controls", () => {
-    const gen = new ElfNameGenerator(data);
+    const gen = elfGenerator(data);
     const SHORT = "prefix,suffix";
     const LONG = "prefix,suffix,suffix";
     const shaped = (first, family) => (r) =>
@@ -388,7 +422,7 @@ describe("ElfNameGenerator structure controls", () => {
 });
 
 describe("ElfNameGenerator rolls under locks", () => {
-    const gen = new ElfNameGenerator(data);
+    const gen = elfGenerator(data);
     const lockOf = (result, ...keys) => ({
         ...Object.fromEntries(keys.map((key) => [key, result.parts.find((p) => p.key === key)])),
         shape: result.shape,
@@ -441,8 +475,108 @@ describe("ElfNameGenerator rolls under locks", () => {
     });
 });
 
+describe("ElfNameGenerator part changes (the picker)", () => {
+    const roll = (gen, ...draws) => gen.generate({ random: fixedRandom(0, 0, 0, 0, ...draws, 0) });
+    const optionsFor = (gen, result, key) => gen.optionsFor(result, key);
+    const option = (gen, result, key, text) => optionsFor(gen, result, key).find((o) => o.text === text);
+
+    it("offers a component whose first joining letter makes too many syllables when a later one fits, and joins it so", () => {
+        const gen = elfGenerator(
+            fixture({
+                prefixes: [
+                    { text: "al", meaning: "Sea" },
+                    { text: "ah", meaning: "Wind" }
+                ],
+                suffixes: [{ male: ["ranela"], female: ["ranela"], meaning: "Woman" }],
+                joinClusters: ["lr", "hl", "hlr"]
+            })
+        );
+        const before = roll(gen);
+        expect(before.name).toBe("Alranela Starym");
+        const ah = option(gen, before, "t0", "ah");
+        expect(ah).toBeDefined();
+        const changed = gen.generatePartChange(before, "t0", ah);
+        expect(changed.name).toBe("Ahlranela Starym");
+        expect(changed.parts.map((p) => p.text)).toEqual(["ah", "l", "ranela", "Starym"]);
+    });
+
+    it("keeps the other parts, the shape and a joining letter that still fits", () => {
+        const gen = elfGenerator(
+            fixture({
+                prefixes: [{ text: "ah", meaning: "Wind" }],
+                suffixes: [
+                    { male: ["ra"], female: ["ra"], meaning: "Woman" },
+                    { male: ["ri"], female: ["ri"], meaning: "Star" }
+                ],
+                joinClusters: []
+            })
+        );
+        const before = roll(gen, 0.5);
+        expect(before.name).toBe("Ahera Starym");
+        const changed = gen.generatePartChange(before, "t1", option(gen, before, "t1", "ri"));
+        expect(changed.name).toBe("Aheri Starym");
+        expect(changed.shape).toEqual(before.shape);
+        expect(part(changed, "t0")).toEqual(part(before, "t0"));
+        expect(part(changed, "family")).toEqual(part(before, "family"));
+    });
+
+    it("tells apart two entries with one spelling, and changes the meaning when the other is chosen", () => {
+        const gen = elfGenerator(
+            fixture({
+                suffixes: [
+                    { male: ["ra"], female: ["ra"], meaning: "Woman" },
+                    { male: ["ra"], female: ["ra"], meaning: "Star" }
+                ]
+            })
+        );
+        const before = roll(gen);
+        const both = optionsFor(gen, before, "t1");
+        expect(both.map((o) => o.meaning)).toEqual(["Woman", "Star"]);
+        expect(both.filter((o) => isSamePart(o, part(before, "t1")))).toHaveLength(1);
+        const other = both.find((o) => !isSamePart(o, part(before, "t1")));
+        const changed = gen.generatePartChange(before, "t1", other);
+        expect(changed.name).toBe(before.name);
+        expect(part(changed, "t1").meaning).not.toBe(part(before, "t1").meaning);
+    });
+
+    it("returns the name unchanged for the current part, and never draws or touches the recent names", () => {
+        const gen = elfGenerator(
+            fixture({
+                prefixes: [
+                    { text: "al", meaning: "Sea" },
+                    { text: "el", meaning: "Star" }
+                ]
+            })
+        );
+        const before = roll(gen);
+        const recent = [...gen.recent.names];
+        expect(gen.generatePartChange(before, "t0", { ...part(before, "t0") })).toBe(before);
+        const changed = gen.generatePartChange(before, "t0", option(gen, before, "t0", "el"));
+        expect(changed.name).toBe("Elra Starym");
+        expect(gen.recent.names).toEqual(recent);
+    });
+
+    it("swaps a published family name whole, and refuses a component that breaks a rule", () => {
+        const gen = elfGenerator(
+            fixture({
+                prefixes: [
+                    { text: "al", meaning: "Sea" },
+                    { text: "a", meaning: "Star" }
+                ],
+                familyNames: [family("Starym"), family("Amakiir")]
+            })
+        );
+        const before = roll(gen);
+        const amakiir = option(gen, before, "family", "Amakiir");
+        expect(gen.generatePartChange(before, "family", amakiir).name).toBe("Alra Amakiir");
+        const short = { ...part(before, "t0"), text: "a", meaning: "Star" };
+        expect(gen.generatePartChange(before, "t0", short)).toBeNull();
+        expect(optionsFor(gen, before, "t0").map((o) => o.text)).toEqual(["al"]);
+    });
+});
+
 describe("ElfNameGenerator surname switch", () => {
-    const gen = new ElfNameGenerator(data);
+    const gen = elfGenerator(data);
     const constructed = () => sample(gen, 300).find((r) => r.familyShape);
     const published = () => sample(gen, 300).find((r) => !r.familyShape && r.parts.at(-1).key === "family");
     const firstName = (r) => r.name.slice(0, r.name.lastIndexOf(" "));
@@ -490,7 +624,7 @@ describe("ElfNameGenerator long names", () => {
     // Sampling: 4,000 unlocked rolls (seed 1) in the three-component shape, against 30 rolls (seeds 100+) for each of
     // 60 locked first components in that shape, so shape weights stay out of it.
     const SHAPE = "prefix,suffix,suffix";
-    const gen = new ElfNameGenerator(data);
+    const gen = elfGenerator(data);
     const roll = (count, seed, locks = {}) => {
         const random = seededRandom(seed);
         return Array.from({ length: count }, () => gen.generate({ style: "neutral", locks, random }));
@@ -516,7 +650,7 @@ describe("ElfNameGenerator long names", () => {
 
 // Rules that earlier tests left unguarded, found by mutation testing (Stryker).
 describe("ElfNameGenerator rule guards", () => {
-    const gen = new ElfNameGenerator(data);
+    const gen = elfGenerator(data);
     const SHORT = "prefix,suffix";
     const LONG = "prefix,suffix,suffix";
     // a one-entry table with the given suffix rows, for rules that need every possible name known
@@ -526,17 +660,18 @@ describe("ElfNameGenerator rule guards", () => {
 
     describe("part picker", () => {
         it("offers every published family name for the surname, and none when the data has none", () => {
-            const options = gen.optionsFor(sample(gen, 1)[0], "family");
+            const withPublished = sample(gen, 20).find((r) => part(r, "family")?.method === "published");
+            const options = gen.optionsFor(withPublished, "family");
             expect(options.map((o) => o.text)).toEqual(familyNames.map((f) => f.text));
             options.forEach((o) =>
                 expect([o.key, o.role, o.section, o.kind]).toEqual(["family", "family name", "family", "whole"])
             );
-            const bare = new ElfNameGenerator(fixture({ familyNames: [] }));
+            const bare = elfGenerator(fixture({ familyNames: [] }));
             expect(bare.optionsFor({ subrace: "high-elf", parts: [] }, "family")).toEqual([]);
         });
 
         it("offers nothing for a part that is not a name component or is not in the name", () => {
-            const small = new ElfNameGenerator(fixture());
+            const small = elfGenerator(fixture());
             const result = twoPart(sample(small, 30))[0];
             const odd = { ...result, parts: [...result.parts, { key: "at1", role: "suffix", text: "ra" }] };
             expect(small.optionsFor(odd, "at1")).toEqual([]);
@@ -562,7 +697,7 @@ describe("ElfNameGenerator rule guards", () => {
         });
 
         it("lists each published spelling of a suffix in the gender's own forms, with that gender's meaning", () => {
-            const spelled = new ElfNameGenerator(
+            const spelled = elfGenerator(
                 // three male spellings against two female ones, so listing the wrong gender's forms shows
                 tiny({
                     suffixes: [{ male: ["ran", "rin", "ron"], female: ["ria", "rya"], meaning: "Lord/Lady, Helper" }]
@@ -686,11 +821,9 @@ describe("ElfNameGenerator rule guards", () => {
     describe("names", () => {
         it("carry the sources of a published personal name they match, and no label otherwise", () => {
             const book = source("Test book");
-            const known = new ElfNameGenerator(
-                tiny({ publishedNames: [publishedName("Alra", "given", { sources: [book] })] })
-            );
+            const known = elfGenerator(tiny({ publishedNames: [publishedName("Alra", "given", { sources: [book] })] }));
             twoPart(sample(known, 20)).forEach((r) => expect(r.published).toEqual({ sources: [book] }));
-            twoPart(sample(new ElfNameGenerator(tiny()), 20)).forEach((r) => expect(r).not.toHaveProperty("published"));
+            twoPart(sample(elfGenerator(tiny()), 20)).forEach((r) => expect(r).not.toHaveProperty("published"));
         });
 
         // Inferred: published names have 2-4 syllables (vowel groups).
@@ -699,7 +832,7 @@ describe("ElfNameGenerator rule guards", () => {
             ["one vowel group", "bal", "dn", "ldn"],
             ["five vowel groups", "ilanu", "rimo", "ur"]
         ])("are refused when a word has %s", (_, prefix, suffix, cluster) => {
-            const refused = new ElfNameGenerator(
+            const refused = elfGenerator(
                 tiny({
                     prefixes: [{ text: prefix, meaning: "" }],
                     suffixes: [{ male: [suffix], female: [suffix], meaning: "" }],
@@ -715,10 +848,10 @@ describe("ElfNameGenerator rule guards", () => {
         const suffix = (text) => ({ male: [text], female: [text], meaning: "" });
         // "balora" has three syllables, "alinora" four; a constant draw below 0.4 picks the two-part shape, and a
         // published family name (draw below 0.5) leaves the first name as the only word the preference can refuse
-        const threeSyllables = new ElfNameGenerator(
+        const threeSyllables = elfGenerator(
             tiny({ prefixes: [{ text: "bal", meaning: "" }], suffixes: [suffix("ora")] })
         );
-        const fourSyllables = new ElfNameGenerator(
+        const fourSyllables = elfGenerator(
             tiny({ prefixes: [{ text: "alin", meaning: "" }], suffixes: [suffix("ora")] })
         );
 
@@ -735,7 +868,7 @@ describe("ElfNameGenerator rule guards", () => {
         it("thins out four-syllable first names and table surnames on every roll", () => {
             // Half the endings make three syllables and half four (longer shapes are too long): kept at 0.3, four syllables are
             // about 23%, 50% without the preference. Many entries keep the five-name memory from evening out the odds.
-            const gen = new ElfNameGenerator(
+            const gen = elfGenerator(
                 tiny({
                     prefixes: ["bal", "dor", "fen", "gal", "hin", "mar"].map((text) => ({ text, meaning: "" })),
                     suffixes: ["ora", "ura", "ela", "orina", "urina", "elina"].map(suffix),
@@ -758,41 +891,41 @@ describe("ElfNameGenerator with no published family names or approved words", ()
         first: [{ text: "Star", lineages: ["sun-elf"] }],
         second: [{ text: "gaze", lineages: ["sun-elf"] }]
     };
-    // the share of Common-form family names is measured on the published ones tied to the subrace
+    // the share of Common-form family names is measured on the published ones tied to the lineage
     const commonOnly = [family("Morninglight", { form: "common", lineages: ["sun-elf"] })];
     const halfCommon = [...commonOnly, family("Starym", { lineages: ["sun-elf"] })];
-    const sunElf = (gen, count, options = {}) => sample(gen, count, { subrace: "sun-elf", ...options });
+    const sunElfGenerator = (lineageData) => elfGenerator(lineageData, "sun-elf");
     const composed = (r) => part(r, "family")?.method === "composed";
 
     it("builds every family name from the tables, and offers no published surname to switch to", () => {
-        const gen = new ElfNameGenerator(bare);
-        const results = sunElf(gen, 100);
+        const gen = sunElfGenerator(bare);
+        const results = sample(gen, 100);
         results.forEach((r) => expect(r.familyShape).toBeDefined());
         expect(gen.getSurnameSwitchOptions(results[0])).toEqual({ kind: "published", options: [] });
         expect(gen.optionsFor(results[0], "family")).toEqual([]);
     });
 
-    it("measures no Common-form share for a subrace no published family name is tied to", () => {
-        const gen = new ElfNameGenerator(fixture({ familyNames: commonOnly, commonWords }));
-        sample(gen, 60, { subrace: "moon-elf" }).forEach((r) => expect(composed(r)).toBe(false));
+    it("measures no Common-form share for a lineage no published family name is tied to", () => {
+        const gen = elfGenerator(fixture({ familyNames: commonOnly, commonWords }), "moon-elf");
+        sample(gen, 60).forEach((r) => expect(composed(r)).toBe(false));
     });
 
     it("falls back to another family name when the Common form has no approved words to compose from", () => {
         // a share of 1 would make every attempt fail, so use one a retry can get past
-        const gen = new ElfNameGenerator(fixture({ familyNames: halfCommon }));
-        sunElf(gen, 100).forEach((r) => expect(composed(r)).toBe(false));
+        const gen = sunElfGenerator(fixture({ familyNames: halfCommon }));
+        sample(gen, 100).forEach((r) => expect(composed(r)).toBe(false));
     });
 
     it("falls back to another family name when the approved words have only first or only second words", () => {
         [{ first: commonWords.first }, { second: commonWords.second }].forEach((oneList) => {
-            const gen = new ElfNameGenerator(fixture({ familyNames: halfCommon, commonWords: oneList }));
-            sunElf(gen, 100).forEach((r) => expect(composed(r)).toBe(false));
+            const gen = sunElfGenerator(fixture({ familyNames: halfCommon, commonWords: oneList }));
+            sample(gen, 100).forEach((r) => expect(composed(r)).toBe(false));
         });
     });
 
     it("composes a Common-form family name from approved words alone", () => {
-        const gen = new ElfNameGenerator(fixture({ familyNames: commonOnly, commonWords }));
-        sunElf(gen, 20).forEach((r) => {
+        const gen = sunElfGenerator(fixture({ familyNames: commonOnly, commonWords }));
+        sample(gen, 20).forEach((r) => {
             expect(r.name.endsWith(" Stargaze")).toBe(true);
             expect(part(r, "family").method).toBe("composed");
         });
@@ -801,13 +934,13 @@ describe("ElfNameGenerator with no published family names or approved words", ()
     it("never composes a Common-form family name from the same word twice, whatever the capitals", () => {
         const words = (...texts) => texts.map((text) => ({ text, lineages: ["sun-elf"] }));
         const compose = (first, second) =>
-            new ElfNameGenerator(fixture({ familyNames: commonOnly, commonWords: { first, second } }));
-        const families = sunElf(compose(words("Star", "Moon"), words("star", "moon")), 60).map(
+            sunElfGenerator(fixture({ familyNames: commonOnly, commonWords: { first, second } }));
+        const families = sample(compose(words("Star", "Moon"), words("star", "moon")), 60).map(
             (r) => part(r, "family").text
         );
         expect([...new Set(families)].sort()).toEqual(["Moonstar", "Starmoon"]);
         // with nothing else to pair, no family name can be composed
-        expect(() => sunElf(compose(words("Star"), words("STAR")), 1)).toThrow(/unlocking/);
+        expect(() => sample(compose(words("Star"), words("STAR")), 1)).toThrow(/unlocking/);
     });
 });
 
@@ -819,7 +952,7 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
     const commonWords = { first: [{ text: "Star" }], second: [{ text: "gaze" }] };
     // one Elvish and one Common-form family name: a Common-form share of 0.5 for any lineage
     const halfCommon = [elvish("Starym"), elvish("Morninglight", { form: "common" })];
-    const make = (options = {}) => new ElfNameGenerator(fixture(options));
+    const make = (options = {}) => elfGenerator(fixture(options));
     const familyOf = (r) => r.name.split(" ").at(-1);
 
     describe("family names", () => {
@@ -838,10 +971,11 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
             // unfiltered, the draw would land on the Common-form name listed first; tied to moon elves, they give a wood
             // elf no Common-form share
             const moon = { lineages: ["moon-elf"] };
-            const gen = make({
-                familyNames: [elvish("Morninglight", { ...moon, form: "common" }), elvish("Starym", moon)]
-            });
-            expect(familyOf(gen.generate({ subrace: "wood-elf", random: () => 0.4 }))).toBe("Starym");
+            const gen = elfGenerator(
+                fixture({ familyNames: [elvish("Morninglight", { ...moon, form: "common" }), elvish("Starym", moon)] }),
+                "wood-elf"
+            );
+            expect(familyOf(gen.generate({ random: () => 0.4 }))).toBe("Starym");
         });
 
         it("accepts published family names and approved words tied to no lineage", () => {
@@ -850,22 +984,28 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
             expect(familyOf(common.generate({ random: () => 0.4 }))).toBe("Stargaze");
         });
 
-        it("names the Common-form family names each word of a composed family name appears in, and their books", () => {
+        it("credits each word of a composed family name to the family names the data lists for it, with their books in the data's order", () => {
             const lore = source("Lost Empires of Faerun");
             const families = [
-                elvish("Starym", { sources: [source("Elvish only")] }),
-                elvish("Starfall", { form: "common", sources: [lore, BOOK] }),
+                elvish("Starfall", { form: "common", sources: [BOOK, lore] }),
+                elvish("Starbright", { form: "common", sources: [source("Not listed")] }),
                 elvish("Moongaze", { form: "common", sources: [lore] }),
                 elvish("Morninglight", { form: "common" })
             ];
-            const gen = new ElfNameGenerator({
-                ...fixture({ commonWords, familyNames: families }),
+            const listed = {
+                first: [{ text: "Star", names: ["Starfall"] }],
+                second: [{ text: "gaze", names: ["Moongaze"] }]
+            };
+            const gen = elfGenerator({
+                ...fixture({ commonWords: listed, familyNames: families }),
                 sources: [lore, BOOK]
             });
             const found = part(gen.generate({ random: () => 0.4 }), "family");
-            expect([found.text, found.method, found.words]).toEqual(["Stargaze", "composed", ["Star", "gaze"]]);
-            expect(found.wordNames).toEqual([["Starfall"], ["Moongaze"]]);
-            expect(found.wordSources).toEqual([[lore, BOOK], [lore]]);
+            expect([found.text, found.method]).toEqual(["Stargaze", "composed"]);
+            expect(found.words).toEqual([
+                { text: "Star", names: ["Starfall"], sources: [lore, BOOK] },
+                { text: "gaze", names: ["Moongaze"], sources: [lore] }
+            ]);
         });
 
         it("labels a composed family name that matches a published one as that published name", () => {
@@ -884,18 +1024,12 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
 
         it("carries a published family name's note", () => {
             const gen = make({ familyNames: [elvish("Starym", { note: "Test note" })] });
-            expect(gen.optionsFor({ subrace: "high-elf", parts: [] }, "family")[0].note).toBe("Test note");
+            const withPublished = sample(gen, 20).find((r) => part(r, "family")?.method === "published");
+            expect(gen.optionsFor(withPublished, "family")[0].note).toBe("Test note");
         });
     });
 
     describe("first names", () => {
-        const rows = (prefix, suffix) => ({
-            prefixes: [{ text: prefix, meaning: "" }],
-            suffixes: [{ male: [suffix], female: [suffix], meaning: "" }]
-        });
-        const withRows = (prefix, suffix, extra = {}) =>
-            new ElfNameGenerator(fixture({ ...rows(prefix, suffix), ...extra }));
-
         it("refuses a word under four letters and keeps one of exactly eleven", () => {
             expect(() => withRows("a", "ra").generate({ random: () => 0.1 })).toThrow(/unlocking/);
             expect(firstWord(withRows("bel", "ranthiel").generate({ random: () => 0.1 }))).toBe("Belranthiel");
@@ -911,14 +1045,14 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
                 );
             // "al" + "ra" with no clusters: only a vowel avoids a consonant pair; "na" + "thel": only a consonant
             // that the clusters allow before "th"
-            expect(lettersOf(new ElfNameGenerator(fixture({ joinClusters: [] })))).toEqual(new Set(["a", "e", "i"]));
+            expect(lettersOf(elfGenerator(fixture({ joinClusters: [] })))).toEqual(new Set(["a", "e", "i"]));
             const consonants = withRows("na", "thel", { joinClusters: ["lth", "rth", "sth", "sh", "shth"] });
             expect(lettersOf(consonants)).toEqual(new Set(["l", "r", "s", "sh"]));
         });
 
         it("keeps a shared suffix's meaning whole; only paired suffixes split Lord/Lady", () => {
             const shared = { male: ["ra"], female: ["ra"], meaning: "Star/Moon" };
-            const gen = new ElfNameGenerator(fixture({ suffixes: [shared] }));
+            const gen = elfGenerator(fixture({ suffixes: [shared] }));
             expect(part(gen.generate({ style: "feminine", random: () => 0.4 }), "t1").meaning).toBe("Star/Moon");
         });
 
@@ -940,39 +1074,159 @@ describe("ElfNameGenerator rules checked with fixed draws", () => {
     it("explains missing tables in its own words, whatever is missing", () => {
         const message = "Elf name data is missing the name tables";
         const [table] = fixture().tables;
-        expect(() => new ElfNameGenerator()).toThrow(message);
-        expect(() => new ElfNameGenerator({ tables: [] })).toThrow(message);
-        expect(() => new ElfNameGenerator({ tables: [{ ...table, suffixes: undefined }] })).toThrow(message);
-        expect(() => new ElfNameGenerator({ tables: [{ ...table, prefixes: [] }] })).toThrow(message);
+        expect(() => elfGenerator({ tables: [] })).toThrow(message);
+        expect(() => elfGenerator({ tables: [{ ...table, suffixes: undefined }] })).toThrow(message);
+        expect(() => elfGenerator({ tables: [{ ...table, prefixes: undefined }] })).toThrow(message);
+        expect(() => elfGenerator({ tables: [{ ...table, prefixes: [] }] })).toThrow(message);
+        expect(() => elfGenerator({ tables: [{ ...table, type: "house" }] })).toThrow(message);
+    });
+
+    it("builds from the given-name table even when another table is listed first", () => {
+        const data = fixture();
+        const house = nameTable("house", { prefixes: [{ text: "zor" }], suffixes: [{ text: "ith" }] });
+        const gen = elfGenerator({ ...data, tables: [house, ...data.tables] });
+        const results = Array.from({ length: 20 }, (_, i) => gen.generate({ random: seededRandom(i) }));
+        results.forEach((r) => expect(r.name).not.toMatch(/zor|ith/i));
+    });
+
+    it("marks a first name published only when a published first name matches it, not a family name", () => {
+        const families = [family("Alra"), family("Starym")];
+        const asFamily = elfGenerator(fixture({ familyNames: families }));
+        expect(asFamily.generate({ random: () => 0.4 }).name).toMatch(/^Alra /);
+        expect(asFamily.generate({ random: () => 0.4 })).not.toHaveProperty("published");
+        const asGiven = elfGenerator(fixture({ publishedNames: [publishedName("Alra", "given")] }));
+        expect(asGiven.generate({ random: () => 0.4 })).toHaveProperty("published");
+    });
+
+    it("reads a prefix's main spelling for either sex, even where the table prints only a male form", () => {
+        const gen = elfGenerator(fixture({ prefixes: [{ male: ["al"], meaning: "Sea" }] }));
+        const female = gen.generate({ style: "feminine", random: () => 0.1 });
+        expect(firstWord(female)).toBe("Alra");
+        expect(gen.optionsFor(female, "t0").map((o) => o.text)).toEqual(["al"]);
+    });
+
+    it("draws nothing for a female exception in a lineage that has none", () => {
+        const draws = (style) => {
+            let count = 0;
+            elfGenerator(fixture()).generate({ style, random: () => (count++, 0.1) });
+            return count;
+        };
+        expect(draws("feminine")).toBe(draws("masculine"));
     });
 });
 
 describe("ElfNameGenerator gives up after exactly 300 attempts", () => {
     // tables whose every component repeats a letter three times, so no name built from them is allowed
-    const never = new ElfNameGenerator(
+    const never = elfGenerator(
         fixture({
             prefixes: [{ text: "aaa", meaning: "Never" }],
             suffixes: [{ male: ["aaa"], female: ["aaa"], meaning: "Never" }]
         })
     );
-    const real = new ElfNameGenerator(data);
-    const names = sample(real, 300);
-    const before = names.find((r) => !r.familyShape && r.parts.at(-1).key === "family");
-    const choice = real.getSurnameSwitchOptions(before).options[0];
-    const changeable = names.find((r) => real.getStructureControls(r).some((c) => c.control === "given"));
+    // rolled inside the tests, so a generator that fails fails a test and not the whole file's collection
+    let rolled;
+    const real = () => {
+        if (!rolled) {
+            const gen = elfGenerator(data);
+            const names = sample(gen, 300);
+            const before = names.find((r) => !r.familyShape && r.parts.at(-1).key === "family");
+            rolled = {
+                before,
+                choice: gen.getSurnameSwitchOptions(before).options[0],
+                changeable: names.find((r) => gen.getStructureControls(r).some((c) => c.control === "given"))
+            };
+        }
+        return rolled;
+    };
     it("when no name can be built", () => {
-        expectGivesUpAfter300Attempts((random) => expect(() => never.generate({ random })).toThrow(/unlocking/));
+        expect(() => never.generate({ random: fixedRandom(0.5) })).toThrow(/unlocking/);
+    });
+
+    it("says an elf name could not be made, in the lineage's words", () => {
+        expect(() => never.generate({ random: fixedRandom(0.5) })).toThrow(
+            "Could not make an elf name with these choices. Try unlocking a part."
+        );
     });
 
     it("when a structure change cannot be built", () => {
-        expectGivesUpAfter300Attempts((random) =>
-            expect(never.generateStructureChange(changeable, "given", { random })).toBeNull()
-        );
+        expect(never.generateStructureChange(real().changeable, "given", { random: fixedRandom(0.5) })).toBeNull();
     });
 
     it("when a surname cannot be built", () => {
-        expectGivesUpAfter300Attempts((random) =>
-            expect(never.generateSurnameChange(before, choice, { random })).toBeNull()
+        const { before, choice } = real();
+        expect(never.generateSurnameChange(before, choice, { random: fixedRandom(0.5) })).toBeNull();
+    });
+});
+
+describe("ElfNameGenerator rolls whose description leaves a choice open", () => {
+    it("lets a re-roll that keeps a surname component change the surname's shape, and keeps it otherwise", () => {
+        const gen = elfGenerator(data);
+        const random = seededRandom(7);
+        const built = Array.from({ length: 300 }, () => gen.generate({ random })).find(
+            (r) => r.familyShape?.length === 2
         );
+        const locks = { n0: built.parts.find((p) => p.key === "n0"), familyShape: built.familyShape };
+        const shapes = (reshape) =>
+            new Set(Array.from({ length: 60 }, () => gen.generate({ locks, reshape, random }).familyShape.length));
+        expect(shapes(false)).toEqual(new Set([2]));
+        expect(shapes(true)).toEqual(new Set([2, 3]));
+    });
+});
+
+describe("ElfNameGenerator spelling at a join", () => {
+    const roll = (gen) => gen.generate({ random: () => 0.1 });
+
+    it("refuses a join that makes four vowels in a row, and keeps one that makes three", () => {
+        // "aeio" is one syllable, so the name has the two syllables it needs without help
+        expect(() => roll(withRows("tae", "ioma"))).toThrow(/unlocking/);
+        expect(firstWord(roll(withRows("tae", "ira")))).toBe("Taeira");
+    });
+
+    it('refuses a join that makes "yy", which no published elf name has', () => {
+        expect(() => roll(withRows("ly", "yra"))).toThrow(/unlocking/);
+        expect(firstWord(roll(withRows("ly", "ra")))).toBe("Lyra");
+    });
+
+    it("makes no name where no joining letter fits the consonants that meet", () => {
+        // "rk" is in no published name, and a letter after it leaves "rk" meeting the next component's "tr" or the letter
+        expect(() => roll(withRows("tark", "tra"))).toThrow(/unlocking/);
+    });
+
+    it("names Dragon #251 as the source of every joining letter", () => {
+        const joints = sample(elfGenerator(fixture({ joinClusters: [] })), 100)
+            .flatMap((r) => r.parts)
+            .filter((p) => p.role === "joining letter");
+        expect(joints.length).toBeGreaterThan(0);
+        expect(new Set(joints.map((j) => j.basis))).toEqual(new Set(["Dragon #251"]));
+    });
+});
+
+describe("ElfNameGenerator composed family names and Expanded Variety", () => {
+    describe("a surname built from the table", () => {
+        const base = fixture({ familyNames: [family("Moonwhisper"), family("Sunsong")] });
+        const cutFamily = {
+            openings: [
+                { text: "Moon", from: ["Moonwhisper"] },
+                { text: "Sun", from: ["Sunsong"] }
+            ],
+            endings: [
+                { text: "whisper", from: ["Moonwhisper"] },
+                { text: "song", from: ["Sunsong"] }
+            ],
+            joins: []
+        };
+        const gen = elfGenerator({ ...base, split: { ...base.split, family: cutFamily } });
+        const splitFamilyParts = (options) =>
+            sample(gen, 300, options)
+                .flatMap((r) => r.parts)
+                .filter((p) => p.section === "family" && p.method === "split");
+
+        it("takes split components with Expanded Variety", () => {
+            expect(splitFamilyParts({ expanded: true }).length).toBeGreaterThan(0);
+        });
+
+        it("takes none without it", () => {
+            expect(splitFamilyParts({}).length).toBe(0);
+        });
     });
 });

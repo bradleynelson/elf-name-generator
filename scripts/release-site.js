@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { stampText, stampedFiles, stampedVersion } from "./stamp-version.js";
+import { scriptImportPattern, stampText, stampedFiles, stampedVersion } from "./stamp-version.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 
@@ -86,11 +86,7 @@ function checkReferences(root, files) {
         } else if (file.endsWith(".css")) {
             for (const match of text.matchAll(/url\(\s*["']?([^\s"')]+)["']?\s*\)/gi)) checkReference(file, match[1]);
         } else {
-            for (const match of text.matchAll(
-                /(?:^\s*import\s+(?:[^;]*?\bfrom\s*)?|^\s*export\s+[^;]*?\bfrom\s*|\bimport\s*\(\s*)["']([^"'\r\n]+)["']/gm
-            )) {
-                checkReference(file, match[1]);
-            }
+            for (const match of text.matchAll(scriptImportPattern(`[^"'\\r\\n]+`))) checkReference(file, match[2]);
             // The current loader resolves literal data paths relative to index.html.
             for (const match of text.matchAll(/["'](data\/[^"'?]+\.json)(?:\?[^"']*)?["']/g)) {
                 checkReference(file, match[1], true);
