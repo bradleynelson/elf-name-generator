@@ -1,54 +1,25 @@
 // Rendering only; text is always set with textContent. Reads a part's `section` and `kind`, never species rules.
-import { isSurnamePart, KIND, NAME_STRUCTURE_CONTROL, surnameStart } from "./core/nameStructure.js?v=4.2.0";
-import { getLineage } from "./core/species.js?v=4.2.0";
+import {
+    capitalize,
+    formatPartLabel,
+    groupWords,
+    isSlotComponent,
+    isSamePart,
+    isSurnamePart,
+    KIND,
+    METHOD,
+    NAME_STRUCTURE_CONTROL,
+    SECTION,
+    STRUCTURE_CONTROLS,
+    surnameStart
+} from "./core/nameStructure.js?v=4.3.0";
+import { getLineage } from "./core/species.js?v=4.3.0";
+import { $, button, element, iconButton, renderBookmark, switchOff } from "./dom.js?v=4.3.0";
+import { announce } from "./messages.js?v=4.3.0";
+import { formatSourceTitle, renderSources } from "./sourcesPanel.js?v=4.3.0";
 
-const $ = (id) => document.getElementById(id);
-const LABELS = {
-    "family name": "family name",
-    prefix: "prefix",
-    suffix: "suffix",
-    "family prefix": "family name prefix",
-    "family suffix": "family name suffix",
-    house: "house name",
-    "house prefix": "house name prefix",
-    "house suffix": "house name suffix"
-};
-const isSlotComponent = (part) => part.kind === KIND.PREFIX || part.kind === KIND.SUFFIX;
 // Ed Greenwood's own sources read "from", not "published in"
 const isFromCreator = (sources) => sources?.[0]?.authority === "creator";
-
-function element(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-}
-
-function button(className, text, label, onClick) {
-    const node = element("button", className, text);
-    node.type = "button";
-    if (label) node.setAttribute("aria-label", label);
-    node.addEventListener("click", onClick);
-    return node;
-}
-
-/** An icon from the sprite in index.html. */
-function icon(name) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    use.setAttribute("href", `#icon-${name}`);
-    svg.append(use);
-    return svg;
-}
-
-function iconButton(className, iconName, label, onClick) {
-    const node = button(className, undefined, label, onClick);
-    node.title = label;
-    node.append(icon(iconName));
-    return node;
-}
-
-const partLabel = (part) => LABELS[part.role] || part.role;
 
 function displayTexts(parts) {
     let wordStart = true;
@@ -59,7 +30,8 @@ function displayTexts(parts) {
             return " ";
         }
         if (index === start) wordStart = true;
-        const text = wordStart ? part.text.charAt(0).toUpperCase() + part.text.slice(1) : part.text;
+        // table and split components are lower case; whole names and phrase words are shown as printed ("the Younger")
+        const text = wordStart && isSlotComponent(part) ? capitalize(part.text) : part.text;
         wordStart = false;
         return text;
     });
@@ -74,20 +46,25 @@ function wordMeaning(parts) {
     if (phrase) return { whole: { text: phrase.wordMeaning } };
     const translated = parts.find((p) => p.meaningSource);
     if (translated) return { whole: { text: translated.meaning } };
-    if (parts.some((p) => p.method === "published" && p.form !== "common")) {
+    if (parts.some((p) => p.method === METHOD.PUBLISHED && p.form !== "common")) {
         return { whole: { text: "Meaning unknown", unknown: true } };
     }
-    const composed = parts.find((p) => p.method === "composed");
-    if (composed) return { whole: { text: composed.words.join("-").toLowerCase(), gloss: true } };
+    const composed = parts.find((p) => p.method === METHOD.COMPOSED);
+    if (composed) return { whole: { text: composed.words.map((w) => w.text.toLowerCase()).join("-"), gloss: true } };
     const components = parts.filter(isSlotComponent);
     if (!components.length) return {};
-    if (components.every((p) => p.method === "split")) {
+    if (components.every((p) => p.method === METHOD.SPLIT)) {
         return { whole: { text: "Meaning unknown", unknown: true, split: true } };
     }
     const segment = (p) =>
-        p.method === "split" ? { text: "Unknown", unknown: true, split: true } : { text: firstGloss(p.meaning) };
+        p.method === METHOD.SPLIT ? { text: "Unknown", unknown: true, split: true } : { text: firstGloss(p.meaning) };
     return { byPart: new Map(components.map((p) => [p, segment(p)])) };
 }
+
+const knownMeaningsOf = ({ whole, byPart }) => ({
+    whole: whole?.unknown ? undefined : whole,
+    byPart: byPart && new Map([...byPart].map(([part, segment]) => [part, segment.unknown ? null : segment]))
+});
 
 /**
  * @param {Object} result - generator result
@@ -103,21 +80,15 @@ export function renderResult(result, locked, handlers) {
     renderSources(result);
 }
 
-function renderNameText(result) {
-    const matchNote = isFromCreator(result.published?.sources) ? "a name used by Ed Greenwood" : "a published name";
-    $("nameText").textContent = result.published ? `${result.name}, ${matchNote}` : result.name;
-}
+// a built first name that matches a published one, or a whole published first name
+const publishedSourcesOf = (result) =>
+    result.published?.sources ??
+    result.parts.find((p) => p.section === SECTION.GIVEN && p.method === METHOD.PUBLISHED)?.sources;
 
-// a space ends a word, and the surname starts one at its first component (a joining letter inside it does not)
-function groupWords(parts) {
-    const words = [];
-    const start = surnameStart(parts);
-    parts.forEach((part, index) => {
-        if (part.role === "space") return words.push([]);
-        if (!words.length || index === start) words.push([]);
-        words.at(-1).push(index);
-    });
-    return words;
+function renderNameText(result) {
+    const sources = publishedSourcesOf(result);
+    const matchNote = isFromCreator(sources) ? "a name used by Ed Greenwood" : "a published name";
+    $("nameText").textContent = sources ? `${result.name}, ${matchNote}` : result.name;
 }
 
 // word by word, so narrow screens wrap between words; a missing compound name shows as an empty slot
@@ -125,30 +96,44 @@ function renderWords(result, locked, handlers) {
     const texts = displayTexts(result.parts);
     const { controls = [], onChange } = handlers.structure || {};
     const steps = new Map(controls.map(({ control, on }) => [control, on]));
-    const { FIRST_NAME, COMPOUND_NAME, SURNAME } = NAME_STRUCTURE_CONTROL;
-    let firstNameWords = 0;
+    const stepFor = (control) => (steps.has(control) ? [renderStep(control, steps.get(control), onChange)] : []);
+    const { COMPOUND_NAME, PHRASE } = NAME_STRUCTURE_CONTROL;
+    const isCompoundMissing = steps.get(COMPOUND_NAME) === false;
+    // a species whose published names carry no meanings (dwarves) captions only the meanings that are known
+    const showsUnknownMeanings = getLineage(result.subrace)?.species?.captionsUnknownMeanings !== false;
+    let givenWords = 0;
     $("nameDials").replaceChildren(
         ...groupWords(result.parts).flatMap((indexes) => {
-            const parts = indexes.map((i) => result.parts[i]);
-            const isSurname = isSurnamePart(parts[0]);
-            const kind = isSurname ? SURNAME : firstNameWords++ === 0 ? FIRST_NAME : COMPOUND_NAME;
-            const { whole, byPart } = wordMeaning(parts);
-            const row = element("span", `name-word-parts${byPart ? " has-part-meanings" : ""}`);
-            indexes.forEach((i) => {
-                const part = result.parts[i];
-                const meaning = byPart && renderMeaning("name-part-meaning", byPart.get(part));
-                row.append(renderPart(part, texts[i], locked.has(part.key), handlers, meaning));
-            });
-            if (steps.has(kind) && (kind !== COMPOUND_NAME || steps.get(kind))) {
-                row.append(renderStep(kind, steps.get(kind), onChange));
-            }
-            const word = element("span", "name-word");
-            word.append(renderMeaning("name-word-meaning", byPart ? null : whole), row);
-            const slot =
-                isSurname && steps.get(COMPOUND_NAME) === false ? [renderStep(COMPOUND_NAME, false, onChange)] : [];
-            return [...slot, word];
-        })
+            const isSurname = isSurnamePart(result.parts[indexes[0]]);
+            const control = controlOfWord(isSurname, isSurname ? null : givenWords++);
+            const ownStep = control === COMPOUND_NAME && isCompoundMissing ? [] : stepFor(control);
+            const shown = indexes.map((i) => ({ part: result.parts[i], text: texts[i] }));
+            const word = renderWord(shown, ownStep, { locked, handlers, showsUnknownMeanings });
+            return isSurname && isCompoundMissing ? [...stepFor(COMPOUND_NAME), word] : [word];
+        }),
+        // the name phrase's + / - follows the whole name, since a phrase is added at its end or around the clan
+        ...stepFor(PHRASE)
     );
+}
+
+function controlOfWord(isSurname, givenWordIndex) {
+    if (isSurname) return NAME_STRUCTURE_CONTROL.SURNAME;
+    return givenWordIndex === 0 ? NAME_STRUCTURE_CONTROL.FIRST_NAME : NAME_STRUCTURE_CONTROL.COMPOUND_NAME;
+}
+
+/** One word: its meaning above, then its parts with their own meanings, then the + / - it carries. */
+function renderWord(shown, ownStep, { locked, handlers, showsUnknownMeanings }) {
+    const meanings = wordMeaning(shown.map(({ part }) => part));
+    const { whole, byPart } = showsUnknownMeanings ? meanings : knownMeaningsOf(meanings);
+    const row = element("span", `name-word-parts${byPart ? " has-part-meanings" : ""}`);
+    shown.forEach(({ part, text }) => {
+        const meaning = byPart && renderMeaning("name-part-meaning", byPart.get(part));
+        row.append(renderPart(part, text, locked.has(part.key), handlers, meaning));
+    });
+    row.append(...ownStep);
+    const word = element("span", "name-word");
+    word.append(renderMeaning("name-word-meaning", byPart ? null : whole), row);
+    return word;
 }
 
 function renderMeaning(className, segment) {
@@ -160,79 +145,27 @@ function renderMeaning(className, segment) {
     return caption;
 }
 
+// The script fonts draw accented letters and punctuation (apostrophes, hyphens, commas, full stops) as an empty box,
+// so the transcription writes the plain letter and leaves punctuation out.
+const scriptText = (name) =>
+    name
+        .normalize("NFD")
+        .replace(/\p{M}/gu, "")
+        .replace(/[^\p{L}\s]/gu, "");
+
 function renderScript(result) {
     const { font, label } = getLineage(result.subrace).script;
     const node = $("nameScript");
-    // the script fonts have no apostrophe glyph and would show an empty box
-    node.textContent = result.name.replace(/'/g, "");
+    node.textContent = scriptText(result.name);
     node.dataset.script = font;
     $("nameScriptLabel").textContent = label;
-}
-
-function renderSources(result) {
-    $("nameSources").replaceChildren(
-        ...describeSources(result).map((row) => {
-            const node = element("div", "name-sources-row");
-            const value = element("div", "name-sources-value");
-            const text = element("p", "name-sources-text", row.text);
-            if (row.names) text.append(" cut from ", ...renderList(row.names, (name) => name, NAME_LIST));
-            if (row.asIn) text.append(" as in ", ...renderList(row.asIn, (name) => name, NAME_LIST));
-            if (row.note) text.append(`. ${row.note}`);
-            value.append(text);
-            if (row.sources?.length) value.append(renderSourceLine(row.sources, row.meaningFrom));
-            if (row.from) value.append(element("p", "name-sources-from", row.from));
-            if (row.ruleFrom) {
-                const line = element("p", "name-sources-from", "rule from ");
-                line.append(element("cite", null, row.ruleFrom));
-                value.append(line);
-            }
-            node.append(element("span", "name-sources-label", row.label), value);
-            return node;
-        })
-    );
-}
-
-function renderSourceLine(sources, meaningFrom) {
-    const line = element("p", "name-sources-from");
-    const books = element("span", "name-sources-books");
-    books.append(...renderList(sources, (source) => element("cite", null, source.title), SOURCE_LIST));
-    line.append(books);
-    if (meaningFrom) line.append(" · meaning from ", element("cite", null, meaningFrom));
-    return line;
-}
-
-const NAME_LIST = { shown: 2, separator: ", ", last: " and ", noun: " names" };
-const SOURCE_LIST = { shown: 1, separator: "; ", last: "; ", noun: "" };
-
-// everything shows when only one more would be hidden, so there is never an "and 1 more"
-function renderList(items, show, { shown: limit, separator, last, noun }) {
-    const shown = items.length <= limit + 1 ? items.length : limit;
-    const rest = items.slice(shown);
-    const first = items.slice(0, shown).flatMap((item, n) => {
-        if (!n) return [show(item)];
-        return [!rest.length && n === shown - 1 ? last : separator, show(item)];
-    });
-    if (!rest.length) return first;
-    const more = element("span", "name-sources-rest");
-    more.hidden = true;
-    more.append(...rest.flatMap((item) => [separator, show(item)]));
-    const count = `and ${rest.length} more${noun}`;
-    const toggle = button("name-sources-more", count, null, () => {
-        const isOpen = toggle.getAttribute("aria-expanded") !== "true";
-        toggle.setAttribute("aria-expanded", String(isOpen));
-        toggle.textContent = isOpen ? "show fewer" : count;
-        more.hidden = !isOpen;
-    });
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.title = more.textContent.slice(separator.length);
-    return [...first, more, toggle];
 }
 
 function renderPart(part, text, isLocked, { onToggleLock, onChoose }, meaning) {
     if (part.kind === KIND.JOINT) {
         return element("span", `name-part-joint name-part-${part.role.replace(" ", "-")}`, text);
     }
-    const label = partLabel(part);
+    const label = formatPartLabel(part);
     const wrapper = element("span", `name-part${isLocked ? " is-locked" : ""}`);
     wrapper.dataset.key = part.key;
     const choose = button("name-part-text", text, `Choose the ${label}: ${text}`, () => onChoose(part.key));
@@ -245,19 +178,12 @@ function renderPart(part, text, isLocked, { onToggleLock, onChoose }, meaning) {
     return wrapper;
 }
 
-// What each + / - button does, for screen readers: [when the control is off, when it is on]
-const STEP_LABELS = {
-    [NAME_STRUCTURE_CONTROL.FIRST_NAME]: ["Add a suffix to the first name", "Remove the last suffix of the first name"],
-    [NAME_STRUCTURE_CONTROL.COMPOUND_NAME]: ["Add a compound name", "Remove the compound name"],
-    [NAME_STRUCTURE_CONTROL.SURNAME]: ["Add a suffix to the surname", "Remove the last suffix of the surname"]
-};
-
 /** A + (the change is off now) or - (it is on) button for a structure control. */
 function renderStep(control, isOn, onChange) {
     const step = iconButton(
         `name-structure-step${control === NAME_STRUCTURE_CONTROL.COMPOUND_NAME && !isOn ? " is-slot" : ""}`,
         isOn ? "minus" : "plus",
-        STEP_LABELS[control][isOn ? 1 : 0],
+        isOn ? STRUCTURE_CONTROLS[control].removeLabel : STRUCTURE_CONTROLS[control].addLabel,
         () => onChange(control)
     );
     step.dataset.control = control;
@@ -273,61 +199,47 @@ export function focusPart(key, control) {
     $("nameDials").querySelector(`[data-key="${key}"] .name-part-${control}`)?.focus();
 }
 
-function describeSources(result) {
-    const rows = result.parts.flatMap(describePart);
-    if (result.published) {
-        const personal = result.name.slice(0, result.name.lastIndexOf(" "));
-        rows.unshift({ label: "Published name", text: personal, sources: result.published.sources });
-    }
-    return rows.filter(Boolean);
-}
-
-const keepTogether = (text) => text.replaceAll(" ", "\u00a0");
-
-/** A part's row (one per word for a composed family name), or null for an apostrophe or a space. */
-function describePart(part) {
-    const label = partLabel(part).charAt(0).toUpperCase() + partLabel(part).slice(1);
-    const shown = part.kind === KIND.PREFIX ? `${part.text}-` : part.kind === KIND.SUFFIX ? `-${part.text}` : part.text;
-    switch (part.method) {
-        case "split":
-            return { label, text: shown, names: part.from, sources: part.sources };
-        case "published": {
-            const text = part.meaningSource ? `${part.text} means "${part.meaning}"` : part.text;
-            const meaningFrom = part.meaningSource !== part.sources[0]?.title ? part.meaningSource : undefined;
-            return { label, text, note: part.note, sources: part.sources, meaningFrom };
-        }
-        case "composed": {
-            const [first, second] = part.words.map((word) => word.toLowerCase());
-            if (part.wordNames) {
-                return [first, second].map((word, n) => ({
-                    label: `${keepTogether(label)}, ${keepTogether(`${n ? "second" : "first"} word`)}`,
-                    text: `"${word}"`,
-                    asIn: part.wordNames[n],
-                    sources: part.wordSources[n]
-                }));
-            }
-            // names saved by earlier versions say only where the words come from, or nothing
-            const from = part.wordsFrom && `words from ${part.wordsFrom}`;
-            return { label, text: `${part.text}: "${first}" and "${second}"`, from };
-        }
-        default:
-            if (part.role === "joining letter") {
-                const text = `-${part.text}- added so the components join smoothly`;
-                return { label: "Joining letter", text, ruleFrom: part.basis };
-            }
-            return isSlotComponent(part)
-                ? { label, text: `${shown} means "${part.meaning}"`, sources: part.sources }
-                : null;
-    }
-}
+/** The species picker's options, in the species description's order. */
+export const renderSpeciesPicker = (species) => renderOptions($("pickerSpecies"), species);
 
 /**
- * Fills the lineage picker from the species description, in its order; the first lineage is the default.
- * @param {{ value: string, label: string }[]} lineages
+ * The pickers and Expanded Variety as the settings say; the lineage list is redrawn only when it changes.
+ * @param {{ speciesName: string, lineages: { value: string, label: string }[], styles: string[], subrace: string,
+ *   style: string, expanded: boolean, smallPoolNote: string }} settings - `lineages` in the species description's
+ *   order; an empty `smallPoolNote` hides it
  */
-export function renderLineagePicker(lineages) {
-    $("pickerLineage").replaceChildren(
-        ...lineages.map(({ value, label }) => {
+export function renderPickers({ speciesName, lineages, styles, subrace, style, expanded, smallPoolNote }) {
+    const lineagePicker = $("pickerLineage");
+    const shown = [...lineagePicker.options].map((option) => option.value);
+    if (shown.join() !== lineages.map((lineage) => lineage.value).join()) renderOptions(lineagePicker, lineages);
+    renderSexChoices(styles);
+    $("pickerSpecies").value = speciesName;
+    lineagePicker.value = subrace;
+    $("pickerSex").value = style;
+    $("expandedToggle").setAttribute("aria-pressed", String(expanded));
+    renderNote($("smallPoolNote"), smallPoolNote);
+}
+
+// only the genders the species offers (dwarves: female and male)
+function renderSexChoices(styles) {
+    for (const option of $("pickerSex").options) {
+        const isOffered = styles.includes(option.value);
+        option.hidden = !isOffered;
+        option.disabled = !isOffered;
+    }
+}
+
+/** A line under the name about the lineage (wild dwarves: why there is no clan name); hidden when there is none. */
+export const renderLineageNote = (text) => renderNote($("lineageNote"), text);
+
+function renderNote(node, text) {
+    node.textContent = text || "";
+    node.hidden = !text;
+}
+
+function renderOptions(select, options) {
+    select.replaceChildren(
+        ...options.map(({ value, label }) => {
             const option = element("option", null, label);
             option.value = value;
             return option;
@@ -335,52 +247,105 @@ export function renderLineagePicker(lineages) {
     );
 }
 
-/** The bookmark stays filled while the current name is saved; pressing it again removes the name. */
-export function renderSaved(isSaved) {
-    const save = $("saveButton");
-    save.setAttribute("aria-pressed", String(isSaved));
-    save.title = isSaved ? "Saved (press to remove)" : "Save";
-}
-
-/** A list of names (more names, history); picking one shows it. */
-export function renderNameList(listId, results, onPick) {
-    $(listId).replaceChildren(
-        ...results.map((result) => {
-            const item = element("li");
-            item.append(button("name-list-name", result.name, `Show ${result.name}`, () => onPick(result)));
-            if (result.published) {
-                const badge = isFromCreator(result.published.sources) ? "Ed Greenwood" : "published";
-                item.append(element("span", "name-list-badge", badge));
-            }
-            return item;
-        })
-    );
-}
-
 /**
- * Saved names: click one to load it (names saved by older versions may only have their text), copy or remove it.
- * @param {{ canLoad: Function, onLoad: Function, onCopy: Function, onRemove: Function, max: number }} handlers -
- *   canLoad(record) says whether a saved name can be shown again
+ * The name card's bookmark; pressing it again removes the saved name. While it is switched off it says Full.
+ * @param {{ isSaved: boolean, isFull: boolean }} state
  */
-export function renderFavorites(favorites, { canLoad, onLoad, onCopy, onRemove, max }) {
-    $("favoritesCount").textContent = `(${favorites.length} of ${max})`;
-    $("favoritesList").replaceChildren(
-        ...favorites.map((favorite) => {
-            const item = element("li", null);
-            const name = canLoad(favorite)
-                ? button("name-list-name", favorite.name, `Show ${favorite.name}`, () => onLoad(favorite.result))
-                : element("span", "name-list-name", favorite.name);
-            const tools = element("span", "favorites-tools");
-            tools.append(
-                iconButton("icon-button favorites-tool", "copy", `Copy ${favorite.name}`, () => onCopy(favorite.name)),
-                iconButton("icon-button favorites-tool favorites-remove", "trash", `Remove ${favorite.name}`, () =>
-                    onRemove(favorite.name)
-                )
-            );
-            item.append(name, tools);
-            return item;
-        })
+export function renderSaved({ isSaved, isFull }) {
+    const save = $("saveButton");
+    const isOff = renderBookmark(save, { isSaved, isFull, label: "Save name" });
+    // says Full for as long as it is off, not only when pressed
+    save.toggleAttribute("data-labelled", isOff);
+    if (isOff) buttonLabel(save).textContent = "Full";
+}
+
+const CONFIRM_MS = 1500;
+const confirming = new WeakMap();
+
+/** Briefly turns an icon button into what it did, in words ("Copied", "Saved"), with another icon if given. */
+export function renderButtonConfirmation(node, word, iconName) {
+    // one word at a time per group of buttons, where they would overlap on a narrow card
+    node.parentElement.querySelectorAll("[data-confirming]").forEach(endConfirmation);
+    const use = node.querySelector("use");
+    const label = buttonLabel(node);
+    const restingIcon = use.getAttribute("href");
+    label.textContent = word;
+    use.setAttribute("href", iconName ? `#icon-${iconName}` : restingIcon);
+    // the countdown line (style.css) runs for the same time as the word's timer; the layout read restarts it
+    borderLine(node);
+    node.style.setProperty("--confirm-ms", `${CONFIRM_MS}ms`);
+    node.getBoundingClientRect();
+    node.toggleAttribute("data-confirming", true);
+    confirming.set(node, { timer: setTimeout(() => endConfirmation(node), CONFIRM_MS), restingIcon });
+}
+
+const GLINT_MS = 600;
+const glinting = new WeakMap();
+
+/** Confirms on a name card button ("copyButton", "saveButton") and glints the card's name. */
+export function renderCardConfirmation(buttonId, word, iconName) {
+    renderButtonConfirmation($(buttonId), word, iconName);
+    renderGlint($("nameDials"));
+}
+
+/** Confirms on any other button, such as a Copy all. */
+export const renderConfirmation = (buttonId, word, iconName) => renderButtonConfirmation($(buttonId), word, iconName);
+
+/** Glints a name (style.css) once, like a shutter; pressing again starts over. */
+export function renderGlint(node) {
+    clearTimeout(glinting.get(node));
+    node.removeAttribute("data-glinting");
+    // the layout read restarts the animation
+    node.getBoundingClientRect();
+    node.toggleAttribute("data-glinting", true);
+    glinting.set(
+        node,
+        setTimeout(() => endGlint(node), GLINT_MS)
     );
+}
+
+function endGlint(node) {
+    clearTimeout(glinting.get(node));
+    glinting.delete(node);
+    node.removeAttribute("data-glinting");
+}
+
+/** Ends the name card's confirmations, which were about the name it showed before. */
+export function endCardConfirmations() {
+    $("saveButton").parentElement.querySelectorAll("[data-confirming]").forEach(endConfirmation);
+    endGlint($("nameDials"));
+}
+
+/** The countdown line: a stroke round the button's border, drawn by style.css while it is confirming. */
+function borderLine(node) {
+    if (node.querySelector(".icon-button-border")) return;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "icon-button-border");
+    svg.setAttribute("aria-hidden", "true");
+    const outline = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    // path length 100 makes the dashes percentages of the border, whatever the button's size
+    outline.setAttribute("pathLength", "100");
+    svg.append(outline);
+    node.append(svg);
+}
+
+const buttonLabel = (node) =>
+    node.querySelector(".icon-button-label") || node.appendChild(element("span", "icon-button-label"));
+
+function endConfirmation(node) {
+    const { timer, restingIcon } = confirming.get(node);
+    clearTimeout(timer);
+    node.removeAttribute("data-confirming");
+    node.style.removeProperty("--confirm-ms");
+    node.querySelector("use").setAttribute("href", restingIcon);
+    confirming.delete(node);
+}
+
+/** Brings a section's heading to the top of the screen and focuses it; focus alone stops once the heading shows. */
+export function goToSection(headingId) {
+    const heading = $(headingId);
+    heading.scrollIntoView({ block: "start" });
+    heading.focus({ preventScroll: true });
 }
 
 /**
@@ -388,14 +353,17 @@ export function renderFavorites(favorites, { canLoad, onLoad, onCopy, onRemove, 
  * constructed) switched by toggle buttons (aria-pressed rather than an ARIA tab widget, so no arrow-key handling).
  * @param {{ kind?: string, label?: string, options: Object[], onPick: Function, selected?: boolean }[]} tabs - parts
  *   from the generator; the tab marked `selected` is the part's current kind and is shown first
- * @param {string} currentText
+ * @param {Part} currentPart - marked in its own tab by isSamePart, since two entries can share a spelling
  */
-export function openPartPicker(tabs, currentText) {
+export function openPartPicker(tabs, currentPart) {
     const dialog = $("partPicker");
-    const describe = (option) => option.meaning || (option.from && `from ${option.from.slice(0, 3).join(", ")}`) || "";
+    const describe = (option) =>
+        option.meaning ||
+        (option.from && `from ${option.from.slice(0, 3).join(", ")}`) ||
+        (option.sources?.length ? formatSourceTitle(option.sources[0]) : "");
     const showTab = (tab) => {
         // the title names what the list holds (a whole family name, or a prefix), so it follows the tab
-        $("partPickerTitle").textContent = `Choose the ${partLabel(tab.options[0])}`;
+        $("partPickerTitle").textContent = `Choose the ${formatPartLabel(tab.options[0])}`;
         $("partPickerTabs")
             .querySelectorAll(".part-picker-tab")
             .forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.kind === tab.kind)));
@@ -411,7 +379,7 @@ export function openPartPicker(tabs, currentText) {
                     element("span", "part-picker-text", option.text),
                     element("span", "part-picker-detail", describe(option))
                 );
-                if (tab.selected && option.text === currentText) pick.setAttribute("aria-current", "true");
+                if (tab.selected && isSamePart(option, currentPart)) pick.setAttribute("aria-current", "true");
                 item.append(pick);
                 return item;
             });
@@ -434,30 +402,168 @@ export function openPartPicker(tabs, currentText) {
     dialog.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "center" });
 }
 
-let noticeTimer;
-/**
- * Shows a short message. With an action (such as Undo) it also shows a button and stays longer; it never disappears
- * while the pointer or keyboard focus is on it.
- * @param {string} message
- * @param {{ label: string, onClick: Function }} [action]
- */
-export function showNotice(message, action = null) {
-    const notice = $("notice");
-    notice.replaceChildren(element("span", null, message));
-    if (action) {
-        notice.append(
-            button("notice-action", action.label, undefined, () => {
-                notice.hidden = true;
-                action.onClick();
-            })
-        );
+const LOADING_WORDS = {
+    loading: { title: "Loading the name lists" },
+    retrying: { title: "The name lists didn't load. Retrying", note: "Your saved names and history are safe." },
+    failed: {
+        title: "The name lists still won't load.",
+        note: "Check your connection, then reload. If that doesn't help, press Ctrl+F5 (Cmd+Shift+R on a Mac) to skip an old saved copy."
+    },
+    broken: {
+        title: "The name card stopped working.",
+        note: "Reload to start again. Your saved names and history are safe."
     }
-    const hideLater = () => {
-        clearTimeout(noticeTimer);
-        noticeTimer = setTimeout(() => (notice.hidden = true), action ? 8000 : 4000);
+};
+const NEEDS_NAMES = ["generateButton", "saveButton", "copyButton", "listButton"];
+
+/**
+ * Where the name card stands while the name lists load: "loading", "retrying" (said once), "failed" (with a Reload
+ * button calling onReload), "broken" (the card failed after loading, also with Reload) or "ready", which hides the
+ * panel and switches the buttons that need the lists back on.
+ * @param {"loading" | "retrying" | "failed" | "broken" | "ready"} step
+ * @param {Function} [onReload]
+ */
+export function renderLoading(step, onReload) {
+    const panel = $("nameLoading");
+    panel.dataset.step = step;
+    panel.hidden = step === "ready";
+    NEEDS_NAMES.forEach((id) => switchOff($(id), step !== "ready"));
+    if (step === "ready") return;
+    const { title, note } = LOADING_WORDS[step];
+    $("nameLoadingTitle").textContent = title;
+    $("nameLoadingNote").replaceChildren(...(note ? [note] : []));
+    if (onReload) $("nameLoadingNote").append(" ", button("name-card-loading-reload", "Reload", undefined, onReload));
+    const sentence = title.endsWith(".") ? title : `${title}.`;
+    announce(note ? `${sentence} ${note}` : title);
+}
+
+/**
+ * Reports what the visitor does with the pickers and the name card. `onRoll(trigger)` ("button" or "spacebar") says
+ * whether a name was rolled, so the Roll Name effects play only then. The Expanded Variety hint and closing a dialog
+ * from its backdrop change nothing the app holds, so they are handled here.
+ * @param {{ onSpeciesChange: Function, onLineageChange: Function, onSexChange: Function, onExpandedToggle: Function,
+ *   onRollPress: Function, onRoll: Function, onCopy: Function, onSave: Function, onSourcesOpen: Function }} handlers -
+ *   the three pickers' handlers are called with the value chosen
+ */
+export function wireCardControls(handlers) {
+    const { onSpeciesChange, onLineageChange, onSexChange, onExpandedToggle, onRollPress, onRoll } = handlers;
+    $("pickerSpecies").addEventListener("change", (event) => onSpeciesChange(event.target.value));
+    $("pickerLineage").addEventListener("change", (event) => onLineageChange(event.target.value));
+    $("pickerSex").addEventListener("change", (event) => onSexChange(event.target.value));
+    $("expandedToggle").addEventListener("click", onExpandedToggle);
+    $("expandedInfo").addEventListener("click", toggleExpandedHint);
+    $("namePicker").addEventListener("submit", (event) => event.preventDefault());
+    const generate = $("generateButton");
+    generate.addEventListener("pointerdown", () => {
+        onRollPress();
+        rechargeOnLetGo(generate);
+    });
+    // a pointer flashed on its press; a click with no pointer (detail 0) came from the keyboard
+    generate.addEventListener("click", (event) => {
+        if (!onRoll("button")) return;
+        if (event.detail === 0) renderFlash();
+        renderRolled();
+    });
+    document.body.addEventListener("keydown", (event) => {
+        const typing = event.target.closest("input, select, textarea, button, summary, a");
+        if (event.code !== "Space" || typing || document.querySelector("dialog[open]")) return;
+        event.preventDefault();
+        if (!onRoll("spacebar")) return;
+        renderFlash();
+        renderRolled();
+    });
+    $("copyButton").addEventListener("click", handlers.onCopy);
+    $("saveButton").addEventListener("click", handlers.onSave);
+    $("nameSourcesSummary")
+        .closest("details")
+        .addEventListener("toggle", (event) => event.currentTarget.open && handlers.onSourcesOpen());
+    closeOnOutsideClick($("partPicker"));
+    closeOnOutsideClick($("privacyDialog"));
+}
+
+function toggleExpandedHint(event) {
+    const isOpen = event.currentTarget.getAttribute("aria-expanded") !== "true";
+    event.currentTarget.setAttribute("aria-expanded", String(isOpen));
+    $("expandedHint").hidden = !isOpen;
+}
+
+// a tap outside a dialog (on its backdrop) closes it
+function closeOnOutsideClick(dialog) {
+    dialog.addEventListener("click", (event) => {
+        const box = dialog.getBoundingClientRect();
+        const outside =
+            event.clientX < box.left ||
+            event.clientX > box.right ||
+            event.clientY < box.top ||
+            event.clientY > box.bottom;
+        if (event.target === dialog && outside) dialog.close();
+    });
+}
+
+/** Tells the inline guard in index.html that the page's script has run. */
+export function renderStarted() {
+    document.documentElement.dataset.started = "true";
+}
+
+/** The cookie banner, its buttons, the privacy dialog and the links that open it, for setUpConsent. */
+export const getConsentControls = () => ({
+    banner: $("cookieBanner"),
+    accept: document.querySelectorAll(".cookie-accept"),
+    decline: document.querySelectorAll(".cookie-decline"),
+    dialog: $("privacyDialog"),
+    links: document.querySelectorAll(".privacy-link")
+});
+
+/** Plays the Roll Name button's discharge, the moment it is pressed or a roll comes from the keyboard. */
+export function renderFlash() {
+    replayAnimation($("generateButton"), "data-flashing");
+}
+
+// the Roll Name button's sparkles come back after a roll
+function renderRolled() {
+    replayAnimation($("generateButton"), "data-rolled");
+}
+
+const LET_GO_CATCH_UP_MS = 90;
+
+// A press dragged off the button and let go there is no click, so the page, not the button, hears it end.
+function rechargeOnLetGo(button) {
+    const pressEnded = new AbortController();
+    const letGo = () => {
+        pressEnded.abort();
+        springBack(button);
     };
-    notice.onpointerenter = notice.onfocusin = () => clearTimeout(noticeTimer);
-    notice.onpointerleave = notice.onfocusout = hideLater;
-    notice.hidden = false;
-    hideLater();
+    for (const type of ["pointerup", "pointercancel"]) {
+        document.addEventListener(type, letGo, { signal: pressEnded.signal });
+    }
+}
+
+// The restore and recharge wait out the discharge but are paused while held, so after a long hold they would wait again.
+// Let go mid-discharge, the light finishes leaving at once, so the stone's light comes back with its lift.
+function springBack(button) {
+    const animations = button.getAnimations?.() ?? [];
+    const named = (name) => animations.find((animation) => animation.animationName === name);
+    const discharge = named("generate-discharge");
+    const isDischarging = (discharge?.playState ?? "finished") !== "finished";
+    const leftToRun = isDischarging ? discharge.effect.getTiming().duration - discharge.currentTime : 0;
+    const catchUp = Math.min(leftToRun, LET_GO_CATCH_UP_MS);
+    if (isDischarging) discharge.playbackRate = leftToRun / catchUp;
+    for (const animation of [named("generate-restore"), named("generate-recharge")]) {
+        if (animation) {
+            animation.currentTime = Math.max(animation.currentTime, animation.effect.getTiming().delay - catchUp);
+        }
+    }
+}
+
+/** Draws the eye to the locked parts, which are why a roll found no name. */
+export function renderLockNudge() {
+    $("nameDials")
+        .querySelectorAll(".name-part.is-locked .name-part-lock")
+        .forEach((lock) => replayAnimation(lock, "data-nudged"));
+}
+
+function replayAnimation(node, attribute) {
+    node.removeAttribute(attribute);
+    void node.offsetWidth; // forces a reflow, so setting the attribute again starts the animation over
+    node.toggleAttribute(attribute, true);
 }

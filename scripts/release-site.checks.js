@@ -10,6 +10,7 @@ import {
     symlinkSync,
     writeFileSync
 } from "node:fs";
+import { createServer } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,11 +18,11 @@ import vm from "node:vm";
 import test from "node:test";
 import { parse } from "yaml";
 import { buildSite, verifySite } from "./release-site.js";
-import { getLiveExpectations, retryWhileProblems } from "./check-live-site.js";
-import { stampedVersion } from "./stamp-version.js";
+import { findDataProblems, getLiveExpectations, retryWhileProblems } from "./check-live-site.js";
+import { stampText, stampedVersion } from "./stamp-version.js";
 import { bumpVersion, nextVersion } from "./version.js";
-import { summarizeMutationReport } from "./mutation-summary.js";
 import { countStrykerDisables, strykerDisableProblems } from "./check-stryker-disables.js";
+import { SPECIES } from "../js/core/species.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const approvedFiles = JSON.parse(readFileSync(path.join(repositoryRoot, "release-files.json"), "utf8"));
@@ -66,7 +67,7 @@ test("the source files carry one version on every local script, stylesheet and d
     assert.match(read("js/app.js"), new RegExp(`from "\\./core/generators\\.js\\?v=${version}"`));
     assert.match(read("js/core/generators.js"), new RegExp(`from "\\./ElfNameGenerator\\.js\\?v=${version}"`));
     assert.match(read("js/core/species.js"), new RegExp(`"data/elfNames\\.json\\?v=${version}"`));
-    assert.match(read("js/core/DrowNameGenerator.js"), new RegExp(`from "\\./random\\.js\\?v=${version}"`));
+    assert.match(read("js/core/ElfNameGenerator.js"), new RegExp(`from "\\./random\\.js\\?v=${version}"`));
 });
 
 test("the page preloads every script it publishes, so none is found late during loading", () => {
@@ -74,6 +75,13 @@ test("the page preloads every script it publishes, so none is found late during 
     const preloaded = [...html.matchAll(/<link rel="modulepreload" href="([^"?]+)/g)].map((match) => match[1]);
     const scripts = approvedFiles.filter((file) => file.startsWith("js/"));
     assert.deepEqual([...preloaded].sort(), [...scripts].sort());
+});
+
+test("the page preloads every species' data file at the address the app fetches", () => {
+    const html = readFileSync(path.join(repositoryRoot, "index.html"), "utf8");
+    const preloaded = [...html.matchAll(/<link rel="preload" href="([^"]+)" as="fetch" crossorigin \/>/g)];
+    const dataFiles = Object.values(SPECIES).map((species) => species.dataFile);
+    assert.deepEqual(preloaded.map((match) => match[1]).sort(), dataFiles.sort());
 });
 
 const UNRELEASED = "## [Unreleased]\n\n### Fixed\n\n- A fix.\n\n## [4.1.4] - 2026-10-30\n";
@@ -308,9 +316,9 @@ test("the live check reports the last problems, after the attempts allowed, when
     assert.deepEqual(problems, ["still reachable on attempt 4"]);
 });
 
-test("mutation testing runs monthly or by hand in production only, read-only, and fails below the floor", () => {
+test("mutation testing runs monthly or by hand in production only, read-only, and judges the merged rerun", () => {
     const workflow = parse(readFileSync(path.join(repositoryRoot, ".github", "workflows", "mutation.yml"), "utf8"));
-    // not on pushes or pull requests: a run takes about 15 minutes or more
+    // not on pushes or pull requests: a full run takes hours
     assert.deepEqual(Object.keys(workflow.on).sort(), ["schedule", "workflow_dispatch"]);
     assert.deepEqual(workflow.permissions, { contents: "read" });
     const job = workflow.jobs.mutation;
@@ -319,30 +327,14 @@ test("mutation testing runs monthly or by hand in production only, read-only, an
     const checkout = job.steps.find((step) => step.uses?.startsWith("actions/checkout@"));
     assert.equal(checkout.with["persist-credentials"], false);
     const order = (pattern) => job.steps.findIndex((step) => pattern.test(step.uses || step.run || ""));
-    assert.ok(order(/test:mutation/) < order(/mutation-summary\.js/));
-    // a score below the floor fails the Stryker step; the summary and report must still be kept
+    // a moved missed count fails the Stryker step; the report must still be kept
     for (const step of job.steps.slice(order(/test:mutation/) + 1)) assert.equal(step.if, "${{ !cancelled() }}");
     const scripts = JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf8")).scripts;
-    assert.equal(scripts["test:mutation"], "stryker run");
+    assert.equal(scripts["test:mutation"], "node scripts/mutation-run.js && node scripts/mutation-summary.js");
     const config = JSON.parse(readFileSync(path.join(repositoryRoot, "stryker.config.json"), "utf8"));
     assert.deepEqual(config.mutate, ["js/core/**/*.js"]);
-    // the no-backsliding floor: raised as the gaps closed, never lowered; every break in core logic must be caught
-    assert.ok(config.thresholds.break >= 100, `floor ${config.thresholds.break}%`);
-});
-
-test("the mutation summary scores timeouts as caught, leaves excused mutants out, and lists the weakest file first", () => {
-    const mutants = (...statuses) => ({ mutants: statuses.map((status) => ({ status })) });
-    const report = {
-        files: {
-            "js/core/strong.js": mutants("Killed", "Killed", "Timeout", "Survived"),
-            "js/core/weak.js": mutants("Killed", "Survived", "NoCoverage", "Ignored", "CompileError")
-        }
-    };
-    const summary = summarizeMutationReport(report, 60);
-    // 4 caught of 7 counted; Ignored (excused with a reason) and CompileError are not counted
-    assert.match(summary, /\*\*Score: 57\.1%\*\* \(below the 60% floor\): 3 changes no test noticed, 1 excused/);
-    assert.ok(summary.indexOf("weak.js | 33.3%") < summary.indexOf("strong.js | 75.0%"), "weakest file first");
-    assert.match(summarizeMutationReport(report, 50), /\*\*Score: 57\.1%\*\* \(floor 50%\)/);
+    // Stryker's own floor would judge the first pass, before its timeouts are rerun; the missed ceiling judges instead
+    assert.equal(config.thresholds.break, null);
 });
 
 test("the Stryker disable ceiling fails when a file gains or loses a directive, naming the file", () => {
@@ -359,4 +351,52 @@ test("the Stryker disable ceiling fails when a file gains or loses a directive, 
 test("the recorded Stryker disable ceiling matches the directives in js/", () => {
     const ceiling = JSON.parse(readFileSync(path.join(repositoryRoot, "stryker-disable-ceiling.json"), "utf8"));
     assert.deepEqual(strykerDisableProblems(countStrykerDisables(), ceiling), []);
+});
+
+async function serveData(t, body) {
+    const requested = [];
+    const server = createServer((request, response) => {
+        requested.push(request.url);
+        response.end(body);
+    });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    t.after(() => server.close());
+    return { base: `http://127.0.0.1:${server.address().port}`, requested };
+}
+
+test("the live check accepts a data file that matches the release bytes, asked for at the page's versioned URL", async (t) => {
+    const release = readFileSync(path.join(repositoryRoot, "data/elfNames.json"), "utf8");
+    const { base, requested } = await serveData(t, release);
+    assert.deepEqual(await findDataProblems(base, repositoryRoot, "9.9.9", ["data/elfNames.json", "index.html"]), []);
+    assert.deepEqual(requested, ["/data/elfNames.json?v=9.9.9"]);
+});
+
+test("the live check reports a data file whose contents differ from the release, such as an old schema", async (t) => {
+    const { base } = await serveData(t, JSON.stringify({ schema: 4 }));
+    assert.deepEqual(await findDataProblems(base, repositoryRoot, "9.9.9", ["data/elfNames.json"]), [
+        "served data differs from the release: data/elfNames.json"
+    ]);
+});
+
+test("the stamper adds the version to every literal local import form", () => {
+    const stamped = (text) => stampText("js/a.js", text, "1.2.3");
+    assert.equal(stamped('import { x } from "./b.js";'), 'import { x } from "./b.js?v=1.2.3";');
+    assert.equal(stamped('export * from "../c.js";'), 'export * from "../c.js?v=1.2.3";');
+    assert.equal(stamped('import "./side.js";'), 'import "./side.js?v=1.2.3";');
+    assert.equal(stamped('const m = await import("./lazy.js");'), 'const m = await import("./lazy.js?v=1.2.3");');
+    assert.equal(stamped('import("./lazy.js?v=0.0.1")'), 'import("./lazy.js?v=1.2.3")', "restamps an older stamp");
+});
+
+test("the release check refuses a side-effect or dynamic local import that has no stamp", (t) => {
+    for (const unstamped of ['import "./core/generators.js";', 'void import("./core/generators.js");']) {
+        const root = fixture(t);
+        const script = path.join(root, "js", "app.js");
+        writeFileSync(
+            script,
+            `${readFileSync(script, "utf8")}
+${unstamped}
+`
+        );
+        assert.throws(() => buildSite(root), /Version stamp missing or not/, unstamped);
+    }
 });

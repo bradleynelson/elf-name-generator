@@ -3,8 +3,9 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { RULE_SETS } from "../js/core/generators.js";
 import { SPECIES } from "../js/core/species.js";
-import { NAME_TYPE, SCHEMA } from "../js/core/speciesData.js";
+import { NAME_TYPE, SCHEMA, loadSpeciesData } from "../js/core/speciesData.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 // each species' data file, as the page asks for it without its version stamp
@@ -60,13 +61,17 @@ const spelling = (value, at) => (Array.isArray(value) ? list(text)(value, at) : 
 // cites must be in `sources` (checked apart, so a broken id names the record that cites it).
 const shapeOf = (species) => {
     const lineages = optional(list(oneOf(...Object.keys(species.lineageWords))));
-    // a table entry gives `text` when its female and male forms are the same, otherwise `female` and `male`
+    // a table entry gives `text` when its female and male forms are the same, otherwise `female` and `male`; a table
+    // that lists each sex's suffixes apart (Races of Stone) gives only that sex's key
+    const sexed = (value) => ({
+        ...(value?.male === undefined && value?.female !== undefined ? {} : { male: spelling }),
+        ...(value?.female === undefined && value?.male !== undefined ? {} : { female: spelling })
+    });
     const tableEntry = (value, at) =>
-        record(
-            value?.text === undefined
-                ? { female: spelling, male: spelling, meaning: text }
-                : { text: spelling, meaning: text }
-        )(value, at);
+        record(value?.text === undefined ? { ...sexed(value), meaning: text } : { text: spelling, meaning: text })(
+            value,
+            at
+        );
     return record({
         schema: is(SCHEMA),
         // "creator": Ed Greenwood's own works, which the page credits to him
@@ -79,7 +84,7 @@ const shapeOf = (species) => {
                 meaning: optional(text),
                 meaningSource: optional(text),
                 note: optional(text),
-                form: oneOf("elvish", "common"),
+                form: oneOf(species.form, "common"),
                 lineages,
                 sources: list(text)
             })
@@ -93,9 +98,47 @@ const shapeOf = (species) => {
                 suffixes: list(tableEntry)
             })
         ),
-        words: list(record({ text, use: oneOf("common-first", "common-second", "glossary", "forbidden"), lineages }))
+        words: list((value, at) =>
+            record({
+                text,
+                use: oneOf("common-first", "common-second", "glossary", "forbidden", "qualifier", "place"),
+                lineages,
+                sources: optional(list(text)),
+                ...(isCommonWord(value) ? { names: list(text) } : {})
+            })(value, at)
+        )
     });
 };
+
+const isCommonWord = (word) => word?.use === "common-first" || word?.use === "common-second";
+
+function checkWordNames(data, at) {
+    if (!Array.isArray(data.names) || !Array.isArray(data.words)) return;
+    const common = new Set(
+        data.names.filter((n) => n?.type === NAME_TYPE.FAMILY && n.form === "common").map((n) => n.text)
+    );
+    data.words.forEach((word, index) => {
+        if (!isCommonWord(word) || !Array.isArray(word.names)) return;
+        const where = field(entryOf({ ...at, path: "words" }, index, word), "names");
+        for (const name of word.names.filter((name) => !common.has(name)))
+            fail(where, `"${name}" is not a Common-form family name`);
+    });
+}
+
+function checkTablesEachGeneratorNeeds(species, data, at) {
+    const loaded = loadSpeciesData(data, species);
+    for (const { lineages, reads, tables = [] } of RULE_SETS.filter((r) => SPECIES[r.species] === species)) {
+        const readable = loaded.tables.filter(reads);
+        for (const type of tables) {
+            const found = readable.filter((table) => table.type === type).length;
+            if (found !== 1)
+                fail(
+                    field(at, "tables"),
+                    `lineages ${lineages.join(", ")} need a "${type}" table; found ${found || "none"}`
+                );
+        }
+    }
+}
 
 // Each source id a record cites must be one the file lists, or the page cannot name the book.
 function checkSourceIds(data, at) {
@@ -111,6 +154,9 @@ function checkSourceIds(data, at) {
     each("names", (name, where) => {
         if (Array.isArray(name?.sources)) name.sources.forEach((id) => cite(id, field(where, "sources")));
         cite(name?.meaningSource, field(where, "meaningSource"));
+    });
+    each("words", (word, where) => {
+        if (Array.isArray(word?.sources)) word.sources.forEach((id) => cite(id, field(where, "sources")));
     });
     each("tables", (table, where) => {
         if (Array.isArray(table?.sources)) table.sources.forEach((id) => cite(id, field(where, "sources")));
@@ -175,10 +221,13 @@ function checkSourcesSayOnlyTheirNames(data, at) {
  */
 export function validateNameData(file, data) {
     const at = { file, path: "", label: undefined, problems: [] };
-    shapeOf(SPECIES_OF_FILE.get(file))(data, at);
+    const species = SPECIES_OF_FILE.get(file);
+    shapeOf(species)(data, at);
     checkSourceIds(data, at);
+    checkWordNames(data, at);
     checkSourcesSayOnlyTheirNames(data, at);
     checkNoLocalPaths(data, at);
+    if (!at.problems.length) checkTablesEachGeneratorNeeds(species, data, at);
     return at.problems;
 }
 

@@ -1,4 +1,6 @@
 // The cut items hold every lineage's names, so each generator passes the names of its own pool.
+import { METHOD } from "./nameStructure.js?v=4.3.0";
+import { SEX, UNISEX } from "./species.js?v=4.3.0";
 
 export const VOWELS = "aeiouyàáâäèéêëìíîïòóôöùúûü";
 const TRAILING_CONSONANTS = new RegExp(`[^${VOWELS}]*$`);
@@ -11,8 +13,8 @@ const DIGRAPHS = new Set(["th", "sh", "ph", "ch", "kh", "gh", "rh", "lh", "wh", 
 // Chosen: an opening keeps at least two letters; an ending always has its consonant and the vowel run after it.
 const SHORTEST_OPENING = 2;
 // Chosen: names with an apostrophe are not cut (the tables supply apostrophe forms), nor Common-form names
-// (Moonwhisper), whose parts would be English, not Elvish.
-const isCut = (name) => !name.text.includes("'") && name.form === "elvish";
+// (Moonwhisper), whose parts would be English, not the species' own language.
+const isCut = (name) => !name.text.includes("'") && name.form !== "common";
 
 function letterRuns(name) {
     const runs = [];
@@ -59,7 +61,7 @@ function cutSection(names) {
 }
 
 /**
- * The split components of a species' published names (Expanded Variety): for Elvish-form given and family names (a
+ * The split components of a species' published names (Expanded Variety): for given and family names not in Common form (a
  * drow house is not cut), the openings and endings each name is cut into and the consonant runs inside it (joins),
  * each with every name it came from.
  * @param {Object[]} names - the data's names ({ text, type, form })
@@ -83,11 +85,11 @@ export function joinsCleanly(left, right, clusters) {
 }
 
 // Chosen: a split component cites at most this many of the names it was cut from (the first, alphabetically), and the
-// books of those names, so its source line stays readable; the cut items keep every name.
-const CITED_NAMES = 5;
+// books of those names, so its source line stays readable; the cut items keep every name, and the part counts them all.
+export const CITED_NAMES = 5;
 
 /** The sexes a published name gives its components: a unisex name both, a name with no stated sex none. */
-const sexesOf = (name) => (name.sex === "unisex" ? ["female", "male"] : [name.sex]);
+const sexesOf = (name) => (name.sex === UNISEX ? [SEX.FEMALE, SEX.MALE] : [name.sex]);
 
 export class SplitComponents {
     /**
@@ -120,28 +122,48 @@ export class SplitComponents {
     }
 
     /**
-     * Components for a slot, each a part with the published names it was cut from (`from`) and the books those names
-     * appear in (`sources`): openings for a prefix slot, endings for a suffix slot. Endings follow gender (those of
-     * names published with it); Chosen: a neutral name uses only endings found on both female and male names, so it
-     * reads as neither; without a gender, every ending.
+     * Components for a slot, each a part with up to five of the published names it was cut from (`from`, of
+     * `fromTotal`) and their books (`sources`; `sourcesTotal` counts the books of all the names): openings for a
+     * prefix slot, endings for a suffix slot. Endings follow gender (those of names published with it); Chosen: a
+     * neutral name uses only endings found on both female and male names; without a gender, every ending. Throws
+     * when there is none (ask hasComponentsFor first where that can happen).
      */
     componentsFor(slot, sex) {
+        const components = this._componentsOf(slot, sex);
+        if (!components.length) throw new Error(`No published name components for a ${slot}${sex ? ` (${sex})` : ""}`);
+        return components;
+    }
+
+    /** Whether componentsFor has any component for the slot and sex. */
+    hasComponentsFor(slot, sex) {
+        return this._componentsOf(slot, sex).length > 0;
+    }
+
+    _componentsOf(slot, sex) {
         const cacheKey = `${slot}|${sex}`;
         if (!this.cache.has(cacheKey)) {
             const inTable = this.tableTexts[slot];
             const items = (slot === "prefix" ? this.openings : this._endingsFor(sex)).filter(
                 (item) => !inTable?.has(item.text.toLowerCase())
             );
-            if (!items.length) throw new Error(`No published name components for a ${slot}${sex ? ` (${sex})` : ""}`);
             this.cache.set(
                 cacheKey,
                 items.map((item) => {
                     const from = item.from.slice(0, CITED_NAMES);
-                    const sources = sourcesInOrder(
-                        from.map((name) => this.names.get(name)),
-                        this.sourceOrder
-                    );
-                    return { text: item.text, from, sources, method: "split" };
+                    const booksOf = (cited) =>
+                        sourcesInOrder(
+                            cited.map((name) => this.names.get(name)),
+                            this.sourceOrder
+                        );
+                    const sourcesTotal = booksOf(item.from).length;
+                    return {
+                        text: item.text,
+                        from,
+                        fromTotal: item.from.length,
+                        sources: booksOf(from),
+                        sourcesTotal,
+                        method: METHOD.SPLIT
+                    };
                 })
             );
         }
@@ -151,10 +173,10 @@ export class SplitComponents {
     _endingsFor(sex) {
         if (!sex) return this.endings;
         const sexes = (names) => new Set(names.flatMap((name) => sexesOf(this.names.get(name))));
-        if (sex === "neutral") {
+        if (sex === SEX.NEUTRAL) {
             return this.endings.filter((item) => {
                 const given = sexes(item.from);
-                return given.has("female") && given.has("male");
+                return given.has(SEX.FEMALE) && given.has(SEX.MALE);
             });
         }
         return this.endings

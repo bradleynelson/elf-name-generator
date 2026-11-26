@@ -4,13 +4,15 @@ import { SPECIES } from "../js/core/species.js";
 import { SCHEMA } from "../js/core/speciesData.js";
 import { readJson, readPage } from "./helpers/files.js";
 
-// Registers a made-up species through its description, a rule set and a data file only, then uses it through the real
-// page, app and storage: if adding a species ever needs a change elsewhere, this fails.
+// Covers adding a lineage through the registry and display path only. A real species also needs: its data file passing
+// check:data, the species selector asserted, and a backward-compatible meaning for the saved record's generatorType.
 const page = readPage();
 const $ = (id) => document.getElementById(id);
 
 const GNOME = {
+    label: "gnome",
     analytics: "gnome",
+    sexes: ["neutral", "female", "male"],
     dataFile: "data/gnomeNames.json",
     script: { font: "dalelands", label: "Written in the test script" },
     lineages: [{ value: "rock-gnome", label: "rock gnome", analytics: "rock_gnome" }],
@@ -60,19 +62,15 @@ class GnomeNameGenerator {
         return [];
     }
 
+    generatePartChange() {
+        return null;
+    }
+
     getStructureControls() {
         return [];
     }
 
-    getSurnameSwitchOptions() {
-        return { kind: "published", options: [] };
-    }
-
     generateStructureChange() {
-        return null;
-    }
-
-    generateSurnameChange() {
         return null;
     }
 }
@@ -103,15 +101,17 @@ afterEach(() => {
     registered.ruleSets.splice(registered.ruleSets.indexOf(RULE_SET), 1);
 });
 
-describe("a new species", () => {
+describe("a new lineage through the registry and display path", () => {
     it("is offered, named, written in its script, saved and shown again with no change to the app, page or storage", async () => {
         await import("../js/app.js");
         await vi.waitFor(() => expect($("nameText").textContent).not.toBe(""));
+        const species = [...$("pickerSpecies").options].find((o) => o.value === "gnome");
+        expect(species.textContent).toBe("gnome");
+        $("pickerSpecies").value = "gnome";
+        $("pickerSpecies").dispatchEvent(new Event("change"));
         const option = [...$("pickerLineage").options].find((o) => o.value === "rock-gnome");
         expect(option.textContent).toBe("rock gnome");
-        $("pickerLineage").value = "rock-gnome";
-        $("pickerLineage").dispatchEvent(new Event("change"));
-        expect($("nameText").textContent).toBe("Bimpnottin Turen");
+        expect($("nameText").textContent).toBe("Bimpnottin Turen, a published name");
         expect($("nameScript").dataset.script).toBe("dalelands");
         expect($("nameScriptLabel").textContent).toBe("Written in the test script");
         expect($("nameSources").querySelector(".name-sources-from").textContent).toBe("Test book");

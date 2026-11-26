@@ -1,7 +1,14 @@
 // Saved names, history and settings in browser storage. The saved-names key and record shape are unchanged from the
 // previous site, so older names (including other races) still show.
-import { getStoredPlace, getStoredTableSources } from "./core/nameStructure.js?v=4.2.0";
-import { getLineage } from "./core/species.js?v=4.2.0";
+import {
+    getStoredPlace,
+    getStoredTableSources,
+    groupWords,
+    KIND,
+    METHOD,
+    SECTION
+} from "./core/nameStructure.js?v=4.3.0";
+import { getLineage } from "./core/species.js?v=4.3.0";
 
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";
@@ -41,16 +48,54 @@ export const MAX_FAVORITES = 100;
 
 const isText = (value) => typeof value === "string" && value !== "";
 
-// A stored result this version can show and build on, or null; one saved by 4.1.5 or earlier is filled in.
+const isCount = (value) => value === undefined || (Number.isInteger(value) && value >= 0);
+const isTextList = (items) => Array.isArray(items) && items.every(isText);
+const isSourceList = (sources) => Array.isArray(sources) && sources.every((source) => isText(source?.title));
+const hasEvidence = (word) => isTextList(word.names) && isSourceList(word.sources);
+const hasNoEvidence = (word) => word.names === undefined && word.sources === undefined;
+
+const PART_CHECKS = {
+    // a total without its names cannot be drawn (the page compares the total with the names it lists)
+    split: (part) =>
+        (part.from === undefined ? part.fromTotal === undefined : isTextList(part.from)) &&
+        isCount(part.fromTotal) &&
+        isCount(part.sourcesTotal),
+    published: (part) => isSourceList(part.sources) && part.sources.length > 0,
+    composed: ({ words }) =>
+        Array.isArray(words) &&
+        words.length === 2 &&
+        words.every((word) => isText(word?.text)) &&
+        (words.every(hasEvidence) || words.every(hasNoEvidence))
+};
+const hasMeaningIfSlot = (part) =>
+    (part.kind !== KIND.PREFIX && part.kind !== KIND.SUFFIX) || typeof part.meaning === "string";
+
+const isPlaced = (part) => Object.values(SECTION).includes(part.section) && Object.values(KIND).includes(part.kind);
+const canRenderPart = (part) =>
+    isPlaced(part) &&
+    (part.sources === undefined || isSourceList(part.sources)) &&
+    (PART_CHECKS[part.method] ?? hasMeaningIfSlot)(part);
+
+// A stored result this version can draw and build on, or null (however it is damaged); older ones are filled in.
 function validateResult(result) {
-    const isUsable =
-        isText(result?.name) &&
-        Boolean(getLineage(result.subrace)) &&
-        Array.isArray(result.parts) &&
-        result.parts.length > 0 &&
-        result.parts.every((part) => isText(part?.key) && isText(part.role) && typeof part.text === "string");
-    if (!isUsable) return null;
-    return result.parts.every((part) => part.section && part.kind) ? result : fillStoredResult(result);
+    try {
+        const isUsable =
+            isText(result?.name) &&
+            Boolean(getLineage(result.subrace)) &&
+            Array.isArray(result.parts) &&
+            result.parts.length > 0 &&
+            result.parts.every((part) => isText(part?.key) && isText(part.role) && typeof part.text === "string");
+        if (!isUsable) return null;
+        const placed = result.parts.every((part) => part.section && part.kind) ? result : fillStoredResult(result);
+        const filled = { ...placed, parts: placed.parts.map(toWordRecords) };
+        const isDrawable =
+            (filled.published?.sources === undefined || isSourceList(filled.published.sources)) &&
+            filled.parts.every(canRenderPart) &&
+            groupWords(filled.parts).every((word) => word.length > 0);
+        return isDrawable ? filled : null;
+    } catch {
+        return null;
+    }
 }
 
 // What 4.1.5 and earlier did not store: parts' section and kind, and `sources` in place of `source`, `books` or one
@@ -70,6 +115,15 @@ function fillStoredResult(result) {
     });
     const published = result.published?.source ? { published: { sources: [sourceOf(result.published.source)] } } : {};
     return { ...result, ...published, parts };
+}
+
+// 4.2.0 kept a composed name's words, names and books as three lists; 4.1.5 kept only the words.
+const hasWordList = (part) => part.method === METHOD.COMPOSED && isTextList(part.words);
+function toWordRecords(part) {
+    if (!hasWordList(part)) return part;
+    const { wordNames, wordSources, ...rest } = part;
+    const evidence = (n) => (wordNames === undefined ? {} : { names: wordNames[n], sources: wordSources?.[n] });
+    return { ...rest, words: part.words.map((text, n) => ({ text, ...evidence(n) })) };
 }
 
 /** Reads a stored list; anything that is not a list (missing, unreadable, blocked storage) reads as empty. */
@@ -113,22 +167,36 @@ export function loadFavorites() {
 export const canLoadFavorite = (record) => Boolean(validateResult(record.result));
 
 /** Adds a name; returns the updated list. Throws an Error with a user-facing message when it cannot be saved. */
-export function addFavorite(favorites, result) {
+export function addFavorite(result) {
+    const favorites = loadFavorites();
     if (favorites.some((f) => f.name === result.name)) throw new Error("That name is already saved.");
     if (favorites.length >= MAX_FAVORITES) throw new Error(`You can save up to ${MAX_FAVORITES} names.`);
-    // the full result is kept so a saved name can be loaded back with its parts and sources
-    const record = { name: result.name, generatorType: "elven", subrace: result.subrace, savedAt: Date.now(), result };
+    const generatorType = getLineage(result.subrace)?.species.generatorType ?? "elven";
+    const record = { name: result.name, generatorType, subrace: result.subrace, savedAt: Date.now(), result };
     return save([...favorites, record]);
 }
 
-export function removeFavorite(favorites, name) {
-    return save(favorites.filter((f) => f.name !== name));
+export function removeFavorite(name) {
+    return save(loadFavorites().filter((f) => f.name !== name));
 }
 
-/** Puts a removed record back where it was (Undo). */
-export function restoreFavorite(favorites, record, index) {
+/**
+ * Puts a removed record back where it was (Undo), unless it is saved again already. Throws an Error with a
+ * user-facing message when the list is full again or the browser refuses.
+ */
+export function restoreFavorite(record, index) {
+    const favorites = loadFavorites();
     if (favorites.some((f) => f.name === record.name)) return favorites;
+    if (favorites.length >= MAX_FAVORITES) {
+        throw new Error("Saved names is full. Unsave another name to put this one back.");
+    }
     return save([...favorites.slice(0, index), record, ...favorites.slice(index)]);
+}
+
+export function watchSavedNames(listener) {
+    window.addEventListener("storage", (event) => {
+        if (event.key === STORAGE_KEY || event.key === null) listener();
+    });
 }
 
 function save(favorites) {
@@ -136,6 +204,6 @@ function save(favorites) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
         return favorites;
     } catch {
-        throw new Error("Your browser would not save the name. Storage may be full or turned off.");
+        throw new Error("Your browser's storage is full or turned off.");
     }
 }

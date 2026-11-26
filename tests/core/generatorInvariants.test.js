@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createGeneratorFor } from "../../js/core/generators.js";
+import { selectRandom } from "../../js/core/random.js";
 import { SUBRACES } from "../../js/core/species.js";
 import { seededRandom } from "../helpers/random.js";
-import { getLocks, KIND, SECTION } from "../../js/core/nameStructure.js";
-import { readSpeciesData } from "../helpers/nameData.js";
+import { getLocks, isSamePart, KIND, SECTION } from "../../js/core/nameStructure.js";
+import { readSpeciesData, stylesOf } from "../helpers/nameData.js";
 
 // Sampling: per lineage, SAMPLE rolls (seeds from SEED_BASE, styles cycled), each re-rolled under LOCK_SHARES, pressed
 // through every offered structure control, and rebuilt with one part swapped for another picker option.
@@ -13,9 +14,12 @@ const LOCK_SHARES = [0.3, 0.6, 1]; // share of the lockable parts kept; 1 is the
 const SEED_BASE = 61000;
 const SAMPLE = 200;
 const PICKER_SAMPLE = 40; // rolls that also get the (slower) part-picker swap
+const OFFERED_SAMPLE = 12; // offered parts tried per slot, drawn from the picker's list
+// wild dwarves have no clan and no name phrase, so nothing to add or take away
+const WITHOUT_CONTROLS = new Set(["wild-dwarf"]);
 
 // the parts a visitor can lock: name components, a whole surname or house; never the joins between them
-const isLockable = (part) => /^([tnf]\d+|family|house)$/.test(part.key);
+const isLockable = (part) => /^([tnfg]\d+|family|house|given|clan|qualifier|parent|ancestor|place)$/.test(part.key);
 const letters = (text) => text.toLowerCase().replace(/\s/g, "");
 const joined = (result) => result.parts.map((p) => p.text).join("");
 
@@ -64,11 +68,18 @@ describe.each(SUBRACES)("%s generator invariants", (subrace) => {
     // A new generator for every test: generators remember recent names, and one elf generator serves all four
     // elf lineages, so a shared one would let a test's sample depend on which tests ran before it.
     let gen;
+    const styles = stylesOf(createGeneratorFor(data), subrace).filter((style) => STYLES.includes(style));
     beforeEach(() => {
         gen = createGeneratorFor(data)(subrace);
     });
     // rolls and locks stay in step with this lineage's seeds
-    const options = (i, random) => ({ subrace, style: STYLES[i % STYLES.length], random });
+    const options = (i, random) => ({ subrace, style: styles[i % styles.length], random });
+    // a picker test's roll, every other one with Expanded Variety, and the keys of its lockable parts
+    const pickerRoll = (i) => {
+        const random = seededRandom(SEED_BASE + i);
+        const start = gen.generate({ ...options(i, random), expanded: i % 2 === 0 });
+        return { random, start, all: new Set(start.parts.filter(isLockable).map((p) => p.key)) };
+    };
 
     it("builds well-formed names from plain rolls", () => {
         for (let i = 0; i < SAMPLE; i++) {
@@ -119,7 +130,8 @@ describe.each(SUBRACES)("%s generator invariants", (subrace) => {
                 pressed++;
             }
         }
-        expect(pressed, "the sample must press controls, or this proves nothing").toBeGreaterThan(SAMPLE);
+        if (WITHOUT_CONTROLS.has(subrace)) expect(pressed).toBe(0);
+        else expect(pressed, "the sample must press controls, or this proves nothing").toBeGreaterThan(SAMPLE);
     });
 
     it("builds a name when one part is swapped for a picker option with the rest locked", () => {
@@ -134,13 +146,76 @@ describe.each(SUBRACES)("%s generator invariants", (subrace) => {
             if (!choice) continue;
             const label = `${subrace} seed ${SEED_BASE + i}, swap ${key} to ${choice.text}`;
             const keep = new Set([...all].filter((k) => k !== key));
-            const locks = { ...getLocks(start, all), [key]: choice };
-            const result = gen.generate({ ...options(i, random), locks });
+            const result = gen.generatePartChange(start, key, choice);
+            expect(result, label).not.toBeNull();
             expectWellFormed(result, label);
             expectLocksKept(result, lockedTexts(start, keep), label);
             expect(result.parts.find((p) => p.key === key)?.text, label).toBe(choice.text);
             swapped++;
         }
         expect(swapped, "the sample must swap parts, or this proves nothing").toBeGreaterThan(PICKER_SAMPLE / 2);
+    });
+
+    it("offers every part another roll put in the slot that a roll keeping the rest accepts, and the current one", () => {
+        let checked = 0;
+        for (let i = 0; i < PICKER_SAMPLE; i++) {
+            const { random, start, all } = pickerRoll(i);
+            const donor = gen.generate({ ...options(i, random), expanded: i % 2 === 0 });
+            for (const key of all) {
+                const current = start.parts.find((p) => p.key === key);
+                const offered = gen.optionsFor(start, key);
+                const label = `${subrace} seed ${SEED_BASE + i}, ${start.name}, ${key}`;
+                if (current.method !== "composed") {
+                    expect(
+                        offered.filter((o) => isSamePart(o, current)),
+                        `${label}: current part`
+                    ).toHaveLength(1);
+                }
+                const other = donor.parts.find((p) => p.key === key);
+                const isComparable = other?.role === current.role && other.method === current.method;
+                if (!isComparable || other.method === "composed") continue;
+                let accepted;
+                try {
+                    accepted = gen.generate({
+                        ...options(i, random),
+                        locks: { ...getLocks(start, all), [key]: other }
+                    });
+                } catch {
+                    continue;
+                }
+                expect(accepted.parts.find((p) => p.key === key)?.text).toBe(other.text);
+                const listed = offered.some((o) => isSamePart(o, other));
+                expect(listed, `${label}: ${other.text} builds ${accepted.name} but is not offered`).toBe(true);
+                checked++;
+            }
+        }
+        // a wild dwarf name has a single part (no clan), so at least one comparison per two rolls
+        expect(checked, "the sample must compare parts, or this proves nothing").toBeGreaterThan(PICKER_SAMPLE / 2);
+    });
+
+    it("offers only parts that a roll keeping the rest accepts in the slot", () => {
+        let checked = 0;
+        for (let i = 0; i < PICKER_SAMPLE; i++) {
+            const { random, start, all } = pickerRoll(i);
+            for (const key of all) {
+                const offered = gen.optionsFor(start, key);
+                const tried = Array.from({ length: OFFERED_SAMPLE }, () => selectRandom(offered, random));
+                for (const choice of new Set(tried.filter(Boolean))) {
+                    const label = `${subrace} seed ${SEED_BASE + i}, ${start.name}, ${key} offered ${choice.text}`;
+                    let accepted;
+                    try {
+                        accepted = gen.generate({
+                            ...options(i, random),
+                            locks: { ...getLocks(start, all), [key]: choice }
+                        });
+                    } catch (error) {
+                        expect.fail(`${label}: a roll refuses it (${error.message})`);
+                    }
+                    expect(accepted.parts.find((p) => p.key === key)?.text, label).toBe(choice.text);
+                    checked++;
+                }
+            }
+        }
+        expect(checked, "the sample must try offered parts, or this proves nothing").toBeGreaterThan(PICKER_SAMPLE);
     });
 });

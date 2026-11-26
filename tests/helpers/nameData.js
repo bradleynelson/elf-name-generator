@@ -100,3 +100,17 @@ export function expectBooksOfItsNames(splits, namesOf) {
         expect(new Set(part.sources).size).toBe(part.sources.length);
     }
 }
+
+const STYLES = ["neutral", "feminine", "masculine"];
+
+/** The styles a lineage's generator accepts (wild dwarves have no unisex names), asked of a throwaway generator. */
+export function stylesOf(generatorFor, subrace) {
+    const probe = generatorFor(subrace);
+    return STYLES.filter((style) => {
+        try {
+            return Boolean(probe.generate({ subrace, style, random: () => 0.5 }));
+        } catch {
+            return false;
+        }
+    });
+}

@@ -17,6 +17,16 @@ export function selectWeighted(items, weightOf, random = Math.random) {
     return items.length ? items[items.length - 1] : null;
 }
 
+/** A copy of `items` in random order (Fisher-Yates). */
+export function shuffle(items, random = Math.random) {
+    const out = [...items];
+    for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+}
+
 /** Remembers the last few names so they are not repeated; a repeat is allowed when nothing else is possible. */
 export class RecentNames {
     constructor(size = 5) {

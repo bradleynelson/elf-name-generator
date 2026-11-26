@@ -4,9 +4,9 @@ import test from "node:test";
 import {
     addedLineNumbers,
     checkRepository,
-    commentLineCounts,
     commentRuleProblems,
-    findComments
+    findComments,
+    stringRuleProblems
 } from "./check-comments.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -54,7 +54,9 @@ test("finds hash comments, trailing ones only in YAML and never inside quotes", 
 test("a comment names no ticket, owner or private file, except in the files that must", () => {
     const problems = commentRuleProblems(
         "js/a.js",
-        ["// BMN-12 fix", "// Brad asked for this", "", "// the owner chose it", "// see DECISIONS.md"].join("\n")
+        ["// BMN-12 fix", "// Brad asked for this", "", "// the project owner chose it", "// see DECISIONS.md"].join(
+            "\n"
+        )
     );
     assert.equal(problems.length, 4);
     assert.match(problems[0], /^js\/a\.js:1: .*ticket/);
@@ -62,10 +64,33 @@ test("a comment names no ticket, owner or private file, except in the files that
     assert.match(problems[2], /^js\/a\.js:4: .*owner/);
     assert.match(problems[3], /^js\/a\.js:5: .*private file/);
     assert.deepEqual(commentRuleProblems("js/a.js", "// a jsdoc-free line about ownership and brads"), []);
+    assert.deepEqual(commentRuleProblems("js/a.js", "// The resource owner releases the handle"), []);
+    assert.equal(commentRuleProblems("js/a.js", "// the repository maintainer wants this").length, 1);
     for (const exempt of [".github/CODEOWNERS", ".prettierignore"]) {
-        assert.deepEqual(commentRuleProblems(exempt, "# The owner keeps AGENTS.md out"), [], exempt);
+        assert.deepEqual(commentRuleProblems(exempt, "# The project owner keeps AGENTS.md out"), [], exempt);
     }
     assert.deepEqual(commentRuleProblems("scripts/release-site.js", "// keeps AGENTS.md out"), []);
+});
+
+test("a comment names no private rule or decision ID", () => {
+    const problems = commentRuleProblems("js/a.js", ["// join rule (D15, D16)", "x(); // chosen (Q7)"].join("\n"));
+    assert.equal(problems.length, 2);
+    assert.match(problems[0], /^js\/a\.js:1: .*private rule or decision ID/);
+    assert.match(problems[1], /^js\/a\.js:2: .*private rule or decision ID/);
+    assert.deepEqual(commentRuleProblems("js/a.js", "// a D&D book, DD1x, ID14 and Q1234 are not IDs"), []);
+});
+
+test("a string in js or tests names no ticket or private ID, but a regular expression may", () => {
+    const source = ['it("of a place (D4; BMN-193)", () => {});', "const note = `line\n${1} Q7`;"].join("\n");
+    const problems = stringRuleProblems("tests/a.test.js", source);
+    assert.equal(problems.length, 3);
+    assert.match(problems[0], /^tests\/a\.test\.js:1: string names a ticket/);
+    assert.match(problems[1], /^tests\/a\.test\.js:1: string names a private rule or decision ID/);
+    assert.match(problems[2], /^tests\/a\.test\.js:3: string names a private rule or decision ID/);
+    assert.equal(stringRuleProblems("js/a.js", 'const a = "BMN-1";').length, 1);
+    assert.deepEqual(stringRuleProblems("js/a.js", "const a = /D4/; const b = 'D'; const c = 'ID14';"), []);
+    assert.deepEqual(stringRuleProblems("scripts/a.js", 'const a = "BMN-1 D4";'), []);
+    assert.deepEqual(stringRuleProblems("style.css", '"BMN-1"'), []);
 });
 
 test("a comment runs at most two lines, counting adjacent whole-line comments as one", () => {
@@ -93,13 +118,6 @@ test("only JSDoc on an exported function, type or public method may run longer",
     assert.equal(commentRuleProblems("js/a.js", "/*\n * One.\n * Two.\n */\nexport function f() {}").length, 1);
 });
 
-test("counts the lines that carry a comment in each file", () => {
-    assert.deepEqual(
-        commentLineCounts({ "js/a.js": "// one\nx(); // two\n\n/* three\nfour */", "js/none.js": "x();" }),
-        { "js/a.js": 4 }
-    );
-});
-
 test("lists the new-file line numbers a unified diff adds", () => {
     const diff = [
         "diff --git a/x b/x",
@@ -114,6 +132,11 @@ test("lists the new-file line numbers a unified diff adds", () => {
     assert.deepEqual([...addedLineNumbers(diff)], [4, 5, 12]);
 });
 
-test("every comment in the repository keeps the rules and stays within its file's ceiling", () => {
+test("every comment in the repository keeps the rules", () => {
     assert.deepEqual(checkRepository(repositoryRoot), []);
+});
+
+test("adding or removing comments in a file never fails on a count", () => {
+    const source = ["// one", "x();", "// two", "y();", "// three"].join("\n");
+    assert.deepEqual(commentRuleProblems("js/a.js", source), []);
 });

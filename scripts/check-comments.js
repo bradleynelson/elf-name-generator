@@ -3,10 +3,8 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Linter } from "eslint";
-import { ceilingProblems } from "./ceiling.js";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
-const CEILING_FILE = "comment-ceiling.json";
 const MAX_LINES = 2;
 const SKIPPED_DIRECTORIES = new Set(["node_modules", "dist", "coverage", "reports", "data"]);
 const HASH_FILES = new Set([".gitignore", ".prettierignore", ".gitattributes", "CODEOWNERS", "robots.txt"]);
@@ -16,9 +14,16 @@ const NAMING_EXEMPT = new Set([
     "scripts/release-site.js",
     "scripts/release-site.checks.js"
 ]);
+const TICKET = { pattern: /\bBMN-\d+/i, what: "a ticket" };
+const PRIVATE_ID = { pattern: /\b[DQ]\d{1,2}\b/, what: "a private rule or decision ID" };
+const STRING_CHECKED = /^(js|tests)\/.*\.js$/;
 const FORBIDDEN = [
-    { pattern: /\bBMN-\d+/i, what: "a ticket" },
-    { pattern: /\b(brad|bradley|nelson|bradleynelson|owners?)\b/i, what: "the owner" },
+    TICKET,
+    PRIVATE_ID,
+    {
+        pattern: /\b(brad|bradley|nelson|bradleynelson|(project|repo|repository) (owner|maintainer)s?)\b/i,
+        what: "the owner"
+    },
     {
         pattern:
             /\b(AGENTS(\.override)?|DECISIONS|PROJECT_ASSESSMENT|RELEASE_CHECKLIST|LOCAL_DEVELOPMENT|CLAUDE)\.md\b|\.(claude|codex|agents)\//i,
@@ -62,11 +67,24 @@ function publicInterfaceStarts(ast) {
     return starts;
 }
 
-function javascriptComments(file, text) {
+function parseJavascript(file, text) {
     const config = { languageOptions: { ecmaVersion: "latest", sourceType: "module" } };
     const fatal = linter.verify(text, config, "file.js").find((message) => message.fatal);
     if (fatal) throw new Error(`${file}:${fatal.line}: cannot parse: ${fatal.message}`);
-    const sourceCode = linter.getSourceCode();
+    return linter.getSourceCode();
+}
+
+function stringsIn(node) {
+    if (Array.isArray(node)) return node.flatMap(stringsIn);
+    if (!node || typeof node.type !== "string") return [];
+    const own = typeof node.value === "string" && node.type === "Literal" ? [node] : [];
+    const cooked = node.type === "TemplateElement" ? [{ ...node, value: node.value.cooked }] : [];
+    const children = Object.entries(node).filter(([key]) => key !== "parent" && key !== "loc" && key !== "range");
+    return [...own, ...cooked, ...children.flatMap(([, child]) => stringsIn(child))];
+}
+
+function javascriptComments(file, text) {
+    const sourceCode = parseJavascript(file, text);
     const publicStarts = publicInterfaceStarts(sourceCode.ast);
     const documents = (end) => publicStarts.has(end + text.slice(end).match(/^\s*/)[0].length);
     return sourceCode
@@ -193,14 +211,21 @@ export function commentRuleProblems(file, text) {
     return problems.sort((a, b) => a.line - b.line).map(({ line, message }) => `${file}:${line}: ${message}`);
 }
 
-/** Lines carrying a comment, per file of `{ file: text }`; files with none are left out. */
-export function commentLineCounts(files) {
-    const counts = {};
-    for (const [file, text] of Object.entries(files)) {
-        const lines = new Set(findComments(file, text).flatMap(({ start, end }) => range(start, end)));
-        if (lines.size) counts[file] = lines.size;
-    }
-    return counts;
+/** Each string or template text in a script of `js/` or `tests/` that names a ticket or a private ID. */
+export function stringRuleProblems(file, text) {
+    if (!STRING_CHECKED.test(file)) return [];
+    const strings = stringsIn(parseJavascript(file, text).ast.body);
+    return strings
+        .flatMap(({ value, loc }) =>
+            [TICKET, PRIVATE_ID].flatMap(({ pattern, what }) => {
+                const match = pattern.exec(value);
+                return match
+                    ? [{ line: lineAt(value, match.index) + loc.start.line - 1, message: `string names ${what}.` }]
+                    : [];
+            })
+        )
+        .sort((a, b) => a.line - b.line)
+        .map(({ line, message }) => `${file}:${line}: ${message}`);
 }
 
 const range = (first, last) => Array.from({ length: last - first + 1 }, (_, i) => first + i);
@@ -226,20 +251,12 @@ function checkedFiles(root, directory = root) {
     });
 }
 
-/** Every comment rule and per-file ceiling problem in the repository at `root`; empty when it passes. */
+/** Every comment rule problem in the repository at `root`; empty when it passes. */
 export function checkRepository(root = repositoryRoot) {
-    const files = Object.fromEntries(
-        checkedFiles(root).map((file) => [file, readFileSync(path.join(root, file), "utf8")])
-    );
-    const ceiling = JSON.parse(readFileSync(path.join(root, CEILING_FILE), "utf8"));
-    return [
-        ...Object.entries(files).flatMap(([file, text]) => commentRuleProblems(file, text)),
-        ...ceilingProblems(commentLineCounts(files), ceiling, {
-            noun: "comment lines",
-            ceilingFile: CEILING_FILE,
-            overAdvice: "Delete a comment we would not miss in six months; the ceiling only moves down."
-        })
-    ];
+    return checkedFiles(root).flatMap((file) => {
+        const text = readFileSync(path.join(root, file), "utf8");
+        return [...commentRuleProblems(file, text), ...stringRuleProblems(file, text)];
+    });
 }
 
 function listAddedComments(base) {
@@ -271,8 +288,7 @@ function main() {
         console.error(problems.join("\n"));
         process.exit(1);
     }
-    const ceiling = JSON.parse(readFileSync(path.join(repositoryRoot, CEILING_FILE), "utf8"));
-    console.log(`Comment lines: ${Object.values(ceiling).reduce((sum, n) => sum + n, 0)}, at the ceiling.`);
+    console.log("Comment rules: no problems.");
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

@@ -16,3 +16,5 @@ PROJECT_ASSESSMENT.md
 RELEASE_CHECKLIST.md
 # generated data, never edited by hand
 data/*.json
+tests/core/elfRecordedOutput.json
+tests/core/savedByOldReleases.json

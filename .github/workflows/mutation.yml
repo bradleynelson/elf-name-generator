@@ -15,7 +15,8 @@ jobs:
         name: Mutation testing (js/core)
         if: github.repository == 'bradleynelson/elf-name-generator'
         runs-on: ubuntu-latest
-        timeout-minutes: 90
+        # GitHub's ceiling; a full run with the rerun took about 2.5 hours locally on 11 workers, and GitHub's runners have fewer
+        timeout-minutes: 360
 
         steps:
             - name: Checkout code
@@ -32,14 +33,11 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            # reruns timeouts and crashes with a long limit, then writes the summary; fails when a missed count moved
             - name: Run Stryker
               run: npm run test:mutation
 
-            # the summary and report are wanted most when the score fell below the floor
-            - name: Summarize the score
-              if: ${{ !cancelled() }}
-              run: node scripts/mutation-summary.js
-
+            # wanted most when the run failed
             - name: Keep the full report
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

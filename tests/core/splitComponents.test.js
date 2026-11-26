@@ -78,8 +78,15 @@ describe("SplitComponents.componentsFor", () => {
 
     it("offers every opening of its names for a prefix slot, each a split component with its names and their books", () => {
         expect(splitsFor().componentsFor("prefix")).toEqual([
-            { text: "ael", from: ["Aelar", "Aelin"], sources: [one, two], method: "split" },
-            { text: "Sy", from: ["Syl"], sources: [], method: "split" }
+            {
+                text: "ael",
+                from: ["Aelar", "Aelin"],
+                fromTotal: 2,
+                sources: [one, two],
+                sourcesTotal: 2,
+                method: "split"
+            },
+            { text: "Sy", from: ["Syl"], fromTotal: 1, sources: [], sourcesTotal: 0, method: "split" }
         ]);
     });
 
@@ -109,6 +116,15 @@ describe("SplitComponents.componentsFor", () => {
         expect(component.sources).not.toContain(three);
     });
 
+    it("counts all the names a component was cut from, and all their books, beyond the five it cites", () => {
+        const many = ["Aelar", "Aelin", "Arwen", "Daniel", "Gabriel", "Vendor"];
+        const pool = many.map((text, n) => named(text, undefined, n === 5 ? [three] : [one]));
+        const splits = new SplitComponents({ openings: [cut("a", ...many)] }, { names: pool, sources });
+        const [component] = splits.componentsFor("prefix");
+        expect([component.from.length, component.fromTotal]).toEqual([5, 6]);
+        expect([component.sources, component.sourcesTotal]).toEqual([[one], 2]);
+    });
+
     it("leaves out components whose text the name tables already offer, ignoring case", () => {
         const splits = splitsFor({ prefix: new Set(["sy"]), suffix: new Set(["ar"]) });
         expect(texts(splits.componentsFor("prefix"))).toEqual(["ael"]);
@@ -130,6 +146,17 @@ describe("SplitComponents.componentsFor", () => {
         );
         expect(() => onlyMale.componentsFor("suffix", "female")).toThrow(missing("suffix (female)"));
         expect(() => onlyMale.componentsFor("suffix", "neutral")).toThrow(missing("suffix (neutral)"));
+    });
+
+    it("says whether a slot has components for a sex, without failing when it has none", () => {
+        const onlyMale = new SplitComponents(
+            { openings: split.openings, endings: [cut("ar", "Aelar")] },
+            { names, sources }
+        );
+        expect(onlyMale.hasComponentsFor("suffix", "male")).toBe(true);
+        expect(onlyMale.hasComponentsFor("suffix", "female")).toBe(false);
+        expect(onlyMale.hasComponentsFor("prefix", "female")).toBe(true);
+        expect(splitsFor({ prefix: new Set(["ael", "sy"]) }).hasComponentsFor("prefix")).toBe(false);
     });
 
     it("answers the same slot and sex again with the same list", () => {

@@ -8,8 +8,15 @@ const HTML_REFERENCE = new RegExp(
     `(\\b(?:href|src)\\s*=\\s*["'])((?:[\\w-]+\\/)*[\\w-]+\\.(?:js|css|json))${OPTIONAL_STAMP}(?=["'])`,
     "gi"
 );
-const SCRIPT_IMPORT = new RegExp(`(\\bfrom\\s*["'])(\\.{1,2}\\/[\\w./-]+\\.js)${OPTIONAL_STAMP}(?=["'])`, "g");
 const DATA_PATH = new RegExp(`(["'])(data\\/[\\w-]+\\.json)${OPTIONAL_STAMP}(?=["'])`, "g");
+
+/** The one definition of a literal import, shared by the stamper and the release check: group 1 opens it, group 2 is the path. */
+export function scriptImportPattern(pathSource, flags = "gm") {
+    const opening = `^\\s*(?:import|export)\\b[^;"']*?\\bfrom\\s*["']|\\bimport\\s*\\(\\s*["']|^\\s*import\\s*["']`;
+    return new RegExp(`(${opening})(${pathSource})${OPTIONAL_STAMP}(?=["'])`, flags);
+}
+
+const SCRIPT_IMPORT = scriptImportPattern("\\.{1,2}\\/[\\w./-]+\\.js");
 
 /** The text with every local reference stamped with `version` (already-stamped references are restamped). */
 export function stampText(file, text, version) {
@@ -51,7 +58,6 @@ export function stampedVersion(root) {
     return readFileSync(path.join(root, "index.html"), "utf8").match(/href="style\.css\?v=([\w.-]+)"/)?.[1] ?? null;
 }
 
-// node scripts/stamp-version.js: stamps the source files with the version in package.json
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
     const root = fileURLToPath(new URL("../", import.meta.url));
     const version = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")).version;
