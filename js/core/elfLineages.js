@@ -1,8 +1,8 @@
 // What makes each elf lineage's names differ, as data the elf generators read in place of knowing the lineage.
 // Which records a lineage gets is its rule set's `reads` in generators.js, not repeated here.
-import { OWN_LINEAGE_WEIGHT } from "./nameRolls.js?v=4.3.1";
-import { DROW, SEX } from "./species.js?v=4.3.1";
-import { NAME_TYPE } from "./speciesData.js?v=4.3.1";
+import { OWN_LINEAGE_WEIGHT } from "./nameRolls.js?v=4.3.2";
+import { DROW, SEX } from "./species.js?v=4.3.2";
+import { NAME_TYPE } from "./speciesData.js?v=4.3.2";
 
 /**
  * @typedef {Object} ElfLineageRules
@@ -16,7 +16,7 @@ import { NAME_TYPE } from "./speciesData.js?v=4.3.1";
  *   second the long one for the structure controls
  * @property {number} compoundShape - the index of the shape the compound-name control adds or removes
  * @property {Object<string, SlotRules>} slots - how a prefix and a suffix slot read the first-name table
- * @property {import("./spelling.js?v=4.3.1").SpellingRules} spelling - its limits; `longKeep` is the roll's keep
+ * @property {import("./spelling.js?v=4.3.2").SpellingRules} spelling - its limits; `longKeep` is the roll's keep
  *   chance by sex
  * @property {boolean} [judgesWholeName] - true: a name is long when any of its words is (one keep chance per name);
  *   left out, each word is judged by its part after an apostrophe

@@ -1,7 +1,7 @@
 // Joining letters, shared by every generator that builds names from components: a roll and a picker edit join by the
 // same rule, so an edit makes only names a roll would make.
-import { isStructurePart, joiningLetter, KIND } from "./nameStructure.js?v=4.3.1";
-import { joinsCleanly } from "./splitComponents.js?v=4.3.1";
+import { isStructurePart, joiningLetter, KIND } from "./nameStructure.js?v=4.3.2";
+import { joinsCleanly } from "./splitComponents.js?v=4.3.2";
 
 /**
  * @typedef {Object} JoinRules

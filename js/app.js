@@ -1,5 +1,5 @@
-import { reportError, setUpConsent, track } from "./analytics.js?v=4.3.1";
-import { createGeneratorFor } from "./core/generators.js?v=4.3.1";
+import { reportError, setUpConsent, track } from "./analytics.js?v=4.3.2";
+import { createGeneratorFor } from "./core/generators.js?v=4.3.2";
 import {
     getLocks,
     isEveryPartLocked,
@@ -8,7 +8,7 @@ import {
     SECTION,
     SECTION_ANALYTICS,
     STRUCTURE_CONTROLS
-} from "./core/nameStructure.js?v=4.3.1";
+} from "./core/nameStructure.js?v=4.3.2";
 import {
     formatNameWithKind,
     getLineage,
@@ -18,10 +18,10 @@ import {
     getStylesFor,
     SEX_BY_STYLE,
     SPECIES
-} from "./core/species.js?v=4.3.1";
-import { loadSpeciesData } from "./core/speciesData.js?v=4.3.1";
-import { loadSetting, saveSetting } from "./favorites.js?v=4.3.1";
-import { announce, renderMessage } from "./messages.js?v=4.3.1";
+} from "./core/species.js?v=4.3.2";
+import { loadSpeciesData } from "./core/speciesData.js?v=4.3.2";
+import { loadSetting, saveSetting } from "./favorites.js?v=4.3.2";
+import { announce, renderMessage } from "./messages.js?v=4.3.2";
 import {
     copyToClipboard,
     renderListMessage,
@@ -32,7 +32,7 @@ import {
     SAVED_NAMES_FULL,
     startNameLists,
     toggleSaved
-} from "./nameLists.js?v=4.3.1";
+} from "./nameLists.js?v=4.3.2";
 import {
     focusPart,
     focusStructure,
@@ -50,7 +50,7 @@ import {
     renderSaved,
     endCardConfirmations,
     wireCardControls
-} from "./ui.js?v=4.3.1";
+} from "./ui.js?v=4.3.2";
 
 const LIST_SIZE = 10;
 // after a failed try, the name lists are tried again after each wait (or when the connection returns), then it gives up

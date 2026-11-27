@@ -33,33 +33,33 @@
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.3.1" />
+        <link rel="stylesheet" href="style.css?v=4.3.2" />
         <!-- fetch modules in parallel rather than one import at a time -->
-        <link rel="modulepreload" href="js/app.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/ui.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/dom.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/sourcesPanel.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/messages.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/nameLists.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/nameListsView.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/joiningLetters.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/spelling.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/nameTables.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/nameRolls.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/species.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/speciesData.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/DwarfNameGenerator.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/dwarfLineages.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/elfLineages.js?v=4.3.1" />
-        <link rel="modulepreload" href="js/core/generators.js?v=4.3.1" />
-        <link rel="preload" href="data/elfNames.json?v=4.3.1" as="fetch" crossorigin />
-        <link rel="preload" href="data/dwarfNames.json?v=4.3.1" as="fetch" crossorigin />
+        <link rel="modulepreload" href="js/app.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/ui.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/dom.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/sourcesPanel.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/messages.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/nameLists.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/nameListsView.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/joiningLetters.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/spelling.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/nameTables.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/nameRolls.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/species.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/speciesData.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/DwarfNameGenerator.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/dwarfLineages.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/elfLineages.js?v=4.3.2" />
+        <link rel="modulepreload" href="js/core/generators.js?v=4.3.2" />
+        <link rel="preload" href="data/elfNames.json?v=4.3.2" as="fetch" crossorigin />
+        <link rel="preload" href="data/dwarfNames.json?v=4.3.2" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
@@ -362,14 +362,19 @@
                                         <feGaussianBlur stdDeviation="0.5" />
                                     </filter>
                                     <linearGradient id="generate-top-band" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0" stop-color="#7a1424" />
-                                        <stop offset="0.5" stop-color="#5a0a16" />
-                                        <stop offset="1" stop-color="#3e0410" />
-                                    </linearGradient>
-                                    <linearGradient id="generate-bottom-band" x1="0" y1="0" x2="1" y2="0">
                                         <stop offset="0" stop-color="#e02a30" />
                                         <stop offset="0.35" stop-color="#b8121e" />
-                                        <stop offset="0.75" stop-color="#5a0610" />
+                                        <stop offset="0.75" stop-color="#7a0a18" />
+                                        <stop offset="1" stop-color="#5a0610" />
+                                    </linearGradient>
+                                    <linearGradient id="generate-top-fade" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0" stop-color="#4e0a14" stop-opacity="0" />
+                                        <stop offset="0.45" stop-color="#4e0a14" stop-opacity="0" />
+                                        <stop offset="1" stop-color="#4e0a14" stop-opacity="0.95" />
+                                    </linearGradient>
+                                    <linearGradient id="generate-bottom-band" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0" stop-color="#7a1424" />
+                                        <stop offset="0.5" stop-color="#5a0a16" />
                                         <stop offset="1" stop-color="#3e0410" />
                                     </linearGradient>
                                     <linearGradient id="generate-left-bevel" x1="0" y1="0" x2="0" y2="1">
@@ -378,7 +383,7 @@
                                     </linearGradient>
                                     <linearGradient id="generate-right-bevel" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="0" stop-color="#5a0812" />
-                                        <stop offset="1" stop-color="#8a1018" />
+                                        <stop offset="1" stop-color="#5c0b14" />
                                     </linearGradient>
                                     <linearGradient
                                         id="generate-top-edge"
@@ -447,11 +452,11 @@
                                         d="M300,0 L277.3,23 A16,17 0 0 1 282,35 L282,65 A16,17 0 0 1 277.3,77 L300,100 Z"
                                     />
                                     <g opacity="0.45">
-                                        <path fill="#601e22" d="M34,0 L266,0 L266,6 L34,6 Z" />
-                                        <path fill="#4e1c1b" d="M34,6 L266,6 L266,12 L34,12 Z" />
-                                        <path fill="#6c1726" d="M34,12 L266,12 L266,18 L34,18 Z" />
-                                        <path fill="#75292e" d="M34,82 L266,82 L266,88 L34,88 Z" />
-                                        <path fill="#8b131e" d="M34,88 L266,88 L266,95 L34,95 Z" />
+                                        <path fill="#e8505a" d="M34,0 L266,0 L266,6 L34,6 Z" />
+                                        <path fill="#d83a44" d="M34,6 L266,6 L266,12 L34,12 Z" />
+                                        <path fill="#c42c38" d="M34,12 L266,12 L266,18 L34,18 Z" />
+                                        <path fill="#2a0408" d="M34,82 L266,82 L266,88 L34,88 Z" />
+                                        <path fill="#200308" d="M34,88 L266,88 L266,95 L34,95 Z" />
                                         <path fill="#670717" d="M0,35 L6,35 L6,65 L0,65 Z" />
                                         <path fill="#5b030c" d="M6,35 L12,35 L12,65 L6,65 Z" />
                                         <path fill="#5f0a19" d="M12,35 L18,35 L18,65 L12,65 Z" />
@@ -459,17 +464,18 @@
                                         <path fill="#500109" d="M288,35 L294,35 L294,65 L288,65 Z" />
                                         <path fill="#530c10" d="M294,35 L300,35 L300,65 L294,65 Z" />
                                     </g>
+                                    <path fill="url(#generate-top-fade)" d="M34,0 L266,0 L266,18 L34,18 Z" />
                                     <g opacity="0.5">
-                                        <path fill="#6b2023" d="M34,0 L0,0 L22.7,23 A16,17 0 0 1 34,18 Z" />
-                                        <path fill="#7a1424" d="M0,0 L0,35 L18,35 A16,17 0 0 1 22.7,23 Z" />
+                                        <path fill="#d4363f" d="M34,0 L0,0 L22.7,23 A16,17 0 0 1 34,18 Z" />
+                                        <path fill="#b82430" d="M0,0 L0,35 L18,35 A16,17 0 0 1 22.7,23 Z" />
                                         <path fill="#4e0a14" d="M266,0 L300,0 L277.3,23 A16,17 0 0 0 266,18 Z" />
                                         <path fill="#440510" d="M300,0 L300,35 L282,35 A16,17 0 0 0 277.3,23 Z" />
-                                        <path fill="#5a0812" d="M300,100 L300,65 L282,65 A16,17 0 0 1 277.3,77 Z" />
-                                        <path fill="#4a0610" d="M266,100 L300,100 L277.3,77 A16,17 0 0 1 266,82 Z" />
-                                        <path fill="#701822" d="M34,100 L0,100 L22.7,77 A16,17 0 0 0 34,82 Z" />
-                                        <path fill="#5a0610" d="M0,100 L0,65 L18,65 A16,17 0 0 0 22.7,77 Z" />
+                                        <path fill="#3f0609" d="M300,100 L300,65 L282,65 A16,17 0 0 1 277.3,77 Z" />
+                                        <path fill="#350509" d="M266,100 L300,100 L277.3,77 A16,17 0 0 1 266,82 Z" />
+                                        <path fill="#480d15" d="M34,100 L0,100 L22.7,77 A16,17 0 0 0 34,82 Z" />
+                                        <path fill="#3d040b" d="M0,100 L0,65 L18,65 A16,17 0 0 0 22.7,77 Z" />
                                     </g>
-                                    <path fill="#e92d36" fill-opacity="0.6" d="M34,96 L266,96 L266,100 L34,100 Z" />
+                                    <path fill="#1a0206" fill-opacity="0.8" d="M34,96 L266,96 L266,100 L34,100 Z" />
                                     <g clip-path="url(#generate-table)">
                                         <path fill="#700f27" fill-opacity="0.4" d="M0,18 L300,18 L300,25 L0,25 Z" />
                                     </g>
@@ -876,7 +882,7 @@
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
                 <button type="button" class="privacy-link">Privacy</button>
             </p>
-            <p class="site-version">v4.3.1 - Last Updated 11-26-26</p>
+            <p class="site-version">v4.3.2 - Last Updated 11-26-26</p>
         </footer>
 
         <div class="visually-hidden" id="announcer" role="status" aria-live="polite"></div>
@@ -951,6 +957,6 @@
                 document.getElementById("announcer").replaceChildren(said);
             }, 10000);
         </script>
-        <script type="module" src="js/app.js?v=4.3.1"></script>
+        <script type="module" src="js/app.js?v=4.3.2"></script>
     </body>
 </html>

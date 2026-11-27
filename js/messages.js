@@ -1,5 +1,5 @@
 // The page's messages and its one live region.
-import { $, button, element, icon } from "./dom.js?v=4.3.1";
+import { $, button, element, icon } from "./dom.js?v=4.3.2";
 
 /** Says a message to screen readers through the page's one live region; a repeated message is said again. */
 export function announce(text) {

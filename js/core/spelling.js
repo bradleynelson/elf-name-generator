@@ -1,6 +1,6 @@
 // The spelling checks every generator applies to the words it builds. Each lineage gives its own limits and keep chance
 // (`SpellingRules`); the checks themselves live only here.
-import { VOWELS } from "./splitComponents.js?v=4.3.1";
+import { VOWELS } from "./splitComponents.js?v=4.3.2";
 
 const VOWEL_GROUP = new RegExp(`[${VOWELS}]+`, "g");
 // Inferred: doubled letters are published (Barendd, Torunn), a letter three times in a row never is.

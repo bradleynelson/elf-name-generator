@@ -1760,6 +1760,9 @@
     .name-list-name.is-damaged {
         color: color-mix(in srgb, var(--color-ruby-light) 70%, var(--color-text));
     }
+    .name-list-name.is-incompatible {
+        color: var(--color-text-muted);
+    }
     /* a long name is cut short rather than wrapped, as when its copy button says Copied */
     .name-list .name-list-name {
         min-width: 0;

@@ -1,4 +1,4 @@
-import { selectWeighted } from "./random.js?v=4.3.1";
+import { selectWeighted } from "./random.js?v=4.3.2";
 
 const FIRST_WORD_SLOTS = 2;
 const EXTRA_SUFFIX_SLOT = 2; // the third slot of the long shape, and the space of the two-word shape
