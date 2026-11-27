@@ -998,6 +998,22 @@ describe("starting with names stored in the browser", () => {
         expect($("nameText").textContent).toBe("Aerith");
     });
 
+    it("lists a name saved by the old site as saved there, not damaged, and explains it when clicked", async () => {
+        const v3Dwarf = { name: "Amar Fireok", generatorType: "dwarven", subrace: "general", savedAt: 1 };
+        stored("faerunNameFavorites", [v3Dwarf]);
+        await startPage();
+        const shown = $("nameText").textContent;
+        const [row] = savedRows();
+        const button = row.querySelector("button.name-list-name");
+        expect(button.classList).not.toContain("is-damaged");
+        expect(row.textContent).toMatch(/Saved on the old site/);
+        expect(row.querySelector('[aria-label^="Copy"]')).not.toBeNull();
+        button.click();
+        expect(row.querySelector(".message-box").textContent).toMatch(/old site/);
+        expect(row.querySelector(".message-box").textContent).not.toMatch(/damaged/);
+        expect($("nameText").textContent).toBe(shown);
+    });
+
     it("lists a name whose parts would draw an empty word as damaged, and keeps the page working", async () => {
         const part = (key, role, text, section, kind) => ({ key, role, text, section, kind, meaning: "Gift" });
         const space = part("sp", "space", " ", "given", "joint");

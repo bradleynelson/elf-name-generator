@@ -1,10 +1,11 @@
 // Saved names, More names and History: what is kept, copied, removed and put back, and the messages about it.
-import { track } from "./analytics.js?v=4.3.0";
-import { formatNameWithKind } from "./core/species.js?v=4.3.0";
+import { track } from "./analytics.js?v=4.3.1";
+import { formatNameWithKind } from "./core/species.js?v=4.3.1";
 import {
     MAX_FAVORITES,
     addFavorite,
     canLoadFavorite,
+    isFromOldSite,
     loadFavorites,
     loadHistory,
     removeFavorite,
@@ -12,8 +13,8 @@ import {
     saveHistory,
     storageAvailable,
     watchSavedNames
-} from "./favorites.js?v=4.3.0";
-import { announce, renderMessage } from "./messages.js?v=4.3.0";
+} from "./favorites.js?v=4.3.1";
+import { announce, renderMessage } from "./messages.js?v=4.3.1";
 import {
     focusHistoryControl,
     focusListedName,
@@ -25,8 +26,8 @@ import {
     renderSavedNameMessage,
     rememberRowFocus,
     wireListControls
-} from "./nameListsView.js?v=4.3.0";
-import { goToSection, renderConfirmation } from "./ui.js?v=4.3.0";
+} from "./nameListsView.js?v=4.3.1";
+import { goToSection, renderConfirmation } from "./ui.js?v=4.3.1";
 
 const HISTORY_SIZE = 10;
 // "Saved · 3 left" and an amber count from this many spaces left
@@ -214,14 +215,23 @@ function renderSavedNames(restored) {
         isNearlyFull: savesLeft() <= FEW_SAVES_LEFT,
         restored,
         canLoad: canLoadFavorite,
+        isFromOldSite,
         onLoad: app.guarded((record) => {
             renderSavedNameMessage(null);
             if (canLoadFavorite(record)) return app.restore(record.result);
-            rowExplainer(record.name)({
-                kind: "warning",
-                title: "This name is damaged.",
-                text: "It can't be shown again, but you can still copy or remove it."
-            });
+            rowExplainer(record.name)(
+                isFromOldSite(record)
+                    ? {
+                          kind: "warning",
+                          title: "This name was saved on the old site.",
+                          text: "It can't be shown here, but you can still copy or remove it."
+                      }
+                    : {
+                          kind: "warning",
+                          title: "This name is damaged.",
+                          text: "It can't be shown again, but you can still copy or remove it."
+                      }
+            );
         }),
         onCopy: app.guarded((record, _index, row) =>
             copyToClipboard(formatSavedLine(record), "saved", {

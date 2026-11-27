@@ -1,5 +1,5 @@
-import { RecentNames, generateWithRetries, selectRandom, selectWeighted } from "./random.js?v=4.3.0";
-import { generateComponentChange, generateJoined } from "./joiningLetters.js?v=4.3.0";
+import { RecentNames, generateWithRetries, selectRandom, selectWeighted } from "./random.js?v=4.3.1";
+import { generateComponentChange, generateJoined } from "./joiningLetters.js?v=4.3.1";
 import {
     createPublishedLookup,
     filterPartOptions,
@@ -7,17 +7,17 @@ import {
     takesPublishedFamily,
     takesSplitComponent,
     weightByLineage
-} from "./nameRolls.js?v=4.3.0";
+} from "./nameRolls.js?v=4.3.1";
 import {
     hasTripleLetter,
     isLongWord,
     keepsEveryLength,
     keepsLengthOnRoll,
     validateSpelling
-} from "./spelling.js?v=4.3.0";
-import { SplitComponents, VOWELS, sourcesInOrder } from "./splitComponents.js?v=4.3.0";
-import { SEX, SEX_BY_STYLE } from "./species.js?v=4.3.0";
-import { NAME_TYPE } from "./speciesData.js?v=4.3.0";
+} from "./spelling.js?v=4.3.1";
+import { SplitComponents, VOWELS, sourcesInOrder } from "./splitComponents.js?v=4.3.1";
+import { SEX, SEX_BY_STYLE } from "./species.js?v=4.3.1";
+import { NAME_TYPE } from "./speciesData.js?v=4.3.1";
 import {
     filterEntriesFor,
     formsFor,
@@ -25,7 +25,7 @@ import {
     mainSpelling,
     readTable,
     tableTextsOf
-} from "./nameTables.js?v=4.3.0";
+} from "./nameTables.js?v=4.3.1";
 import {
     capitalize,
     formatSectionText,
@@ -49,7 +49,7 @@ import {
     tablePart,
     wholeSection,
     wordsOf
-} from "./nameStructure.js?v=4.3.0";
+} from "./nameStructure.js?v=4.3.1";
 
 const PERSONAL = { section: SECTION.GIVEN, rolePrefix: "", shapeKey: "shape", splitsBySex: true };
 const FAMILY = {
@@ -143,7 +143,7 @@ function readNames({ names, tables, words, split, sources }) {
 export class ElfNameGenerator {
     /**
      * @param {Object} data - the lineage's share of the species data (generators.js)
-     * @param {import("./elfLineages.js?v=4.3.0").ElfLineageRules} rules
+     * @param {import("./elfLineages.js?v=4.3.1").ElfLineageRules} rules
      */
     constructor(data, rules) {
         Object.assign(this, readNamesOnce(data));

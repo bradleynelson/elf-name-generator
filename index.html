@@ -33,33 +33,33 @@
         />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="stylesheet" href="style.css?v=4.3.0" />
+        <link rel="stylesheet" href="style.css?v=4.3.1" />
         <!-- fetch modules in parallel rather than one import at a time -->
-        <link rel="modulepreload" href="js/app.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/analytics.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/favorites.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/ui.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/dom.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/sourcesPanel.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/messages.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/nameLists.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/nameListsView.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/random.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/joiningLetters.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/spelling.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/nameTables.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/nameRolls.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/species.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/speciesData.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/DwarfNameGenerator.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/dwarfLineages.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/elfLineages.js?v=4.3.0" />
-        <link rel="modulepreload" href="js/core/generators.js?v=4.3.0" />
-        <link rel="preload" href="data/elfNames.json?v=4.3.0" as="fetch" crossorigin />
-        <link rel="preload" href="data/dwarfNames.json?v=4.3.0" as="fetch" crossorigin />
+        <link rel="modulepreload" href="js/app.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/analytics.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/favorites.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/ui.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/dom.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/sourcesPanel.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/messages.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/nameLists.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/nameListsView.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/random.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/splitComponents.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/joiningLetters.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/spelling.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/nameTables.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/nameRolls.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/nameStructure.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/species.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/speciesData.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/ElfNameGenerator.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/DwarfNameGenerator.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/dwarfLineages.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/elfLineages.js?v=4.3.1" />
+        <link rel="modulepreload" href="js/core/generators.js?v=4.3.1" />
+        <link rel="preload" href="data/elfNames.json?v=4.3.1" as="fetch" crossorigin />
+        <link rel="preload" href="data/dwarfNames.json?v=4.3.1" as="fetch" crossorigin />
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
@@ -645,9 +645,16 @@
                         <summary>Surface Elves</summary>
                         <p>
                             Surface elves have several lineages, the most common being high elves (sun and moon elves)
-                            and wood elves. While no distinct naming conventions are explicitly documented for these
-                            lineages, patterns can be observed in published material, and this generator reflects those
-                            patterns.
+                            and wood elves. There are no distinct naming conventions explicitly documented for these
+                            lineages (<cite>Elves of Evermeet</cite> and <cite>The Complete Book of Elves</cite>, 2e;
+                            <cite>Races of Faerûn</cite>, 3e). <cite>The Complete Book of Elves</cite> describes one
+                            fashion for all elves, soft sounds with the occasional hard consonant. The generator
+                            therefore uses a shared pool of names with a slight weight toward the published names of the
+                            lineage you choose.
+                        </p>
+                        <p>
+                            Wood elves have fewer published names than sun or moon elves, so their results draw more on
+                            the shared pool.
                         </p>
                         <p>
                             First names are built from the elven name tables in <cite>Races of the Wild</cite> (3.5e),
@@ -716,9 +723,11 @@
                 <details>
                     <summary>Dwarves (Stout Folk)</summary>
                     <p>
-                        The dwarves of Faerûn include shield dwarves (mountain dwarves), gold dwarves (hill dwarves),
-                        wild dwarves (jungle dwarves) and duergar (gray dwarves). While they share a common ancestry,
-                        their naming traditions reflect differences in culture and society.
+                        <cite>Races of Faerûn</cite> (3e) identifies shield dwarves (mountain or northern), gold dwarves
+                        (hill or southern), wild dwarves (jungle or <i>Dur Authalar</i>), duergar (dark or gray),
+                        urdunnir (deep or orecutter), and arctic dwarves (Inugaakalikurit). The latter two are rare, so
+                        this generator focuses on the first four. While they share a common ancestry, their naming
+                        traditions reflect cultural and societal differences.
                     </p>
                     <p>
                         Unlike elves, who traditionally bear unique names, dwarves pass their names down through
@@ -730,6 +739,19 @@
                         here are female or male, with no unisex option.
                     </p>
                     <p>
+                        Among dwarves it is more common to use one's clan name, as in Dorn Bladebite. A dwarf who is
+                        clanless or outlawed, or who wants to hide their clan, may use a kingdom name instead, as in
+                        Dorn of the Deep Realm (<cite>Dwarves Deep</cite>, 2e). Wild dwarves have no clans.
+                    </p>
+                    <p>
+                        To tell apart dwarves who share a name, shield and gold dwarves add phrases: a personal
+                        qualifier such as "the Younger" or "Hammerhand"; their ancestry, as "son of" or "daul of"
+                        (daughter of) a notable ancestor, or "blood of" for the most famous heroes and rulers; and the
+                        kingdom or hold they come from. These can be strung together (<cite>Dwarves Deep</cite>, 2e).
+                        About one name in ten gets such a phrase here, and the + button beside a name adds one. Places
+                        come from published Realms sources, such as "of Gauntlgrym".
+                    </p>
+                    <p>
                         With Expanded Variety on, first names may also be constructed using the dwarven name tables in
                         <cite>Races of Stone</cite> (3.5e), first published in <cite>Dragon</cite> #261: a prefix and a
                         suffix, each with its own meaning. The suffixes differ between masculine and feminine names.
@@ -737,29 +759,38 @@
                         unknown. If a constructed name matches that of a published character, it is flagged so you know.
                     </p>
                     <details>
-                        <summary>Shield and Gold Dwarves</summary>
+                        <summary>Shield Dwarves</summary>
                         <p>
-                            Clan membership is central to dwarven identity. Members of a clan's founding or ruling
-                            family bear the clan name as their own, while other members identify themselves as being
-                            "of" the clan (<cite>Dwarves Deep</cite>, 2e).
+                            Shield dwarves are the mountain dwarves of the north. <cite>Dwarves Deep</cite> (2e) prints
+                            a northern list of names and clans for them, and no name in it also appears in the southern
+                            list used for gold dwarves. This generator uses published names and clans, favoring those
+                            the sources tie to shield dwarves, but names and clans with no sourced ties to either
+                            lineage can appear for both.
                         </p>
                         <p>
-                            This generator uses published clan names, favoring those the sources tie to the chosen
-                            lineage, such as the northern clans for shield dwarves and the southern clans for gold
-                            dwarves (<cite>Dwarves Deep</cite>, 2e); clans no source ties to either can appear for both.
+                            Shield dwarf names take the phrases described above, up to one per name. That limit is this
+                            generator's choice, not a rule the sources state.
                         </p>
+                    </details>
+                    <details>
+                        <summary>Gold Dwarves</summary>
                         <p>
-                            To distinguish between dwarves who share a name, dwarves may adopt personal qualifiers, such
-                            as "the Younger" or "Hammerhand," or identify themselves by their ancestry using "son of,"
-                            "daul of" (daughter of), or, less commonly, "blood of" a notable ancestor. They may also
-                            name the hold or realm they come from, as in "of Gauntlgrym" (<cite>Dwarves Deep</cite>,
-                            2e). About one name in ten gets such a phrase here, and the + button beside a name adds one.
+                            Gold dwarves are the hill dwarves of the south. <cite>Dwarves Deep</cite> (2e) prints a
+                            southern list of names and clans for them, separate from the northern list used for shield
+                            dwarves. This generator favors the names and clans the sources tie to gold dwarves;
+                            similarly, names and clans with no sourced ties to either lineage can appear for both.
                         </p>
                         <p>
                             Gold dwarves place particular importance on ancestry and social standing, maintaining
                             genealogies that span thousands of years. As a result, their names tend to be longer and
-                            more elaborate than those of other dwarves (<cite>Dwarves Deep</cite>, 2e), so a gold dwarf
-                            name may carry two phrases.
+                            more elaborate than those of other dwarves (<cite>Dwarves Deep</cite>, 2e).
+                        </p>
+                        <p>
+                            Gold dwarves live in the Great Rift, the Deep Realm and the Deep Lands beneath the Shaar, so
+                            "of the Deep Realm" suits them well. To reflect their longer names, this generator lets a
+                            gold dwarf name carry up to two of the phrases described above. That limit is this
+                            generator's choice, not a rule the sources state: <cite>Dwarves Deep</cite>'s own example of
+                            a full gold name carries four.
                         </p>
                     </details>
                     <details>
@@ -799,9 +830,10 @@
                     <details>
                         <summary>Dethek</summary>
                         <p>
-                            Dethek is the dwarven alphabet of Faerûn, a runic script also used to write several other
-                            languages (<cite>Forgotten Realms Campaign Setting</cite>, 3e). It is an alphabet, not a
-                            language.
+                            Dethek is the universal dwarven alphabet of Faerûn, a runic script also used to write
+                            several other languages (<cite>Forgotten Realms Campaign Setting</cite>, 3e). It is an
+                            alphabet, not a language. All Dwarvish in Faerûn is written in the Dethek runic script, even
+                            though Dwarvish has distinct regional dialects.
                         </p>
                         <p>
                             Under each dwarven name, the same letters are shown in a Dethek font. This is a
@@ -844,7 +876,7 @@
                 <a href="https://ko-fi.com/bradleyn" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a> ·
                 <button type="button" class="privacy-link">Privacy</button>
             </p>
-            <p class="site-version">v4.3.0 - Last Updated 11-26-26</p>
+            <p class="site-version">v4.3.1 - Last Updated 11-26-26</p>
         </footer>
 
         <div class="visually-hidden" id="announcer" role="status" aria-live="polite"></div>
@@ -919,6 +951,6 @@
                 document.getElementById("announcer").replaceChildren(said);
             }, 10000);
         </script>
-        <script type="module" src="js/app.js?v=4.3.0"></script>
+        <script type="module" src="js/app.js?v=4.3.1"></script>
     </body>
 </html>

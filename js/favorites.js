@@ -7,8 +7,8 @@ import {
     KIND,
     METHOD,
     SECTION
-} from "./core/nameStructure.js?v=4.3.0";
-import { getLineage } from "./core/species.js?v=4.3.0";
+} from "./core/nameStructure.js?v=4.3.1";
+import { getLineage } from "./core/species.js?v=4.3.1";
 
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";
@@ -165,6 +165,9 @@ export function loadFavorites() {
 
 /** True if a saved name can be shown again with its components, rather than only listed. */
 export const canLoadFavorite = (record) => Boolean(validateResult(record.result));
+
+/** True for a name an older site saved as text only: every current version stores a result with its record. */
+export const isFromOldSite = (record) => record.result === undefined;
 
 /** Adds a name; returns the updated list. Throws an Error with a user-facing message when it cannot be saved. */
 export function addFavorite(result) {

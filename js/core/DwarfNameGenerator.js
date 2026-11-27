@@ -1,17 +1,17 @@
-import { generateComponentChange, generateJoined } from "./joiningLetters.js?v=4.3.0";
-import { RecentNames, selectRandom, selectWeighted, shuffle } from "./random.js?v=4.3.0";
+import { generateComponentChange, generateJoined } from "./joiningLetters.js?v=4.3.1";
+import { RecentNames, selectRandom, selectWeighted, shuffle } from "./random.js?v=4.3.1";
 import {
     createPublishedLookup,
     filterPartOptions,
     generateName,
     takesSplitComponent,
     weightByLineage
-} from "./nameRolls.js?v=4.3.0";
-import { hasTripleLetter, keepsEveryLength, keepsLengthOnRoll, validateSpelling } from "./spelling.js?v=4.3.0";
-import { SplitComponents } from "./splitComponents.js?v=4.3.0";
-import { SEX, SEX_BY_STYLE, UNISEX } from "./species.js?v=4.3.0";
-import { NAME_TYPE } from "./speciesData.js?v=4.3.0";
-import { filterEntriesFor, formsFor, readTable, tableTextsOf } from "./nameTables.js?v=4.3.0";
+} from "./nameRolls.js?v=4.3.1";
+import { hasTripleLetter, keepsEveryLength, keepsLengthOnRoll, validateSpelling } from "./spelling.js?v=4.3.1";
+import { SplitComponents } from "./splitComponents.js?v=4.3.1";
+import { SEX, SEX_BY_STYLE, UNISEX } from "./species.js?v=4.3.1";
+import { NAME_TYPE } from "./speciesData.js?v=4.3.1";
+import { filterEntriesFor, formsFor, readTable, tableTextsOf } from "./nameTables.js?v=4.3.1";
 import {
     formatSectionText,
     generateWithPart,
@@ -26,7 +26,7 @@ import {
     slotPart,
     structurePart,
     tablePart
-} from "./nameStructure.js?v=4.3.0";
+} from "./nameStructure.js?v=4.3.1";
 
 const GIVEN_KEY = "given";
 const CLAN_KEY = "clan";
@@ -81,7 +81,7 @@ const STRUCTURE_CONTROLS = {
  * A name is one first name, a clan unless the lineage has none, and sometimes a name phrase.
  */
 export class DwarfNameGenerator {
-    /** @param {import("./dwarfLineages.js?v=4.3.0").LineageRules} rules */
+    /** @param {import("./dwarfLineages.js?v=4.3.1").LineageRules} rules */
     constructor({ names, tables, words, split, sources }, rules) {
         if (!rules) throw new Error("A dwarf generator needs its lineage description");
         this.rules = rules;
