@@ -112,7 +112,14 @@ describe("a row's buttons", () => {
             result: { name: "Alra", sex: "female", subrace: "sun-elf" }
         };
         const handlers = { onLoad: vi.fn(), onCopy: vi.fn(), onRemove: vi.fn(), onUndo: vi.fn() };
-        renderFavorites([{ record }], { count: 1, max: 100, isNearlyFull: false, canLoad: () => true, ...handlers });
+        renderFavorites([{ record }], {
+            count: 1,
+            max: 100,
+            isNearlyFull: false,
+            canLoad: () => true,
+            isFromOldSite: () => false,
+            ...handlers
+        });
         document.querySelector("#favoritesList .name-list-name").click();
         document.querySelector("#favoritesList .name-list-remove").click();
         expect(handlers.onLoad).toHaveBeenCalledWith(record, 0, expect.anything());
@@ -132,7 +139,7 @@ describe("renderSavedNameMessage", () => {
 
 describe("renderFavorites: the line under each name", () => {
     const record = (name, sex, subrace) => ({ name, subrace, result: { name, sex, subrace } });
-    const show = (rows, canLoad = () => true) =>
+    const show = (rows, canLoad = () => true, isFromOldSite = () => false) =>
         renderFavorites(
             rows.map((row) => (row.isRemoved ? row : { record: row })),
             {
@@ -140,6 +147,7 @@ describe("renderFavorites: the line under each name", () => {
                 max: 100,
                 isNearlyFull: false,
                 canLoad,
+                isFromOldSite,
                 onLoad: vi.fn(),
                 onCopy: vi.fn(),
                 onRemove: vi.fn(),
@@ -182,6 +190,23 @@ describe("renderFavorites: the line under each name", () => {
         expect(names.map((n) => n.classList.contains("is-damaged"))).toEqual([false, true]);
         const notes = [...document.querySelectorAll("#favoritesList .name-list-kind")];
         expect(notes.map((n) => n.classList.contains("is-note"))).toEqual([false, true]);
+    });
+
+    it("says a name from the old site was saved there, and does not call it damaged", () => {
+        const old = { name: "Amar Fireok", generatorType: "dwarven", subrace: "general" };
+        show(
+            [old, record("Brix", "male", "drow")],
+            (r) => r !== old,
+            (r) => r === old
+        );
+        expect(lines()).toEqual([
+            "Saved on the old site: Cannot be rebuilt here. Copy and remove still work.",
+            "male elf · drow lineage"
+        ]);
+        const [oldName] = document.querySelectorAll("#favoritesList .name-list-name");
+        expect(oldName.classList.contains("is-damaged")).toBe(false);
+        expect(oldName.getAttribute("aria-label")).toBe("Amar Fireok, saved on the old site");
+        expect(document.querySelector(".name-list-kind").classList.contains("is-note")).toBe(true);
     });
 
     it("shows only what is known, and no line when nothing is", () => {
@@ -237,6 +262,7 @@ describe("the Copy all buttons", () => {
     it("show in Saved names only while a name is saved", () => {
         const savedHandlers = {
             canLoad: () => true,
+            isFromOldSite: () => false,
             onLoad: vi.fn(),
             onCopy: vi.fn(),
             onRemove: vi.fn(),

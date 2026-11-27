@@ -1,6 +1,6 @@
 // The cut items hold every lineage's names, so each generator passes the names of its own pool.
-import { METHOD } from "./nameStructure.js?v=4.3.0";
-import { SEX, UNISEX } from "./species.js?v=4.3.0";
+import { METHOD } from "./nameStructure.js?v=4.3.1";
+import { SEX, UNISEX } from "./species.js?v=4.3.1";
 
 export const VOWELS = "aeiouyàáâäèéêëìíîïòóôöùúûü";
 const TRAILING_CONSONANTS = new RegExp(`[^${VOWELS}]*$`);

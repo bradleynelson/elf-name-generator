@@ -3,6 +3,7 @@ import {
     MAX_FAVORITES,
     addFavorite,
     canLoadFavorite,
+    isFromOldSite,
     loadFavorites,
     loadHistory,
     loadSetting,
@@ -152,6 +153,22 @@ describe("saved names", () => {
         const loaded = loadFavorites();
         expect(loaded).toEqual([older, damaged, otherRace, good]);
         expect(loaded.map(canLoadFavorite)).toEqual([false, false, false, true]);
+    });
+});
+
+describe("isFromOldSite", () => {
+    // what the v3 site stored for a dwarf: text and parts, no result
+    const v3Dwarf = { name: "Amar Fireok", generatorType: "dwarven", subrace: "general", firstName: { name: "Amar" } };
+
+    it("is true for a record without a result, which no current version stores", () => {
+        expect(isFromOldSite(v3Dwarf)).toBe(true);
+        expect(isFromOldSite({ name: "Thorin", generatorType: "elven", savedAt: 1 })).toBe(true);
+    });
+
+    it("is false for a record with a result, usable or not", () => {
+        const damaged = { name: "Ilsevel", result: { name: "Ilsevel", subrace: "moon-elf", parts: [null] } };
+        expect(isFromOldSite({ name: "Aerith", result: result("Aerith") })).toBe(false);
+        expect(isFromOldSite(damaged)).toBe(false);
     });
 });
 

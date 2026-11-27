@@ -1,8 +1,8 @@
 // The lists of names on the page (More names, History and Saved names), each row with its tools.
-import { formatNameKind } from "./core/species.js?v=4.3.0";
-import { $, button, element, iconButton, renderBookmark } from "./dom.js?v=4.3.0";
-import { renderMessageIn } from "./messages.js?v=4.3.0";
-import { renderButtonConfirmation, renderGlint } from "./ui.js?v=4.3.0";
+import { formatNameKind } from "./core/species.js?v=4.3.1";
+import { $, button, element, iconButton, renderBookmark } from "./dom.js?v=4.3.1";
+import { renderMessageIn } from "./messages.js?v=4.3.1";
+import { renderButtonConfirmation, renderGlint } from "./ui.js?v=4.3.1";
 
 // what a row's button does (its data-action) and the handler it calls
 const HANDLER_OF = {
@@ -104,15 +104,16 @@ function renderListedRow(result, { isSaved, isFull, onRemove }) {
 }
 
 /**
- * Saved names: click one to load it, copy or remove it. One that cannot be shown again is marked damaged but listed;
- * a removed one keeps its row, with an Undo, until the page is left.
+ * Saved names: click one to load it, copy or remove it. One that cannot be shown again is listed with a note: damaged,
+ * or saved on the old site; a removed one keeps its row, with an Undo, until the page is left.
  * @param {{ record: Object, isRemoved?: boolean }[]} rows - in the order shown
- * @param {{ count: number, max: number, isNearlyFull: boolean, restored?: string, canLoad: Function, onLoad: Function,
- *   onCopy: Function, onRemove: Function, onUndo: Function }} handlers - canLoad(record) says whether a saved name can be
- *   shown again; onLoad, onCopy, onRemove and onUndo are called with the row's record, its index in `rows` and the
+ * @param {{ count: number, max: number, isNearlyFull: boolean, restored?: string, canLoad: Function,
+ *   isFromOldSite: Function, onLoad: Function, onCopy: Function, onRemove: Function, onUndo: Function }} handlers -
+ *   canLoad(record) says whether a saved name can be shown again, isFromOldSite(record) whether an older site saved it
+ *   as text only; onLoad, onCopy, onRemove and onUndo are called with the row's record, its index in `rows` and the
  *   button pressed (onLoad for every click); `restored` names the row just put back, which glints
  */
-export function renderFavorites(rows, { count, max, isNearlyFull, restored, canLoad, ...handlers }) {
+export function renderFavorites(rows, { count, max, isNearlyFull, restored, canLoad, isFromOldSite, ...handlers }) {
     const isFull = count >= max;
     $("copyAllSavedButton").hidden = count === 0;
     const counter = $("favoritesCount");
@@ -126,23 +127,38 @@ export function renderFavorites(rows, { count, max, isNearlyFull, restored, canL
                   undoLabel: `Undo unsaving ${record.name}`,
                   note: "Cleared when you leave or refresh this page."
               })
-            : renderSavedRow(record, canLoad(record));
+            : renderSavedRow(record, savedRowState(record, canLoad, isFromOldSite));
         item.dataset.name = record.name;
         item.toggleAttribute("data-restored", record.name === restored);
         return item;
     });
 }
 
-const DAMAGED_NOTE = "Damaged: Cannot be rebuilt in generator. Copy and remove still work.";
+// How a saved name can be shown: again (SHOWN), not because an older site saved it as text (OLD_SITE), or not because
+// its record no longer reads (DAMAGED).
+const SHOWN = { label: (name) => `Show ${name}` };
+const OLD_SITE = {
+    label: (name) => `${name}, saved on the old site`,
+    note: "Saved on the old site: Cannot be rebuilt here. Copy and remove still work."
+};
+const DAMAGED = {
+    label: (name) => `${name}, damaged`,
+    note: "Damaged: Cannot be rebuilt in generator. Copy and remove still work.",
+    className: "is-damaged"
+};
 
-function renderSavedRow(favorite, canLoad) {
+function savedRowState(record, canLoad, isFromOldSite) {
+    if (canLoad(record)) return SHOWN;
+    return isFromOldSite(record) ? OLD_SITE : DAMAGED;
+}
+
+function renderSavedRow(favorite, state) {
     const item = element("li", null);
-    const isDamaged = !canLoad;
     const name = rowButton(
         "load",
-        `name-list-name${isDamaged ? " is-damaged" : ""}`,
+        `name-list-name${state.className ? ` ${state.className}` : ""}`,
         favorite.name,
-        isDamaged ? `${favorite.name}, damaged` : `Show ${favorite.name}`
+        state.label(favorite.name)
     );
     const tools = element("span", "name-list-tools");
     tools.append(
@@ -150,7 +166,7 @@ function renderSavedRow(favorite, canLoad) {
         rowTool("remove", "trash", `Unsave ${favorite.name}`)
     );
     const kind = formatNameKind({ sex: favorite.result?.sex, subrace: favorite.subrace });
-    const line = isDamaged ? noteLine(DAMAGED_NOTE) : kind && element("span", "name-list-kind", kind);
+    const line = state.note ? noteLine(state.note) : kind && element("span", "name-list-kind", kind);
     item.append(nameWithKind(name, line), tools);
     return item;
 }

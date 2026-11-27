@@ -1,5 +1,5 @@
 // Reading a species' name tables, and the rule that gives each sex the entries it may use.
-import { SEX } from "./species.js?v=4.3.0";
+import { SEX } from "./species.js?v=4.3.1";
 
 /**
  * A table entry as every generator reads it.

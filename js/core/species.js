@@ -41,7 +41,7 @@ export const SPECIES = {
         generatorType: "elven",
         form: "elvish",
         sexes: [SEX.NEUTRAL, SEX.FEMALE, SEX.MALE],
-        dataFile: "data/elfNames.json?v=4.3.0",
+        dataFile: "data/elfNames.json?v=4.3.1",
         script: ESPRUAR,
         lineages: [
             // Chosen (2026-11-23): no longer offered, so every name has a lineage; kept so names saved with it still show
@@ -88,7 +88,7 @@ export const SPECIES = {
         captionsUnknownMeanings: false,
         meaningsNote:
             "No book gives the meaning of a dwarf's first name or clan name. Only names built from the dwarven name tables (Expanded Variety) show meanings, part by part.",
-        dataFile: "data/dwarfNames.json?v=4.3.0",
+        dataFile: "data/dwarfNames.json?v=4.3.1",
         script: DETHEK,
         lineages: [
             {

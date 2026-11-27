@@ -1,10 +1,10 @@
 // The one place that knows which generator serves which lineage; generators never import each other.
-import { DwarfNameGenerator } from "./DwarfNameGenerator.js?v=4.3.0";
-import { DWARF_LINEAGE_RULES } from "./dwarfLineages.js?v=4.3.0";
-import { ElfNameGenerator } from "./ElfNameGenerator.js?v=4.3.0";
-import { ELF_LINEAGE_RULES } from "./elfLineages.js?v=4.3.0";
-import { DROW, DWARF_LINEAGES, ELF_SUBRACES } from "./species.js?v=4.3.0";
-import { NAME_TYPE } from "./speciesData.js?v=4.3.0";
+import { DwarfNameGenerator } from "./DwarfNameGenerator.js?v=4.3.1";
+import { DWARF_LINEAGE_RULES } from "./dwarfLineages.js?v=4.3.1";
+import { ElfNameGenerator } from "./ElfNameGenerator.js?v=4.3.1";
+import { ELF_LINEAGE_RULES } from "./elfLineages.js?v=4.3.1";
+import { DROW, DWARF_LINEAGES, ELF_SUBRACES } from "./species.js?v=4.3.1";
+import { NAME_TYPE } from "./speciesData.js?v=4.3.1";
 
 /**
  * What every lineage's generator offers the app. A part, structure or surname change keeps every other part in its

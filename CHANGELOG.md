@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.1] - 2026-11-26
+
+### Changed
+
+- The browser tab icon and the home-screen icon are now the same deep ruby red as the site and the Roll Name button; they were still the old brick red and crimson.
+
+- Shield dwarves and gold dwarves each have their own section on the Etymology & Realmslore page, saying how their names differ instead of describing them together: Dwarves Deep prints a northern list of names and clans for shield dwarves and a southern list for gold dwarves with no name in both, shield dwarves get one phrase, and gold dwarves up to two. Generated names are unchanged.
+
+- The Surface Elves section on the Etymology & Realmslore page now names the books checked for wood, sun and moon elf naming (Elves of Evermeet, The Complete Book of Elves, Races of Faerûn), says none sets these lineages apart (The Complete Book of Elves describes one fashion for all elves), says the generator therefore uses one shared pool with a slight weight toward the published names of the chosen lineage, and says wood elves have fewer published names than sun or moon elves. Generated names are unchanged.
+
+### Fixed
+
+- A name saved by an older version of the site, as text only, is no longer marked "Damaged". Its row says "Saved on the old site: Cannot be rebuilt here. Copy and remove still work.", and clicking it says the same. "Damaged" now means only a name this site saved that has since become unreadable.
+
 ## [4.3.0] - 2026-11-26
 
 ### Added
