@@ -1,5 +1,5 @@
 // The values and steps every generator's roll shares, so a lineage differs only where its rules do.
-import { generateUnrepeated } from "./random.js?v=4.3.1";
+import { generateUnrepeated } from "./random.js?v=4.3.2";
 
 // Chosen: with Expanded Variety, the chance that a prefix or suffix slot takes a split component.
 const SPLIT_COMPONENT_SHARE = 0.5;

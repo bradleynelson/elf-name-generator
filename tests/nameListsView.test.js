@@ -192,7 +192,7 @@ describe("renderFavorites: the line under each name", () => {
         expect(notes.map((n) => n.classList.contains("is-note"))).toEqual([false, true]);
     });
 
-    it("says a name from the old site was saved there, and does not call it damaged", () => {
+    it("greys a name from an outdated generator and says it is not compatible, without calling it damaged", () => {
         const old = { name: "Amar Fireok", generatorType: "dwarven", subrace: "general" };
         show(
             [old, record("Brix", "male", "drow")],
@@ -200,12 +200,13 @@ describe("renderFavorites: the line under each name", () => {
             (r) => r === old
         );
         expect(lines()).toEqual([
-            "Saved on the old site: Cannot be rebuilt here. Copy and remove still work.",
+            "Not compatible: saved from an outdated generator. Copy and remove still work.",
             "male elf · drow lineage"
         ]);
         const [oldName] = document.querySelectorAll("#favoritesList .name-list-name");
         expect(oldName.classList.contains("is-damaged")).toBe(false);
-        expect(oldName.getAttribute("aria-label")).toBe("Amar Fireok, saved on the old site");
+        expect(oldName.classList.contains("is-incompatible")).toBe(true);
+        expect(oldName.getAttribute("aria-label")).toBe("Amar Fireok, not compatible");
         expect(document.querySelector(".name-list-kind").classList.contains("is-note")).toBe(true);
     });
 

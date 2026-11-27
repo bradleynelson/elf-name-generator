@@ -1,8 +1,8 @@
 // The lists of names on the page (More names, History and Saved names), each row with its tools.
-import { formatNameKind } from "./core/species.js?v=4.3.1";
-import { $, button, element, iconButton, renderBookmark } from "./dom.js?v=4.3.1";
-import { renderMessageIn } from "./messages.js?v=4.3.1";
-import { renderButtonConfirmation, renderGlint } from "./ui.js?v=4.3.1";
+import { formatNameKind } from "./core/species.js?v=4.3.2";
+import { $, button, element, iconButton, renderBookmark } from "./dom.js?v=4.3.2";
+import { renderMessageIn } from "./messages.js?v=4.3.2";
+import { renderButtonConfirmation, renderGlint } from "./ui.js?v=4.3.2";
 
 // what a row's button does (its data-action) and the handler it calls
 const HANDLER_OF = {
@@ -105,7 +105,7 @@ function renderListedRow(result, { isSaved, isFull, onRemove }) {
 
 /**
  * Saved names: click one to load it, copy or remove it. One that cannot be shown again is listed with a note: damaged,
- * or saved on the old site; a removed one keeps its row, with an Undo, until the page is left.
+ * or from an outdated generator; a removed one keeps its row, with an Undo, until the page is left.
  * @param {{ record: Object, isRemoved?: boolean }[]} rows - in the order shown
  * @param {{ count: number, max: number, isNearlyFull: boolean, restored?: string, canLoad: Function,
  *   isFromOldSite: Function, onLoad: Function, onCopy: Function, onRemove: Function, onUndo: Function }} handlers -
@@ -134,12 +134,13 @@ export function renderFavorites(rows, { count, max, isNearlyFull, restored, canL
     });
 }
 
-// How a saved name can be shown: again (SHOWN), not because an older site saved it as text (OLD_SITE), or not because
-// its record no longer reads (DAMAGED).
+// How a saved name can be shown: again (SHOWN), not because an outdated generator saved it as text (INCOMPATIBLE), or
+// not because its record no longer reads (DAMAGED).
 const SHOWN = { label: (name) => `Show ${name}` };
-const OLD_SITE = {
-    label: (name) => `${name}, saved on the old site`,
-    note: "Saved on the old site: Cannot be rebuilt here. Copy and remove still work."
+const INCOMPATIBLE = {
+    label: (name) => `${name}, not compatible`,
+    note: "Not compatible: saved from an outdated generator. Copy and remove still work.",
+    className: "is-incompatible"
 };
 const DAMAGED = {
     label: (name) => `${name}, damaged`,
@@ -149,7 +150,7 @@ const DAMAGED = {
 
 function savedRowState(record, canLoad, isFromOldSite) {
     if (canLoad(record)) return SHOWN;
-    return isFromOldSite(record) ? OLD_SITE : DAMAGED;
+    return isFromOldSite(record) ? INCOMPATIBLE : DAMAGED;
 }
 
 function renderSavedRow(favorite, state) {

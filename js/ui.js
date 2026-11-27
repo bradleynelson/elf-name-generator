@@ -12,11 +12,11 @@ import {
     SECTION,
     STRUCTURE_CONTROLS,
     surnameStart
-} from "./core/nameStructure.js?v=4.3.1";
-import { getLineage } from "./core/species.js?v=4.3.1";
-import { $, button, element, iconButton, renderBookmark, switchOff } from "./dom.js?v=4.3.1";
-import { announce } from "./messages.js?v=4.3.1";
-import { formatSourceTitle, renderSources } from "./sourcesPanel.js?v=4.3.1";
+} from "./core/nameStructure.js?v=4.3.2";
+import { getLineage } from "./core/species.js?v=4.3.2";
+import { $, button, element, iconButton, renderBookmark, switchOff } from "./dom.js?v=4.3.2";
+import { announce } from "./messages.js?v=4.3.2";
+import { formatSourceTitle, renderSources } from "./sourcesPanel.js?v=4.3.2";
 
 // Ed Greenwood's own sources read "from", not "published in"
 const isFromCreator = (sources) => sources?.[0]?.authority === "creator";

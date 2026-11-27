@@ -7,8 +7,8 @@ import {
     KIND,
     METHOD,
     SECTION
-} from "./core/nameStructure.js?v=4.3.1";
-import { getLineage } from "./core/species.js?v=4.3.1";
+} from "./core/nameStructure.js?v=4.3.2";
+import { getLineage } from "./core/species.js?v=4.3.2";
 
 const STORAGE_KEY = "faerunNameFavorites";
 const HISTORY_KEY = "faerunNameHistory";

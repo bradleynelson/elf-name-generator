@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.2] - 2026-11-26
+
+### Changed
+
+- A saved name from an outdated generator (saved as text only by an older version of the site) is now greyed out and says "Not compatible: saved from an outdated generator. Copy and remove still work." Clicking it says "Name not compatible. This name was built with an older version of the generator and cannot be loaded into the current one. You can still copy and remove it."
+
+- The Roll Name button has its 3D lighting back: the top bevel is lighter and fades darker toward the right, the bottom bevel is dark, and the corners step between them, so the ruby is no longer washed out.
+
+- The browser tab icon and the home-screen icon have some depth: the top two faces of the die are a little lighter and the bottom faces a little darker, so the die no longer looks flat.
+
 ## [4.3.1] - 2026-11-26
 
 ### Changed

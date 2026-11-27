@@ -1,6 +1,6 @@
 // Saved names, More names and History: what is kept, copied, removed and put back, and the messages about it.
-import { track } from "./analytics.js?v=4.3.1";
-import { formatNameWithKind } from "./core/species.js?v=4.3.1";
+import { track } from "./analytics.js?v=4.3.2";
+import { formatNameWithKind } from "./core/species.js?v=4.3.2";
 import {
     MAX_FAVORITES,
     addFavorite,
@@ -13,8 +13,8 @@ import {
     saveHistory,
     storageAvailable,
     watchSavedNames
-} from "./favorites.js?v=4.3.1";
-import { announce, renderMessage } from "./messages.js?v=4.3.1";
+} from "./favorites.js?v=4.3.2";
+import { announce, renderMessage } from "./messages.js?v=4.3.2";
 import {
     focusHistoryControl,
     focusListedName,
@@ -26,8 +26,8 @@ import {
     renderSavedNameMessage,
     rememberRowFocus,
     wireListControls
-} from "./nameListsView.js?v=4.3.1";
-import { goToSection, renderConfirmation } from "./ui.js?v=4.3.1";
+} from "./nameListsView.js?v=4.3.2";
+import { goToSection, renderConfirmation } from "./ui.js?v=4.3.2";
 
 const HISTORY_SIZE = 10;
 // "Saved · 3 left" and an amber count from this many spaces left
@@ -223,8 +223,8 @@ function renderSavedNames(restored) {
                 isFromOldSite(record)
                     ? {
                           kind: "warning",
-                          title: "This name was saved on the old site.",
-                          text: "It can't be shown here, but you can still copy or remove it."
+                          title: "Name not compatible.",
+                          text: "This name was built with an older version of the generator and cannot be loaded into the current one. You can still copy and remove it."
                       }
                     : {
                           kind: "warning",

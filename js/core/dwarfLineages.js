@@ -1,7 +1,7 @@
 // What makes each dwarf lineage's names differ, as data the dwarf generator reads in place of knowing the lineage.
 // Which records a lineage gets is its rule set's `reads` in generators.js, not repeated here.
-import { OWN_LINEAGE_WEIGHT } from "./nameRolls.js?v=4.3.1";
-import { DWARF_LINEAGES as D, SPECIES } from "./species.js?v=4.3.1";
+import { OWN_LINEAGE_WEIGHT } from "./nameRolls.js?v=4.3.2";
+import { DWARF_LINEAGES as D, SPECIES } from "./species.js?v=4.3.2";
 
 /**
  * @typedef {Object} LineageRules

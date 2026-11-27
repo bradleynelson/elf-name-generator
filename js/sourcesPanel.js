@@ -7,10 +7,10 @@ import {
     KIND,
     METHOD,
     SECTION
-} from "./core/nameStructure.js?v=4.3.1";
-import { getLineage } from "./core/species.js?v=4.3.1";
-import { CITED_NAMES } from "./core/splitComponents.js?v=4.3.1";
-import { $, button, element } from "./dom.js?v=4.3.1";
+} from "./core/nameStructure.js?v=4.3.2";
+import { getLineage } from "./core/species.js?v=4.3.2";
+import { CITED_NAMES } from "./core/splitComponents.js?v=4.3.2";
+import { $, button, element } from "./dom.js?v=4.3.2";
 
 /** A book's title as credited: Ed Greenwood's own sources say so. */
 export const formatSourceTitle = ({ title, authority }) =>
